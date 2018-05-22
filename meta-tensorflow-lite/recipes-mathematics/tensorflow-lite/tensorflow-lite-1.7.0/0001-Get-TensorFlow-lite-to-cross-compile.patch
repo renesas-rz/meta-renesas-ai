@@ -1,0 +1,153 @@
+From f8f782093a41da2fab1c770e4bd5ce0ffa5aea55 Mon Sep 17 00:00:00 2001
+From: Jianming Qiao <jianming.qiao@bp.renesas.com>
+Date: Mon, 21 May 2018 13:49:43 +0100
+Subject: [PATCH 1/5] Get TensorFlow lite to cross compile
+
+This patch adds cross compiler support to TensorFlow lite.
+
+The content of file tensorflow/contrib/lite/Makefile.internal has
+been inspired from the content of file:
+tensorflow/contrib/lite/Makefile
+
+from repository:
+https://github.com/tensorflow/tensorflow.git
+
+tag:
+v1.7.0 (024aecf414941e11eb643e29ceed3e1c47a115ad)
+
+Signed-off-by: Jianming Qiao <jianming.qiao@bp.renesas.com>
+---
+ Makefile                                  |   1 +
+ tensorflow/contrib/lite/Makefile.internal | 112 ++++++++++++++++++++++++++++++
+ 2 files changed, 113 insertions(+)
+ create mode 100644 Makefile
+ create mode 100644 tensorflow/contrib/lite/Makefile.internal
+
+diff --git a/Makefile b/Makefile
+new file mode 100644
+index 0000000..eb10ead
+--- /dev/null
++++ b/Makefile
+@@ -0,0 +1 @@
++include ./tensorflow/contrib/lite/Makefile.internal
+diff --git a/tensorflow/contrib/lite/Makefile.internal b/tensorflow/contrib/lite/Makefile.internal
+new file mode 100644
+index 0000000..cd70948
+--- /dev/null
++++ b/tensorflow/contrib/lite/Makefile.internal
+@@ -0,0 +1,112 @@
++# Find where we're running from, so we can store generated files here.
++ifeq ($(origin MAKEFILE_DIR), undefined)
++	MAKEFILE_DIR := $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
++endif
++
++# Where compiled objects are stored.
++OBJDIR := $(MAKEFILE_DIR)/gen/obj/
++BINDIR := $(MAKEFILE_DIR)/gen/bin/
++LIBDIR := $(MAKEFILE_DIR)/gen/lib/
++GENDIR := $(MAKEFILE_DIR)/gen/obj/
++
++# Settings for the host compiler.
++CXX ?= $(TOOLCHAIN_PATH)/bin/$(CC_PREFIX)-gcc
++CXXFLAGS += --std=c++11 -O3 -DNDEBUG
++CC ?= $(TOOLCHAIN_PATH)/bin/$(CC_PREFIX)-gcc
++CFLAGS ?= -O3 -DNDEBUG
++ARFLAGS ?= -r
++AR ?= $(TOOLCHAIN_PATH)/bin/$(CC_PREFIX)-ar
++
++INCLUDES := \
++-I. \
++-I$(MAKEFILE_DIR)/../../../ \
++-I$(MAKEFILE_DIR)/downloads/ \
++-I$(MAKEFILE_DIR)/downloads/eigen \
++-I$(MAKEFILE_DIR)/downloads/gemmlowp \
++-I$(MAKEFILE_DIR)/downloads/neon_2_sse \
++-I$(MAKEFILE_DIR)/downloads/farmhash/src \
++-I$(MAKEFILE_DIR)/downloads/flatbuffers/include \
++-I$(GENDIR)
++
++LIBS := \
++-lstdc++ \
++-lpthread \
++-lm
++
++LIBS += -ldl
++
++# This library is the main target for this makefile. It will contain a minimal
++# runtime that can be linked in to other programs.
++LIB_NAME := libtensorflow-lite.a
++LIB_PATH := $(LIBDIR)$(LIB_NAME)
++
++# What sources we want to compile, must be kept in sync with the main Bazel
++# build files.
++
++CORE_CC_ALL_SRCS := \
++$(wildcard tensorflow/contrib/lite/*.cc) \
++$(wildcard tensorflow/contrib/lite/kernels/*.cc) \
++$(wildcard tensorflow/contrib/lite/kernels/internal/*.cc) \
++$(wildcard tensorflow/contrib/lite/kernels/internal/optimized/*.cc) \
++$(wildcard tensorflow/contrib/lite/kernels/internal/reference/*.cc) \
++$(wildcard tensorflow/contrib/lite/*.c) \
++$(wildcard tensorflow/contrib/lite/kernels/*.c) \
++$(wildcard tensorflow/contrib/lite/kernels/internal/*.c) \
++$(wildcard tensorflow/contrib/lite/kernels/internal/optimized/*.c) \
++$(wildcard tensorflow/contrib/lite/kernels/internal/reference/*.c) \
++$(wildcard tensorflow/contrib/lite/downloads/farmhash/src/farmhash.cc)
++# Remove any duplicates.
++CORE_CC_ALL_SRCS := $(sort $(CORE_CC_ALL_SRCS))
++CORE_CC_EXCLUDE_SRCS := \
++$(wildcard tensorflow/contrib/lite/*test.cc) \
++$(wildcard tensorflow/contrib/lite/*/*test.cc) \
++$(wildcard tensorflow/contrib/lite/*/*/*test.cc) \
++$(wildcard tensorflow/contrib/lite/*/*/*/*test.cc) \
++$(wildcard tensorflow/contrib/lite/kernels/test_util.cc)
++
++$(info $$CORE_CC_ALL_SRCS is [${CORE_CC_ALL_SRCS}])
++$(info $$CORE_CC_EXCLUDE_SRCS is [${CORE_CC_EXCLUDE_SRCS}])
++
++# Filter out all the excluded files.
++TF_LITE_CC_SRCS := $(filter-out $(CORE_CC_EXCLUDE_SRCS), $(CORE_CC_ALL_SRCS))
++# File names of the intermediate files target compilation generates.
++TF_LITE_CC_OBJS := $(addprefix $(OBJDIR), \
++$(patsubst %.cc,%.o,$(patsubst %.c,%.o,$(TF_LITE_CC_SRCS))))
++LIB_OBJS := $(TF_LITE_CC_OBJS)
++
++$(info $$TF_LITE_CC_SRCS is [${TF_LITE_CC_SRCS}])
++$(info $$TF_LITE_CC_OBJS is [${TF_LITE_CC_OBJS}])
++
++# For normal manually-created TensorFlow C++ source files.
++$(OBJDIR)%.o: %.cc
++	@mkdir -p $(dir $@)
++	$(CXX) $(CXXFLAGS) $(INCLUDES) -c $< -o $@
++
++# For normal manually-created TensorFlow C++ source files.
++$(OBJDIR)%.o: %.c
++	@mkdir -p $(dir $@)
++	$(CC) $(CCFLAGS) $(INCLUDES) -c $< -o $@
++
++# The target that's compiled if there's no command-line arguments.
++all: $(LIB_PATH)
++
++# Gathers together all the objects we've compiled into a single '.a' archive.
++$(LIB_PATH): $(LIB_OBJS)
++	@mkdir -p $(dir $@)
++	$(AR) $(ARFLAGS) $(LIB_PATH) $(LIB_OBJS)
++
++# Gets rid of all generated files.
++clean:
++	rm -rf $(MAKEFILE_DIR)/gen
++
++# Gets rid of target files only, leaving the host alone. Also leaves the lib
++# directory untouched deliberately, so we can persist multiple architectures
++# across builds for iOS and Android.
++cleantarget:
++	rm -rf $(OBJDIR)
++	rm -rf $(BINDIR)
++
++$(DEPDIR)/%.d: ;
++.PRECIOUS: $(DEPDIR)/%.d
++
++-include $(patsubst %,$(DEPDIR)/%.d,$(basename $(TF_CC_SRCS)))
+-- 
+2.7.4
+

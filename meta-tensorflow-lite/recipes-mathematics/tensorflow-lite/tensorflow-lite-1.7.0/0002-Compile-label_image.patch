@@ -1,0 +1,67 @@
+From 744b6e7864c2c4346bd44b1311921adab556c830 Mon Sep 17 00:00:00 2001
+From: Jianming Qiao <jianming.qiao@bp.renesas.com>
+Date: Mon, 21 May 2018 13:52:15 +0100
+Subject: [PATCH 2/5] Compile label_image
+
+This patch adds label_image example to list of objects to be
+compiled.
+
+Signed-off-by: Jianming Qiao <jianming.qiao@bp.renesas.com>
+---
+ tensorflow/contrib/lite/Makefile.internal | 20 ++++++++++++++++++--
+ 1 file changed, 18 insertions(+), 2 deletions(-)
+
+diff --git a/tensorflow/contrib/lite/Makefile.internal b/tensorflow/contrib/lite/Makefile.internal
+index cd70948..24afa75 100644
+--- a/tensorflow/contrib/lite/Makefile.internal
++++ b/tensorflow/contrib/lite/Makefile.internal
+@@ -40,6 +40,15 @@ LIBS += -ldl
+ LIB_NAME := libtensorflow-lite.a
+ LIB_PATH := $(LIBDIR)$(LIB_NAME)
+ 
++# A small example program that shows how to link against the library.
++LABELIMAGE_PATH := $(BINDIR)label_image
++
++LABELIMAGE_SRCS := \
++tensorflow/contrib/lite/examples/label_image/bitmap_helpers.cc \
++tensorflow/contrib/lite/examples/label_image/label_image.cc
++LABELIMAGE_OBJS := $(addprefix $(OBJDIR), \
++$(patsubst %.cc,%.o,$(patsubst %.c,%.o,$(LABELIMAGE_SRCS))))
++
+ # What sources we want to compile, must be kept in sync with the main Bazel
+ # build files.
+ 
+@@ -62,7 +71,8 @@ $(wildcard tensorflow/contrib/lite/*test.cc) \
+ $(wildcard tensorflow/contrib/lite/*/*test.cc) \
+ $(wildcard tensorflow/contrib/lite/*/*/*test.cc) \
+ $(wildcard tensorflow/contrib/lite/*/*/*/*test.cc) \
+-$(wildcard tensorflow/contrib/lite/kernels/test_util.cc)
++$(wildcard tensorflow/contrib/lite/kernels/test_util.cc) \
++$(LABELIMAGE_SRCS)
+ 
+ $(info $$CORE_CC_ALL_SRCS is [${CORE_CC_ALL_SRCS}])
+ $(info $$CORE_CC_EXCLUDE_SRCS is [${CORE_CC_EXCLUDE_SRCS}])
+@@ -88,13 +98,19 @@ $(OBJDIR)%.o: %.c
+ 	$(CC) $(CCFLAGS) $(INCLUDES) -c $< -o $@
+ 
+ # The target that's compiled if there's no command-line arguments.
+-all: $(LIB_PATH)
++all: $(LIB_PATH) $(LABELIMAGE_PATH)
+ 
+ # Gathers together all the objects we've compiled into a single '.a' archive.
+ $(LIB_PATH): $(LIB_OBJS)
+ 	@mkdir -p $(dir $@)
+ 	$(AR) $(ARFLAGS) $(LIB_PATH) $(LIB_OBJS)
+ 
++$(LABELIMAGE_PATH): $(LABELIMAGE_OBJS) $(LIB_PATH)
++	@mkdir -p $(dir $@)
++	$(CXX) $(CXXFLAGS) $(INCLUDES) \
++	-o $(LABELIMAGE_PATH) $(LABELIMAGE_OBJS) \
++	$(LIBFLAGS) $(LIB_PATH) $(LDFLAGS) $(LIBS)
++
+ # Gets rid of all generated files.
+ clean:
+ 	rm -rf $(MAKEFILE_DIR)/gen
+-- 
+2.7.4
+

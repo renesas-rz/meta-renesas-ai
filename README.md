@@ -27,20 +27,27 @@ the configuration must be inspected and further customized according to the
 project requirements.
 
 
-At this point in time the only AI tool supported is *TensorFlow* and the only
-platform supported is *iwg20m*.
+Supported AI tools:
+- TensorFlow v1.2.0  
+- TensorFlow Lite v1.7.0  
 
 
-This project is licensed under the terms of the MIT license (please see file
-*COPYING.MIT* in this directory for further details).
+Supported Platforms:  
+- Renesas RZ/G1M iwg20m
 
 
 ---
+
 **Note**  
 If working behind a proxy, make sure the environment of the shell you are
 running bitbake from contains *HTTP\_PROXY* and *HTTPS\_PROXY* environment
 variables, set according to your proxy configuration.
+
 ---
+
+
+This project is licensed under the terms of the MIT license (please see file
+*COPYING.MIT* in this directory for further details).
 
 
 Send pull requests, patches, comments or questions to:  
