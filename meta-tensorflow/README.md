@@ -35,8 +35,8 @@ the official TensorFlow documentation for instructions on how to use
 
 
 In summary:  
-1. On host machine, download model data:  
-`curl -L "https://storage.googleapis.com/download.tensorflow.org/models/inception_v3_2016_08_28_frozen.pb.tar.gz"`  
+1. Download model data:  
+`wget https://storage.googleapis.com/download.tensorflow.org/models/inception_v3_2016_08_28_frozen.pb.tar.gz`  
 2. Extract to home directory on target.  
 3. Copy image to be processed to home directory on target.  
 4. Run label_image, specifying the downloaded files:  
