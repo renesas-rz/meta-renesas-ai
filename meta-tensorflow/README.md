@@ -24,11 +24,6 @@ beneficial when you just want to populate an SDK for developing an application
 based on TensorFlow.
 
 
-If working behind a proxy, make sure the environment of the shell you are
-running bitbake from contains *HTTP\_PROXY* and *HTTPS\_PROXY* environment
-variables, set according to your proxy configuration.
-
-
 After the build is complete, both Tensorflow C (*libtensorflow_cc.so*) and C++
 (*libtensorflow.so*) libraries will be generated.
 

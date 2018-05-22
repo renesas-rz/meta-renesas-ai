@@ -35,6 +35,14 @@ This project is licensed under the terms of the MIT license (please see file
 *COPYING.MIT* in this directory for further details).
 
 
+---
+**Note**  
+If working behind a proxy, make sure the environment of the shell you are
+running bitbake from contains *HTTP\_PROXY* and *HTTPS\_PROXY* environment
+variables, set according to your proxy configuration.
+---
+
+
 Send pull requests, patches, comments or questions to:  
 [chris.paterson2@renesas.com](mailto:chris.paterson2@renesas.com).
 
