@@ -19,7 +19,7 @@ family of System on Chips.
 
 In order to add TensorFlow support to your project, make sure *tensorflow* is
 listed as a dependency to your recipe/package.
-Listing *tensorflow* and *tensorflow-dev* in *IMAGE\_INSTALL* variable could be
+Listing *tensorflow* and *tensorflow-dev* in *IMAGE_INSTALL* variable could be
 beneficial when you just want to populate an SDK for developing an application
 based on TensorFlow.
 
@@ -38,9 +38,8 @@ In summary:
 1. Download model data:  
 `wget https://storage.googleapis.com/download.tensorflow.org/models/inception_v3_2016_08_28_frozen.pb.tar.gz`  
 2. Extract to home directory on target.  
-3. Copy image to be processed to home directory on target.  
-4. Run label_image, specifying the downloaded files:  
-`/usr/bin/tensorflow/examples/label_image --image="/home/root/grace_hopper.jpg" --graph="/home/root/inception_v3_2016_08_28_frozen.pb" --labels="/home/root/imagenet_slim_labels.txt"`
+3. Run label_image, specifying the downloaded files:  
+`/usr/bin/tensorflow/examples/label_image --image="/usr/bin/tensorflow/examples/grace_hopper.jpg" --graph="/home/root/inception_v3_2016_08_28_frozen.pb" --labels="/home/root/imagenet_slim_labels.txt"`
 
 
 Instructions for verifying the C library can be found in the "Validate your

@@ -96,6 +96,9 @@ do_install () {
 	install -m 0555 \
 		${S}/bazel-out/${HOST_PREFIX}opt/bin/tensorflow/examples/label_image/label_image \
 		${D}${bindir}/${PN}-${PV}/examples
+	install -m 0644 \
+		${S}/tensorflow/examples/label_image/data/grace_hopper.jpg \
+		${D}${bindir}/${PN}-${PV}/examples
 	cd ${D}${bindir}
 	ln -sf ${PN}-${PV} ${PN}
 }
@@ -120,6 +123,7 @@ FILES_${PN}-dbg = " \
 FILES_${PN}-examples = " \
 	${bindir}/${PN} \
 	${bindir}/${PN}-${PV}/examples/label_image \
+	${bindir}/${PN}-${PV}/examples/grace_hopper.jpg \
 "
 
 FILES_${PN}-examples-dbg = " \
