@@ -18,10 +18,10 @@ This project comes with template files to make it easier for the user to quickly
 integrate their specific application with the specific AI tool. Only specific
 platforms are supported, therefore template files are machine specific and can
 be found under:  
-**meta-${AI\_TOOL\_NAME}/template/${MACHINE}**  
+**meta-${AI\_TOOL\_NAME}/templates/${MACHINE}**  
 
 
-Copying *local.conf* and *bblayers.conf* from the template directory to your
+Copying *local.conf* and *bblayers.conf* from the templates directory to your
 build conf directory is usually the first thing the user wants to do, but
 the configuration must be inspected and further customized according to the
 project requirements.
