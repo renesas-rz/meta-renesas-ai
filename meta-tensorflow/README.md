@@ -45,3 +45,13 @@ In summary:
 Instructions for verifying the C library can be found in the "Validate your
 installation" section of:
 **https://www.tensorflow.org/install/install_c**
+
+
+---
+
+**Note**  
+When using TensorFlow with the iwg22m platform one should take note of the fact
+that there is only 512MB of memory available. Out of memory errors will occur
+when using larger models.
+
+---
