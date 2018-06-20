@@ -35,6 +35,7 @@ Supported AI tools:
 
 Supported Platforms:  
 - Renesas RZ/G1M iwg20m  
+- Renesas RZ/G1E iwg22m  
 
 
 ---
