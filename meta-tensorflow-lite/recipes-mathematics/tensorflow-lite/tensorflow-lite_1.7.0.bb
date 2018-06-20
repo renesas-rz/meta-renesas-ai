@@ -13,7 +13,7 @@ SRC_URI = " \
 	file://0004-Check-NEON-support.patch \
 	file://0005-Disable-dlopen-error-of-libneuralnetworks-for-non-An.patch \
 "
-COMPATIBLE_MACHINE = "(iwg20m)"
+COMPATIBLE_MACHINE = "(iwg20m|iwg22m)"
 
 S = "${WORKDIR}/tensorflow-${PV}"
 

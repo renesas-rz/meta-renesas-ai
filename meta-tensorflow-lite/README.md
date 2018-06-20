@@ -17,9 +17,9 @@ RZ/G1 family of System on Chips.
 
 In order to add TensorFlow Lite support to your project, make sure
 *tensorflow-lite* is listed as a dependency to your recipe/package.
-Listing *tensorflow-lite-staticdev* and *tensorflow-dev* in *IMAGE\_INSTALL* variable could be
-beneficial when you just want to populate an SDK for developing an application
-based on TensorFlow Lie.
+Listing *tensorflow-lite-staticdev* and *tensorflow-dev* in *IMAGE\_INSTALL*
+variable could be beneficial when you just want to populate an SDK for
+developing an application based on TensorFlow Lite.
 
 
 After the build is complete the static C++ TensorFlow Lite library
@@ -54,3 +54,13 @@ The output of a healthy execution should look like the following:
 > 0.0117647: 835 suit  
 > 0.00784314: 611 jersey  
 > 0.00392157: 922 book jacket  
+
+
+---
+
+**Note**  
+When using TensorFlow Lite with the iwg22m platform one should take note of the
+fact that there is only 512MB of memory available. Out of memory errors will
+occur when using larger models.
+
+---
