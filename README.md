@@ -30,10 +30,11 @@ project requirements.
 Supported AI tools:
 - TensorFlow v1.2.0  
 - TensorFlow Lite v1.7.0  
+- Caffe2 v0.7.0  
 
 
 Supported Platforms:  
-- Renesas RZ/G1M iwg20m
+- Renesas RZ/G1M iwg20m  
 
 
 ---

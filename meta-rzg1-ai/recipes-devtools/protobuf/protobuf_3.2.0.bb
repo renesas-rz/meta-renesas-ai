@@ -23,3 +23,5 @@ EXTRA_OECONF += " --with-protoc=echo"
 inherit autotools-brokensep
 
 S = "${WORKDIR}/git"
+
+BBCLASSEXTEND = "native nativesdk"
