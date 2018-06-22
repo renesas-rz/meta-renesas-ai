@@ -18,7 +18,7 @@ SRC_URI = " \
 	file://TensorFlow-neon-alignment.patch \
 "
 
-COMPATIBLE_MACHINE = "(iwg20m|iwg22m)"
+COMPATIBLE_MACHINE = "(iwg20m|iwg21m|iwg22m)"
 
 export BAZEL_FLAGS="--output_base ${WORKDIR}/output_base"
 
