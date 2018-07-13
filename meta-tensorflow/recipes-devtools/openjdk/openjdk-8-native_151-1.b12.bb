@@ -2,13 +2,6 @@ DESCRIPTION = "Java runtime based upon the OpenJDK Project"
 LICENSE = "GPL-2.0-with-classpath-exception"
 LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/${LICENSE};md5=6133e6794362eff6641708cfcc075b80"
 
-MAJOR_VERSION = "1.8.0"
-SUB_VERSION = "151-1.b12"
-SUB_VERSION_MAJOR = "151-1"
-SUB_VERSION_MINOR = "b12"
-VERSION = "${MAJOR_VERSION}.${SUB_VERSION}"
-JAVA_ZIP_URL = "https://github.com/ojdkbuild/ojdkbuild/releases/download/"
-
 inherit native
 
 INHIBIT_SYSROOT_STRIP = "1"
@@ -16,7 +9,7 @@ INHIBIT_SYSROOT_STRIP = "1"
 SRC_URI[md5sum] = "5573dd4caaebce2167ef4c8b7889915a"
 SRC_URI[sha256sum] = "5dccd3d05f489cd6dc5fe645e5f71b3bd29c9f2f8cfac66c6f4d95bba362e639"
 SRC_URI = " \
-	${JAVA_ZIP_URL}/${MAJOR_VERSION}.${SUB_VERSION_MAJOR}/java-${MAJOR_VERSION}-openjdk-${VERSION}.el6_9.x86_64.zip \
+	https://github.com/ojdkbuild/ojdkbuild/releases/download/1.8.0.151-1/java-1.8.0-openjdk-1.8.0.151-1.b12.el6_9.x86_64.zip \
 "
 
 S = "${WORKDIR}/java-1.8.0-openjdk-1.8.0.151-1.b12.el6_9.x86_64"
