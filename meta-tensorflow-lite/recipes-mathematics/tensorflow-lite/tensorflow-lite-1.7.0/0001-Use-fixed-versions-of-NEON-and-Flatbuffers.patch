@@ -1,0 +1,38 @@
+From 5e613c858187809f847ac7d7407614a192263f8b Mon Sep 17 00:00:00 2001
+From: Chris Paterson <chris.paterson2@renesas.com>
+Date: Wed, 8 Aug 2018 12:11:46 +0100
+Subject: [PATCH] Use fixed versions of NEON and Flatbuffers
+
+Up until now the master branch was used from both repositories. This meant that
+we were at risk of build errors due to upstream changes outside of our control.
+
+There are no tags in the ARM_NEON_2_x86_SSE repository so we are selecting the
+current latest commit as we know it works.
+
+For Flatbuffers we are using the latest tag known to work, v1.9.0.
+
+Signed-off-by: Chris Paterson <chris.paterson2@renesas.com>
+Signed-off-by: Jianming Qiao <jianming.qiao@bp.renesas.com>
+---
+ tensorflow/contrib/lite/download_dependencies.sh | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/tensorflow/contrib/lite/download_dependencies.sh b/tensorflow/contrib/lite/download_dependencies.sh
+index a93ed201d647ddf2..59a43be94edba072 100755
+--- a/tensorflow/contrib/lite/download_dependencies.sh
++++ b/tensorflow/contrib/lite/download_dependencies.sh
+@@ -33,9 +33,9 @@ EIGEN_URL="$(grep -o 'http.*bitbucket.org/eigen/eigen/get/.*tar\.gz' "${BZL_FILE
+ GEMMLOWP_URL="$(grep -o 'https://mirror.bazel.build/github.com/google/gemmlowp/.*zip' "${BZL_FILE_PATH}" | head -n1)"
+ GOOGLETEST_URL="https://github.com/google/googletest/archive/release-1.8.0.tar.gz"
+ ABSL_URL="$(grep -o 'https://github.com/abseil/abseil-cpp/.*tar.gz' "${BZL_FILE_PATH}" | head -n1)"
+-NEON_2_SSE_URL="https://github.com/intel/ARM_NEON_2_x86_SSE/archive/master.zip"
++NEON_2_SSE_URL="https://github.com/intel/ARM_NEON_2_x86_SSE/archive/32c968f69cde2d8abb446cd3a71396d2b490bb9a.zip"
+ FARMHASH_URL="https://mirror.bazel.build/github.com/google/farmhash/archive/816a4ae622e964763ca0862d9dbd19324a1eaf45.tar.gz"
+-FLATBUFFERS_URL="https://github.com/google/flatbuffers/archive/master.zip"
++FLATBUFFERS_URL="https://github.com/google/flatbuffers/archive/20a400e940634108bad812f571582eeffc728eac.zip"
+ 
+ # TODO(petewarden): Some new code in Eigen triggers a clang bug with iOS arm64,
+ #                   so work around it by patching the source.
+-- 
+1.9.1
+

@@ -12,6 +12,7 @@ SRC_URI = " \
 	file://0003-Fix-compile-time-error.patch \
 	file://0004-Check-NEON-support.patch \
 	file://0005-Disable-dlopen-error-of-libneuralnetworks-for-non-An.patch \
+	file://0001-Use-fixed-versions-of-NEON-and-Flatbuffers.patch \
 "
 
 COMPATIBLE_MACHINE = "(iwg20m|iwg21m|iwg22m)"
