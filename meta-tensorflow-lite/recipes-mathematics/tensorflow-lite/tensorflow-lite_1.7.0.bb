@@ -3,10 +3,10 @@ LICENSE = "Apache-2.0"
 
 LIC_FILES_CHKSUM = "file://LICENSE;md5=01e86893010a1b87e69a213faa753ebd"
 
-SRC_URI[md5sum] = "4f89e2891b18f948912656913c25cff4"
-SRC_URI[sha256sum] = "5ad6f31b076cb7394f0302cfaee2f4fa48153e4882ff75041c2bac834be39743"
+SRCREV = "024aecf414941e11eb643e29ceed3e1c47a115ad"
+
 SRC_URI = " \
-	https://github.com/tensorflow/tensorflow/archive/v${PV}.zip \
+	git://github.com/tensorflow/tensorflow.git;branch=master \
 	file://0001-Get-TensorFlow-lite-to-cross-compile.patch \
 	file://0002-Compile-label_image.patch \
 	file://0003-Fix-compile-time-error.patch \
@@ -16,7 +16,7 @@ SRC_URI = " \
 
 COMPATIBLE_MACHINE = "(iwg20m|iwg21m|iwg22m)"
 
-S = "${WORKDIR}/tensorflow-${PV}"
+S = "${WORKDIR}/git"
 
 PACKAGES += "${PN}-examples ${PN}-examples-dbg"
 
