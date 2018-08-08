@@ -39,6 +39,7 @@ DEPENDS += " \
 	protobuf-native \
 	python-numpy \
 	python-numpy-native \
+	opencv \
 "
 
 RDEPENDS_${PN} = " \
