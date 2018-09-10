@@ -56,6 +56,36 @@ The output of a healthy execution should look like the following:
 > 0.00392157: 922 book jacket  
 
 
+To use *benchmark_model*:  
+1. Download model data:  
+`wget https://storage.googleapis.com/download.tensorflow.org/models/tflite/mobilenet_v1_224_android_quant_2017_11_08.zip`  
+2. Extract to */usr/bin/tensorflow-lite/examples/*.  
+3. Execute  *benchmark_model* by running the following commands:
+```
+cd /usr/bin/tensorflow-lite/examples/
+./benchmark_model --graph=mobilenet_quant_v1_224.tflite
+```
+
+
+For more information about the output of the execution, please refer to
+**https://github.com/tensorflow/tensorflow/tree/master/tensorflow/contrib/lite/tools/benchmark**
+
+
+To use *minimal*:  
+1. Download model data:  
+`wget https://storage.googleapis.com/download.tensorflow.org/models/tflite/mobilenet_v1_224_android_quant_2017_11_08.zip`  
+2. Extract to */usr/bin/tensorflow-lite/examples/*.  
+3. Execute  *minimal* by running the following commands:
+```
+cd /usr/bin/tensorflow-lite/examples/
+./minimal mobilenet_quant_v1_224.tflite
+```
+
+
+The output of a healthy execution will read the model file and perform
+inference.
+
+
 ---
 
 **Note**  

@@ -1,0 +1,24 @@
+From cc3098a3bd581ba5f809ae08aed39bbc6a912056 Mon Sep 17 00:00:00 2001
+From: Jianming Qiao <jianming.qiao@bp.renesas.com>
+Date: Thu, 6 Sep 2018 17:14:12 +0100
+Subject: [PATCH] creating a new Makefile that triggers Makefile.internal to be
+ built
+
+Add top level Makefile for Bitbake to pick up that points to our
+TensorFlow Lite Arm specific Makefile.
+
+Signed-off-by: Jianming Qiao <jianming.qiao@bp.renesas.com>
+---
+ Makefile | 1 +
+ 1 file changed, 1 insertion(+)
+ create mode 100644 Makefile
+
+diff --git a/Makefile b/Makefile
+new file mode 100644
+index 0000000..eb10ead
+--- /dev/null
++++ b/Makefile
+@@ -0,0 +1 @@
++include ./tensorflow/contrib/lite/Makefile.internal
+-- 
+2.7.4

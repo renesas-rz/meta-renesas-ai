@@ -3,16 +3,14 @@ LICENSE = "Apache-2.0"
 
 LIC_FILES_CHKSUM = "file://LICENSE;md5=01e86893010a1b87e69a213faa753ebd"
 
-SRCREV = "024aecf414941e11eb643e29ceed3e1c47a115ad"
+SRCREV = "656e7a2b347c3c6eb76a6c130ed4b1def567b6c1"
 
 SRC_URI = " \
-	git://github.com/tensorflow/tensorflow.git;branch=master \
-	file://0001-Get-TensorFlow-lite-to-cross-compile.patch \
-	file://0002-Compile-label_image.patch \
-	file://0003-Fix-compile-time-error.patch \
-	file://0004-Check-NEON-support.patch \
-	file://0005-Disable-dlopen-error-of-libneuralnetworks-for-non-An.patch \
-	file://0001-Use-fixed-versions-of-NEON-and-Flatbuffers.patch \
+	git://github.com/tensorflow/tensorflow.git;branch=r1.10 \
+	file://0001-creating-a-new-Makefile-that-triggers-Makefile.inter.patch \
+	file://0001-Tailor-our-own-Makefile-for-arm-cross-compilation.patch \
+	file://0001-Fix-compilation-error-when-compiling-benchmark_model.patch \
+	file://0001-Check-NEON-support.patch \
 "
 
 COMPATIBLE_MACHINE = "(iwg20m|iwg21m|iwg22m)"
@@ -50,6 +48,12 @@ do_install(){
 	install -m 0555 \
 		${S}/tensorflow/contrib/lite/examples/label_image/testdata/grace_hopper.bmp \
 		${D}${bindir}/${PN}-${PV}/examples
+	install -m 0555 \
+                ${S}/tensorflow/contrib/lite/gen/bin/minimal \
+                ${D}${bindir}/${PN}-${PV}/examples
+        install -m 0555 \
+                ${S}/tensorflow/contrib/lite/gen/bin/benchmark_model \
+                ${D}${bindir}/${PN}-${PV}/examples
 	cd ${D}${bindir}
 	ln -sf ${PN}-${PV} ${PN}
 }
@@ -74,6 +78,8 @@ FILES_${PN}-examples = " \
 	${bindir}/${PN} \
 	${bindir}/${PN}-${PV}/examples/label_image \
 	${bindir}/${PN}-${PV}/examples/grace_hopper.bmp \
+	${bindir}/${PN}-${PV}/examples/minimal \
+	${bindir}/${PN}-${PV}/examples/benchmark_model \
 "
 
 FILES_${PN}-examples-dbg = " \
