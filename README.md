@@ -28,9 +28,9 @@ project requirements.
 
 
 Supported AI tools:
-- TensorFlow v1.2.0  
-- TensorFlow Lite v1.7.0  
-- Caffe2 v0.7.0  
+- TensorFlow v1.10.0  
+- TensorFlow Lite v1.10.0  
+- Caffe2 v0.8.1  
 
 
 Supported Platforms:  
