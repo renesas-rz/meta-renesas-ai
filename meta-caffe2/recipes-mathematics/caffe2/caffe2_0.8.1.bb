@@ -18,7 +18,7 @@ SRC_URI = " \
 	file://0002-Always-use-third_party-eigen.patch \
 "
 
-SRCREV = "21d0d7674c2902f2fddb5661da4ba029c995c9c9"
+SRCREV = "32f023fe8c0a0327f8f14b1c041536a7c6b1f4ec"
 
 FILES_${PN} += " \
 	/usr/caffe/* \
