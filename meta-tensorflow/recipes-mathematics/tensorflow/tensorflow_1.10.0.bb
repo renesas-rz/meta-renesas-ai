@@ -1,21 +1,26 @@
 DESCRIPTION = "TensorFlow C/C++ Libraries"
 LICENSE = "Apache-2.0"
-LIC_FILES_CHKSUM = "file://LICENSE;md5=e74df23890b9521cc481e3348863e45d"
+LIC_FILES_CHKSUM = "file://LICENSE;md5=01e86893010a1b87e69a213faa753ebd"
 
-DEPENDS = "bazel-native"
+DEPENDS = "bazel-native protobuf-native protobuf"
 RDEPENDS_${PN}-dev += "libeigen-dev protobuf-dev"
 PACKAGES += "${PN}-examples ${PN}-examples-dbg"
 
 S = "${WORKDIR}/git"
 
-SRCREV = "12f033df4c8fa3feb88ce936eb1581eaa92b303e"
+SRCREV = "656e7a2b347c3c6eb76a6c130ed4b1def567b6c1"
 
 SRC_URI = " \
-	git://github.com/tensorflow/tensorflow.git;branch=master \
-	file://TensorFlow-common-platform.patch \
+	git://github.com/tensorflow/tensorflow.git;branch=r1.10 \
 	file://TensorFlow-crosscompile-arm.patch \
-	file://TensorFlow-neon-eigen.patch \
-	file://TensorFlow-neon-alignment.patch \
+	file://Add-generic-arm-platform-support-in-tensorflow-workspace.patch \
+	file://Fix-all-compilation-errors-from-undefined-functions-in-j.patch \
+	file://Fix-alignment-issue-when-neon-is-enabled.patch \
+	file://Remove-python-support-from-label_image-example-applicati.patch \
+	file://Patching-eigen-library-on-the-fly-via-bazel.patch \
+	file://Patching-nsync-library-on-the-fly-via-bazel.patch \
+	file://Fix-eigen-header-compiler-crash.patch;apply=no \
+	file://Fix-alignment-issue-in-arm-neon-platform.patch;apply=no \
 "
 
 COMPATIBLE_MACHINE = "(iwg20m|iwg21m|iwg22m)"
@@ -40,7 +45,26 @@ do_configure () {
 	mkdir -p ${WORKDIR}/output_base
 
 	export JAVA_HOME=${STAGING_BINDIR_NATIVE}/openjdk-1.8-native
-	yes ''| ./configure
+	(TF_NEED_JEMALLOC=0 \
+	 TF_NEED_GCP=0 \
+ 	 TF_NEED_CUDA=0 \
+ 	 TF_NEED_S3=0 \
+ 	 TF_NEED_HDFS=0 \
+ 	 TF_NEED_KAFKA=0 \
+ 	 TF_NEED_OPENCL_SYCL=0 \
+ 	 TF_NEED_OPENCL=0 \
+  	 TF_CUDA_CLANG=0 \
+ 	 TF_DOWNLOAD_CLANG=0 \
+  	 TF_ENABLE_XLA=0 \
+ 	 TF_NEED_GDR=0 \
+ 	 TF_NEED_VERBS=0 \
+ 	 TF_NEED_MPI=0 \
+ 	 TF_NEED_AWS=0 \
+ 	 TF_SET_ANDROID_WORKSPACE=0 \
+	./configure)
+
+	cp ${WORKDIR}/Fix-eigen-header-compiler-crash.patch ${S}/third_party/
+	cp ${WORKDIR}/Fix-alignment-issue-in-arm-neon-platform.patch ${S}/third_party/
 }
 
 do_compile () {
@@ -52,35 +76,42 @@ do_compile () {
 	export JAVA_HOME=${STAGING_BINDIR_NATIVE}/openjdk-1.8-native
 
 	bazel $BAZEL_FLAGS build \
+		--config=monolithic \
 		-c opt \
-		tensorflow:libtensorflow.so \
+		--copt=-DARM_NON_MOBILE \
 		--cpu=armeabi-v7a \
 		--crosstool_top=//tools/arm_compiler:toolchain \
-		--verbose_failures
+		--verbose_failures \
+		tensorflow:libtensorflow.so
 
 	bazel $BAZEL_FLAGS build \
+		--config=monolithic \
 		-c opt \
-		tensorflow:libtensorflow_cc.so \
+		--copt=-DARM_NON_MOBILE \
 		--cpu=armeabi-v7a \
 		--crosstool_top=//tools/arm_compiler:toolchain \
-		--verbose_failures
+		--verbose_failures \
+		tensorflow:libtensorflow_cc.so
 
         bazel $BAZEL_FLAGS build \
-		tensorflow/examples/label_image/... \
+		--config=monolithic \
 		-c opt \
+		--copt=-DARM_NON_MOBILE \
 		--cpu=armeabi-v7a \
 		--crosstool_top=//tools/arm_compiler:toolchain \
-		--verbose_failures
+		--verbose_failures \
+		tensorflow/examples/label_image/...
 }
 
 do_install () {
 	install -d ${D}${libdir}
+
 	install -m 0555 \
-		${S}/bazel-out/${HOST_PREFIX}opt/bin/tensorflow/libtensorflow*.so \
+		${S}/bazel-bin/tensorflow/libtensorflow*.so \
 		${D}${libdir}
 
 	install -d ${D}${includedir}/tensorflow
-	cd ${S}/bazel-out/${HOST_PREFIX}opt/genfiles/tensorflow
+	cd ${S}/bazel-genfiles/tensorflow
 	cp --parents \
 		$(find . -name "*.h*") \
 		${D}${includedir}/tensorflow
@@ -93,9 +124,11 @@ do_install () {
 		${D}/usr/src/debug/tensorflow
 
 	install -d ${D}${bindir}/${PN}-${PV}/examples
+
 	install -m 0555 \
-		${S}/bazel-out/${HOST_PREFIX}opt/bin/tensorflow/examples/label_image/label_image \
+		${S}/bazel-bin/tensorflow/examples/label_image/label_image \
 		${D}${bindir}/${PN}-${PV}/examples
+
 	install -m 0644 \
 		${S}/tensorflow/examples/label_image/data/grace_hopper.jpg \
 		${D}${bindir}/${PN}-${PV}/examples

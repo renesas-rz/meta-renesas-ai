@@ -92,23 +92,6 @@ index 0000000..262a0ea
 +    ':as',
 +  ],
 +)
-diff --git a/WORKSPACE b/WORKSPACE
-index b2d6fb5..59e0cf1 100644
---- a/WORKSPACE
-+++ b/WORKSPACE
-@@ -16,6 +16,12 @@ closure_repositories()
- 
- load("//tensorflow:workspace.bzl", "tf_workspace")
- 
-+new_local_repository(
-+    name = "arm_compiler",
-+    path = "%%CT_ROOT_DIR%%",
-+    build_file = "BUILD.arm_compiler",
-+)
-+
- # Uncomment and update the paths in these entries to build the Android demo.
- #android_sdk_repository(
- #    name = "androidsdk",
 diff --git a/tools/arm_compiler/BUILD b/tools/arm_compiler/BUILD
 new file mode 100644
 index 0000000..04f3abe

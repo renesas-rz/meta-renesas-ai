@@ -1,0 +1,33 @@
+From d782684dbfd74c83ae441097bcaa78aa841da796 Mon Sep 17 00:00:00 2001
+From: Jianming Qiao <jianming.qiao@bp.renesas.com>
+Date: Wed, 22 Aug 2018 11:04:29 +0100
+Subject: [PATCH] Fix alignment issue in Arm neon platform
+
+The original code does the pointer type conversion from one weak
+alignment requirement to another strong alignment requirement,
+however, lacking the alignment consideration.
+
+The original code might work in 64-bit enviroment, but will crash on
+a 32-bit platfrom with an alignment requirement.
+
+Signed-off-by: Jianming Qiao <jianming.qiao@bp.renesas.com>
+---
+ internal/sem.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/internal/sem.h b/internal/sem.h
+index b58ce96..8f48c05 100644
+--- a/internal/sem.h
++++ b/internal/sem.h
+@@ -23,7 +23,7 @@
+ NSYNC_CPP_START_
+ 
+ typedef struct nsync_semaphore_s_ {
+-	void *sem_space[32]; /* space used by implementation */
++	alignas(void *) alignas(alignof(max_align_t)) void *sem_space[32]; /* space used by implementation */
+ } nsync_semaphore;
+ 
+ /* Initialize *s; the initial value is 0. */
+-- 
+2.7.4
+

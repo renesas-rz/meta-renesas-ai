@@ -2,11 +2,10 @@ DESCRIPTION = "Bazel build and test tool"
 LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=3b83ef96387f14655fc854ddc3c6bd57"
 
-SRC_URI[md5sum] = "1f1227ff947dd30fd42d5490f9209775"
-SRC_URI[sha256sum] = "2418c619bdd44257a170b85b9d2ecb75def29e751b725e27186468ada2e009ea"
-SRC_URI = " \
-	https://github.com/bazelbuild/bazel/releases/download/${PV}/bazel-${PV}-dist.zip \
-"
+SRC_URI[md5sum] = "fb6b928b62f068697bd66ad6d13aad53"
+SRC_URI[sha256sum] = "c3b716e6625e6b8c323350c95cd3ae0f56aeb00458dddd10544d5bead8a7b602"
+
+SRC_URI = " https://github.com/bazelbuild/bazel/releases/download/${PV}/bazel-${PV}-dist.zip "
 
 inherit native
 

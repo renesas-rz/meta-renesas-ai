@@ -1,0 +1,31 @@
+From 7bdceebc7a50601cdc95cafe97d0d71087ab8299 Mon Sep 17 00:00:00 2001
+From: Jianming Qiao <jianming.qiao@bp.renesas.com>
+Date: Fri, 17 Aug 2018 02:09:16 +0100
+Subject: [PATCH] Add generic Arm Platform support in TensorFlow Workspace
+ File
+
+Signed-off-by: Jianming Qiao <jianming.qiao@bp.renesas.com>
+---
+ WORKSPACE | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/WORKSPACE b/WORKSPACE
+index 1796182..0e24c3b 100644
+--- a/WORKSPACE
++++ b/WORKSPACE
+@@ -22,6 +22,12 @@ check_bazel_version_at_least("0.15.0")
+ 
+ load("//tensorflow:workspace.bzl", "tf_workspace")
+ 
++new_local_repository(
++    name = "arm_compiler",
++    path = "%%CT_ROOT_DIR%%",
++    build_file = "BUILD.arm_compiler",
++)
++
+ load("//third_party/android:android_configure.bzl", "android_configure")
+ android_configure(name="local_config_android")
+ load("@local_config_android//:android.bzl", "android_workspace")
+-- 
+1.9.1
+

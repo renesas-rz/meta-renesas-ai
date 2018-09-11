@@ -1,0 +1,34 @@
+From 91177fa0b042b47e3477aee49b0f2681463f10d3 Mon Sep 17 00:00:00 2001
+From: Jianming Qiao <jianming.qiao@bp.renesas.com>
+Date: Thu, 16 Aug 2018 15:35:38 +0100
+Subject: [PATCH] Fix alignment issue when Neon is enabled
+
+On 32-bit platforms pointers will not be 64-bit aligned automatically.
+The original code will only work on 64-bit platforms or 32-bit
+platforms without neon support. The fix is to add proper alignment
+based on the actual template type parameter, which is C++11
+compatible.
+
+Signed-off-by: Jianming Qiao <jianming.qiao@bp.renesas.com>
+---
+ tensorflow/core/lib/gtl/inlined_vector.h | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
+
+diff --git a/tensorflow/core/lib/gtl/inlined_vector.h b/tensorflow/core/lib/gtl/inlined_vector.h
+index 2011f7d..2737c7a 100644
+--- a/tensorflow/core/lib/gtl/inlined_vector.h
++++ b/tensorflow/core/lib/gtl/inlined_vector.h
+@@ -283,9 +283,7 @@ class InlinedVector {
+   static const size_t kFit = (kFit1 >= kSentinel) ? (kSentinel - 1) : kFit1;
+ 
+   union {
+-    unsigned char data[kSize];
+-    // Force data to be aligned enough for a pointer.
+-    T* unused_aligner;
++    alignas(T) unsigned char data[kSize];
+   } u_;
+ 
+   inline void InitRep() { u_.data[kSize - 1] = 0; }
+-- 
+2.7.4
+

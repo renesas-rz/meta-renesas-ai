@@ -1,0 +1,30 @@
+From bc81bcbc22fd3ae5341d176048c0494543adae22 Mon Sep 17 00:00:00 2001
+From: Jianming Qiao <jianming.qiao@bp.renesas.com>
+Date: Thu, 16 Aug 2018 23:56:59 +0100
+Subject: [PATCH] Fix Eigen header compiler crash
+
+Inspired from Internal Compiler Error:
+Segmentation Fault - veyron_fievel SimpleChrome at
+https://bugs.chromium.org/p/chromium/issues/detail?id=675648
+
+Signed-off-by: Jianming Qiao <jianming.qiao@bp.renesas.com>
+---
+ unsupported/Eigen/src/MatrixFunctions/MatrixFunction.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/unsupported/Eigen/src/MatrixFunctions/MatrixFunction.h b/unsupported/Eigen/src/MatrixFunctions/MatrixFunction.h
+index ef50c46..42a74ee 100644
+--- a/unsupported/Eigen/src/MatrixFunctions/MatrixFunction.h
++++ b/unsupported/Eigen/src/MatrixFunctions/MatrixFunction.h
+@@ -43,7 +43,7 @@ class MatrixFunctionAtomic
+       * \param[in]  A  argument of matrix function, should be upper triangular and atomic
+       * \returns  f(A), the matrix function evaluated at the given matrix
+       */
+-    MatrixType compute(const MatrixType& A);
++    MatrixType compute(const MatrixType& A) __attribute__((optimize ("O2")));
+ 
+   private:
+     StemFunction* m_f;
+-- 
+1.9.1
+
