@@ -48,11 +48,8 @@ installation" section of:
 **https://www.tensorflow.org/install/install_c**
 
 
----
-
-**Note**  
-When using TensorFlow with the iwg22m platform one should take note of the fact
-that there is only 512MB of memory available. Out of memory errors will occur
-when using larger models.
-
----
+## Notes ##
+**Using Large Models**  
+Due to the limited memory size on some platforms, large pre-trained models could
+cause out of memory issues. To overcome this memory limitation, a swap file can
+used. Please see the top level *README.md* file for details.

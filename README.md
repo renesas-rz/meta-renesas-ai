@@ -1,4 +1,4 @@
-# meta-renesas-ai
+# meta-renesas-ai #
 This OpenEmbedded/Yocto layer collector adds AI tools support to Renesas RZ/G1
 platforms.
 
@@ -41,10 +41,30 @@ Supported Platforms:
 
 ---
 
-**Note**  
+## Notes ##
+**Proxies**  
 If working behind a proxy, make sure the environment of the shell you are
 running bitbake from contains *HTTP\_PROXY* and *HTTPS\_PROXY* environment
 variables, set according to your proxy configuration.
+
+
+**Using Large Models**  
+Due to the limited memory size on some platforms, large pre-trained models could
+cause out of memory issues. To overcome this memory limitation, a swap file can
+used.  
+To include swap support add the following to local.conf:  
+```
+IMAGE_INSTALL_append = " mkswap"
+```
+
+
+By default, this will create and enable a 2048 MB swapfile.  
+
+
+If needed, the size of the swap file can be set (in MB) in local.conf:  
+```
+SWAP_SIZE = "512"
+```
 
 ---
 
