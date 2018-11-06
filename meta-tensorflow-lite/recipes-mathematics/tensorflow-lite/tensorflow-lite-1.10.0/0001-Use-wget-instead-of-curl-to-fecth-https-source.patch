@@ -1,0 +1,32 @@
+From 7b55baedbecc14ff33ed46cdfa8b2ce1ca0b4649 Mon Sep 17 00:00:00 2001
+From: Jianming Qiao <jianming.qiao@bp.renesas.com>
+Date: Mon, 5 Nov 2018 20:29:55 +0000
+Subject: [PATCH 1/1] Use wget instead of curl to fecth https source
+
+Signed-off-by: Jianming Qiao <jianming.qiao@bp.renesas.com>
+---
+ tensorflow/contrib/lite/download_dependencies.sh | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/tensorflow/contrib/lite/download_dependencies.sh b/tensorflow/contrib/lite/download_dependencies.sh
+index 8c7df47..ed97749 100755
+--- a/tensorflow/contrib/lite/download_dependencies.sh
++++ b/tensorflow/contrib/lite/download_dependencies.sh
+@@ -61,12 +61,12 @@ download_and_extract() {
+   echo "downloading ${url}" >&2
+   mkdir -p "${dir}"
+   if [[ "${url}" == *gz ]]; then
+-    curl -Ls "${url}" | tar -C "${dir}" --strip-components=1 -xz
++    wget -qO- "${url}" | tar xz --strip-components=1 -C "${dir}"
+   elif [[ "${url}" == *zip ]]; then
+     tempdir=$(mktemp -d)
+     tempdir2=$(mktemp -d)
+ 
+-    curl -L ${url} > ${tempdir}/zipped.zip
++    wget ${url} -O ${tempdir}/zipped.zip
+     unzip ${tempdir}/zipped.zip -d ${tempdir2}
+ 
+     # If the zip file contains nested directories, extract the files from the
+-- 
+2.7.4
+

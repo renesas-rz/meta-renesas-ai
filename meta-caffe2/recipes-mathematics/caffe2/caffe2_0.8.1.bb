@@ -16,6 +16,7 @@ SRC_URI = " \
 	git://github.com/caffe2/caffe2.git \
 	file://0001-Remove-unwind-symbol.patch \
 	file://0002-Always-use-third_party-eigen.patch \
+	file://0001-Fix-compilation-errors-when-using-GCC-7.2.1.patch \
 "
 
 SRCREV = "32f023fe8c0a0327f8f14b1c041536a7c6b1f4ec"
@@ -64,6 +65,7 @@ EXTRA_OECMAKE = " \
 	-DPYTHON_EXECUTABLE=${STAGING_BINDIR_NATIVE}/python-native/python2.7 \
 	-DBUILD_TEST=OFF \
 	-DUSE_NCCL=ON \
+	-DCMAKE_CXX_IMPLICIT_INCLUDE_DIRECTORIES=${STAGING_INCDIR} \
 "
 
 addtask do_fetch_fixup after do_unpack before do_patch

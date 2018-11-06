@@ -11,6 +11,7 @@ SRC_URI = " \
 	file://0001-Tailor-our-own-Makefile-for-arm-cross-compilation.patch \
 	file://0001-Fix-compilation-error-when-compiling-benchmark_model.patch \
 	file://0001-Check-NEON-support.patch \
+	file://0001-Use-wget-instead-of-curl-to-fecth-https-source.patch \
 "
 
 COMPATIBLE_MACHINE = "(iwg20m|iwg21m|iwg22m)"
@@ -19,9 +20,13 @@ S = "${WORKDIR}/git"
 
 PACKAGES += "${PN}-examples ${PN}-examples-dbg"
 
+DEPENDS = "gzip-native unzip-native"
+
 do_configure(){
 	export HTTP_PROXY=${HTTP_PROXY}
 	export HTTPS_PROXY=${HTTPS_PROXY}
+	export http_proxy=${HTTP_PROXY}
+	export https_proxy=${HTTPS_PROXY}
 
 	${S}/tensorflow/contrib/lite/download_dependencies.sh
 }

@@ -1,0 +1,65 @@
+From 531cd79b5f3dad74377a551e930c374d05d88c76 Mon Sep 17 00:00:00 2001
+From: Jianming Qiao <jianming.qiao@bp.renesas.com>
+Date: Tue, 23 Oct 2018 19:59:45 +0100
+Subject: [PATCH 1/1] Fix compilation erros when using GCC 7.2.1
+
+This patch is inspired from https://raw.githubusercontent.com/yuriaisaka/nixpkgs/ \
+e559fa19f319c0208fc27261faa479a8abec2d00/pkgs/development/libraries/science/math/ \
+caffe2/fix_compilation_on_gcc7.patch
+
+Signed-off-by: Jianming Qiao <jianming.qiao@bp.renesas.com>
+---
+ caffe2/operators/recurrent_network_op.cc | 2 +-
+ caffe2/operators/recurrent_network_op.h  | 4 ++--
+ caffe2/queue/queue_ops.h                 | 9 +++------
+ 3 files changed, 6 insertions(+), 9 deletions(-)
+
+diff --git a/caffe2/operators/recurrent_network_op.cc b/caffe2/operators/recurrent_network_op.cc
+index dd4fded..5995e8a 100644
+--- a/caffe2/operators/recurrent_network_op.cc
++++ b/caffe2/operators/recurrent_network_op.cc
+@@ -1,4 +1,4 @@
+-#include "recurrent_network_op.h"
++#include "caffe2/operators/recurrent_network_op.h"
+ #include "caffe2/core/workspace.h"
+ 
+ namespace caffe2 {
+diff --git a/caffe2/operators/recurrent_network_op.h b/caffe2/operators/recurrent_network_op.h
+index 55328e5..ea898bc 100644
+--- a/caffe2/operators/recurrent_network_op.h
++++ b/caffe2/operators/recurrent_network_op.h
+@@ -762,8 +762,8 @@ class AccumulateInputGradientOp : public Operator<Context> {
+   USE_OPERATOR_CONTEXT_FUNCTIONS;
+ 
+   bool RunOnDevice() override {
+-    const auto t =
+-        OperatorBase::Input<Tensor<CPUContext>>(0).template data<int32_t>()[0];
++    const auto& t0 = OperatorBase::Input<Tensor<CPUContext>>(0);
++    const auto t = t0.template data<int32_t>()[0];
+     auto& og = Input(1);
+     auto* g = Output(0);
+ 
+diff --git a/caffe2/queue/queue_ops.h b/caffe2/queue/queue_ops.h
+index f2c0a33..642343f 100644
+--- a/caffe2/queue/queue_ops.h
++++ b/caffe2/queue/queue_ops.h
+@@ -17,13 +17,10 @@ class CreateBlobsQueueOp final : public Operator<Context> {
+         name(operator_def.output().Get(0)) {}
+ 
+   bool RunOnDevice() override {
+-    const auto capacity =
+-        OperatorBase::template GetSingleArgument<int>("capacity", 1);
+-    const auto numBlobs =
+-        OperatorBase::template GetSingleArgument<int>("num_blobs", 1);
++    const auto capacity = GetSingleArgument("capacity", 1);
++    const auto numBlobs = GetSingleArgument("num_blobs", 1);
+     const auto enforceUniqueName =
+-        OperatorBase::template GetSingleArgument<int>(
+-            "enforce_unique_name", false);
++        GetSingleArgument("enforce_unique_name", false);
+     const auto fieldNames =
+         OperatorBase::template GetRepeatedArgument<std::string>("field_names");
+     CAFFE_ENFORCE_EQ(this->OutputSize(), 1);
+-- 
+2.7.4
+

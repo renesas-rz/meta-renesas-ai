@@ -2,7 +2,7 @@ DESCRIPTION = "TensorFlow C/C++ Libraries"
 LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=01e86893010a1b87e69a213faa753ebd"
 
-DEPENDS = "bazel-native protobuf-native protobuf"
+DEPENDS = "bazel-native protobuf-native util-linux-native protobuf"
 RDEPENDS_${PN}-dev += "libeigen-dev protobuf-dev"
 PACKAGES += "${PN}-examples ${PN}-examples-dbg"
 
@@ -43,6 +43,11 @@ do_configure () {
 	unset $(printenv | cut -d "=" -f1 | grep -v '^PATH$')
 
 	mkdir -p ${WORKDIR}/output_base
+
+	# Let zip adjust the entry offsets stored in the
+	# archive to take into account the "preamble" data in
+	# self-extracting executable archive (bazel)
+	zip -A ${STAGING_BINDIR_NATIVE}/bazel
 
 	export JAVA_HOME=${STAGING_BINDIR_NATIVE}/openjdk-1.8-native
 	(TF_NEED_JEMALLOC=0 \
