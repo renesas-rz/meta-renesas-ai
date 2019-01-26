@@ -1,0 +1,29 @@
+From d5241ab320835110055aa34381206d1b88b4ae82 Mon Sep 17 00:00:00 2001
+From: Jianming Qiao <jianming.qiao@bp.renesas.com>
+Date: Sat, 2 Feb 2019 23:30:43 +0000
+Subject: [PATCH 1/1] Remove the input tensor's dimension check.
+
+The current code will check the input tensor's shape size.
+It will force to crash the application if the input tensor's shape is more than 1.
+However,the check is redundant because the code only uses the first element.
+
+Signed-off-by: Jianming Qiao <jianming.qiao@bp.renesas.com>
+---
+ src/armnnTfLiteParser/TfLiteParser.cpp | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/src/armnnTfLiteParser/TfLiteParser.cpp b/src/armnnTfLiteParser/TfLiteParser.cpp
+index 89c72c5..aa5db1e 100644
+--- a/src/armnnTfLiteParser/TfLiteParser.cpp
++++ b/src/armnnTfLiteParser/TfLiteParser.cpp
+@@ -1065,7 +1065,6 @@ void TfLiteParser::ParseReshape(size_t subgraphIndex, size_t operatorIndex)
+     CHECK_MODEL(m_Model, subgraphIndex, operatorIndex);
+ 
+     auto inputs = GetInputs(m_Model, subgraphIndex, operatorIndex);
+-    CHECK_VALID_SIZE(inputs.size(), 1);
+ 
+     auto outputs = GetOutputs(m_Model, subgraphIndex, operatorIndex);
+     CHECK_VALID_SIZE(outputs.size(), 1);
+-- 
+2.7.4
+
