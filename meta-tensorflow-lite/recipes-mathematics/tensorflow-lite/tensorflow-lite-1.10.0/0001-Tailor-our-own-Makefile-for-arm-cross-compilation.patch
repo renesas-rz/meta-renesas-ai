@@ -1,12 +1,12 @@
-From 9c544fb855390bbbf8bf1a415448983e4ed34796 Mon Sep 17 00:00:00 2001
+From 3e7b58c3019ba908c4b4e3e929c0b884f9064f4c Mon Sep 17 00:00:00 2001
 From: Jianming Qiao <jianming.qiao@bp.renesas.com>
-Date: Mon, 3 Sep 2018 17:01:55 +0100
+Date: Sun, 27 Jan 2019 00:02:53 +0000
 Subject: [PATCH 1/1] Tailor our own Makefile for arm cross-compilation
 
 This Makefile supports cross-compilation for the following:
 1. Tensorflow Lite static library
 2. label_image application(An example code for image classification)
-3. benchmark application(An example code for benchmarking Tensorflow Lite model)
+3. benchmark application with profiling feature(An example code for benchmarking Tensorflow Lite model)
 4. minimal application(An example code for parsing model information)
 
 The content of file tensorflow/contrib/lite/Makefile.internal has
@@ -27,7 +27,7 @@ Signed-off-by: Jianming Qiao <jianming.qiao@bp.renesas.com>
 
 diff --git a/tensorflow/contrib/lite/Makefile.internal b/tensorflow/contrib/lite/Makefile.internal
 new file mode 100644
-index 0000000..88d6bcb
+index 0000000..ae17b15
 --- /dev/null
 +++ b/tensorflow/contrib/lite/Makefile.internal
 @@ -0,0 +1,183 @@
@@ -44,7 +44,7 @@ index 0000000..88d6bcb
 +
 +# Settings for the host compiler.
 +CXX ?= $(TOOLCHAIN_PATH)/bin/$(CC_PREFIX)-gcc
-+CXXFLAGS += --std=c++11 -O3 -DNDEBUG
++CXXFLAGS += --std=c++11 -O3 -DNDEBUG -DTFLITE_PROFILING_ENABLED
 +CC ?= $(TOOLCHAIN_PATH)/bin/$(CC_PREFIX)-gcc
 +CFLAGS ?= -O3 -DNDEBUG
 +ARFLAGS ?= -r

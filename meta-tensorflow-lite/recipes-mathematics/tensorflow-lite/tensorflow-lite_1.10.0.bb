@@ -13,6 +13,7 @@ SRC_URI = " \
 	file://0001-Check-NEON-support.patch \
 	file://0001-Use-wget-instead-of-curl-to-fecth-https-source.patch \
 "
+PR = "r1"
 
 COMPATIBLE_MACHINE = "(iwg20m|iwg21m|iwg22m)"
 
