@@ -76,7 +76,6 @@ do_fetch_fixup () {
 	cd ${S}
 	git submodule deinit -f third_party/NNPACK
 	git submodule deinit -f third_party/benchmark
-	git submodule deinit -f third_party/cub
 	git submodule deinit -f third_party/eigen
 	git submodule deinit -f third_party/gloo
 	git submodule deinit -f third_party/googletest
@@ -85,17 +84,15 @@ do_fetch_fixup () {
 	git submodule deinit -f third_party/protobuf
 	git submodule deinit -f third_party/pybind11
 	git rm -rf third_party/cub
+	git rm -rf third_party/nervanagpu
 	sed -i "s|https://github.com/RLovelett/eigen.git|https://github.com/eigenteam/eigen-git-mirror.git|g" .gitmodules
+	sed -i '/nervanagpu/d' .gitmodules
 	git add .gitmodules
 	git commit -m "Fixup for broken dependencies"
 	git submodule init
 	git submodule update
-	git submodule add --force https://github.com/NVlabs/cub.git third_party/cub
-	git add .gitmodules
-	git commit -m "Add third_party/cub"
 	cd third_party/NNPACK 		&& git checkout 087269189207a63ab7084e6925ea511d8952fa59 && cd ../..
 	cd third_party/benchmark/ 	&& git checkout 491360b833aaab96818dce256a8409f6296dd995 && cd ../..
-	cd third_party/cub/ 		&& git checkout 285aeebaa34b0e8a7670867a2e66c1a52d998d6a && cd ../..
 	cd third_party/eigen/ 		&& git checkout 4e79cb69b9425f5f8c3a84be4350d4ab75b5fd9d && cd ../..
 	cd third_party/gloo/ 		&& git checkout 9b2c046e5f7d4a8ec61598d382838a8f6867a1d4 && cd ../..
 	cd third_party/googletest/ 	&& git checkout 69e48e92de43960a316a826293510b7b3deb9eca && cd ../..
