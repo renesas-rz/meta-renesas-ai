@@ -15,7 +15,7 @@ SRC_URI = " \
 "
 PR = "r1"
 
-COMPATIBLE_MACHINE = "(iwg20m|iwg21m|iwg22m)"
+COMPATIBLE_MACHINE = "(iwg20m-g1m|iwg21m|iwg22m)"
 
 S = "${WORKDIR}/git"
 

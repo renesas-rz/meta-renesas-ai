@@ -23,7 +23,7 @@ SRC_URI = " \
 	file://Fix-alignment-issue-in-arm-neon-platform.patch;apply=no \
 "
 
-COMPATIBLE_MACHINE = "(iwg20m|iwg21m|iwg22m)"
+COMPATIBLE_MACHINE = "(iwg20m-g1m|iwg21m|iwg22m)"
 
 export BAZEL_FLAGS="--output_base ${WORKDIR}/output_base"
 

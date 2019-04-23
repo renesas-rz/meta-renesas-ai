@@ -23,7 +23,7 @@ PACKAGES += "${PN}-examples ${PN}-examples-dbg \
              ${PN}-onnx-dev \
 "
 
-COMPATIBLE_MACHINE = "(iwg20m|iwg21m|iwg22m)"
+COMPATIBLE_MACHINE = "(iwg20m-g1m|iwg21m|iwg22m)"
 
 inherit PyHelper
 

@@ -18,7 +18,7 @@ SRC_URI = " \
 	file://0001-Adding-support-for-building-Arm-CL-with-Scons.patch \
 "
 
-COMPATIBLE_MACHINE = "(iwg20m|iwg21m|iwg22m)"
+COMPATIBLE_MACHINE = "(iwg20m-g1m|iwg21m|iwg22m)"
 
 S = "${WORKDIR}/git"
 

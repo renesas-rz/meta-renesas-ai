@@ -6,7 +6,7 @@ platforms.
 The layers should be used with the official Renesas RZ/G Yocto Poky BSP based
 on the CIP Kernel:  
 URI: **https://github.com/renesas-rz/meta-renesas.git**  
-Revision: certified-linux-v2.1.0 (2533997eedd4905c6e43ec3dfb338b20f335bfb5)
+Revision: certified-linux-v2.1.1 (3010443641f9a14d2f2a8044ddaa433c2eef2ea1)
 
 
 For each AI tool, please refer to **meta-${AI\_TOOL\_NAME}/README.md**. For
