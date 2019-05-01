@@ -1,6 +1,6 @@
-From 0e44182f6758f0b1bcca1716db581be5905159d0 Mon Sep 17 00:00:00 2001
+From 7ece0c9e1579f3fbba028fea071f011b1f2c1bb0 Mon Sep 17 00:00:00 2001
 From: Jianming Qiao <jianming.qiao@bp.renesas.com>
-Date: Thu, 28 Mar 2019 00:54:39 +0000
+Date: Wed, 1 May 2019 22:56:27 +0100
 Subject: [PATCH 1/1] Add generic Arm NN SDK inference framework and test code
 
 A C++ framework and test that is able to seperate the original
@@ -12,16 +12,16 @@ Armnn test framework class into following four independent steps:
 
 Signed-off-by: Jianming Qiao <jianming.qiao@bp.renesas.com>
 ---
- tests/CMakeLists.txt                              |  28 ++
- tests/RenesasSample-Armnn/RenesasSample-Armnn.cpp | 409 ++++++++++++++++++++++
- 2 files changed, 437 insertions(+)
+ tests/CMakeLists.txt                              |  29 ++
+ tests/RenesasSample-Armnn/RenesasSample-Armnn.cpp | 435 ++++++++++++++++++++++
+ 2 files changed, 464 insertions(+)
  create mode 100644 tests/RenesasSample-Armnn/RenesasSample-Armnn.cpp
 
 diff --git a/tests/CMakeLists.txt b/tests/CMakeLists.txt
-index 9815537..6b28e26 100644
+index 9913321..9f9aec6 100644
 --- a/tests/CMakeLists.txt
 +++ b/tests/CMakeLists.txt
-@@ -208,6 +208,18 @@ if (BUILD_CAFFE_PARSER OR BUILD_TF_PARSER OR BUILD_TF_LITE_PARSER OR BUILD_ONNX_
+@@ -245,6 +245,18 @@ if (BUILD_ARMNN_SERIALIZER OR BUILD_CAFFE_PARSER OR BUILD_TF_PARSER OR BUILD_TF_
      set(ExecuteNetwork_sources
          ExecuteNetwork/ExecuteNetwork.cpp)
  
@@ -40,8 +40,12 @@ index 9815537..6b28e26 100644
      add_executable_ex(ExecuteNetwork ${ExecuteNetwork_sources})
      target_include_directories(ExecuteNetwork PRIVATE ../src/armnn)
      target_include_directories(ExecuteNetwork PRIVATE ../src/armnnUtils)
-@@ -215,26 +227,42 @@ if (BUILD_CAFFE_PARSER OR BUILD_TF_PARSER OR BUILD_TF_LITE_PARSER OR BUILD_ONNX_
+@@ -252,29 +264,46 @@ if (BUILD_ARMNN_SERIALIZER OR BUILD_CAFFE_PARSER OR BUILD_TF_PARSER OR BUILD_TF_
  
+     if (BUILD_ARMNN_SERIALIZER)
+         target_link_libraries(ExecuteNetwork armnnSerializer)
++        target_link_libraries(RenesasSample-Armnn armnnSerializer)
+     endif()
      if (BUILD_CAFFE_PARSER)
          target_link_libraries(ExecuteNetwork armnnCaffeParser)
 +        target_link_libraries(RenesasSample-Armnn armnnCaffeParser)
@@ -85,10 +89,10 @@ index 9815537..6b28e26 100644
  endif()
 diff --git a/tests/RenesasSample-Armnn/RenesasSample-Armnn.cpp b/tests/RenesasSample-Armnn/RenesasSample-Armnn.cpp
 new file mode 100644
-index 0000000..da359b1
+index 0000000..6378c30
 --- /dev/null
 +++ b/tests/RenesasSample-Armnn/RenesasSample-Armnn.cpp
-@@ -0,0 +1,409 @@
+@@ -0,0 +1,435 @@
 +﻿/* 
 + * Copyright (C) 2019 Renesas Electronics Corp. 
 + * This file is licensed under the terms of the MIT License
@@ -124,6 +128,7 @@ index 0000000..da359b1
 +#include <boost/algorithm/string/split.hpp>
 +#include <boost/algorithm/string/classification.hpp>
 +#include <boost/program_options.hpp>
++#include <boost/variant.hpp>
 +
 +#include <iostream>
 +#include <fstream>
@@ -159,6 +164,7 @@ index 0000000..da359b1
 +    std::map<float,int> resultMap;
 +
 +    int index = 0;
++    
 +    for (const auto & o : output)
 +    {
 +        float prob = ToFloat<TDataType>::Convert(o, quantParams);
@@ -234,6 +240,12 @@ index 0000000..da359b1
 +        return EXIT_FAILURE;
 +    }
 +
++    using TContainer = boost::variant<std::vector<float>, std::vector<int>, std::vector<unsigned char>>;
++
++    std::vector<TContainer> inputDataContainers;
++
++    std::vector<TContainer> outputDataContainers;
++
 +    std::vector<ImageSet> imageSet =
 +    {
 +        {inputImageName, 0},
@@ -245,17 +257,15 @@ index 0000000..da359b1
 +        typename InferenceModel<TParser, TDataType>::Params params;
 +        params.m_ModelPath = modelPath;
 +        params.m_IsModelBinary = true;
-+        params.m_InputBinding = inputName;
-+        params.m_InputTensorShape = inputTensorShape;
-+        params.m_OutputBinding = outputName;
++        params.m_InputBindings.push_back(std::string(inputName));
++        params.m_InputShapes.push_back(*inputTensorShape);
++        params.m_OutputBindings.push_back(outputName);
 +        params.m_EnableProfiling = enableProfiling;
 +        params.m_SubgraphId = subgraphId;
-+        params.m_ComputeDevice = {armnn::Compute::CpuAcc};
++        params.m_ComputeDevices = {armnn::Compute::CpuAcc};
 +        InferenceModel<TParser, TDataType> model(params, runtime);
 +
 +        // Executes the model.
-+        std::vector<TDataType> output(model.GetOutputSize());
-+
 +        std::unique_ptr<ClassifierTestCaseData<TDataType>> TestCaseData;
 +
 +        if(isFloatModel)
@@ -273,6 +283,8 @@ index 0000000..da359b1
 +                ImagePreprocessor<TDataType> Image(inputTensorDataFilePath,inputImageWidth,inputImageHeight,imageSet);
 +                TestCaseData = Image.GetTestCaseData(0);
 +            }
++
++            outputDataContainers.push_back(std::vector<float>(model.GetOutputSize()));
 +        }
 +        else
 +        {
@@ -285,10 +297,15 @@ index 0000000..da359b1
 +						inputBinding.second.GetQuantizationOffset());
 +
 +            TestCaseData = Image.GetTestCaseData(0);
++            
++            outputDataContainers.push_back(std::vector<uint8_t>(model.GetOutputSize()));
++
 +        }
 +
++        inputDataContainers.push_back(TestCaseData->m_InputImage);
++
 +        //warm up
-+        model.Run(TestCaseData->m_InputImage, output);
++        model.Run(inputDataContainers, outputDataContainers);
 +     
 +        time_point<high_resolution_clock> predictStart;
 +        time_point<high_resolution_clock> predictEnd;
@@ -299,7 +316,7 @@ index 0000000..da359b1
 +        {
 +            predictStart = high_resolution_clock::now();
 +
-+            model.Run(TestCaseData->m_InputImage, output);
++            model.Run(inputDataContainers, outputDataContainers);
 +
 +            predictEnd = high_resolution_clock::now();
 +
@@ -310,7 +327,18 @@ index 0000000..da359b1
 +
 +        CaculateAvergeDeviation(time_vector);
 +
-+        ProcessResult<TDataType>(output,model.GetQuantizationParams(),mode_type);
++        if(isFloatModel)
++        {
++            std::vector<float> output;
++            output = boost::get<std::vector<float>>(outputDataContainers[0]);
++            ProcessResult<float>(output,model.GetQuantizationParams(),mode_type);
++        }
++        else
++        {
++            std::vector<unsigned char> output;
++            output = boost::get<std::vector<unsigned char>>(outputDataContainers[0]);
++            ProcessResult<unsigned char>(output,model.GetQuantizationParams(),mode_type);
++        }
 +    }
 +    catch (armnn::Exception const& e)
 +    {
@@ -327,6 +355,8 @@ index 0000000..da359b1
 +    Model_Table["mobilenet_v1_1.0_224_frozen.pb"] = {"tensorflow-binary", true , false , base_path + "/tensorflow/models/mobilenet_v1_1.0_224_frozen.pb",armnn::TensorShape({ 1, 224, 224, 3}),"input","MobilenetV1/Predictions/Reshape_1", 224, 224};
 +
 +    Model_Table["mobilenet_v1_1.0_224_quant.tflite"] = {"tflite-binary", false , false ,base_path + "/tensorflow-lite/models/mobilenet_v1_1.0_224_quant.tflite",armnn::TensorShape({ 1, 224, 224, 3}),"input","MobilenetV1/Predictions/Reshape_1", 224, 224};
++
++    Model_Table["mobilenet_v1_1.0_224_frozen.pb"] = {"armnn", true , false , base_path + "/ArmnnConverter/mobilenet_v1_1.0_224_frozen_pb.armnn",armnn::TensorShape({ 1, 224, 224, 3}),"input","MobilenetV1/Predictions/Reshape_1", 224, 224};
 +}
 +
 +// This will run a test

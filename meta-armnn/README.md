@@ -104,7 +104,7 @@ $ ./TfMobileNet-Armnn -d /usr/bin/armnn/examples/images/ \
 
 2. The output of a healthy execution should look like the following:
 ```
-ArmNN v20181100
+ArmNN v20190200
 
 = Prediction values for test #0
 Top(1) prediction is 653 with confidence: 77.9504%
@@ -140,7 +140,7 @@ $ ./TfLiteMobilenetQuantized-Armnn -d /usr/bin/armnn/examples/images/ \
 
 2. The output of a healthy execution should look like the following:
 ```
-ArmNN v20181100
+ArmNN v20190200
 
 = Prediction values for test #0
 Top(1) prediction is 653 with confidence: 63.2812%
@@ -172,7 +172,7 @@ $ ./OnnxMobileNet-Armnn -d /usr/bin/armnn/examples/images/ \
 
 2. The output of a healthy execution should look like the following:
 ```
-ArmNN v20181100
+ArmNN v20190200
 
 = Prediction values for test #0
 Top(1) prediction is 652 with confidence: 1317.76%
@@ -211,15 +211,40 @@ $ ./RenesasSample-Armnn
 * TensorFlow: mobilenet v1.0.224
 * TensorFlow Lite: mobilent quant v1.0.224 
 
+### ExecuteNetwork
+*ExecuteNetwork* is a generic model inference test application,
+which takes any model and any input tensor, and simply 
+prints out the output tensor. Renesas provides a sample input
+tensor file called "rsz_grace_hopper.csv", which can be used
+for any model (whose operator is supported in Armnn) that
+accepts 224 X 224 input tensor size. Run with no arguments 
+to see command-line help for more information.
+
+For example, for mobilenet_v1_1.0_224:
+
+1. Execute *ExecuteNetwork* by running the following commands:
+```
+$ cd /usr/bin/armnn/examples/ExecuteNetwork/
+$ ./ExecuteNetwork -f tensorflow-binary -i input \
+  -o MobilenetV1/Predictions/Reshape_1 \
+  -d /usr/bin/armnn/examples/images/rsz_grace_hopper.csv -s 1,224,224,3 \
+  -m /usr/bin/armnn/examples/tensorflow/models/mobilenet_v1_1.0_224_frozen.pb
+```
+2. It prints out the ouput tensor, for example,
+```
+ArmNN v20190200
+
+MobilenetV1/Predictions/Reshape_1: 0.000000 0.000000 0.000007 0.000001 0.000000...
+```
 
 ## Supported Frameworks and Operators
 The Arm NN SDK supports the following operators:
 
 TensorFlow:  
-**https://github.com/ARM-software/armnn/blob/branches/armnn_18_11/src/armnnTfParser/TensorFlowSupport.md**
+**https://github.com/ARM-software/armnn/blob/branches/armnn_19_02/src/armnnTfParser/TensorFlowSupport.md**
 
 TensorFlow Lite:  
-**https://github.com/ARM-software/armnn/blob/branches/armnn_18_11/src/armnnTfLiteParser/TensorFlowLiteSupport.md**
+**https://github.com/ARM-software/armnn/blob/branches/armnn_19_02/src/armnnTfLiteParser/TensorFlowLiteSupport.md**
 
 ONNX:  
-**https://github.com/ARM-software/armnn/blob/branches/armnn_18_11/src/armnnOnnxParser/OnnxSupport.md**
+**https://github.com/ARM-software/armnn/blob/branches/armnn_19_02/src/armnnOnnxParser/OnnxSupport.md**

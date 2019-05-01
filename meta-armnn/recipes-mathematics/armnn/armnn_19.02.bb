@@ -45,11 +45,12 @@ SRC_URI = " \
 	file://0001-Change-test-image-set-to-grace_hopper.jpg.patch \
 	file://0001-Add-generic-Arm-NN-SDK-inference-framework-and-test-.patch \
 	file://0001-Do-not-use-the-CMAKE_FIND_ROOT_PATH-variable-when-lo.patch \
+	file://files/rsz_grace_hopper.csv \
 	git://github.com/tensorflow/tensorflow.git;name=tensorflow;branch=r1.10;subdir=${WORKDIR}/tensorflow;destsuffix=tensorflow \
 	gitsm://github.com/onnx/onnx.git;protocol=https;name=onnx;branch=master;subdir=${WORKDIR}/onnx;destsuffix=onnx \
 "
 
-SRCREV_armnn = "9337af3f8eeb5993a52b300cad940f0ac15d6c79"
+SRCREV_armnn = "120196d394eb5af4b28f78396d1a225ca47cf274"
 
 SRCREV_tensorflow = "656e7a2b347c3c6eb76a6c130ed4b1def567b6c1"
 
@@ -126,6 +127,7 @@ EXTRA_OECMAKE=" \
 	-DPROTOBUF_LIBRARY_DEBUG=${STAGING_DIR_TARGET}/usr/lib/libprotobuf.so.16.0.0 \
 	-DPROTOBUF_LIBRARY_RELEASE=${STAGING_DIR_TARGET}/usr/lib/libprotobuf.so.16.0.0 \
 	-DBOOST_ROOT=${STAGING_DIR_TARGET}/usr/ \
+	-DFLATC_DIR=${STAGING_DIR_NATIVE}${prefix}/bin/ \
 	-DBUILD_TF_PARSER=1 \
 	-DBUILD_TF_LITE_PARSER=1 \
 	-DBUILD_ONNX_PARSER=1 \
@@ -160,6 +162,7 @@ do_install_append() {
 	install -d ${D}${bindir}/${PN}-${PV}/examples/tensorflow-lite
 	install -d ${D}${bindir}/${PN}-${PV}/examples/onnx
 	install -d ${D}${bindir}/${PN}-${PV}/examples/RenesasSample-Armnn
+	install -d ${D}${bindir}/${PN}-${PV}/examples/ExecuteNetwork
 
 	install -m 0555 \
 		${WORKDIR}/build/samples/SimpleSample \
@@ -197,6 +200,12 @@ do_install_append() {
 
 	chrpath -d ${D}${bindir}/${PN}-${PV}/examples/RenesasSample-Armnn/*
 
+	install -m 0555 \
+		${WORKDIR}/build/tests/ExecuteNetwork \
+		${D}${bindir}/${PN}-${PV}/examples/ExecuteNetwork/
+
+	chrpath -d ${D}${bindir}/${PN}-${PV}/examples/ExecuteNetwork/*
+
 	install -d ${D}${includedir}/armnn-tensorflow-lite/schema
 
 	install -m 0644 \
@@ -206,7 +215,7 @@ do_install_append() {
 	cd ${D}${bindir}
 	ln -sf ${PN}-${PV} ${PN}
 
-	#Install Sample Models and Image
+	# Install sample models and images
 
 	install -d ${D}${bindir}/${PN}-${PV}/examples/tensorflow/models
 	install -d ${D}${bindir}/${PN}-${PV}/examples/tensorflow-lite/models
@@ -215,6 +224,10 @@ do_install_append() {
 
 	install -m 0644 \
 		${WORKDIR}/images/grace_hopper.jpg \
+		${D}${bindir}/${PN}-${PV}/examples/images/
+
+	install -m 0644 \
+		${WORKDIR}/files/rsz_grace_hopper.csv \
 		${D}${bindir}/${PN}-${PV}/examples/images/
 
 	install -m 0644 \
@@ -250,6 +263,8 @@ FILES_${PN} = " \
 
 FILES_${PN}-dev = " \
 	${includedir}/armnn \
+	${includedir}/armnnDeserializer \
+	${includedir}/armnnSerializer \
 "
 
 FILES_${PN}-dbg = " \
@@ -262,6 +277,7 @@ FILES_${PN}-examples = " \
 	${bindir}/${PN}-${PV}/examples/SampleApp \
 	${bindir}/${PN}-${PV}/examples/RenesasSample-Armnn \
 	${bindir}/${PN}-${PV}/examples/images \
+	${bindir}/${PN}-${PV}/examples/ExecuteNetwork \
 "
 
 FILES_${PN}-examples-dbg = " \
