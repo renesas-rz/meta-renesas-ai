@@ -73,6 +73,8 @@ addtask do_fetch_fixup after do_unpack before do_patch
 # Unfortunately Caffe2 has broken references, and on top of that we better pick
 # up more suitable versions for the third party submodules.
 do_fetch_fixup () {
+	export HTTP_PROXY=${HTTP_PROXY}
+	export HTTPS_PROXY=${HTTPS_PROXY}
 	cd ${S}
 	git submodule deinit -f third_party/NNPACK
 	git submodule deinit -f third_party/benchmark
