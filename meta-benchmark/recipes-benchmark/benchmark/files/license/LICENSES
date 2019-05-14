@@ -1,0 +1,405 @@
+FileName:grace_hopper.bmp
+Source:https://github.com/tensorflow/tensorflow/tree/master/tensorflow/contrib/lite/examples/label_image/testdata/grace_hopper.bmp
+License:Apache License 2.0
+md5sum:60ffb380233d55175f6f8ded50e97c14
+
+FileName:grace_hopper.jpg
+Source:https://github.com/tensorflow/tensorflow/tree/master/tensorflow/examples/label_image/data/grace_hopper.jpg
+License:Apache License 2.0
+md5sum:11b681a638da9ec33a37b192185a2d20
+
+FileName:synset_words.txt
+Source:inspired from https://github.com/avoroshilov/tf-squeezenet/blob/master/synset_words.txt
+License:Unknownn
+md5sum:3717997f5be3920fe9769d915634a322
+
+FileName:sqz_full.pckl
+Source:inspired from https://github.com/avoroshilov/tf-squeezenet/blob/master/sqz_full.mat
+License:Unknownn
+md5sum:b5e36a1bf3a0593035343ec50dde66c1
+
+FileName:predict_net.pb
+Source:https://s3.amazonaws.com/download.caffe2.ai/models/squeezenet/predict_net.pb
+License:Apache License 2.0
+md5sum:694bfdd02e9ccb57bfc4acb451fbfb2d
+
+FileName:init_net.pb
+Source:https://s3.amazonaws.com/download.caffe2.ai/models/squeezenet/init_net.pb
+License:Apache License 2.0
+md5sum:a589d31d93c44d353ae2cd92af4d5a3f
+
+FileName:ilsvrc_2012_mean.npy
+Source:https://github.com/BVLC/caffe/raw/master/python/caffe/imagenet/ilsvrc_2012_mean.npy
+License:Unknownn
+md5sum:28a998b87558ea0cac23c83e718636b1
+
+FileName:imagenet_slim_labels.txt
+Source:https://storage.googleapis.com/download.tensorflow.org/models/inception_v3_2016_08_28_frozen.pb.tar.gz
+License:Apache License 2.0
+md5sum:4f669cc9d57b8bd5fa65d3d8d518bdb7
+
+FileName:alexnet_codes
+Source:https://gist.githubusercontent.com/aaronmarkham/cd3a6b6ac071eca6f7b4a6e40e6038aa/raw/9edb4038a37da6b5a44c3b5bc52e448ff09bfe5b/alexnet_codes
+License:Unknownn
+md5sum:a5934b290b736a967348d42405bc37b6
+
+FileName:labels.txt
+Source:https://storage.googleapis.com/download.tensorflow.org/models/tflite/mobilenet_v1_224_android_quant_2017_11_08.zip
+License:Apache License 2.0
+md5sum:295d81f0039772b0c909237eb803b42d
+
+FileName:mobilenet_v1_0.25_128_quant.tflite
+Source:http://download.tensorflow.org/models/mobilenet_v1_2018_08_02/mobilenet_v1_0.25_128_quant.tgz
+License:Apache License 2.0
+md5sum:39f06514361a7612a7e092cc7fbf9d8a
+
+FileName:mobilenet_v1_0.25_128.tflite
+Source:http://download.tensorflow.org/models/mobilenet_v1_2018_02_22/mobilenet_v1_0.25_128.tgz
+License:Apache License 2.0
+md5sum:f05ad582abdbf02d816bfaa9c87c0db7
+
+FileName:mobilenet_v1_0.25_160_quant.tflite
+Source:http://download.tensorflow.org/models/mobilenet_v1_2018_08_02/mobilenet_v1_0.25_160_quant.tgz
+License:Apache License 2.0
+md5sum:55ae29a6849a9595893ca2bdfd5dfc1e
+
+FileName:mobilenet_v1_0.25_160.tflite
+Source:http://download.tensorflow.org/models/mobilenet_v1_2018_02_22/mobilenet_v1_0.25_160.tgz
+License:Apache License 2.0
+md5sum:a2874971f7e72cd88e51fcc7b154e8f4
+
+FileName:mobilenet_v1_0.25_192_quant.tflite
+Source:http://download.tensorflow.org/models/mobilenet_v1_2018_08_02/mobilenet_v1_0.25_192_quant.tgz
+License:Apache License 2.0
+md5sum:f91c8e43586cbece48b6d100696ede78
+
+FileName:mobilenet_v1_0.25_192.tflite
+Source:http://download.tensorflow.org/models/mobilenet_v1_2018_02_22/mobilenet_v1_0.25_192.tgz
+License:Apache License 2.0
+md5sum:eaca3c39b94acdb9823f6e8eb51dcc06
+
+FileName:mobilenet_v1_0.25_224_quant.tflite
+Source:http://download.tensorflow.org/models/mobilenet_v1_2018_08_02/mobilenet_v1_0.25_224_quant.tgz
+License:Apache License 2.0
+md5sum:52fa23a37a02f8fd76ec979afca3b26a
+
+FileName:mobilenet_v1_0.25_224.tflite
+Source:http://download.tensorflow.org/models/mobilenet_v1_2018_02_22/mobilenet_v1_0.25_224.tgz
+License:Apache License 2.0
+md5sum:f5292d706b9095fed7bbb378e48af917
+
+FileName:mobilenet_v1_0.5_128_quant.tflite
+Source:http://download.tensorflow.org/models/mobilenet_v1_2018_08_02/mobilenet_v1_0.5_128_quant.tgz
+License:Apache License 2.0
+md5sum:5cc8484cf04a407fc90993296f3f02db
+
+FileName:mobilenet_v1_0.50_128.tflite
+Source:http://download.tensorflow.org/models/mobilenet_v1_2018_02_22/mobilenet_v1_0.50_128.tgz
+License:Apache License 2.0
+md5sum:6387201eb8a763683c75e287a3e33864
+
+FileName:mobilenet_v1_0.5_160_quant.tflite
+Source:http://download.tensorflow.org/models/mobilenet_v1_2018_08_02/mobilenet_v1_0.5_160_quant.tgz
+License:Apache License 2.0
+md5sum:e3b83009a9dd9052223feaf743e32ec0
+
+FileName:mobilenet_v1_0.50_160.tflite
+Source:http://download.tensorflow.org/models/mobilenet_v1_2018_02_22/mobilenet_v1_0.50_160.tgz
+License:Apache License 2.0
+md5sum:a80704a12124abc9484263425972855a
+
+FileName:mobilenet_v1_0.5_192_quant.tflite
+Source:http://download.tensorflow.org/models/mobilenet_v1_2018_08_02/mobilenet_v1_0.5_192_quant.tgz
+License:Apache License 2.0
+md5sum:997399d60a87a1877475973fec03153b
+
+FileName:mobilenet_v1_0.50_192.tflite
+Source:http://download.tensorflow.org/models/mobilenet_v1_2018_02_22/mobilenet_v1_0.50_192.tgz
+License:Apache License 2.0
+md5sum:d73e4e2278fc70854b9a6456ec26fb44
+
+FileName:mobilenet_v1_0.5_224_quant.tflite
+Source:http://download.tensorflow.org/models/mobilenet_v1_2018_08_02/mobilenet_v1_0.5_224_quant.tgz
+License:Apache License 2.0
+md5sum:3a12c2a5e3c1c836f1d00ee03c759c89
+
+FileName:mobilenet_v1_0.50_224.tflite
+Source:http://download.tensorflow.org/models/mobilenet_v1_2018_02_22/mobilenet_v1_0.50_224.tgz
+License:Apache License 2.0
+md5sum:0af60c25d2f4c589e0f314d588606397
+
+FileName:mobilenet_v1_0.75_128_quant.tflite
+Source:http://download.tensorflow.org/models/mobilenet_v1_2018_08_02/mobilenet_v1_0.75_128_quant.tgz
+License:Apache License 2.0
+md5sum:33b8c9e0a2f3378660675468eb50bdaa
+
+FileName:mobilenet_v1_0.75_128.tflite
+Source:http://download.tensorflow.org/models/mobilenet_v1_2018_02_22/mobilenet_v1_0.75_128.tgz
+License:Apache License 2.0
+md5sum:a18d9d6dcbba48f5cf99647a81a59310
+
+FileName:mobilenet_v1_0.75_160_quant.tflite
+Source:http://download.tensorflow.org/models/mobilenet_v1_2018_08_02/mobilenet_v1_0.75_160_quant.tgz
+License:Apache License 2.0
+md5sum:3d7c9aceadbc262abda3d7827da8a9d3
+
+FileName:mobilenet_v1_0.75_160.tflite
+Source:http://download.tensorflow.org/models/mobilenet_v1_2018_02_22/mobilenet_v1_0.75_160.tgz
+License:Apache License 2.0
+md5sum:11d6a037c7312af19bbfa88986bb90e1
+
+FileName:mobilenet_v1_0.75_192_quant.tflite
+Source:http://download.tensorflow.org/models/mobilenet_v1_2018_08_02/mobilenet_v1_0.75_192_quant.tgz
+License:Apache License 2.0
+md5sum:3279a583c3db6ff40a3673eb6163a9e4
+
+FileName:mobilenet_v1_0.75_192.tflite
+Source:http://download.tensorflow.org/models/mobilenet_v1_2018_02_22/mobilenet_v1_0.75_192.tgz
+License:Apache License 2.0
+md5sum:20a8fa6abce98e701d18181668ba31df
+
+FileName:mobilenet_v1_0.75_224_quant.tflite
+Source:http://download.tensorflow.org/models/mobilenet_v1_2018_08_02/mobilenet_v1_0.75_224_quant.tgz
+License:Apache License 2.0
+md5sum:2f809f0ee6e09409b65c8fd87034c245
+
+FileName:mobilenet_v1_0.75_224.tflite
+Source:http://download.tensorflow.org/models/mobilenet_v1_2018_02_22/mobilenet_v1_0.75_224.tgz
+License:Apache License 2.0
+md5sum:5f8514e074d5addc9f66819d12474b47
+
+FileName:mobilenet_v1_1.0_128_quant.tflite
+Source:http://download.tensorflow.org/models/mobilenet_v1_2018_08_02/mobilenet_v1_1.0_128_quant.tgz
+License:Apache License 2.0
+md5sum:2055a82e4a7339b8f3bbf3b6c6a53921
+
+FileName:mobilenet_v1_1.0_128.tflite
+Source:http://download.tensorflow.org/models/mobilenet_v1_2018_02_22/mobilenet_v1_1.0_128.tgz
+License:Apache License 2.0
+md5sum:b81ffd0e0e659ad5b6fe6d6b0cdbfa50
+
+FileName:mobilenet_v1_1.0_160_quant.tflite
+Source:http://download.tensorflow.org/models/mobilenet_v1_2018_08_02/mobilenet_v1_1.0_160_quant.tgz
+License:Apache License 2.0
+md5sum:095cdb2d648f36490a374837552b76cf
+
+FileName:mobilenet_v1_1.0_160.tflite
+Source:http://download.tensorflow.org/models/mobilenet_v1_2018_02_22/mobilenet_v1_1.0_160.tgz
+License:Apache License 2.0
+md5sum:6bcc077ec5966621abfd5e0c7be25028
+
+FileName:mobilenet_v1_1.0_192_quant.tflite
+Source:http://download.tensorflow.org/models/mobilenet_v1_2018_08_02/mobilenet_v1_1.0_192_quant.tgz
+License:Apache License 2.0
+md5sum:5afac0ff77dd96c4629e67eed4f530f3
+
+FileName:mobilenet_v1_1.0_192.tflite
+Source:http://download.tensorflow.org/models/mobilenet_v1_2018_02_22/mobilenet_v1_1.0_192.tgz
+License:Apache License 2.0
+md5sum:d2f53268a885a39a398d6a7c704533e8
+
+FileName:mobilenet_quant_v1_224.tflite
+Source:http://download.tensorflow.org/models/mobilenet_v1_2018_08_02/mobilenet_quant_v1_224.tgz
+License:Apache License 2.0
+md5sum:36af340c00e60291931cb30ce32d4e86
+
+FileName:mobilenet_v1_1.0_224.tflite
+Source:http://download.tensorflow.org/models/mobilenet_v1_2018_02_22/mobilenet_v1_1.0_224.tgz
+License:Apache License 2.0
+md5sum:570a9615104b5d8afac870fc5dec88f1
+
+FileName:mobilenet_v2_0.35_128.tflite
+Source:https://storage.googleapis.com/mobilenet_v2/checkpoints/mobilenet_v2_0.35_128.tgz
+License:Apache License 2.0
+md5sum:ad6a15a8fd0f5404043cff0ae704ffc7
+
+FileName:mobilenet_v2_0.35_160.tflite
+Source:https://storage.googleapis.com/mobilenet_v2/checkpoints/mobilenet_v2_0.35_160.tgz
+License:Apache License 2.0
+md5sum:2565c81f59e30b1969455d223447280d
+
+FileName:mobilenet_v2_0.35_192.tflite
+Source:https://storage.googleapis.com/mobilenet_v2/checkpoints/mobilenet_v2_0.35_192.tgz
+License:Apache License 2.0
+md5sum:827a6f3588e36c0796eac2de6a1bd12d
+
+FileName:mobilenet_v2_0.35_224.tflite
+Source:https://storage.googleapis.com/mobilenet_v2/checkpoints/mobilenet_v2_0.35_224.tgz
+License:Apache License 2.0
+md5sum:0a9b31d96fa0ab8702e818ec3f183411
+
+FileName:mobilenet_v2_0.35_96.tflite
+Source:https://storage.googleapis.com/mobilenet_v2/checkpoints/mobilenet_v2_0.35_96.tgz
+License:Apache License 2.0
+md5sum:4f808a4ec483447f8c659297f478e485
+
+FileName:mobilenet_v2_0.5_128.tflite
+Source:https://storage.googleapis.com/mobilenet_v2/checkpoints/mobilenet_v2_0.5_128.tgz
+License:Apache License 2.0
+md5sum:b922ee23063aede48793705cfde952b4
+
+FileName:mobilenet_v2_0.5_160.tflite
+Source:https://storage.googleapis.com/mobilenet_v2/checkpoints/mobilenet_v2_0.5_160.tgz
+License:Apache License 2.0
+md5sum:c72209271bfbe5043cef44cfb2e752e9
+
+FileName:mobilenet_v2_0.5_192.tflite
+Source:https://storage.googleapis.com/mobilenet_v2/checkpoints/mobilenet_v2_0.5_192.tgz
+License:Apache License 2.0
+md5sum:397bc58968070b954310e590557e8f58
+
+FileName:mobilenet_v2_0.5_224.tflite
+Source:https://storage.googleapis.com/mobilenet_v2/checkpoints/mobilenet_v2_0.5_224.tgz
+License:Apache License 2.0
+md5sum:285b743d51ee04946a5280ce84193a15
+
+FileName:mobilenet_v2_0.5_96.tflite
+Source:https://storage.googleapis.com/mobilenet_v2/checkpoints/mobilenet_v2_0.5_96.tgz
+License:Apache License 2.0
+md5sum:8786556d3d32982f47c956f5e28ad623
+
+FileName:mobilenet_v2_0.75_128.tflite
+Source:https://storage.googleapis.com/mobilenet_v2/checkpoints/mobilenet_v2_0.75_128.tgz
+License:Apache License 2.0
+md5sum:a573132d3b584659278789b9e703a387
+
+FileName:mobilenet_v2_0.75_160.tflite
+Source:https://storage.googleapis.com/mobilenet_v2/checkpoints/mobilenet_v2_0.75_160.tgz
+License:Apache License 2.0
+md5sum:e57f7e0a2508a7086b84aad96a717101
+
+FileName:mobilenet_v2_0.75_192.tflite
+Source:https://storage.googleapis.com/mobilenet_v2/checkpoints/mobilenet_v2_0.75_192.tgz
+License:Apache License 2.0
+md5sum:e88f3cf300b4cbf548b0e56c1805bacd
+
+FileName:mobilenet_v2_0.75_224.tflite
+Source:https://storage.googleapis.com/mobilenet_v2/checkpoints/mobilenet_v2_0.75_224.tgz
+License:Apache License 2.0
+md5sum:1c3151d21affa1c96b7254e561ba30a1
+
+FileName:mobilenet_v2_0.75_96.tflite
+Source:https://storage.googleapis.com/mobilenet_v2/checkpoints/mobilenet_v2_0.75_96.tgz
+License:Apache License 2.0
+md5sum:468426c8527bf24fe1e0a0b677cb79be
+
+FileName:mobilenet_v2_1.0_128.tflite
+Source:https://storage.googleapis.com/mobilenet_v2/checkpoints/mobilenet_v2_1.0_128.tgz
+License:Apache License 2.0
+md5sum:4405b0393542ac0d633ecf60a9c1d08c
+
+FileName:mobilenet_v2_1.0_160.tflite
+Source:https://storage.googleapis.com/mobilenet_v2/checkpoints/mobilenet_v2_1.0_160.tgz
+License:Apache License 2.0
+md5sum:3a5b53a585c9c42572888663c1960b25
+
+FileName:mobilenet_v2_1.0_192.tflite
+Source:https://storage.googleapis.com/mobilenet_v2/checkpoints/mobilenet_v2_1.0_192.tgz
+License:Apache License 2.0
+md5sum:54b646972d9a241646a87f18a9269583
+
+FileName:mobilenet_v2_1.0_224.tflite
+Source:https://storage.googleapis.com/mobilenet_v2/checkpoints/mobilenet_v2_1.0_224.tgz
+License:Apache License 2.0
+md5sum:d8065bc96469fdc4f3fdb05b878c6bbc
+
+FileName:mobilenet_v2_1.0_96.tflite
+Source:https://storage.googleapis.com/mobilenet_v2/checkpoints/mobilenet_v2_1.0_96.tgz
+License:Apache License 2.0
+md5sum:cc37ac1d1d5b6c7a57f6274a58b45fc4
+
+FileName:mobilenet_v2_1.3_224.tflite
+Source:https://storage.googleapis.com/mobilenet_v2/checkpoints/mobilenet_v2_1.3_224.tgz
+License:Apache License 2.0
+md5sum:581404a6e75fe7fc9f463495a5e70ec5
+
+FileName:mobilenet_v2_1.4_224.tflite
+Source:https://storage.googleapis.com/mobilenet_v2/checkpoints/mobilenet_v2_1.4_224.tgz
+License:Apache License 2.0
+md5sum:d8d5f59166545be8998ab8afc7f372d7
+
+FileName:inception_v3_2016_08_28_frozen.pb
+Source:https://storage.googleapis.com/download.tensorflow.org/models/inception_v3_2016_08_28_frozen.pb.tar.gz
+License:Apache License 2.0
+md5sum:4b0459bcf60c61cf2ec759ff89ebbbb7
+
+FileName:inception_v3_2016_08_28_frozen_transformed.pb
+Source:inspired from https://storage.googleapis.com/download.tensorflow.org/models/inception_v3_2016_08_28_frozen.pb.tar.gz
+License:Apache License 2.0
+md5sum:57898658601399b638d350a35ec7edab
+
+FileName:inception_v3_2016_08_28_frozen_Quant.pb
+Source:inspired by https://storage.googleapis.com/download.tensorflow.org/models/inception_v3_2016_08_28_frozen.pb.tar.gz
+License:Apache License 2.0
+md5sum:6bf8be3fb1396bc558eddb9b701cb8d3
+
+FileName:mobilenet_v2_1.0_224_quant.tflite
+Source:http://download.tensorflow.org/models/tflite_11_05_08/mobilenet_v2_1.0_224_quant.tgz
+License:Apache License 2.0
+md5sum:72bd6012812f0c1ff3c8fbc4101e0981
+
+FileName:nasnet_mobile.tflite
+Source:https://storage.googleapis.com/download.tensorflow.org/models/tflite/model_zoo/upload_20180427/nasnet_mobile_2018_04_27.tgz
+License:Apache License 2.0
+md5sum:ed75b9cedfdd47ab50c85c367b2ed8d0
+
+FileName:inception_v3.tflite
+Source:https://storage.googleapis.com/download.tensorflow.org/models/tflite/model_zoo/upload_20180427/inception_v3_2018_04_27.tgz
+License:Apache License 2.0
+md5sum:b09e7cedafccf20f1ab91c6aa8d21d9a
+
+FileName:inception_v3_quant.tflite
+Source:https://download.tensorflow.org/models/tflite_11_05_08/inception_v3_quant.tgz
+License:Apache License 2.0
+md5sum:eee364b713cef15f8fe7f66eacfdf1af
+
+FileName:squeezenet.tflite
+Source:https://storage.googleapis.com/download.tensorflow.org/models/tflite/model_zoo/upload_20180427/squeezenet_2018_04_27.tgz
+License:Apache License 2.0
+md5sum:2bb5c960ff74229c0d5999a77027d4ab
+
+FileName:mnasnet_0.5_224.tflite
+Source:https://www.tensorflow.org/lite/models
+License:Apache License 2.0
+md5sum:65971a28ce163c0d15efa50c36bd676a
+
+FileName:mnasnet_0.75_224.tflite
+Source:https://www.tensorflow.org/lite/models
+License:Apache License 2.0
+md5sum:8646752016d5572d16ace13dbc048a44
+
+FileName:mnasnet_1.0_128.tflite
+Source:https://www.tensorflow.org/lite/models
+License:Apache License 2.0
+md5sum:7555142c52ef99b9e58efcf4d7952f5a
+
+FileName:mnasnet_1.0_160.tflite
+Source:https://www.tensorflow.org/lite/models
+License:Apache License 2.0
+md5sum:634b248e46ed35ce021193585ab0d2a6
+
+FileName:mnasnet_1.0_192.tflite
+Source:https://www.tensorflow.org/lite/models
+License:Apache License 2.0
+md5sum:de113da355ecacf7d503bac9ccf280d3
+
+FileName:mnasnet_1.0_224.tflite
+Source:https://www.tensorflow.org/lite/models
+License:Apache License 2.0
+md5sum:efe89ac2e011c5598e2bbe4b6a9aa2dd
+
+FileName:mnasnet_1.0_96.tflite
+Source:https://www.tensorflow.org/lite/models
+License:Apache License 2.0
+md5sum:7f1a1e2496779cb6dbaf1f24c2a0408c
+
+FileName:mnasnet_1.3_224.tflite
+Source:https://www.tensorflow.org/lite/models
+License:Apache License 2.0
+md5sum:3c9c042cb45192dbd894628b5bb1a5d9
+
+FileName:libQt5Charts.so.2.1.3
+Source:http://code.qt.io/qt/qtcharts.git
+Branch:5.6
+Commit:4cdf7b5ca4e72c815ead5a1b2044adb54e10d9d0
+License:GPLv3
