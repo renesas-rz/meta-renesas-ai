@@ -21,3 +21,7 @@ do_install() {
         install -m 0644 $hdr ${D}${includedir}
     done
 }
+
+FILES_${PN} = " \
+        ${includedir} \
+"
