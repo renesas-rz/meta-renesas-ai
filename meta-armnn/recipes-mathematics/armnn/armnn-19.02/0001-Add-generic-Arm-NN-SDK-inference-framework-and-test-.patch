@@ -1,6 +1,6 @@
-From 7ece0c9e1579f3fbba028fea071f011b1f2c1bb0 Mon Sep 17 00:00:00 2001
+From 3b3370771afaf3821440915ffb9528d9bbfc20e0 Mon Sep 17 00:00:00 2001
 From: Jianming Qiao <jianming.qiao@bp.renesas.com>
-Date: Wed, 1 May 2019 22:56:27 +0100
+Date: Tue, 25 Jun 2019 00:00:46 +0100
 Subject: [PATCH 1/1] Add generic Arm NN SDK inference framework and test code
 
 A C++ framework and test that is able to seperate the original
@@ -13,8 +13,8 @@ Armnn test framework class into following four independent steps:
 Signed-off-by: Jianming Qiao <jianming.qiao@bp.renesas.com>
 ---
  tests/CMakeLists.txt                              |  29 ++
- tests/RenesasSample-Armnn/RenesasSample-Armnn.cpp | 435 ++++++++++++++++++++++
- 2 files changed, 464 insertions(+)
+ tests/RenesasSample-Armnn/RenesasSample-Armnn.cpp | 433 ++++++++++++++++++++++
+ 2 files changed, 462 insertions(+)
  create mode 100644 tests/RenesasSample-Armnn/RenesasSample-Armnn.cpp
 
 diff --git a/tests/CMakeLists.txt b/tests/CMakeLists.txt
@@ -89,10 +89,10 @@ index 9913321..9f9aec6 100644
  endif()
 diff --git a/tests/RenesasSample-Armnn/RenesasSample-Armnn.cpp b/tests/RenesasSample-Armnn/RenesasSample-Armnn.cpp
 new file mode 100644
-index 0000000..6378c30
+index 0000000..59d2745
 --- /dev/null
 +++ b/tests/RenesasSample-Armnn/RenesasSample-Armnn.cpp
-@@ -0,0 +1,435 @@
+@@ -0,0 +1,433 @@
 +﻿/* 
 + * Copyright (C) 2019 Renesas Electronics Corp. 
 + * This file is licensed under the terms of the MIT License
@@ -355,8 +355,6 @@ index 0000000..6378c30
 +    Model_Table["mobilenet_v1_1.0_224_frozen.pb"] = {"tensorflow-binary", true , false , base_path + "/tensorflow/models/mobilenet_v1_1.0_224_frozen.pb",armnn::TensorShape({ 1, 224, 224, 3}),"input","MobilenetV1/Predictions/Reshape_1", 224, 224};
 +
 +    Model_Table["mobilenet_v1_1.0_224_quant.tflite"] = {"tflite-binary", false , false ,base_path + "/tensorflow-lite/models/mobilenet_v1_1.0_224_quant.tflite",armnn::TensorShape({ 1, 224, 224, 3}),"input","MobilenetV1/Predictions/Reshape_1", 224, 224};
-+
-+    Model_Table["mobilenet_v1_1.0_224_frozen.pb"] = {"armnn", true , false , base_path + "/ArmnnConverter/mobilenet_v1_1.0_224_frozen_pb.armnn",armnn::TensorShape({ 1, 224, 224, 3}),"input","MobilenetV1/Predictions/Reshape_1", 224, 224};
 +}
 +
 +// This will run a test
