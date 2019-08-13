@@ -5,17 +5,16 @@ TensorFlow Lite and Onnx Runtime.
 
 Each framework has its own benchmark tool.
 
-For Arm NN SDK, it is armnnBenchmark
-For Caffe2, it is caffe2Benchmark
-For TensorFlow, it is tensorflowBenchmark
-For TensorFlow-lite, it is tensorflow-lite-benchmark
-For ONNX Runtime, it is onnxruntime_benchmark
+* For Arm NN SDK, it is armnnBenchmark
+* For Caffe2, it is caffe2_Benchmark.sh
+* For TensorFlow, it is tensorflowBenchmark
+* For TensorFlow-lite, it is tensorflow-lite-benchmark
+* For ONNX Runtime, it is onnxruntime_benchmark
 
-The output of each benchmark tool shows the average inference
-time and the standard deviation for each available model, which 
-are printed in the terminal.
+The output of each benchmark tool shows the average inference time and the
+standard deviation for each available model, which are printed in the terminal.
 
-The instruction of using these benchmark tools is listed below:
+The instructions for using these benchmark tools are listed below:
 
 ## Arm NN SDK
 ```bash
@@ -27,11 +26,10 @@ cd /usr/bin/armnnBenchmark
 
 ## Caffe2
 ```bash
-export PYTHONPATH=$PYTHONPATH:/usr
 cd /usr/bin/caffe2Benchmark
 
-# Run inference 1000 times
-./caffe2Benchmark.py grace_hopper.jpg
+# Run inference 30 times
+./caffe2_Benchmark.sh
 ```
 
 ## TensorFlow

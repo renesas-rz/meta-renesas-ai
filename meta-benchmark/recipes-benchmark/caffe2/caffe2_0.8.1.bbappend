@@ -2,7 +2,8 @@ FILESEXTRAPATHS_prepend := "${THISDIR}/files:"
 
 SRC_URI += " \
 	file://alexnet_codes \
-	file://caffe2Benchmark.py \
+	file://caffe2_Benchmark.sh \
+	file://caffe2_Benchmark.py \
 	file://grace_hopper.jpg \
 	file://models \
 "
@@ -10,7 +11,8 @@ SRC_URI += " \
 do_install_append() {
 	install -d ${D}${bindir}/caffe2Benchmark
 	install -m 0644 ${S}/../alexnet_codes ${D}${bindir}/caffe2Benchmark/
-	install -m 0555 ${S}/../caffe2Benchmark.py ${D}${bindir}/caffe2Benchmark/
+	install -m 0555 ${S}/../caffe2_Benchmark.sh ${D}${bindir}/caffe2Benchmark/
+	install -m 0555 ${S}/../caffe2_Benchmark.py ${D}${bindir}/caffe2Benchmark/
 	install -m 0644 ${S}/../grace_hopper.jpg ${D}${bindir}/caffe2Benchmark/
 	cp -r ${S}/../models ${D}${bindir}/caffe2Benchmark/
 }
