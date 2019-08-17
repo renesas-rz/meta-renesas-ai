@@ -56,8 +56,31 @@ cd /usr/bin/tensorflow-lite-benchmark
 /home/root/models/tensorflowlite/Mobile_InceptionV3/ 30 2
 
 # Test on iwg21m with 4 cores (inference run 30 times)
-./run_TF_measurement_4_cores.py test_file_list_Inception_Net_V3.txt \
+./run_TF_measurement.py test_file_list_Inception_Net_V3.txt \
 /home/root/models/tensorflowlite/Mobile_InceptionV3/ 30 4
+```
+
+Other models can also be tested such as MnasNet, MobileNet v1, MobileNet v2,
+Nasnet and Squeezenet. The steps to run benchmarking for these models are almost
+the same as above.
+
+Some examples can be found below (assuming 2 cores and inference 30 times):
+
+```bash
+./run_TF_measurement.py test_file_list_MnasNet.txt \
+/home/root/models/tensorflowlite/Mnasnet/ 30 2
+
+./run_TF_measurement.py test_file_list_Mobile_Net_V1.txt \
+/home/root/models/tensorflowlite/Mobile_Net_V1_Model/ 30 2
+
+./run_TF_measurement.py test_file_list_Mobile_Net_V2.txt \
+/home/root/models/tensorflowlite/Mobile_Net_V2_Model/ 30 2
+
+./run_TF_measurement.py test_file_list_NasNet.txt \
+/home/root/models/tensorflowlite/NasNet/ 30 2
+
+./run_TF_measurement.py test_file_list_Squeezenet.txt \
+/home/root/models/tensorflowlite/Squeezenet/ 30 2
 ```
 
 ## ONNX Runtime
