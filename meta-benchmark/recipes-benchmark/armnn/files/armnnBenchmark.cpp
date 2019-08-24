@@ -112,13 +112,13 @@ int ProcessResult(std::vector<TDataType>& output,InferenceModelInternal::Quantiz
 void CaculateAvergeDeviation(vector<double>& time_vec)
 {
     double sum = std::accumulate(time_vec.begin(), time_vec.end(), 0.0);
-    double mean = sum / time_vec.size();
+    double mean = sum / static_cast<double>(time_vec.size());
 
     std::vector<double> diff(time_vec.size());
     std::transform(time_vec.begin(), time_vec.end(), diff.begin(),
                    std::bind2nd(std::minus<double>(), mean));
     double sq_sum = std::inner_product(diff.begin(), diff.end(), diff.begin(), 0.0);
-    double stdev = std::sqrt(sq_sum / time_vec.size());
+    double stdev = std::sqrt(sq_sum / static_cast<double>(time_vec.size()));
 
     std::cout << "Total Time Takes " << (sum) << " ms"<< std::endl;
 

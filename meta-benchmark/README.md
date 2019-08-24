@@ -1,7 +1,7 @@
 # meta-benchmark
 
 This meta-layer provides benchmark tools for Arm NN SDK, Caffe2, TensorFlow,
-TensorFlow Lite and Onnx Runtime.
+TensorFlow Lite and ONNX Runtime.
 
 Each framework has its own benchmark tool.
 
@@ -58,6 +58,10 @@ cd /usr/bin/tensorflow-lite-benchmark
 # Test on iwg21m with 4 cores (inference run 30 times)
 ./run_TF_measurement.py test_file_list_Inception_Net_V3.txt \
 /home/root/models/tensorflowlite/Mobile_InceptionV3/ 30 4
+
+# Test on hihope-rzg2m with 6 cores (inference run 30 times)
+./run_TF_measurement.py test_file_list_Inception_Net_V3.txt \
+/home/root/models/tensorflowlite/Mobile_InceptionV3/ 30 6
 ```
 
 Other models can also be tested such as MnasNet, MobileNet v1, MobileNet v2,
