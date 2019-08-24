@@ -1,0 +1,40 @@
+From 30d332c800edcf68b3f10588baf2aece166ad57b Mon Sep 17 00:00:00 2001
+From: Jianming Qiao <jianming.qiao@bp.renesas.com>
+Date: Wed, 28 Aug 2019 00:41:55 +0100
+Subject: [PATCH] Adding support for building arm and aarch64 CL with Scons
+
+Signed-off-by: Jianming Qiao <jianming.qiao@bp.renesas.com>
+---
+ SConstruct | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
+
+diff --git a/SConstruct b/SConstruct
+index 7d396fa..148747c 100644
+--- a/SConstruct
++++ b/SConstruct
+@@ -161,11 +161,10 @@ if env['openmp']:
+ 
+ prefix = ""
+ if env['arch'] == 'armv7a':
+-    env.Append(CXXFLAGS = ['-march=armv7-a', '-mthumb', '-mfpu=neon'])
++    env.Append(CXXFLAGS = ['-mthumb', '-mfpu=neon'])
+ 
+     if env['os'] == 'linux':
+-        prefix = "arm-linux-gnueabihf-"
+-        env.Append(CXXFLAGS = ['-mfloat-abi=hard'])
++        env.Append(CXXFLAGS = ['-mfloat-abi=hard','-fPIC','-Wno-unused-but-set-variable','-Wno-ignored-qualifiers','-Wno-noexcept'])
+     elif env['os'] == 'bare_metal':
+         prefix = "arm-eabi-"
+         env.Append(CXXFLAGS = ['-mfloat-abi=hard'])
+@@ -176,7 +175,7 @@ elif env['arch'] == 'arm64-v8a':
+     env.Append(CXXFLAGS = ['-march=armv8-a'])
+     env.Append(CPPDEFINES = ['ARM_COMPUTE_AARCH64_V8A','NO_DOT_IN_TOOLCHAIN'])
+     if env['os'] == 'linux':
+-        prefix = "aarch64-linux-gnu-"
++        env.Append(CXXFLAGS = ['-fPIC','-Wno-unused-but-set-variable','-Wno-ignored-qualifiers','-Wno-noexcept'])
+     elif env['os'] == 'bare_metal':
+         prefix = "aarch64-elf-"
+     elif env['os'] == 'android':
+-- 
+2.7.4
+

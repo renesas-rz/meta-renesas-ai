@@ -23,7 +23,7 @@ PACKAGES += "${PN}-examples ${PN}-examples-dbg \
              ${PN}-onnx-dev \
 "
 
-COMPATIBLE_MACHINE = "(iwg20m-g1m|iwg21m|iwg22m)"
+COMPATIBLE_MACHINE = "(iwg20m-g1m|iwg21m|iwg22m|hihope-rzg2m)"
 
 inherit PyHelper
 
@@ -48,6 +48,10 @@ SRC_URI = " \
 	file://files/rsz_grace_hopper.csv \
 	git://github.com/tensorflow/tensorflow.git;name=tensorflow;branch=r1.10;subdir=${WORKDIR}/tensorflow;destsuffix=tensorflow \
 	gitsm://github.com/onnx/onnx.git;protocol=https;name=onnx;branch=master;subdir=${WORKDIR}/onnx;destsuffix=onnx \
+"
+
+SRC_URI_append_aarch64 = " \
+	file://0001-Add-usr-lib64-in-Armnn-to-support-64bit-rootfs-struc.patch \
 "
 
 SRCREV_armnn = "120196d394eb5af4b28f78396d1a225ca47cf274"
@@ -118,14 +122,10 @@ RDEPENDS_${PN}-examples-dbg += "${PN}"
 
 EXTRA_OECMAKE=" \
 	-DARMCOMPUTE_ROOT=${STAGING_DIR_TARGET}/usr/share/arm-compute-library/ \
-	-DARMCOMPUTE_BUILD_DIR=${STAGING_DIR_TARGET}/usr/lib/ \
 	-DTF_GENERATED_SOURCES=${WORKDIR}/tensorflow/ \
 	-DONNX_GENERATED_SOURCES=${WORKDIR}/onnx \
 	-DTF_LITE_GENERATED_PATH=${WORKDIR}/tensorflow/tensorflow/contrib/lite/schema \
 	-DFLATBUFFERS_ROOT=${STAGING_DIR_TARGET}/usr/ \
-	-DFLATBUFFERS_LIBRARY=${STAGING_DIR_TARGET}/usr/lib/libflatbuffers.a \
-	-DPROTOBUF_LIBRARY_DEBUG=${STAGING_DIR_TARGET}/usr/lib/libprotobuf.so.16.0.0 \
-	-DPROTOBUF_LIBRARY_RELEASE=${STAGING_DIR_TARGET}/usr/lib/libprotobuf.so.16.0.0 \
 	-DBOOST_ROOT=${STAGING_DIR_TARGET}/usr/ \
 	-DFLATC_DIR=${STAGING_DIR_NATIVE}${prefix}/bin/ \
 	-DBUILD_TF_PARSER=1 \
@@ -138,6 +138,20 @@ EXTRA_OECMAKE=" \
 	-DTHIRD_PARTY_INCLUDE_DIRS=${STAGING_DIR_HOST}${includedir} \
 	-DBUILD_ARMNN_EXAMPLES=1 \
 	-DCMAKE_CXX_IMPLICIT_INCLUDE_DIRECTORIES=${STAGING_INCDIR} \
+"
+
+EXTRA_OECMAKE_append_arm=" \
+	-DARMCOMPUTE_BUILD_DIR=${STAGING_DIR_TARGET}/usr/lib/ \
+	-DFLATBUFFERS_LIBRARY=${STAGING_DIR_TARGET}/usr/lib/libflatbuffers.a \
+	-DPROTOBUF_LIBRARY_DEBUG=${STAGING_DIR_TARGET}/usr/lib/libprotobuf.so.16.0.0 \
+	-DPROTOBUF_LIBRARY_RELEASE=${STAGING_DIR_TARGET}/usr/lib/libprotobuf.so.16.0.0 \
+"
+
+EXTRA_OECMAKE_append_aarch64=" \
+	-DARMCOMPUTE_BUILD_DIR=${STAGING_DIR_TARGET}/usr/lib64/ \
+	-DFLATBUFFERS_LIBRARY=${STAGING_DIR_TARGET}/usr/lib64/libflatbuffers.a \
+	-DPROTOBUF_LIBRARY_DEBUG=${STAGING_DIR_TARGET}/usr/lib64/libprotobuf.so.16.0.0 \
+	-DPROTOBUF_LIBRARY_RELEASE=${STAGING_DIR_TARGET}/usr/lib64/libprotobuf.so.16.0.0 \
 "
 
 do_configure_prepend() {
@@ -269,6 +283,7 @@ FILES_${PN}-dev = " \
 
 FILES_${PN}-dbg = " \
 	${libdir}/.debug \
+	${prefix}/src/debug \
 "
 
 FILES_${PN}-examples = " \
@@ -348,6 +363,6 @@ FILES_${PN}-onnx-dev = " \
 	${includedir}/armnnOnnxParser/IOnnxParser.hpp \
 "
 
-FILES_${PN}-dev += "{libdir}/cmake/*"
+FILES_${PN}-dev += "${libdir}/cmake/*"
 INSANE_SKIP_${PN}-dev = "dev-elf"
 INSANE_SKIP_${PN} = "dev-deps"

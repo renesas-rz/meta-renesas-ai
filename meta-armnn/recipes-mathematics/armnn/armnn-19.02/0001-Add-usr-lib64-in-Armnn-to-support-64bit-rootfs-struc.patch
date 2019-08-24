@@ -1,0 +1,45 @@
+From 9ce05ec79a4b2076234a76a8a2e840383bb02cf4 Mon Sep 17 00:00:00 2001
+From: Jianming Qiao <jianming.qiao@bp.renesas.com>
+Date: Sat, 17 Aug 2019 16:18:38 +0100
+Subject: [PATCH] Add /usr/lib64 in Armnn to support 64bit rootfs structure
+
+Signed-off-by: Jianming Qiao <jianming.qiao@bp.renesas.com>
+---
+ CMakeLists.txt | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 0823f08..7dcc669 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -419,21 +419,21 @@ target_link_libraries(armnn armnnUtils)
+ 
+ target_link_libraries(armnn ${CMAKE_DL_LIBS})
+ 
+-install(TARGETS armnn DESTINATION ${CMAKE_INSTALL_PREFIX}/lib)
++install(TARGETS armnn DESTINATION ${CMAKE_INSTALL_PREFIX}/lib64)
+ if(BUILD_CAFFE_PARSER)
+-    install(TARGETS armnnCaffeParser DESTINATION ${CMAKE_INSTALL_PREFIX}/lib)
++    install(TARGETS armnnCaffeParser DESTINATION ${CMAKE_INSTALL_PREFIX}/lib64)
+ endif()
+ if(BUILD_ONNX_PARSER)
+-    install(TARGETS armnnOnnxParser DESTINATION ${CMAKE_INSTALL_PREFIX}/lib)
++    install(TARGETS armnnOnnxParser DESTINATION ${CMAKE_INSTALL_PREFIX}/lib64)
+ endif()
+ if(BUILD_TF_PARSER)
+-    install(TARGETS armnnTfParser DESTINATION ${CMAKE_INSTALL_PREFIX}/lib)
++    install(TARGETS armnnTfParser DESTINATION ${CMAKE_INSTALL_PREFIX}/lib64)
+ endif()
+ if(BUILD_TF_LITE_PARSER)
+-    install(TARGETS armnnTfLiteParser DESTINATION ${CMAKE_INSTALL_PREFIX}/lib)
++    install(TARGETS armnnTfLiteParser DESTINATION ${CMAKE_INSTALL_PREFIX}/lib64)
+ endif()
+ if(BUILD_ARMNN_SERIALIZER)
+-    install(TARGETS armnnSerializer DESTINATION ${CMAKE_INSTALL_PREFIX}/lib)
++    install(TARGETS armnnSerializer DESTINATION ${CMAKE_INSTALL_PREFIX}/lib64)
+ endif()
+ install(DIRECTORY include/ DESTINATION ${CMAKE_INSTALL_PREFIX}/include)
+ 
+-- 
+2.7.4
+

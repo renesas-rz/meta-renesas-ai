@@ -15,10 +15,10 @@ SRCREV = "514be65ad8d3340f53fd9591035352ed285811ba"
 
 SRC_URI = " \
 	git://github.com/ARM-software/ComputeLibrary.git \
-	file://0001-Adding-support-for-building-Arm-CL-with-Scons.patch \
+	file://0001-Adding-support-for-building-arm-and-aarch64-CL-with-.patch \
 "
 
-COMPATIBLE_MACHINE = "(iwg20m-g1m|iwg21m|iwg22m)"
+COMPATIBLE_MACHINE = "(iwg20m-g1m|iwg21m|iwg22m|hihope-rzg2m)"
 
 S = "${WORKDIR}/git"
 
@@ -26,8 +26,11 @@ PR = "r0"
 
 inherit scons
 
-EXTRA_OESCONS = "arch=armv7a extra_cxx_flags="${TOOLCHAIN_OPTIONS}" benchmark_tests=1 \
-		 validation_tests=0 neon=1 openmp=1 opencl=0 set_soname=1"
+OESCONS_COMMON_FLAG = " extra_cxx_flags="${TOOLCHAIN_OPTIONS}" benchmark_tests=1 \
+			validation_tests=0 neon=1 openmp=1 opencl=0 set_soname=1"
+
+EXTRA_OESCONS_arm = "arch=armv7a${OESCONS_COMMON_FLAG}"
+EXTRA_OESCONS_aarch64 = "arch=arm64-v8a${OESCONS_COMMON_FLAG}"
 
 do_install() {
 	CP_ARGS="-Prf --preserve=mode,timestamps --no-preserve=ownership"
