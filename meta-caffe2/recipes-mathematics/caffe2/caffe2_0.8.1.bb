@@ -8,7 +8,7 @@ LICENSE = "Apache-2.0"
 
 LIC_FILES_CHKSUM = "file://LICENSE;md5=80651d10fcb4d58e5cb4c839df037144"
 
-COMPATIBLE_MACHINE = "(iwg20m-g1m|iwg21m|iwg22m)"
+COMPATIBLE_MACHINE = "(iwg20m-g1m|iwg21m|iwg22m|hihope-rzg2m)"
 
 S = "${WORKDIR}/git"
 
@@ -17,6 +17,9 @@ SRC_URI = " \
 	file://0001-Remove-unwind-symbol.patch \
 	file://0002-Always-use-third_party-eigen.patch \
 	file://0001-Fix-compilation-errors-when-using-GCC-7.2.1.patch \
+"
+SRC_URI_append_aarch64 = " \
+	file://0001-Add-usr-lib64-to-support-64bit-rootfs-structure.patch \
 "
 
 SRCREV = "32f023fe8c0a0327f8f14b1c041536a7c6b1f4ec"
@@ -66,6 +69,10 @@ EXTRA_OECMAKE = " \
 	-DBUILD_TEST=OFF \
 	-DUSE_NCCL=ON \
 	-DCMAKE_CXX_IMPLICIT_INCLUDE_DIRECTORIES=${STAGING_INCDIR} \
+"
+
+EXTRA_OECMAKE_append_aarch64 = " \
+	-DUSE_GLOO=OFF \
 "
 
 addtask do_fetch_fixup after do_unpack before do_patch
