@@ -12,7 +12,6 @@ SRCREV = "656e7a2b347c3c6eb76a6c130ed4b1def567b6c1"
 
 SRC_URI = " \
 	git://github.com/tensorflow/tensorflow.git;branch=r1.10 \
-	file://TensorFlow-crosscompile-arm.patch \
 	file://Add-generic-arm-platform-support-in-tensorflow-workspace.patch \
 	file://Fix-all-compilation-errors-from-undefined-functions-in-j.patch \
 	file://Fix-alignment-issue-when-neon-is-enabled.patch \
@@ -23,7 +22,23 @@ SRC_URI = " \
 	file://Fix-alignment-issue-in-arm-neon-platform.patch;apply=no \
 "
 
-COMPATIBLE_MACHINE = "(iwg20m-g1m|iwg21m|iwg22m)"
+SRC_URI_append_iwg20m-g1m = " \
+	file://TensorFlow-crosscompile-arm-a15.patch \
+"
+
+SRC_URI_append_iwg21m = " \
+	file://TensorFlow-crosscompile-arm-a15.patch \
+"
+
+SRC_URI_append_iwg22m = " \
+        file://TensorFlow-crosscompile-arm-a7.patch \
+"
+
+SRC_URI_append_hihope-rzg2m = " \
+        file://TensorFlow-crosscompile-aarch64-a57a53.patch \
+"
+
+COMPATIBLE_MACHINE = "(iwg20m-g1m|iwg21m|iwg22m|hihope-rzg2m)"
 
 export BAZEL_FLAGS="--output_base ${WORKDIR}/output_base"
 
@@ -72,6 +87,14 @@ do_configure () {
 	cp ${WORKDIR}/Fix-alignment-issue-in-arm-neon-platform.patch ${S}/third_party/
 }
 
+do_compile_prepend_arm () {
+	TF_ARCH="--cpu=armeabi-v7a"
+}
+
+do_compile_prepend_aarch64 () {
+	TF_ARCH="--cpu=arm64-v8a"
+}
+
 do_compile () {
 	export HTTP_PROXY=${HTTP_PROXY}
 	export HTTPS_PROXY=${HTTPS_PROXY}
@@ -84,7 +107,7 @@ do_compile () {
 		--config=monolithic \
 		-c opt \
 		--copt=-DARM_NON_MOBILE \
-		--cpu=armeabi-v7a \
+		${TF_ARCH} \
 		--crosstool_top=//tools/arm_compiler:toolchain \
 		--verbose_failures \
 		tensorflow:libtensorflow.so
@@ -93,7 +116,7 @@ do_compile () {
 		--config=monolithic \
 		-c opt \
 		--copt=-DARM_NON_MOBILE \
-		--cpu=armeabi-v7a \
+		${TF_ARCH} \
 		--crosstool_top=//tools/arm_compiler:toolchain \
 		--verbose_failures \
 		tensorflow:libtensorflow_cc.so
@@ -102,7 +125,7 @@ do_compile () {
 		--config=monolithic \
 		-c opt \
 		--copt=-DARM_NON_MOBILE \
-		--cpu=armeabi-v7a \
+		${TF_ARCH} \
 		--crosstool_top=//tools/arm_compiler:toolchain \
 		--verbose_failures \
 		tensorflow/examples/label_image/...

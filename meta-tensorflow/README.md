@@ -13,8 +13,8 @@ The official website is:
 **https://www.tensorflow.org/**
 
 
-This Yocto/OpenEmbedded meta-layer provides TensorFlow support for the RZ/G1
-family of System on Chips.
+This Yocto/OpenEmbedded meta-layer provides TensorFlow support for the RZ/G1 and
+RZ/G2 families of System on Chips.
 
 
 In order to add TensorFlow support to your project, make sure *tensorflow* is
@@ -38,7 +38,7 @@ In summary:
 1. Download model data and label file:  
 `wget http://download.tensorflow.org/models/mobilenet_v1_2018_02_22/mobilenet_v1_1.0_224.tgz`  
 `wget https://storage.googleapis.com/download.tensorflow.org/models/tflite/mobilenet_v1_224_android_quant_2017_11_08.zip`  
-2. Extract to home directory on target.  
+2. Extract to /home/root directory on target.  
 3. Run label_image, specifying the downloaded files:  
 `/usr/bin/tensorflow/examples/label_image --image="/usr/bin/tensorflow/examples/grace_hopper.jpg" --graph="/home/root/mobilenet_v1_1.0_224_frozen.pb" --labels="/home/root/labels.txt" --input_width=224 --input_height=224 --output_layer="MobilenetV1/Predictions/Reshape_1"`  
 

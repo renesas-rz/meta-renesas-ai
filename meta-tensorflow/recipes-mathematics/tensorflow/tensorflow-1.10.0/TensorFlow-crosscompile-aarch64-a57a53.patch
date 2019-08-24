@@ -1,15 +1,24 @@
-commit 304cd30442f34607928231333fd6264e9c551536
-Author: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Date:   Fri Apr 13 11:46:56 2018 +0100
+From 8a73b34f8b58649b75b25eed017a705f2ae30228 Mon Sep 17 00:00:00 2001
+From: Jianming Qiao <jianming.qiao@bp.renesas.com>
+Date: Thu, 29 Aug 2019 02:05:14 +0100
+Subject: [PATCH] Add 64bit arm cross-compiler support
 
-    Add cross-compiler support
+Signed-off-by: Jianming Qiao <jianming.qiao@bp.renesas.com>
+---
+ BUILD.arm_compiler           |  81 ++++
+ tools/arm_compiler/BUILD     |  50 +++
+ tools/arm_compiler/CROSSTOOL | 879 +++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 1010 insertions(+)
+ create mode 100644 BUILD.arm_compiler
+ create mode 100644 tools/arm_compiler/BUILD
+ create mode 100644 tools/arm_compiler/CROSSTOOL
 
 diff --git a/BUILD.arm_compiler b/BUILD.arm_compiler
 new file mode 100644
-index 0000000..262a0ea
+index 0000000..37110b6
 --- /dev/null
 +++ b/BUILD.arm_compiler
-@@ -0,0 +1,82 @@
+@@ -0,0 +1,81 @@
 +package(default_visibility = ['//visibility:public'])
 +
 +filegroup(
@@ -72,10 +81,9 @@ index 0000000..262a0ea
 +  name = 'compiler_pieces',
 +  srcs = glob([
 +    'usr/include/**',
-+    'usr/lib/%%CT_NAME%%/**',
-+    'usr/lib/%%CT_NAME%%/gcc/**',
-+    'usr/libexec/%%CT_NAME%%/**',
-+    'usr/include/gcc-build-internal-%%CT_NAME%%/**',
++    'usr/lib64/%%CT_NAME%%/**',
++    'usr/lib64/%%CT_NAME%%/gcc/**',
++    'usr/include/glibc-locale-internal-%%CT_NAME%%/**',
 +  ]),
 +)
 +
@@ -94,7 +102,7 @@ index 0000000..262a0ea
 +)
 diff --git a/tools/arm_compiler/BUILD b/tools/arm_compiler/BUILD
 new file mode 100644
-index 0000000..04f3abe
+index 0000000..2a73488
 --- /dev/null
 +++ b/tools/arm_compiler/BUILD
 @@ -0,0 +1,50 @@
@@ -103,7 +111,7 @@ index 0000000..04f3abe
 +cc_toolchain_suite(
 +  name = 'toolchain',
 +  toolchains = {
-+    'armeabi-v7a|compiler':':cc-compiler-armeabi-v7a',
++    'arm64-v8a|compiler':':cc-compiler-arm64-v8a',
 +    "local|compiler": ":cc-compiler-local",
 +  },
 +)
@@ -136,10 +144,10 @@ index 0000000..04f3abe
 +
 +
 +cc_toolchain(
-+  name = 'cc-compiler-armeabi-v7a',
++  name = 'cc-compiler-arm64-v8a',
 +  all_files = ':toolchain_linux_all_files',
 +  compiler_files = ':toolchain_linux_all_files',
-+  cpu = 'armeabi-v7a',
++  cpu = 'arm64-v8a',
 +  dwp_files = ':empty',
 +  dynamic_runtime_libs = [':empty'],
 +  linker_files = ':toolchain_linux_all_files',
@@ -150,10 +158,10 @@ index 0000000..04f3abe
 +)
 diff --git a/tools/arm_compiler/CROSSTOOL b/tools/arm_compiler/CROSSTOOL
 new file mode 100644
-index 0000000..c4c7a4a
+index 0000000..ac1c528
 --- /dev/null
 +++ b/tools/arm_compiler/CROSSTOOL
-@@ -0,0 +1,881 @@
+@@ -0,0 +1,879 @@
 +major_version: "local"
 +minor_version: ""
 +default_target_cpu: "same_as_host"
@@ -175,7 +183,7 @@ index 0000000..c4c7a4a
 +  toolchain_identifier: "local_freebsd"
 +}
 +default_toolchain {
-+  cpu: "armeabi-v7a"
++  cpu: "arm64-v8a"
 +  toolchain_identifier: "%%CT_NAME%%"
 +}
 +default_toolchain {
@@ -196,11 +204,11 @@ index 0000000..c4c7a4a
 +}
 +
 +toolchain {
-+  abi_version: "armeabi-v7a"
-+  abi_libc_version: "armeabi-v7a"
++  abi_version: "arm64-v8a"
++  abi_libc_version: "arm64-v8a"
 +  builtin_sysroot: ""
 +  compiler: "compiler"
-+  host_system_name: "armeabi-v7a"
++  host_system_name: "arm64-v8a"
 +  needsPic: true
 +  supports_gold_linker: false
 +  supports_incremental_linker: false
@@ -208,9 +216,9 @@ index 0000000..c4c7a4a
 +  supports_interface_shared_objects: false
 +  supports_normalizing_ar: false
 +  supports_start_end_lib: false
-+  target_libc: "armeabi-v7a"
-+  target_cpu: "armeabi-v7a"
-+  target_system_name: "armeabi-v7a"
++  target_libc: "arm64-v8a"
++  target_cpu: "arm64-v8a"
++  target_system_name: "arm64-v8a"
 +  toolchain_identifier: "%%CT_NAME%%"
 +
 +  tool_path { name: "compat-ld" path: "/bin/false" }
@@ -257,10 +265,8 @@ index 0000000..c4c7a4a
 +  compiler_flag: "-D_FORTIFY_SOURCE=1"
 +  compiler_flag: "-fstack-protector"
 +  compiler_flag: "--sysroot=%%CT_STAGING_DIR%%"
-+  compiler_flag: "-march=armv7-a"
-+  compiler_flag: "-mfloat-abi=hard"
-+  compiler_flag: "-mfpu=neon-vfpv4"
-+  compiler_flag: "-mtune=cortex-a15"
++  compiler_flag: "-march=armv8-a"
++  compiler_flag: "-mtune=cortex-a57.cortex-a53"
 +  compiler_flag: "-funsafe-math-optimizations"
 +  compiler_flag: "-ftree-vectorize"
 +  compiler_flag: "-fomit-frame-pointer"
@@ -271,7 +277,7 @@ index 0000000..c4c7a4a
 +  linker_flag: "-Wl,--build-id=md5"
 +  linker_flag: "-Wl,--hash-style=gnu"
 +  linker_flag: "--sysroot=%%CT_STAGING_DIR%%"
-+  linker_flag: "-Wl,--dynamic-linker=/lib/ld-linux-armhf.so.3"
++  linker_flag: "-Wl,--dynamic-linker=/lib/ld-linux-aarch64.so.1"
 +
 +  compilation_mode_flags {
 +    mode: DBG
@@ -1035,3 +1041,6 @@ index 0000000..c4c7a4a
 +    compiler_flag: "-Xcompilation-mode=opt"
 +  }
 +}
+-- 
+2.7.4
+
