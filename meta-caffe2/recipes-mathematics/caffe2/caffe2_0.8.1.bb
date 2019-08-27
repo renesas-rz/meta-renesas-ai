@@ -13,7 +13,7 @@ COMPATIBLE_MACHINE = "(iwg20m-g1m|iwg21m|iwg22m)"
 S = "${WORKDIR}/git"
 
 SRC_URI = " \
-	git://github.com/caffe2/caffe2.git \
+	git://github.com/facebookarchive/caffe2.git \
 	file://0001-Remove-unwind-symbol.patch \
 	file://0002-Always-use-third_party-eigen.patch \
 	file://0001-Fix-compilation-errors-when-using-GCC-7.2.1.patch \
