@@ -1,12 +1,18 @@
 # meta-renesas-ai #
 This OpenEmbedded/Yocto layer collector adds AI tools support to Renesas RZ/G1
-platforms.
+and RZ/G2 platforms.
 
-
-The layers should be used with the official Renesas RZ/G Yocto Poky BSP based
+### For RZ/G1 ###
+The layers should be used with the official Renesas RZ/G1 Yocto Poky BSP based
 on the CIP Kernel:  
 URI: **https://github.com/renesas-rz/meta-renesas.git**  
 Revision: certified-linux-v2.1.1 (3010443641f9a14d2f2a8044ddaa433c2eef2ea1)
+
+### For RZ/G2 ###
+The layers should be used with the official Renesas RZ/G2 Yocto Poky BSP based
+on the CIP Kernel:
+URI: **https://github.com/renesas-rz/meta-rzg2.git**  
+tag: BSP-1.0.1-update1 (eac71df8f6f98409fad932f8929dcbc86f356f27)
 
 
 For each AI tool, please refer to **meta-${AI\_TOOL\_NAME}/README.md**. For
@@ -27,7 +33,7 @@ the configuration must be inspected and further customized according to the
 project requirements.
 
 
-Supported AI tools:
+Supported AI tools:  
 - TensorFlow v1.10.0  
 - TensorFlow Lite v1.10.0  
 - Caffe2 v0.8.1  
@@ -39,7 +45,7 @@ Supported Platforms:
 - Renesas RZ/G1M iwg20m  
 - Renesas RZ/G1H iwg21m  
 - Renesas RZ/G1E iwg22m  
-
+- Renesas RZ/G2M hihope-rzg2m
 
 ---
 
