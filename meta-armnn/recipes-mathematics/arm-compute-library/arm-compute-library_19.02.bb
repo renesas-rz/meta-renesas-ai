@@ -18,7 +18,7 @@ SRC_URI = " \
 	file://0001-Adding-support-for-building-arm-and-aarch64-CL-with-.patch \
 "
 
-COMPATIBLE_MACHINE = "(iwg20m-g1m|iwg21m|iwg22m|hihope-rzg2m)"
+COMPATIBLE_MACHINE = "(iwg20m-g1m|iwg21m|iwg22m|hihope-rzg2m|ek874)"
 
 S = "${WORKDIR}/git"
 

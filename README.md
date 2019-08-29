@@ -45,7 +45,8 @@ Supported Platforms:
 - Renesas RZ/G1M iwg20m  
 - Renesas RZ/G1H iwg21m  
 - Renesas RZ/G1E iwg22m  
-- Renesas RZ/G2M hihope-rzg2m
+- Renesas RZ/G2M hihope-rzg2m  
+- Renesas RZ/G2E ek874
 
 ---
 

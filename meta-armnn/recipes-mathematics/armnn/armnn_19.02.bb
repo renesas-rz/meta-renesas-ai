@@ -23,7 +23,7 @@ PACKAGES += "${PN}-examples ${PN}-examples-dbg \
              ${PN}-onnx-dev \
 "
 
-COMPATIBLE_MACHINE = "(iwg20m-g1m|iwg21m|iwg22m|hihope-rzg2m)"
+COMPATIBLE_MACHINE = "(iwg20m-g1m|iwg21m|iwg22m|hihope-rzg2m|ek874)"
 
 inherit PyHelper
 
@@ -193,7 +193,7 @@ do_install_append() {
 	install -m 0555 \
 		${WORKDIR}/build/tests/TfLiteMobilenetQuantized-Armnn \
 		${D}${bindir}/${PN}-${PV}/examples/tensorflow-lite/
-	
+
 	chrpath -d ${D}${bindir}/${PN}-${PV}/examples/tensorflow-lite/TfLiteMobilenetQuantized-Armnn
 
 	install -m 0555 \
