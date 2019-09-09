@@ -1,0 +1,30 @@
+From c2085b56b394d35fa2d21dfd577b2440dd02cddf Mon Sep 17 00:00:00 2001
+From: Jianming Qiao <jianming.qiao@bp.renesas.com>
+Date: Sun, 8 Sep 2019 02:18:22 +0100
+Subject: [PATCH] Remove INTERNAL since the upstream patch changes it to the
+ dynamic library
+
+Using INTERNAL flag won't be able to install the orignal .so file and its symlinks
+which is the rule set by OpenCVModule.cmake
+
+Signed-off-by: Jianming Qiao <jianming.qiao@bp.renesas.com>
+---
+ modules/ts/CMakeLists.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/modules/ts/CMakeLists.txt b/modules/ts/CMakeLists.txt
+index ee67858..3ec914a 100644
+--- a/modules/ts/CMakeLists.txt
++++ b/modules/ts/CMakeLists.txt
+@@ -16,7 +16,7 @@ endif()
+ 
+ ocv_warnings_disable(CMAKE_CXX_FLAGS -Wundef)
+ 
+-ocv_add_module(ts INTERNAL opencv_core opencv_imgproc opencv_imgcodecs opencv_videoio opencv_highgui)
++ocv_add_module(ts opencv_core opencv_imgproc opencv_imgcodecs opencv_videoio opencv_highgui)
+ 
+ ocv_glob_module_sources()
+ ocv_module_include_directories()
+-- 
+2.7.4
+

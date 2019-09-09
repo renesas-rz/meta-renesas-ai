@@ -39,6 +39,7 @@ Supported AI tools:
 - Caffe2 v0.8.1  
 - Arm Neural Network SDK v19.02  
 - ONNX Runtime v0.4.0
+- OpenCV v4.1.1
 
 
 Supported Platforms:  

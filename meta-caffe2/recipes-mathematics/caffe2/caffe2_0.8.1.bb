@@ -16,6 +16,7 @@ SRC_URI = " \
 	git://github.com/facebookarchive/caffe2.git \
 	file://0001-Remove-unwind-symbol.patch \
 	file://0002-Always-use-third_party-eigen.patch \
+	file://0001-Add-new-opencv-api-support-for-Caffe2.patch \
 	file://0001-Fix-compilation-errors-when-using-GCC-7.2.1.patch \
 "
 SRC_URI_append_aarch64 = " \

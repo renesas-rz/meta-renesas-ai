@@ -1,0 +1,34 @@
+From dec30df578d789e65245e40854b444256f8b10c5 Mon Sep 17 00:00:00 2001
+From: Jianming Qiao <jianming.qiao@bp.renesas.com>
+Date: Mon, 26 Aug 2019 22:56:38 +0100
+Subject: [PATCH] Remove download_vgg and download_boostdesc
+
+vgg and bbstdesc are downloaded by seperate patch
+
+Signed-off-by: Jianming Qiao <jianming.qiao@bp.renesas.com>
+---
+ modules/xfeatures2d/CMakeLists.txt | 7 -------
+ 1 file changed, 7 deletions(-)
+
+diff --git a/modules/xfeatures2d/CMakeLists.txt b/modules/xfeatures2d/CMakeLists.txt
+index 84c8f10..21de755 100644
+--- a/modules/xfeatures2d/CMakeLists.txt
++++ b/modules/xfeatures2d/CMakeLists.txt
+@@ -2,14 +2,7 @@ set(the_description "Contributed/Experimental Algorithms for Salient 2D Features
+ 
+ ocv_define_module(xfeatures2d opencv_core opencv_imgproc opencv_features2d opencv_calib3d OPTIONAL opencv_shape opencv_ml opencv_cudaarithm WRAP python java)
+ 
+-include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/download_vgg.cmake)
+-include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/download_boostdesc.cmake)
+ set(DOWNLOAD_DIR "${OpenCV_BINARY_DIR}/downloads/xfeatures2d")
+-download_boost_descriptors("${DOWNLOAD_DIR}" boost_status)
+-download_vgg_descriptors("${DOWNLOAD_DIR}" vgg_status)
+-if(NOT boost_status OR NOT vgg_status)
+-  ocv_module_disable(xfeatures2d)
+-endif()
+ 
+ ocv_module_include_directories("${DOWNLOAD_DIR}")
+ 
+-- 
+2.7.4
+

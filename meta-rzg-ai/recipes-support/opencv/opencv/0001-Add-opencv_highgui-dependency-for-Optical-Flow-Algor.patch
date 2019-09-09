@@ -1,0 +1,21 @@
+From 9232e0d7f96f2bb19182b3f65962567046895c2d Mon Sep 17 00:00:00 2001
+From: Jianming Qiao <jianming.qiao@bp.renesas.com>
+Date: Mon, 26 Aug 2019 17:16:04 +0100
+Subject: [PATCH] Add opencv_highgui dependency for Optical Flow Algorithms
+
+Signed-off-by: Jianming Qiao <jianming.qiao@bp.renesas.com>
+---
+ modules/optflow/CMakeLists.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/modules/optflow/CMakeLists.txt b/modules/optflow/CMakeLists.txt
+index e423274..3982fb6 100644
+--- a/modules/optflow/CMakeLists.txt
++++ b/modules/optflow/CMakeLists.txt
+@@ -1,2 +1,2 @@
+ set(the_description "Optical Flow Algorithms")
+-ocv_define_module(optflow opencv_core opencv_imgproc opencv_calib3d opencv_video opencv_ximgproc opencv_imgcodecs opencv_flann WRAP python)
++ocv_define_module(optflow opencv_core opencv_highgui opencv_imgproc opencv_calib3d opencv_video opencv_ximgproc opencv_imgcodecs opencv_flann WRAP python)
+-- 
+2.7.4
+
