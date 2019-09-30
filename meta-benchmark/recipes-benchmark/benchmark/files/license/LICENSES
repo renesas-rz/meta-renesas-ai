@@ -1,3 +1,8 @@
+FileName:squeezenet_v1.1.caffemodel
+Source:https://github.com/DeepScale/SqueezeNet/blob/master/SqueezeNet_v1.1/squeezenet_v1.1.caffemodel
+License:BSD 2-Clause "Simplified" License
+md5sum:0357e4e11d173c72a01615888826bc8e
+
 FileName:grace_hopper.bmp
 Source:https://github.com/tensorflow/tensorflow/tree/master/tensorflow/contrib/lite/examples/label_image/testdata/grace_hopper.bmp
 License:Apache License 2.0

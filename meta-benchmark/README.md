@@ -1,7 +1,7 @@
 # meta-benchmark
 
 This meta-layer provides benchmark tools for Arm NN SDK, Caffe2, TensorFlow,
-TensorFlow Lite and ONNX Runtime.
+TensorFlow Lite, ONNX Runtime and OpenCV.
 
 Each framework has its own benchmark tool.
 
@@ -10,6 +10,7 @@ Each framework has its own benchmark tool.
 * For TensorFlow, it is tensorflowBenchmark
 * For TensorFlow-lite, it is tensorflow-lite-benchmark
 * For ONNX Runtime, it is onnxruntime_benchmark
+* For OpenCV, it is opencv-benchmark.sh
 
 The output of each benchmark tool shows the average inference time and the
 standard deviation for each available model, which are printed in the terminal.
@@ -94,4 +95,12 @@ cd /usr/bin/onnxruntime_benchmark
 
 # Run inference 30 times
 ./onnxruntime_benchmark.sh
+```
+
+## OpenCV
+```bash
+cd /usr/bin/opencvBenchmark
+
+# Run inference 30 times
+./opencv-benchmark.sh
 ```
