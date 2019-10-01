@@ -50,7 +50,8 @@ SRC_URI[ssd_mobilenetv2_pbtxt.sha256sum] = "cfbecf9447c384403ef5cf695f4cd0bb4840
 
 
 PACKAGECONFIG = "python2 dnn eigen jpeg png tiff v4l libv4l gstreamer samples tbb gphoto2 \
-    ${@bb.utils.contains("DISTRO_FEATURES", "x11", "wayland", "gtk", d)} \
+    ${@bb.utils.contains("DISTRO_FEATURES", "x11", "gtk", "", d)} \
+    ${@bb.utils.contains("DISTRO_FEATURES", "wayland", "wayland", "", d)} \
     ${@bb.utils.contains("LICENSE_FLAGS_WHITELIST", "commercial", "libav", "", d)}"
 
 inherit ${@bb.utils.contains('PACKAGECONFIG', 'python3', 'distutils3-base', '', d)}
