@@ -4,7 +4,7 @@ COMPATIBLE_MACHINE = "(iwg20m-g1m|iwg21m|iwg22m|hihope-rzg2m|ek874)"
 
 DEPENDS_append = "python-native"
 
-#label file synset_words.txt is originally from 
+#label file synset_words.txt is originally from
 #https://raw.githubusercontent.com/opencv/opencv/master/samples/data/dnn/synset_words.txt
 
 SRC_URI_append = " \
@@ -14,13 +14,14 @@ SRC_URI_append = " \
            https://github.com/tensorflow/models/raw/master/research/object_detection/test_images/image2.jpg;downloadfilename=object_detection_sample.jpg;name=object_detection_sample \
            https://github.com/opencv/opencv/raw/master/samples/data/dnn/classification_classes_ILSVRC2012.txt;name=classes_ILSVRC2012 \
            https://github.com/opencv/opencv_extra/raw/master/testdata/dnn/bvlc_googlenet.prototxt;name=bvlc_googlenet_proto \
-           http://dl.caffe.berkeleyvision.org/bvlc_googlenet.caffemodel;name=bvlc_googlenet_proto_caffe \
            https://github.com/opencv/opencv_extra/blob/master/testdata/dnn/dog416.png?raw=true;downloadfilename=dog416.png;name=dog416 \
            https://github.com/opencv/opencv_extra/raw/master/testdata/dnn/ssd_mobilenet_v2_coco_2018_03_29.pbtxt;name=ssd_mobilenetv2_pbtxt \
            file://synset_words.txt \
            file://opencv-onnx-image-classification.py \
            file://opencv-tensorflow-object-detection.py \
-           "
+           file://bvlc_googlenet.caffemodel \
+"
+
 SRC_URI[onnx-squeezenet.md5sum] = "92e240a948f9bbc92534d752eb465317"
 SRC_URI[onnx-squeezenet.sha256sum] = "f4c9a2906a949f089bee5ef1bf9ea1c0dc1b49d5abeb1874fff3d206751d0f3b"
 
@@ -32,9 +33,6 @@ SRC_URI[sapce_shuttle.sha256sum] = "12a9c70863d95a9b6de0795ab9b9ba7ec59bd58eaac7
 
 SRC_URI[classes_ILSVRC2012.md5sum] = "4fdfb6d202e9d8e65da14c78b604af95"
 SRC_URI[classes_ILSVRC2012.sha256sum] = "4eb3da435cf544e4a6f390f62c84cb9c9bb68cf8b14e97f8a063452382e5efd2"
-
-SRC_URI[bvlc_googlenet_proto_caffe.md5sum] = "dc05671f0443708da1b0d0ae0e0c9cad"
-SRC_URI[bvlc_googlenet_proto_caffe.sha256sum] = "6f7101e3a2183738a7125a0c5021ba82a1feb4228c5ca0924d991b6daf6f6fad"
 
 SRC_URI[bvlc_googlenet_proto.md5sum] = "a0888d41230461469a4a2d62fb9058d7"
 SRC_URI[bvlc_googlenet_proto.sha256sum] = "3cf5576e43eaf70fdd8b599d0dabc4825c318df49ff9430d6c48c3a3668d9476"
