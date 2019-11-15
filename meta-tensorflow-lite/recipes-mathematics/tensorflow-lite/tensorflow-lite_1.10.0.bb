@@ -40,7 +40,8 @@ do_install(){
 	cp -r \
 		${S}/tensorflow/contrib/lite/gen/lib/* \
 		${D}${libdir}
-
+	cd ${S}
+	find tensorflow/contrib/lite -name "*.h" | cpio -pdm ${D}${includedir}/
 	install -d ${D}${includedir}/tensorflow_lite
 	cd ${S}/tensorflow/contrib/lite
 	cp --parents \
