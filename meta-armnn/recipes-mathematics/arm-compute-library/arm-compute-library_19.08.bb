@@ -9,9 +9,9 @@ HOMEPAGE = "https://developer.arm.com/technologies/compute-library"
 DESCRIPTION = "Arm Compute Library"
 LICENSE = "MIT"
 
-LIC_FILES_CHKSUM = "file://LICENSE;md5=762a7ba8d2ddc3b38d88742fbaf0b62d"
+LIC_FILES_CHKSUM = "file://LICENSE;md5=8948bc85114b3b716576ef8d732f034f"
 
-SRCREV = "514be65ad8d3340f53fd9591035352ed285811ba"
+SRCREV = "975dfe175e3d7c62c27598b1c0e8e77ed90df463"
 
 SRC_URI = " \
 	git://github.com/ARM-software/ComputeLibrary.git \
@@ -53,17 +53,17 @@ do_install() {
 	cp $CP_ARGS ${S}/support ${D}${datadir}/${BPN}/.
 }
 
-FILES_${PN} = "${libdir}/libarm_compute_core.so.14.0.0 \
-               ${libdir}/libarm_compute_graph.so.14.0.0 \
-               ${libdir}/libarm_compute.so.14.0.0 \
+FILES_${PN} = "${libdir}/libarm_compute_core.so.16.0.0 \
+               ${libdir}/libarm_compute_graph.so.16.0.0 \
+               ${libdir}/libarm_compute.so.16.0.0 \
 "
 
 #Symlink .so files should go into the -dev package
 FILES_${PN}-dev = "${datadir}/arm-compute-library \
-                   ${libdir}/libarm_compute_graph.so.14 \
-                   ${libdir}/libarm_compute.so.14 \
+                   ${libdir}/libarm_compute_graph.so.16 \
+                   ${libdir}/libarm_compute.so.16 \
                    ${libdir}/libarm_compute.so \
-                   ${libdir}/libarm_compute_core.so.14 \
+                   ${libdir}/libarm_compute_core.so.16 \
                    ${libdir}/libarm_compute_core.so \
                    ${libdir}/libarm_compute_graph.so \
 "

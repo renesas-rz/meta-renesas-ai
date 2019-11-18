@@ -1,7 +1,7 @@
-From 2509575fef1db6a2d25061906b727cfd459edfc0 Mon Sep 17 00:00:00 2001
+From 8d85004d9e746b5d3c4d086fa279f93bb80e5728 Mon Sep 17 00:00:00 2001
 From: Jianming Qiao <jianming.qiao@bp.renesas.com>
-Date: Mon, 19 Aug 2019 21:44:41 +0100
-Subject: [PATCH 1/1] Add generic Arm NN SDK inference framework and test code
+Date: Sun, 24 Nov 2019 22:27:24 +0000
+Subject: [PATCH] Add generic Arm NN SDK inference framework and test code
 
 A C++ framework and test that is able to seperate the original
 Armnn test framework class into following four independent steps:
@@ -13,15 +13,16 @@ Armnn test framework class into following four independent steps:
 Signed-off-by: Jianming Qiao <jianming.qiao@bp.renesas.com>
 ---
  tests/CMakeLists.txt                              |  29 ++
- tests/RenesasSample-Armnn/RenesasSample-Armnn.cpp | 433 ++++++++++++++++++++++
- 2 files changed, 462 insertions(+)
+ tests/InferenceTest.hpp                           |  47 +++
+ tests/RenesasSample-Armnn/RenesasSample-Armnn.cpp | 431 ++++++++++++++++++++++
+ 3 files changed, 507 insertions(+)
  create mode 100644 tests/RenesasSample-Armnn/RenesasSample-Armnn.cpp
 
 diff --git a/tests/CMakeLists.txt b/tests/CMakeLists.txt
-index 9913321..9f9aec6 100644
+index 1961254..fe05cc5 100644
 --- a/tests/CMakeLists.txt
 +++ b/tests/CMakeLists.txt
-@@ -245,6 +245,18 @@ if (BUILD_ARMNN_SERIALIZER OR BUILD_CAFFE_PARSER OR BUILD_TF_PARSER OR BUILD_TF_
+@@ -257,6 +257,18 @@ if (BUILD_ARMNN_SERIALIZER OR BUILD_CAFFE_PARSER OR BUILD_TF_PARSER OR BUILD_TF_
      set(ExecuteNetwork_sources
          ExecuteNetwork/ExecuteNetwork.cpp)
  
@@ -40,7 +41,7 @@ index 9913321..9f9aec6 100644
      add_executable_ex(ExecuteNetwork ${ExecuteNetwork_sources})
      target_include_directories(ExecuteNetwork PRIVATE ../src/armnn)
      target_include_directories(ExecuteNetwork PRIVATE ../src/armnnUtils)
-@@ -252,29 +264,46 @@ if (BUILD_ARMNN_SERIALIZER OR BUILD_CAFFE_PARSER OR BUILD_TF_PARSER OR BUILD_TF_
+@@ -264,31 +276,48 @@ if (BUILD_ARMNN_SERIALIZER OR BUILD_CAFFE_PARSER OR BUILD_TF_PARSER OR BUILD_TF_
  
      if (BUILD_ARMNN_SERIALIZER)
          target_link_libraries(ExecuteNetwork armnnSerializer)
@@ -87,12 +88,72 @@ index 9913321..9f9aec6 100644
 +    addDllCopyCommands(RenesasSample-Armnn)
 +
  endif()
+ 
+ if(BUILD_ACCURACY_TOOL)
+diff --git a/tests/InferenceTest.hpp b/tests/InferenceTest.hpp
+index f2b8c63..97cb66e 100644
+--- a/tests/InferenceTest.hpp
++++ b/tests/InferenceTest.hpp
+@@ -98,6 +98,53 @@ public:
+     virtual bool OnInferenceTestFinished() { return true; };
+ };
+ 
++template <typename TDataType>
++struct ToFloat { }; // nothing defined for the generic case
++
++template <>
++struct ToFloat<float>
++{
++    static inline float Convert(float value, const InferenceModelInternal::QuantizationParams &)
++    {
++        // assuming that float models are not quantized
++        return value;
++    }
++
++    static inline float Convert(int value, const InferenceModelInternal::QuantizationParams &)
++    {
++        // assuming that float models are not quantized
++        return static_cast<float>(value);
++    }
++};
++
++template <>
++struct ToFloat<uint8_t>
++{
++    static inline float Convert(uint8_t value,
++                                const InferenceModelInternal::QuantizationParams & quantizationParams)
++    {
++        return armnn::Dequantize<uint8_t>(value,
++                                          quantizationParams.first,
++                                          quantizationParams.second);
++    }
++
++    static inline float Convert(int value,
++                                const InferenceModelInternal::QuantizationParams & quantizationParams)
++    {
++        return armnn::Dequantize<uint8_t>(static_cast<uint8_t>(value),
++                                          quantizationParams.first,
++                                          quantizationParams.second);
++    }
++
++    static inline float Convert(float value,
++                                const InferenceModelInternal::QuantizationParams & quantizationParams)
++    {
++        return armnn::Dequantize<uint8_t>(static_cast<uint8_t>(value),
++                                          quantizationParams.first,
++                                          quantizationParams.second);
++    }
++};
++
+ template <typename TModel>
+ class InferenceModelTestCase : public IInferenceTestCase
+ {
 diff --git a/tests/RenesasSample-Armnn/RenesasSample-Armnn.cpp b/tests/RenesasSample-Armnn/RenesasSample-Armnn.cpp
 new file mode 100644
-index 0000000..00327b8
+index 0000000..97c8638
 --- /dev/null
 +++ b/tests/RenesasSample-Armnn/RenesasSample-Armnn.cpp
-@@ -0,0 +1,433 @@
+@@ -0,0 +1,431 @@
 +﻿/* 
 + * Copyright (C) 2019 Renesas Electronics Corp. 
 + * This file is licensed under the terms of the MIT License
@@ -260,10 +321,9 @@ index 0000000..00327b8
 +        params.m_InputBindings.push_back(std::string(inputName));
 +        params.m_InputShapes.push_back(*inputTensorShape);
 +        params.m_OutputBindings.push_back(outputName);
-+        params.m_EnableProfiling = enableProfiling;
 +        params.m_SubgraphId = subgraphId;
 +        params.m_ComputeDevices = {armnn::Compute::CpuAcc};
-+        InferenceModel<TParser, TDataType> model(params, runtime);
++        InferenceModel<TParser, TDataType> model(params, enableProfiling, "", runtime);
 +
 +        // Executes the model.
 +        std::unique_ptr<ClassifierTestCaseData<TDataType>> TestCaseData;
@@ -273,7 +333,7 @@ index 0000000..00327b8
 +            if(mode_type == "onnx")
 +            {
 +                ImagePreprocessor<TDataType>  Image(inputTensorDataFilePath,inputImageWidth,inputImageHeight,imageSet,\
-+                                                    1.0,0,{{0.485f, 0.456f, 0.406f}},{{0.229f, 0.224f, 0.225f}},\
++                                                    255.0f,{{0.485f, 0.456f, 0.406f}},{{0.229f, 0.224f, 0.225f}},\
 +                                                    ImagePreprocessor<TDataType>::DataFormat::NCHW);
 +
 +                TestCaseData = Image.GetTestCaseData(0);
@@ -292,14 +352,13 @@ index 0000000..00327b8
 +            auto inputBinding = model.GetInputBindingInfo();
 +            printf("Scale %f\n",inputBinding.second.GetQuantizationScale());
 +            printf("Offset %d\n",inputBinding.second.GetQuantizationOffset());
-+            ImagePreprocessor<TDataType>  Image(inputTensorDataFilePath,inputImageWidth,inputImageHeight,imageSet,\
-+	   					inputBinding.second.GetQuantizationScale(), \
-+						inputBinding.second.GetQuantizationOffset());
++
++            ImagePreprocessor<TDataType> Image(inputTensorDataFilePath,inputImageWidth,inputImageHeight,imageSet,\
++                                               1,{{0, 0, 0}},{{1, 1, 1}});
 +
 +            TestCaseData = Image.GetTestCaseData(0);
 +            
 +            outputDataContainers.push_back(std::vector<uint8_t>(model.GetOutputSize()));
-+
 +        }
 +
 +        inputDataContainers.push_back(TestCaseData->m_InputImage);

@@ -173,10 +173,9 @@ int MainImpl(const char* modelPath,
         params.m_InputBindings.push_back(std::string(inputName));
         params.m_InputShapes.push_back(*inputTensorShape);
         params.m_OutputBindings.push_back(outputName);
-        params.m_EnableProfiling = enableProfiling;
         params.m_SubgraphId = subgraphId;
         params.m_ComputeDevices = {armnn::Compute::CpuAcc};
-        InferenceModel<TParser, TDataType> model(params, runtime);
+        InferenceModel<TParser, TDataType> model(params, enableProfiling, "", runtime);
 
         // Executes the model.
         std::unique_ptr<ClassifierTestCaseData<TDataType>> TestCaseData;
@@ -186,7 +185,7 @@ int MainImpl(const char* modelPath,
             if(mode_type == "onnx")
             {
                 ImagePreprocessor<TDataType>  Image(inputTensorDataFilePath,inputImageWidth,inputImageHeight,imageSet,\
-                                                    1.0,0,{{0.485f, 0.456f, 0.406f}},{{0.229f, 0.224f, 0.225f}},\
+                                                    255.0f,{{0.485f, 0.456f, 0.406f}},{{0.229f, 0.224f, 0.225f}},\
                                                     ImagePreprocessor<TDataType>::DataFormat::NCHW);
 
                 TestCaseData = Image.GetTestCaseData(0);
@@ -206,8 +205,7 @@ int MainImpl(const char* modelPath,
             printf("Scale %f\n",inputBinding.second.GetQuantizationScale());
             printf("Offset %d\n",inputBinding.second.GetQuantizationOffset());
             ImagePreprocessor<TDataType>  Image(inputTensorDataFilePath,inputImageWidth,inputImageHeight,imageSet,\
-	   					inputBinding.second.GetQuantizationScale(), \
-						inputBinding.second.GetQuantizationOffset());
+                                                1,{{0, 0, 0}},{{1, 1, 1}});
 
             TestCaseData = Image.GetTestCaseData(0);
 

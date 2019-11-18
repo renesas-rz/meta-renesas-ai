@@ -1,7 +1,7 @@
-From a20b3963537e1946383b0678616253008bacedad Mon Sep 17 00:00:00 2001
+From f8bc6cd4749a26a6d6387bf63091c82281c884f4 Mon Sep 17 00:00:00 2001
 From: Jianming Qiao <jianming.qiao@bp.renesas.com>
-Date: Sun, 3 Feb 2019 00:14:36 +0000
-Subject: [PATCH 1/1] Change test image set to grace_hopper.jpg
+Date: Sun, 10 Nov 2019 17:06:23 +0000
+Subject: [PATCH] Change test image set to grace_hopper.jpg
 
 The name of the image in the Arm NN SDK Test Example is
 hard coded. ARM does not provide any link for these test
@@ -11,12 +11,12 @@ replace them.
 Signed-off-by: Jianming Qiao <jianming.qiao@bp.renesas.com>
 ---
  tests/OnnxMobileNet-Armnn/OnnxMobileNet-Armnn.cpp  |  4 +--
- .../TfLiteMobilenetQuantized-Armnn.cpp             | 29 ++++----------------
- tests/TfMobileNet-Armnn/TfMobileNet-Armnn.cpp      | 32 +++++-----------------
- 3 files changed, 14 insertions(+), 51 deletions(-)
+ .../TfLiteMobilenetQuantized-Armnn.cpp             | 31 ++++-----------------
+ tests/TfMobileNet-Armnn/TfMobileNet-Armnn.cpp      | 32 ++++------------------
+ 3 files changed, 13 insertions(+), 54 deletions(-)
 
 diff --git a/tests/OnnxMobileNet-Armnn/OnnxMobileNet-Armnn.cpp b/tests/OnnxMobileNet-Armnn/OnnxMobileNet-Armnn.cpp
-index 79ee49e..339b005 100644
+index 8786fea..321cc63 100644
 --- a/tests/OnnxMobileNet-Armnn/OnnxMobileNet-Armnn.cpp
 +++ b/tests/OnnxMobileNet-Armnn/OnnxMobileNet-Armnn.cpp
 @@ -14,9 +14,7 @@ int main(int argc, char* argv[])
@@ -31,58 +31,58 @@ index 79ee49e..339b005 100644
  
          armnn::TensorShape inputTensorShape({ 1, 3, 224, 224 });
 diff --git a/tests/TfLiteMobilenetQuantized-Armnn/TfLiteMobilenetQuantized-Armnn.cpp b/tests/TfLiteMobilenetQuantized-Armnn/TfLiteMobilenetQuantized-Armnn.cpp
-index 36b1d14..1b83518 100644
+index 1b411f9..c1c3635 100644
 --- a/tests/TfLiteMobilenetQuantized-Armnn/TfLiteMobilenetQuantized-Armnn.cpp
 +++ b/tests/TfLiteMobilenetQuantized-Armnn/TfLiteMobilenetQuantized-Armnn.cpp
-@@ -16,30 +16,13 @@ int main(int argc, char* argv[])
-         // Coverity fix: The following code may throw an exception of type std::length_error.
-         std::vector<ImageSet> imageSet =
-         {
--            {"Dog.jpg", 209},
--            // top five predictions in tensorflow:
-+            // top five predictions in tensorflow lite:
-             // -----------------------------------
--            // 209:Labrador retriever 0.949995
--            // 160:Rhodesian ridgeback 0.0270182
--            // 208:golden retriever 0.0192866
--            // 853:tennis ball 0.000470382
--            // 239:Greater Swiss Mountain dog 0.000464451
--            {"Cat.jpg", 283},
--            // top five predictions in tensorflow:
--            // -----------------------------------
--            // 283:tiger cat 0.579016
--            // 286:Egyptian cat 0.319676
--            // 282:tabby, tabby cat 0.0873346
--            // 288:lynx, catamount 0.011163
--            // 289:leopard, Panthera pardus 0.000856755
--            {"shark.jpg", 3},
--            // top five predictions in tensorflow:
--            // -----------------------------------
--            // 3:great white shark, white shark, ... 0.996926
--            // 4:tiger shark, Galeocerdo cuvieri 0.00270528
--            // 149:killer whale, killer, orca, ... 0.000121848
--            // 395:sturgeon 7.78977e-05
--            // 5:hammerhead, hammerhead shark 6.44127e-055
-+            // 653:military uniform 0.632812
-+            // 458:bow tie, bow-tie, bowtie 0.0703125
-+            // 452:bolo tie, bolo, bola tie, bola 0.015625
-+            // 0:background 0
-+            {"grace_hopper.jpg", 653},
-         };
- 
-         armnn::TensorShape inputTensorShape({ 1, 224, 224, 3  });
+@@ -30,31 +30,12 @@ std::vector<ImageSet> ParseDataset(const std::string& filename)
+     }
+     else
+     {
+-        // Use the default images
+-        imageSet.push_back(ImageSet("Dog.jpg", 209));
+-        // top five predictions in tensorflow:
+-        // -----------------------------------
+-        // 209:Labrador retriever 0.949995
+-        // 160:Rhodesian ridgeback 0.0270182
+-        // 208:golden retriever 0.0192866
+-        // 853:tennis ball 0.000470382
+-        // 239:Greater Swiss Mountain dog 0.000464451
+-        imageSet.push_back(ImageSet("Cat.jpg", 283));
+-        // top five predictions in tensorflow:
+-        // -----------------------------------
+-        // 283:tiger cat 0.579016
+-        // 286:Egyptian cat 0.319676
+-        // 282:tabby, tabby cat 0.0873346
+-        // 288:lynx, catamount 0.011163
+-        // 289:leopard, Panthera pardus 0.000856755
+-        imageSet.push_back(ImageSet("shark.jpg", 3));
+-        // top five predictions in tensorflow:
+-        // -----------------------------------
+-        // 3:great white shark, white shark, ... 0.996926
+-        // 4:tiger shark, Galeocerdo cuvieri 0.00270528
+-        // 149:killer whale, killer, orca, ... 0.000121848
+-        // 395:sturgeon 7.78977e-05
+-        // 5:hammerhead, hammerhead shark 6.44127e-055
++        // top five predictions in tensorflow lite:
++        // 653:military uniform 0.632812
++        // 458:bow tie, bow-tie, bowtie 0.0703125
++        // 452:bolo tie, bolo, bola tie, bola 0.015625
++        // 0:background 0
++        imageSet.push_back(ImageSet("grace_hopper.jpg", 653));
+     };
+     return imageSet;
+ }
 diff --git a/tests/TfMobileNet-Armnn/TfMobileNet-Armnn.cpp b/tests/TfMobileNet-Armnn/TfMobileNet-Armnn.cpp
-index 6748b12..123df7e 100644
+index 6748b12..6b8370c 100644
 --- a/tests/TfMobileNet-Armnn/TfMobileNet-Armnn.cpp
 +++ b/tests/TfMobileNet-Armnn/TfMobileNet-Armnn.cpp
-@@ -14,32 +14,14 @@ int main(int argc, char* argv[])
+@@ -14,32 +14,12 @@ int main(int argc, char* argv[])
          // Coverity fix: The following code may throw an exception of type std::length_error.
          std::vector<ImageSet> imageSet =
          {
 -            {"Dog.jpg", 209},
 -            // Top five predictions in tensorflow:
-+            // top five predictions in tensorflow:
-             // -----------------------------------
+-            // -----------------------------------
 -            // 209:Labrador retriever 0.46392533
 -            // 160:Rhodesian ridgeback 0.29911423
 -            // 208:golden retriever 0.108059585

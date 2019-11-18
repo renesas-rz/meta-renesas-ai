@@ -46,17 +46,13 @@ SRC_URI = " \
 	file://0001-Add-generic-Arm-NN-SDK-inference-framework-and-test-.patch \
 	file://0001-Do-not-use-the-CMAKE_FIND_ROOT_PATH-variable-when-lo.patch \
 	file://files/rsz_grace_hopper.csv \
-	git://github.com/tensorflow/tensorflow.git;name=tensorflow;branch=r1.10;subdir=${WORKDIR}/tensorflow;destsuffix=tensorflow \
+	git://github.com/tensorflow/tensorflow.git;name=tensorflow;branch=r2.0;subdir=${WORKDIR}/tensorflow;destsuffix=tensorflow \
 	gitsm://github.com/onnx/onnx.git;protocol=https;name=onnx;branch=master;subdir=${WORKDIR}/onnx;destsuffix=onnx \
 "
 
-SRC_URI_append_aarch64 = " \
-	file://0001-Add-usr-lib64-in-Armnn-to-support-64bit-rootfs-struc.patch \
-"
+SRCREV_armnn = "26052fcf2f8c91f3479c9484354e88e8944d004d"
 
-SRCREV_armnn = "120196d394eb5af4b28f78396d1a225ca47cf274"
-
-SRCREV_tensorflow = "656e7a2b347c3c6eb76a6c130ed4b1def567b6c1"
+SRCREV_tensorflow = "1cf0898dd4331baf93fe77205550f2c2e6c90ee5"
 
 SRCREV_onnx = "bae6333e149a59a3faa9c4d9c44974373dcf5256"
 
@@ -124,7 +120,7 @@ EXTRA_OECMAKE=" \
 	-DARMCOMPUTE_ROOT=${STAGING_DIR_TARGET}/usr/share/arm-compute-library/ \
 	-DTF_GENERATED_SOURCES=${WORKDIR}/tensorflow/ \
 	-DONNX_GENERATED_SOURCES=${WORKDIR}/onnx \
-	-DTF_LITE_GENERATED_PATH=${WORKDIR}/tensorflow/tensorflow/contrib/lite/schema \
+	-DTF_LITE_GENERATED_PATH=${WORKDIR}/tensorflow/tensorflow/lite/schema \
 	-DFLATBUFFERS_ROOT=${STAGING_DIR_TARGET}/usr/ \
 	-DBOOST_ROOT=${STAGING_DIR_TARGET}/usr/ \
 	-DFLATC_DIR=${STAGING_DIR_NATIVE}${prefix}/bin/ \
@@ -223,7 +219,7 @@ do_install_append() {
 	install -d ${D}${includedir}/armnn-tensorflow-lite/schema
 
 	install -m 0644 \
-                ${WORKDIR}/tensorflow/tensorflow/contrib/lite/schema/schema.fbs \
+                ${WORKDIR}/tensorflow/tensorflow/lite/schema/schema.fbs \
                 ${D}${includedir}/armnn-tensorflow-lite/schema/
 
 	cd ${D}${bindir}
@@ -266,6 +262,51 @@ do_install_append() {
 
 	#Remove Unsupported Caffe Parser files
 	rm -rf ${D}/${includedir}/armnnCaffeParser
+
+	#Install backend unit test utilities
+	install -d ${D}${bindir}/${PN}-${PV}/examples/UnitTests/src/backends/backendsCommon/test
+        
+	install -d ${D}${bindir}/${PN}-${PV}/examples/UnitTests/src/backends/dynamic/reference/
+
+	cp -Pr ${WORKDIR}/build/src/backends/backendsCommon/test/testSharedObject \
+	       ${D}${bindir}/${PN}-${PV}/examples/UnitTests/src/backends/backendsCommon/test/
+
+	cp -Pr ${WORKDIR}/build/src/backends/backendsCommon/test/testDynamicBackend \
+	       ${D}${bindir}/${PN}-${PV}/examples/UnitTests/src/backends/backendsCommon/test/
+
+	cp -Pr ${WORKDIR}/build/src/backends/backendsCommon/test/backendsTestPath1 \
+	       ${D}${bindir}/${PN}-${PV}/examples/UnitTests/src/backends/backendsCommon/test/
+
+	cp -Pr ${WORKDIR}/build/src/backends/backendsCommon/test/backendsTestPath2 \
+	       ${D}${bindir}/${PN}-${PV}/examples/UnitTests/src/backends/backendsCommon/test/
+
+	cp -Pr ${WORKDIR}/build/src/backends/backendsCommon/test/backendsTestPath3 \
+	       ${D}${bindir}/${PN}-${PV}/examples/UnitTests/src/backends/backendsCommon/test/
+
+	cp -Pr ${WORKDIR}/build/src/backends/backendsCommon/test/backendsTestPath5 \
+	       ${D}${bindir}/${PN}-${PV}/examples/UnitTests/src/backends/backendsCommon/test/
+
+	cp -Pr ${WORKDIR}/build/src/backends/backendsCommon/test/backendsTestPath6 \
+	       ${D}${bindir}/${PN}-${PV}/examples/UnitTests/src/backends/backendsCommon/test/
+
+	cp -Pr ${WORKDIR}/build/src/backends/backendsCommon/test/backendsTestPath7 \
+	       ${D}${bindir}/${PN}-${PV}/examples/UnitTests/src/backends/backendsCommon/test/
+
+	cp -Pr ${WORKDIR}/build/src/backends/backendsCommon/test/backendsTestPath9 \
+	       ${D}${bindir}/${PN}-${PV}/examples/UnitTests/src/backends/backendsCommon/test/
+
+	cp -Pr ${WORKDIR}/build/src/backends/dynamic/reference/Arm_CpuRef_backend.so \
+	       ${D}${bindir}/${PN}-${PV}/examples/UnitTests/src/backends/dynamic/reference/
+
+	chrpath -d ${D}${bindir}/${PN}-${PV}/examples/UnitTests/src/backends/backendsCommon/test/testDynamicBackend/*
+
+	chrpath -d ${D}${bindir}/${PN}-${PV}/examples/UnitTests/src/backends/backendsCommon/test/backendsTestPath5/*
+
+	chrpath -d ${D}${bindir}/${PN}-${PV}/examples/UnitTests/src/backends/backendsCommon/test/backendsTestPath9/*
+
+	chrpath -d ${D}${bindir}/${PN}-${PV}/examples/UnitTests/src/backends/backendsCommon/test/backendsTestPath6/*
+
+	chrpath -d ${D}${bindir}/${PN}-${PV}/examples/UnitTests/src/backends/dynamic/reference/*
 }
 
 CXXFLAGS += "-fopenmp"
@@ -279,6 +320,7 @@ FILES_${PN}-dev = " \
 	${includedir}/armnn \
 	${includedir}/armnnDeserializer \
 	${includedir}/armnnSerializer \
+	${includedir}/armnnQuantizer \
 "
 
 FILES_${PN}-dbg = " \
@@ -293,12 +335,16 @@ FILES_${PN}-examples = " \
 	${bindir}/${PN}-${PV}/examples/RenesasSample-Armnn \
 	${bindir}/${PN}-${PV}/examples/images \
 	${bindir}/${PN}-${PV}/examples/ExecuteNetwork \
+	${bindir}/${PN}-${PV}/examples/UnitTests/src/backends/backendsCommon \
+	${bindir}/${PN}-${PV}/examples/UnitTests/src/backends/dynamic \
 "
 
 FILES_${PN}-examples-dbg = " \
 	${bindir}/${PN}-${PV}/examples/SampleApp/.debug \
 	${bindir}/${PN}-${PV}/examples/RenesasSample-Armnn/.debug \
 	${bindir}/${PN}-${PV}/examples/UnitTests/.debug \
+	${bindir}/${PN}-${PV}/examples/UnitTests/src/backends/backendsCommon/test/testSharedObject/.debug \
+	${bindir}/${PN}-${PV}/examples/UnitTests/src/backends/backendsCommon/test/testDynamicBackend/.debug \
 "
 
 FILES_${PN}-tensorflow-lite-examples = " \
@@ -366,3 +412,5 @@ FILES_${PN}-onnx-dev = " \
 FILES_${PN}-dev += "${libdir}/cmake/*"
 INSANE_SKIP_${PN}-dev = "dev-elf"
 INSANE_SKIP_${PN} = "dev-deps"
+INSANE_SKIP_${PN}-examples = "dev-so libdir"
+INSANE_SKIP_${PN}-examples-dbg = "libdir"
