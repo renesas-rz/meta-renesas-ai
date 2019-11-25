@@ -8,8 +8,7 @@ LICENSE = "MIT & Apache-2.0"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=3e14a924c16f7d828b8335a59da64074 \
                     file://${COMMON_LICENSE_DIR}/Apache-2.0;md5=89aea4e17d99a7cacdbeed46a0096b10"
 
-PACKAGES += "${PN}-examples ${PN}-examples-dbg \
-             ${PN}-tensorflow-lite-examples \
+PACKAGES += "${PN}-tensorflow-lite-examples \
              ${PN}-tensorflow-lite-examples-dbg \
              ${PN}-tensorflow-lite \
              ${PN}-tensorflow-lite-dev \
@@ -21,6 +20,7 @@ PACKAGES += "${PN}-examples ${PN}-examples-dbg \
              ${PN}-onnx-examples-dbg \
              ${PN}-onnx \
              ${PN}-onnx-dev \
+             ${PN}-examples ${PN}-examples-dbg \
 "
 
 COMPATIBLE_MACHINE = "(iwg20m-g1m|iwg21m|iwg22m|hihope-rzg2m|ek874)"
