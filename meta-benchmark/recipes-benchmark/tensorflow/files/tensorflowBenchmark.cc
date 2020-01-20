@@ -96,6 +96,15 @@ void CaculateAvergeDeviation(std::vector<double>& time_vec)
 }
 
 
+float stddev(std::vector<float> const & func)
+{
+    float mean = std::accumulate(func.begin(), func.end(), 0.0) / func.size();
+    float sq_sum = std::inner_product(func.begin(), func.end(), func.begin(), 0.0,
+        [](float const & x, float const & y) { return x + y; },
+        [mean](float const & x, float const & y) { return (x - mean)*(y - mean); });
+    return sq_sum / ( func.size() - 1 );
+}
+
 // Takes a file name, and loads a list of labels from it, one per line, and
 // returns a vector of the strings. It pads with empty strings so the length
 // of the result is a multiple of 16, because our model expects that.
@@ -137,7 +146,7 @@ static Status ReadEntireFile(tensorflow::Env* env, const string& filename,
                                         "' expected ", file_size, " got ",
                                         data.size());
   }
-  output->scalar<string>()() = data.ToString();
+  output->scalar<string>()() = string(data);
   return Status::OK();
 }
 
@@ -304,15 +313,6 @@ Status CheckTopLabel(const std::vector<Tensor>& outputs, int expected,
   return Status::OK();
 }
 
-float stddev(std::vector<float> const & func)
-{
-    float mean = std::accumulate(func.begin(), func.end(), 0.0) / func.size();
-    float sq_sum = std::inner_product(func.begin(), func.end(), func.begin(), 0.0,
-        [](float const & x, float const & y) { return x + y; },
-        [mean](float const & x, float const & y) { return (x - mean)*(y - mean); });
-    return sq_sum / ( func.size() - 1 );
-}
-
 int main(int argc, char* argv[]) {
   // These are the command-line flags the program can understand.
   // They define where the graph and input data is located, and what kind of
@@ -387,6 +387,10 @@ int main(int argc, char* argv[]) {
 
   Status run_status = session->Run({{input_layer, resized_tensor}},
                                    {output_layer}, {}, &outputs);
+  if (!run_status.ok()) {
+    LOG(ERROR) << "Running model failed: " << run_status;
+    return -1;
+  }
 
   for (int i = 0; i < TEST_NUMBER; i++)
   {

@@ -10,9 +10,11 @@ SRC_URI += " \
 "
 
 do_compile_append() {
-	${CC} ../tensorflowBenchmark.cc -o tensorflowBenchmark \
+	${CXX} -std=c++11 ../tensorflowBenchmark.cc -o tensorflowBenchmark \
 		-I . -I ./bazel-genfiles -I ${STAGING_DIR_TARGET}/usr/include/eigen3 \
 		-I ${STAGING_DIR_TARGET}/usr/include -L ./bazel-bin/tensorflow/ \
+		-I ${WORKDIR}/output_base/external/com_google_absl/ \
+		-I ${WORKDIR}/output_base/external/com_google_protobuf/src/ \
 		-ltensorflow_cc -lstdc++ -lm ${LDFLAGS}
 }
 
