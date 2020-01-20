@@ -1,0 +1,192 @@
+From 32e908df2622e9121bb81f1bfc6ef4b248a3bd98 Mon Sep 17 00:00:00 2001
+From: Jianming Qiao <jianming.qiao@bp.renesas.com>
+Date: Thu, 5 Dec 2019 00:13:15 +0000
+Subject: [PATCH] Add Tensorflow 2.0 cross-compile support
+
+Signed-off-by: Jianming Qiao <jianming.qiao@bp.renesas.com>
+---
+ BUILD.yocto_compiler                               | 82 ++++++++++++++++++++++
+ WORKSPACE                                          |  6 ++
+ tensorflow/workspace.bzl                           |  8 +++
+ third_party/repo.bzl                               |  1 +
+ .../toolchains/yocto/yocto_compiler_configure.bzl  | 24 +++++++
+ 5 files changed, 121 insertions(+)
+ create mode 100644 BUILD.yocto_compiler
+ create mode 100644 third_party/toolchains/yocto/yocto_compiler_configure.bzl
+
+diff --git a/BUILD.yocto_compiler b/BUILD.yocto_compiler
+new file mode 100644
+index 0000000..0dd84d3
+--- /dev/null
++++ b/BUILD.yocto_compiler
+@@ -0,0 +1,82 @@
++package(default_visibility = ['//visibility:public'])
++
++filegroup(
++  name = 'gcc',
++  srcs = [
++    'recipe-sysroot-native/usr/bin/%%CT_NAME%%/%%CT_NAME%%-gcc',
++  ],
++)
++
++filegroup(
++  name = 'ar',
++  srcs = [
++    'recipe-sysroot-native/usr/bin/%%CT_NAME%%/%%CT_NAME%%-ar',
++  ],
++)
++
++filegroup(
++  name = 'ld',
++  srcs = [
++    'recipe-sysroot-native/usr/bin/%%CT_NAME%%/%%CT_NAME%%-ld',
++  ],
++)
++
++filegroup(
++  name = 'nm',
++  srcs = [
++    'recipe-sysroot-native/usr/bin/%%CT_NAME%%/%%CT_NAME%%-nm',
++  ],
++)
++
++filegroup(
++  name = 'objcopy',
++  srcs = [
++    'recipe-sysroot-native/usr/bin/%%CT_NAME%%/%%CT_NAME%%-objcopy',
++  ],
++)
++
++filegroup(
++  name = 'objdump',
++  srcs = [
++    'recipe-sysroot-native/usr/bin/%%CT_NAME%%/%%CT_NAME%%-objdump',
++  ],
++)
++
++filegroup(
++  name = 'strip',
++  srcs = [
++    'recipe-sysroot-native/usr/bin/%%CT_NAME%%/%%CT_NAME%%-strip',
++  ],
++)
++
++filegroup(
++  name = 'as',
++  srcs = [
++    'recipe-sysroot-native/usr/bin/%%CT_NAME%%/%%CT_NAME%%-as',
++  ],
++)
++
++filegroup(
++  name = 'compiler_pieces',
++  srcs = glob([
++    'recipe-sysroot-native/usr/include/**',
++    'recipe-sysroot-native/usr/lib/%%CT_NAME%%/**',
++    'recipe-sysroot-native/usr/lib/%%CT_NAME%%/gcc/**',
++    'recipe-sysroot-native/usr/libexec/%%CT_NAME%%/**',
++    'recipe-sysroot/usr/include/**',
++  ]),
++)
++
++filegroup(
++  name = 'compiler_components',
++  srcs = [
++    ':gcc',
++    ':ar',
++    ':ld',
++    ':nm',
++    ':objcopy',
++    ':objdump',
++    ':strip',
++    ':as',
++  ],
++)
+diff --git a/WORKSPACE b/WORKSPACE
+index 74ea14d..2984b25 100644
+--- a/WORKSPACE
++++ b/WORKSPACE
+@@ -94,6 +94,12 @@ android_configure(name="local_config_android")
+ load("@local_config_android//:android.bzl", "android_workspace")
+ android_workspace()
+ 
++new_local_repository(
++    name = "yocto_compiler",
++    path = "%%WORKDIR%%",
++    build_file = "//:BUILD.yocto_compiler",
++)
++
+ # If a target is bound twice, the later one wins, so we have to do tf bindings
+ # at the end of the WORKSPACE file.
+ load("//tensorflow:workspace.bzl", "tf_bind")
+diff --git a/tensorflow/workspace.bzl b/tensorflow/workspace.bzl
+index 5d22243..0cd6c0d 100755
+--- a/tensorflow/workspace.bzl
++++ b/tensorflow/workspace.bzl
+@@ -12,6 +12,7 @@ load("//third_party/systemlibs:syslibs_configure.bzl", "syslibs_configure")
+ load("//third_party/toolchains/remote:configure.bzl", "remote_execution_configure")
+ load("//third_party/toolchains/clang6:repo.bzl", "clang6_configure")
+ load("//third_party/toolchains/cpus/arm:arm_compiler_configure.bzl", "arm_compiler_configure")
++load("//third_party/toolchains/yocto:yocto_compiler_configure.bzl", "yocto_compiler_configure")
+ load("//third_party:repo.bzl", "tf_http_archive")
+ load("//third_party/clang_toolchain:cc_configure_clang.bzl", "cc_download_clang_toolchain")
+ load("@io_bazel_rules_closure//closure/private:java_import_external.bzl", "java_import_external")
+@@ -92,6 +93,13 @@ def tf_repositories(path_prefix = "", tf_repo_name = ""):
+         remote_config_repo = "../arm_compiler",
+     )
+ 
++    # Point //external/local_config_yocto_compiler to //external/yocto_compiler
++    yocto_compiler_configure(
++        name = "local_config_yocto_compiler",
++        build_file = clean_dep("//third_party/toolchains/yocto:BUILD"),
++        remote_config_repo = "../yocto_compiler",
++    )
++
+     mkl_repository(
+         name = "mkl_linux",
+         build_file = clean_dep("//third_party/mkl:mkl.BUILD"),
+diff --git a/third_party/repo.bzl b/third_party/repo.bzl
+index 4fc91af..a7506b4 100644
+--- a/third_party/repo.bzl
++++ b/third_party/repo.bzl
+@@ -16,6 +16,7 @@
+ 
+ _SINGLE_URL_WHITELIST = depset([
+     "arm_compiler",
++    "yocto_compiler",
+ ])
+ 
+ def _is_windows(ctx):
+diff --git a/third_party/toolchains/yocto/yocto_compiler_configure.bzl b/third_party/toolchains/yocto/yocto_compiler_configure.bzl
+new file mode 100644
+index 0000000..19c7cd1
+--- /dev/null
++++ b/third_party/toolchains/yocto/yocto_compiler_configure.bzl
+@@ -0,0 +1,24 @@
++# -*- Python -*-
++"""Yocto rule for yocto compiler autoconfiguration."""
++
++def _tpl(repository_ctx, tpl, substitutions={}, out=None):
++  if not out:
++    out = tpl
++  repository_ctx.template(
++      out,
++      Label("//third_party/toolchains/yocto:%s.tpl" % tpl),
++      substitutions)
++
++
++def _yocto_compiler_configure_impl(repository_ctx):
++  _tpl(repository_ctx, "CROSSTOOL")
++  repository_ctx.symlink(repository_ctx.attr.build_file, "BUILD")
++
++
++yocto_compiler_configure = repository_rule(
++    implementation = _yocto_compiler_configure_impl,
++    attrs = {
++        "remote_config_repo": attr.string(mandatory = False, default =""),
++        "build_file": attr.label(),
++    },
++)
+-- 
+2.7.4
+

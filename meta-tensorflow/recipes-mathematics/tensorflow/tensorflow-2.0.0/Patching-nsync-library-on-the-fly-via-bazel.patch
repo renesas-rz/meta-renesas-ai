@@ -1,0 +1,29 @@
+From d2b09bb232102b8b2e64bafc4559e7229d7f277a Mon Sep 17 00:00:00 2001
+From: Jianming Qiao <jianming.qiao@bp.renesas.com>
+Date: Thu, 5 Dec 2019 23:12:38 +0000
+Subject: [PATCH] Patching nsync library on the fly via Bazel
+
+We have to patch nsync via Bazel instead of BitBake as in the middle
+of Bazel running there is no way for BitBake to know that the nsync
+library has been downloaded by Bazel.
+
+Signed-off-by: Jianming Qiao <jianming.qiao@bp.renesas.com>
+---
+ tensorflow/workspace.bzl | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/tensorflow/workspace.bzl b/tensorflow/workspace.bzl
+index 0cd6c0d..8267999 100755
+--- a/tensorflow/workspace.bzl
++++ b/tensorflow/workspace.bzl
+@@ -452,6 +452,7 @@ def tf_repositories(path_prefix = "", tf_repo_name = ""):
+     tf_http_archive(
+         name = "nsync",
+         sha256 = "704be7f58afa47b99476bbac7aafd1a9db4357cef519db361716f13538547ffd",
++        patch_file = clean_dep("//third_party:Fix-alignment-issue-in-arm-neon-platform.patch"),
+         strip_prefix = "nsync-1.20.2",
+         system_build_file = clean_dep("//third_party/systemlibs:nsync.BUILD"),
+         urls = [
+-- 
+2.7.4
+
