@@ -34,12 +34,13 @@ project requirements.
 
 
 Supported AI tools:  
-- TensorFlow v2.0.0  
-- TensorFlow Lite v2.0.0  
-- Caffe2 v0.8.1  
-- Arm Neural Network SDK v19.08.01  
-- ONNX Runtime v0.4.0  
-- OpenCV v4.1.1
+- TensorFlow (v2.0.0)  
+- TensorFlow Lite (v2.0.0)  
+- Caffe2 (v0.8.1)  
+- Arm Neural Network SDK (v19.08.01)  
+- ONNX Runtime (v0.4.0)  
+- OpenCV (v4.1.1)  
+- Google Coral USB TPU (diploria2)
 
 
 Supported Platforms:  
