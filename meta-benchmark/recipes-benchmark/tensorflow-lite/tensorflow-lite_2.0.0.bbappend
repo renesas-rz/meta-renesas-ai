@@ -14,10 +14,11 @@ SRC_URI += " \
 
 do_compile_append() {
 	cp ../tensorflow-lite-benchmark.cc .
-	${CC} tensorflow-lite-benchmark.cc tensorflow/contrib/lite/examples/label_image/bitmap_helpers.cc \
+	${CC} tensorflow-lite-benchmark.cc tensorflow/lite/examples/label_image/bitmap_helpers.cc \
 		-o tensorflow-lite-benchmark \
-		-I . -I tensorflow/contrib/lite/downloads/flatbuffers/include \
-		-lstdc++ -lpthread -lm -ldl ${LDFLAGS} tensorflow/contrib/lite/gen/lib/libtensorflow-lite.a
+		-I . -I tensorflow/lite/tools/make/downloads/flatbuffers/include \
+		-I tensorflow/lite/tools/make/downloads/gemmlowp \
+		-lstdc++ -lpthread -lm -ldl ${LDFLAGS} tensorflow/lite/tools/make/gen/lib/libtensorflow-lite.a
 }
 
 do_install_append() {

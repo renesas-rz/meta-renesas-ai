@@ -1,6 +1,6 @@
-From 22e286eca16637e495696108e33f70ea43931f62 Mon Sep 17 00:00:00 2001
+From 31d8801af5742824a493ffe69deccdf9cba16b35 Mon Sep 17 00:00:00 2001
 From: Jianming Qiao <jianming.qiao@bp.renesas.com>
-Date: Fri, 5 Jul 2019 23:21:17 +0100
+Date: Sun, 8 Dec 2019 18:14:50 +0000
 Subject: [PATCH] Fix image resize crash in certain caess
 
 The reason it crashes is because of the following callstack:
@@ -15,14 +15,14 @@ The profiling data structure memory is not appropriately initialized
 
 Signed-off-by: Jianming Qiao <jianming.qiao@bp.renesas.com>
 ---
- tensorflow/contrib/lite/examples/label_image/bitmap_helpers_impl.h | 2 ++
+ tensorflow/lite/examples/label_image/bitmap_helpers_impl.h | 2 ++
  1 file changed, 2 insertions(+)
 
-diff --git a/tensorflow/contrib/lite/examples/label_image/bitmap_helpers_impl.h b/tensorflow/contrib/lite/examples/label_image/bitmap_helpers_impl.h
-index e36218e..f88f1f0 100644
---- a/tensorflow/contrib/lite/examples/label_image/bitmap_helpers_impl.h
-+++ b/tensorflow/contrib/lite/examples/label_image/bitmap_helpers_impl.h
-@@ -42,6 +42,8 @@ void resize(T* out, uint8_t* in, int image_height, int image_width,
+diff --git a/tensorflow/lite/examples/label_image/bitmap_helpers_impl.h b/tensorflow/lite/examples/label_image/bitmap_helpers_impl.h
+index 9015b93..a6d44c3 100644
+--- a/tensorflow/lite/examples/label_image/bitmap_helpers_impl.h
++++ b/tensorflow/lite/examples/label_image/bitmap_helpers_impl.h
+@@ -35,6 +35,8 @@ void resize(T* out, uint8_t* in, int image_height, int image_width,
  
    int base_index = 0;
  

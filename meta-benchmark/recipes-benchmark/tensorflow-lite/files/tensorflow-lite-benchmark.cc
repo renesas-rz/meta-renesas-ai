@@ -32,16 +32,16 @@ limitations under the License.
 #include <sys/uio.h>    // NOLINT(build/include_order)
 #include <unistd.h>     // NOLINT(build/include_order)
 
-#include "tensorflow/contrib/lite/kernels/register.h"
-#include "tensorflow/contrib/lite/model.h"
-#include "tensorflow/contrib/lite/optional_debug_tools.h"
-#include "tensorflow/contrib/lite/string_util.h"
-
-#include "tensorflow/contrib/lite/examples/label_image/bitmap_helpers.h"
-#include "tensorflow/contrib/lite/examples/label_image/get_top_n.h"
+#include "tensorflow/lite/kernels/register.h"
+#include "tensorflow/lite/model.h"
+#include "tensorflow/lite/optional_debug_tools.h"
+#include "tensorflow/lite/string_util.h"
+#include "tensorflow/lite/profiling/profiler.h"
+#include "tensorflow/lite/examples/label_image/bitmap_helpers.h"
+#include "tensorflow/lite/examples/label_image/get_top_n.h"
 
 // check NEON
-#include "tensorflow/contrib/lite/kernels/internal/optimized/cpu_check.h"
+#include "tensorflow/lite/kernels/internal/optimized/cpu_check.h"
 
 #define LOG(x) std::cerr
 
@@ -362,10 +362,6 @@ int Main(int argc, char** argv) {
 }  // namespace tflite
 
 int main(int argc, char** argv) {
-  if (tflite::TestCPUFeatureNeon())
-      std::cout << "Neon Support Enabled" << std::endl;
-  else
-      std::cout << "Neon Support Disabled" << std::endl;
 
   return tflite::label_image::Main(argc, argv);
 }
