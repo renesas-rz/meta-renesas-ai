@@ -37,7 +37,7 @@ Supported AI tools:
 - TensorFlow v1.10.0  
 - TensorFlow Lite v1.10.0  
 - Caffe2 v0.8.1  
-- Arm Neural Network SDK v19.08  
+- Arm Neural Network SDK v19.08.01  
 - ONNX Runtime v0.4.0  
 - OpenCV v4.1.1
 

@@ -50,7 +50,7 @@ SRC_URI = " \
 	gitsm://github.com/onnx/onnx.git;protocol=https;name=onnx;branch=master;subdir=${WORKDIR}/onnx;destsuffix=onnx \
 "
 
-SRCREV_armnn = "26052fcf2f8c91f3479c9484354e88e8944d004d"
+SRCREV_armnn = "68efb0770a73c8939a7a0f59ac5e028e0e5f0bb4"
 
 SRCREV_tensorflow = "1cf0898dd4331baf93fe77205550f2c2e6c90ee5"
 
