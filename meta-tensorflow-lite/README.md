@@ -44,10 +44,10 @@ cd /usr/bin/tensorflow-lite/examples/
 
 
 The output of a healthy execution should look like the following:
-> Neon Support  
 > Loaded model ./mobilenet_quant_v1_224.tflite  
 > resolved reporter  
 > invoked  
+> INFO: Initialized TensorFlow Lite runtime.  
 > average time: 317.484 ms  
 > 0.666667: 458 bow tie  
 > 0.290196: 653 military uniform  
