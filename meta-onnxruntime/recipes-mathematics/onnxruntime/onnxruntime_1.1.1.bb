@@ -1,5 +1,5 @@
 DESCRIPTION = "ONNX Runtime is an open-source scoring engine for Open Neural \
-Network Exchange (ONNX) models. ONNX Runtime has an open architecture that \ 
+Network Exchange (ONNX) models. ONNX Runtime has an open architecture that \
 is continually evolving to address the newest developments and challenges \
 in AI and Deep Learning."
 SUMMARY = "ONNX Runtime"
@@ -14,7 +14,7 @@ PACKAGES += "${PN}-examples ${PN}-examples-dbg"
 
 SRCREV_FORMAT = "onnxruntime"
 
-SRCREV_onnxruntime ="bf859a9a5489a5f0c954ad7da724f3514983d0e3"
+SRCREV_onnxruntime ="2cec09a48347748823c36fbee494af1565637e04"
 
 S = "${WORKDIR}/git/cmake"
 
@@ -24,7 +24,7 @@ inherit cmake
 #grace_hopper_224_224.jpg is inspired from https://github.com/tensorflow/tensorflow/blob/master/tensorflow/examples/label_image/data/grace_hopper.jpg
 
 SRC_URI = " \
-	gitsm://github.com/microsoft/onnxruntime.git;protocol=git;branch=rel-0.4.0;name=onnxruntime \
+	gitsm://github.com/microsoft/onnxruntime.git;protocol=git;branch=rel-1.1.1;name=onnxruntime \
 	file://patches/0001-Fix-no-test-cases-are-loaded-in-onnxruntime-test-cod.patch;patchdir=${WORKDIR}/git \
 	file://files/onnxruntime_inference_example.cpp \
 	file://files/grace_hopper_224_224.jpg \
@@ -61,14 +61,15 @@ EXTRA_OECMAKE=" \
 
 do_compile_append() {
 	${CXX} -std=c++14 ${S}/../../files/onnxruntime_inference_example.cpp -DONNX_ML \
-	-I ${S}/../include/onnxruntime/core/session/ \
-	-I ${S}/../cmake/external/onnx/ ${S}/../../build/libonnxruntime_session.a \
-	${S}/../../build/libonnxruntime_providers.a ${S}/../../build/libonnxruntime_framework.a \
-	${S}/../../build/libonnxruntime_optimizer.a ${S}/../../build/libonnxruntime_graph.a \
-	${S}/../../build/libonnxruntime_common.a  ${S}/../../build/onnx/libonnx_proto.a \
-	${S}/../../build/external/protobuf/cmake/libprotobuf.a ${S}/../../build//external/re2/libre2.a \
-	${S}/../../build/libonnxruntime_util.a ${S}/../../build/libonnxruntime_mlas.a \
-	${S}/../../build/onnx/libonnx.a  -lpthread -fopenmp -ldl ${LDFLAGS} -o onnxruntime_inference_example
+		-I ${S}/../include/onnxruntime/core/session/ \
+		-I ${S}/../cmake/external/onnx/ ${S}/../../build/libonnxruntime_session.a \
+		${S}/../../build/libonnxruntime_providers.a ${S}/../../build/libonnxruntime_framework.a \
+		${S}/../../build/libonnxruntime_optimizer.a ${S}/../../build/libonnxruntime_graph.a \
+		${S}/../../build/libonnxruntime_common.a  ${S}/../../build/onnx/libonnx_proto.a \
+		${S}/../../build/libautoml_featurizers.a \
+		${S}/../../build/external/protobuf/cmake/libprotobuf.a ${S}/../../build//external/re2/libre2.a \
+		${S}/../../build/libonnxruntime_util.a ${S}/../../build/libonnxruntime_mlas.a \
+		${S}/../../build/onnx/libonnx.a  -lpthread -fopenmp -ldl ${LDFLAGS} -o onnxruntime_inference_example
 }
 
 do_install() {
