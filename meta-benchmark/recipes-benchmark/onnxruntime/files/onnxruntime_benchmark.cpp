@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019 Renesas Electronics Corp.
+ * Copyright (C) 2020 Renesas Electronics Corp.
  * This file is licensed under the terms of the MIT License
  * This program is licensed "as is" without any warranty of any
  * kind, whether express or implied.
@@ -19,6 +19,19 @@
 
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
+
+const OrtApi* g_ort = OrtGetApiBase()->GetApi(ORT_API_VERSION);
+
+// helper function to check for status
+void CheckStatus(OrtStatus* status)
+{
+    if (status != NULL) {
+        const char* msg = g_ort->GetErrorMessage(status);
+        fprintf(stderr, "%s\n", msg);
+        g_ort->ReleaseStatus(status);
+        exit(1);
+    }
+}
 
 std::map<int,std::string> label_file_map;
 
@@ -65,9 +78,7 @@ void CaculateAvergeDeviation(std::vector<double>& time_vec)
     double stdev = std::sqrt(sq_sum / time_vec.size());
 
     std::cout << "Total Time Takes " << (sum) << " ms"<< std::endl;
-
     std::cout << "Average Time Takes " << (mean) << " ms"<< std::endl;
-
     std::cout << "Standard Deviation " << stdev << std::endl;
 }
 
@@ -77,7 +88,7 @@ int main(int argc, char* argv[])
 
   if (argc != 3)
   {
-      fprintf(stderr,"Incorrect number of parameters,expect 2 parameters\n");
+      fprintf(stderr,"Incorrect number of parameters. 2 parameters expected.\n");
       return -1;
   }
 
@@ -89,7 +100,7 @@ int main(int argc, char* argv[])
   }
   catch(std::exception const & e)
   {
-     std::cout << "read input parameter error : " << e.what() << std::endl;
+     std::cout << "read input parameter error: " << e.what() << std::endl;
   }
 
   std::string model_name(argv[2]);
@@ -108,14 +119,14 @@ int main(int argc, char* argv[])
 
   auto it = onnx_models_map.find(model_name);
 
-  if(it == onnx_models_map.end())
+  if (it == onnx_models_map.end())
   {
       fprintf(stderr,"Fail to find model %s\n",model_name);
       return -1;
   }
 
   OrtEnv* env;
-  OrtCreateEnv(ORT_LOGGING_LEVEL_WARNING, "test", &env);
+  CheckStatus(g_ort->CreateEnv(ORT_LOGGING_LEVEL_WARNING, "test", &env));
 
   OrtSession* session;
 
@@ -123,14 +134,14 @@ int main(int argc, char* argv[])
 
   OrtSessionOptions* session_options = NULL;
 
-  OrtCreateSession(env, model_path.c_str(), session_options, &session);
+  CheckStatus(g_ort->CreateSession(env, model_path.c_str(), session_options, &session));
 
   size_t num_input_nodes;
   OrtStatus* status;
   OrtAllocator* allocator;
-  OrtCreateDefaultAllocator(&allocator);
+  CheckStatus(g_ort->GetAllocatorWithDefaultOptions(&allocator));
 
-  status = OrtSessionGetInputCount(session, &num_input_nodes);
+  status = g_ort->SessionGetInputCount(session, &num_input_nodes);
   std::vector<const char*> input_node_names(num_input_nodes);
   std::vector<int64_t> input_node_dims;
 
@@ -141,33 +152,32 @@ int main(int argc, char* argv[])
   for (size_t i = 0; i < num_input_nodes; i++) {
     // print input node names
     char* input_name;
-    status = OrtSessionGetInputName(session, i, allocator, &input_name);
+    status = g_ort->SessionGetInputName(session, i, allocator, &input_name);
     printf("Input %zu : name=%s\n", i, input_name);
     input_node_names[i] = input_name;
 
     // print input node types
     OrtTypeInfo* typeinfo;
-    status = OrtSessionGetInputTypeInfo(session, i, &typeinfo);
-    const OrtTensorTypeAndShapeInfo* tensor_info = OrtCastTypeInfoToTensorInfo(typeinfo);
-    ONNXTensorElementDataType type = OrtGetTensorElementType(tensor_info);
+    status = g_ort->SessionGetInputTypeInfo(session, i, &typeinfo);
+    const OrtTensorTypeAndShapeInfo* tensor_info;
+    CheckStatus(g_ort->CastTypeInfoToTensorInfo(typeinfo, &tensor_info));
+    ONNXTensorElementDataType type;
+    CheckStatus(g_ort->GetTensorElementType(tensor_info, &type));
     printf("Input %zu : type=%d\n", i, type);
 
     size_t num_dims = 4;
     printf("Input %zu : num_dims=%zu\n", i, num_dims);
     input_node_dims.resize(num_dims);
-    OrtGetDimensions(tensor_info, (int64_t*)input_node_dims.data(), num_dims);
+    g_ort->GetDimensions(tensor_info, (int64_t*)input_node_dims.data(), num_dims);
     for (size_t j = 0; j < num_dims; j++)
       printf("Input %zu : dim %zu=%jd\n", i, j, input_node_dims[j]);
 
-    OrtReleaseTypeInfo(typeinfo);
+    g_ort->ReleaseTypeInfo(typeinfo);
   }
-
-  OrtReleaseAllocator(allocator);
 
   size_t input_tensor_size = 224 * 224 * 3;
 
   std::vector<float> input_tensor_values(input_tensor_size);
-
   std::vector<const char*> output_node_names;
 
   output_node_names.push_back(it->second.c_str());
@@ -204,12 +214,14 @@ int main(int argc, char* argv[])
   }
 
   // create input tensor object from data values
-  OrtAllocatorInfo* allocator_info;
-  OrtCreateCpuAllocatorInfo(OrtArenaAllocator, OrtMemTypeDefault, &allocator_info);
+  OrtMemoryInfo* memory_info;
+  CheckStatus(g_ort->CreateCpuMemoryInfo(OrtArenaAllocator, OrtMemTypeDefault, &memory_info));
   OrtValue* input_tensor = NULL;
-  OrtCreateTensorWithDataAsOrtValue(allocator_info, input_tensor_values.data(), input_tensor_size * sizeof(float), input_node_dims.data(), 4, ONNX_TENSOR_ELEMENT_DATA_TYPE_FLOAT, &input_tensor);
-  assert(OrtIsTensor(input_tensor));
-  OrtReleaseAllocatorInfo(allocator_info);
+  CheckStatus(g_ort->CreateTensorWithDataAsOrtValue(memory_info, input_tensor_values.data(), input_tensor_size * sizeof(float), input_node_dims.data(), 4, ONNX_TENSOR_ELEMENT_DATA_TYPE_FLOAT, &input_tensor));
+  int is_tensor;
+  CheckStatus(g_ort->IsTensor(input_tensor, &is_tensor));
+  assert(is_tensor);
+  g_ort->ReleaseMemoryInfo(memory_info);
 
   std::vector<double> time_vector;
   struct timeval start_time, stop_time;
@@ -218,9 +230,10 @@ int main(int argc, char* argv[])
   for (int i = 0; i < inference_count; i++)
   {
       gettimeofday(&start_time, nullptr);
-      OrtRun(session, NULL, input_node_names.data(), (const OrtValue* const*)&input_tensor, 1, output_node_names.data(), 1, &output_tensor);
+      CheckStatus(g_ort->Run(session, NULL, input_node_names.data(), (const OrtValue* const*)&input_tensor, 1, output_node_names.data(), 1, &output_tensor));
       gettimeofday(&stop_time, nullptr);
-      assert(OrtIsTensor(output_tensor));
+      CheckStatus(g_ort->IsTensor(output_tensor, &is_tensor));
+      assert(is_tensor);
 
       double diff = timedifference_msec(start_time,stop_time);
       time_vector.push_back(diff);
@@ -228,9 +241,9 @@ int main(int argc, char* argv[])
 
   CaculateAvergeDeviation(time_vector);
 
-  // Get pointer to output tensor float values
+  // get pointer to output tensor float values
   float* floatarr;
-  OrtGetTensorMutableData(output_tensor, (void**)&floatarr);
+  CheckStatus(g_ort->GetTensorMutableData(output_tensor, (void**)&floatarr));
 
   std::map<float,int> result;
 
@@ -242,7 +255,7 @@ int main(int argc, char* argv[])
 
   std::string filename("/usr/bin/onnxruntime/examples/inference/synset_words.txt");
 
-  if(loadLabelFile(filename) != 0)
+  if (loadLabelFile(filename) != 0)
   {
       fprintf(stderr,"Fail to open or process file %s\n",filename.c_str());
       return -1;
@@ -253,19 +266,18 @@ int main(int argc, char* argv[])
   {
       counter++;
 
-      if(counter > 6)
+      if (counter > 6)
           break;
 
       printf("index [%d]: %s :prob [%f]\n",(*it).second,label_file_map[(*it).second].c_str(),(*it).first);
   }
 
-  OrtReleaseValue(output_tensor);
-  OrtReleaseValue(input_tensor);
-  OrtReleaseSession(session);
-  OrtReleaseSessionOptions(session_options);
-  OrtReleaseEnv(env);
+  g_ort->ReleaseValue(output_tensor);
+  g_ort->ReleaseValue(input_tensor);
+  g_ort->ReleaseSession(session);
+  g_ort->ReleaseSessionOptions(session_options);
+  g_ort->ReleaseEnv(env);
   printf("Done!\n");
 
   return 0;
 }
-

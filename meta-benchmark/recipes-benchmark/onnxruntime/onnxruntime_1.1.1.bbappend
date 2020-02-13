@@ -12,6 +12,7 @@ do_compile_append() {
 		${S}/../../build/libonnxruntime_providers.a ${S}/../../build/libonnxruntime_framework.a \
 		${S}/../../build/libonnxruntime_optimizer.a ${S}/../../build/libonnxruntime_graph.a \
 		${S}/../../build/libonnxruntime_common.a  ${S}/../../build/onnx/libonnx_proto.a \
+		${S}/../../build/libautoml_featurizers.a \
 		${S}/../../build/external/protobuf/cmake/libprotobuf.a ${S}/../../build//external/re2/libre2.a \
 		${S}/../../build/libonnxruntime_util.a ${S}/../../build/libonnxruntime_mlas.a \
 		${S}/../../build/onnx/libonnx.a  -lpthread -fopenmp -ldl ${LDFLAGS} -L . -o onnxruntime_benchmark
