@@ -13,7 +13,6 @@
 #include <map>
 #include <fstream>
 #include <sys/time.h>
-#include <iostream>
 #include <numeric>
 #include <algorithm>
 
@@ -77,9 +76,9 @@ void CaculateAvergeDeviation(std::vector<double>& time_vec)
     double sq_sum = std::inner_product(diff.begin(), diff.end(), diff.begin(), 0.0);
     double stdev = std::sqrt(sq_sum / time_vec.size());
 
-    std::cout << "Total Time Takes " << (sum) << " ms"<< std::endl;
-    std::cout << "Average Time Takes " << (mean) << " ms"<< std::endl;
-    std::cout << "Standard Deviation " << stdev << std::endl;
+    printf("Total Time Takes %f ms\n", sum);
+    printf("Average Time Takes  %f ms\n", mean);
+    printf("Standard Deviation  %f\n", stdev);
 }
 
 
@@ -100,7 +99,7 @@ int main(int argc, char* argv[])
   }
   catch(std::exception const & e)
   {
-     std::cout << "read input parameter error: " << e.what() << std::endl;
+      printf("read input parameter error:  %s\n", e.what());
   }
 
   std::string model_name(argv[2]);
