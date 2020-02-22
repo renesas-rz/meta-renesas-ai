@@ -38,7 +38,7 @@ Supported AI tools:
 - TensorFlow Lite (v2.0.0)  
 - Caffe2 (v0.8.1)  
 - Arm Neural Network SDK (v19.08.01)  
-- ONNX Runtime (v1.1.1)  
+- ONNX Runtime (v1.1.2)  
 - OpenCV (v4.1.1)  
 - Google Coral USB TPU (diploria2)
 
