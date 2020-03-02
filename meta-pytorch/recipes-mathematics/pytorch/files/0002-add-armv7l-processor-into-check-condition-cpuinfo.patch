@@ -1,0 +1,35 @@
+From 51efbebeca600080e572ea1290771141f3ed1521 Mon Sep 17 00:00:00 2001
+From: Christopher Feghali  <christopher.feghali.xb@renesas.com>
+Date: Wed, 22 Apr 2020 10:40:56 +0100
+Subject: [PATCH] add armv7l processor into check condition cpuinfo
+
+Signed-off-by: Vu Phan <vu.phan.xw@renesas.com>
+---
+ third_party/cpuinfo/CMakeLists.txt | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/third_party/cpuinfo/CMakeLists.txt b/third_party/cpuinfo/CMakeLists.txt
+index 2b88714..7ead2ad 100644
+--- a/third_party/cpuinfo/CMakeLists.txt
++++ b/third_party/cpuinfo/CMakeLists.txt
+@@ -316,7 +316,7 @@ IF(CPUINFO_SUPPORTED_PLATFORM AND CPUINFO_BUILD_MOCK_TESTS)
+   ENDIF()
+   TARGET_LINK_LIBRARIES(cpuinfo_mock PRIVATE clog)
+ 
+-  IF(CMAKE_SYSTEM_NAME STREQUAL "Android" AND CMAKE_SYSTEM_PROCESSOR MATCHES "^(armv5te|armv7-a)$")
++  IF(CMAKE_SYSTEM_NAME STREQUAL "Android" AND CMAKE_SYSTEM_PROCESSOR MATCHES "^(armv5te|armv7-a|armv7l)$")
+     ADD_EXECUTABLE(atm7029b-tablet-test test/mock/atm7029b-tablet.cc)
+     TARGET_INCLUDE_DIRECTORIES(atm7029b-tablet-test BEFORE PRIVATE test/mock)
+     TARGET_LINK_LIBRARIES(atm7029b-tablet-test PRIVATE cpuinfo_mock gtest)
+@@ -498,7 +498,7 @@ IF(CPUINFO_SUPPORTED_PLATFORM AND CPUINFO_BUILD_MOCK_TESTS)
+     ADD_TEST(xperia-sl-test xperia-sl-test)
+   ENDIF()
+ 
+-  IF(CMAKE_SYSTEM_NAME STREQUAL "Android" AND CMAKE_SYSTEM_PROCESSOR MATCHES "^(armv5te|armv7-a|aarch64)$")
++  IF(CMAKE_SYSTEM_NAME STREQUAL "Android" AND CMAKE_SYSTEM_PROCESSOR MATCHES "^(armv5te|armv7-a|armv7l|aarch64)$")
+     ADD_EXECUTABLE(alcatel-revvl-test test/mock/alcatel-revvl.cc)
+     TARGET_INCLUDE_DIRECTORIES(alcatel-revvl-test BEFORE PRIVATE test/mock)
+     TARGET_LINK_LIBRARIES(alcatel-revvl-test PRIVATE cpuinfo_mock gtest)
+-- 
+2.17.1
+

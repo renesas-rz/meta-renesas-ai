@@ -1,0 +1,36 @@
+From 7eeaa118df8fb3a1d9a9fd295ff77744e6b72cc7 Mon Sep 17 00:00:00 2001
+From: Christopher Feghali <christopher.feghali.xb@renesas.com>
+Date: Wed, 22 Apr 2020 09:52:22 +0100
+Subject: [PATCH] add base cmake configuration
+
+Add cmake configuration for cross-compilation.
+
+Signed-off-by: Vu Phan <vu.phan.xw@renesas.com>
+---
+ CMakeLists.txt | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 7d1ee67eac..9e1ac2dafe 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -29,7 +29,15 @@ else()
+ endif()
+ 
+ set(CMAKE_INSTALL_MESSAGE NEVER)
+-
++set(CMAKE_BUILD_TYPE "RelWithDebInfo")
++set(GLIBCXX_USE_CXX11_ABI "0")
++set(CMAKE_CROSSCOMPILING "1")
++set(CAFFE2_IS_NUMA_AVAILABLE OFF)
++set(CAFFE2_COMPILER_SUPPORTS_AVX2_EXTENSIONS OFF)
++set(CAFFE2_COMPILER_SUPPORTS_AVX512_EXTENSIONS OFF)
++set(NATIVE_BUILD_DIR "${PROJECT_SOURCE_DIR}/../recipe-sysroot-native")
++set(COMPILER_WORKS_EXITCODE "0")
++set(COMPILER_WORKS_EXITCODE__TRYRUN_OUTPUT "0")
+ set(CMAKE_CXX_STANDARD 11)
+ if (NOT MSVC)
+   set(CMAKE_C_STANDARD 11)
+-- 
+2.17.1
+

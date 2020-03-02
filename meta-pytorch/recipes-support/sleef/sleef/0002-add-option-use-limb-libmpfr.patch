@@ -1,0 +1,61 @@
+From 146bce421890a188a3a9e78ef6e25ca3ad17d40b Mon Sep 17 00:00:00 2001
+From: nhat thieu <nhat.thieu.xr@renesas.com>
+Date: Mon, 9 Sep 2019 14:17:32 +0700
+Subject: [PATCH] add-option-use-limb+libmpfr
+
+---
+ CMakeLists.txt  |  3 +++
+ Configure.cmake | 18 +++++++++++-------
+ 2 files changed, 14 insertions(+), 7 deletions(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 8d870bd..49433e9 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -9,6 +9,9 @@ option(SLEEF_TEST_ALL_IUT "Perform tests on implementations with all vector exte
+ option(SLEEF_SHOW_CONFIG "Show SLEEF configuration status messages." ON)
+ option(SLEEF_SHOW_ERROR_LOG "Show cmake error log." OFF)
+ 
++option(USE_LIBM " " OFF)
++option(USE_LIB_MPFR " " OFF)
++
+ # See doc/build-with-cmake.md for instructions on how to build Sleef.
+ cmake_minimum_required(VERSION 3.4.3)
+ 
+diff --git a/Configure.cmake b/Configure.cmake
+index a6a1994..6d9441b 100644
+--- a/Configure.cmake
++++ b/Configure.cmake
+@@ -3,18 +3,22 @@ include(CheckCSourceCompiles)
+ include(CheckTypeSize)
+ 
+ # Some toolchains require explicit linking of the libraries following.
+-find_library(LIB_MPFR mpfr)
+-find_library(LIBM m)
+ find_library(LIBGMP gmp)
+ find_library(LIBRT rt)
+ find_library(LIBFFTW3 fftw3)
+ 
+-find_path(MPFR_INCLUDE_DIR
+-  NAMES mpfr.h
+-  ONLY_CMAKE_FIND_ROOT_PATH)
++if (USE_LIB_MPFR)
++   find_library(LIB_MPFR mpfr)
++   find_path(MPFR_INCLUDE_DIR
++     NAMES mpfr.h
++     ONLY_CMAKE_FIND_ROOT_PATH)
++endif()
+ 
+-if (NOT LIBM)
+-  set(LIBM "")
++if (USE_LIBM)
++   find_library(LIBM m)
++   if (NOT LIBM)
++     set(LIBM "")
++   endif()
+ endif()
+ 
+ if (NOT LIBRT)
+-- 
+2.7.4
+
