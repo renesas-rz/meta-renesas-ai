@@ -1,5 +1,12 @@
 FILESEXTRAPATHS_prepend := "${THISDIR}/files:"
 
+RDEPENDS_${PN} += " \
+	python \
+	python-pip \
+	python-setuptools \
+	python-numpy \
+"
+
 SRC_URI += " \
 	file://tensorflow-lite-benchmark.cc \
 	file://patch/0001-Fix-image-resize-crash-in-certain-caess.patch \
