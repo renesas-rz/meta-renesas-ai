@@ -3,7 +3,7 @@ LICENSE = "Apache-2.0"
 LICENSE_FLAGS = "commercial"
 LIC_FILES_CHKSUM = " \
         file://license/COPYING;md5=c4e89413e9e0e6a372520647a3fae1ae \
-        file://license/LICENSES;md5=94656da73683106fd411e1be7026498a \
+        file://license/LICENSES;md5=f45ef5591030973d68d21a967e92b32e \
 "
 
 S = "${WORKDIR}"
@@ -64,6 +64,12 @@ SRC_URI = " \
 	https://storage.googleapis.com/mobilenet_v2/checkpoints/mobilenet_v2_0.35_128.tgz;name=mobilenet_v2_0_35_128  \
 	https://storage.googleapis.com/mobilenet_v2/checkpoints/mobilenet_v2_0.35_96.tgz;name=mobilenet_v2_0_35_96  \
 	http://download.tensorflow.org/models/tflite_11_05_08/mobilenet_v2_1.0_224_quant.tgz;name=mobilenet_v2_1.0_224_quant  \
+	https://storage.googleapis.com/mobilenet_v3/checkpoints/v3-large_224_1.0_float.tgz;name=mobilenet_v3_large_1.0_224  \
+	https://storage.googleapis.com/mobilenet_v3/checkpoints/v3-large_224_1.0_uint8.tgz;name=mobilenet_v3_large_1.0_224_quant  \
+	https://storage.googleapis.com/mobilenet_v3/checkpoints/v3-large_224_0.75_float.tgz;name=mobilenet_v3_large_0.75_224  \
+	https://storage.googleapis.com/mobilenet_v3/checkpoints/v3-small_224_1.0_float.tgz;name=mobilenet_v3_small_1.0_224  \
+	https://storage.googleapis.com/mobilenet_v3/checkpoints/v3-small_224_1.0_uint8.tgz;name=mobilenet_v3_small_1.0_224_quant  \
+	https://storage.googleapis.com/mobilenet_v3/checkpoints/v3-small_224_0.75_float.tgz;name=mobilenet_v3_small_0.75_224  \
 	https://storage.googleapis.com/download.tensorflow.org/models/tflite/model_zoo/upload_20180427/nasnet_mobile_2018_04_27.tgz;name=nasnet_mobile_2018_04_27 \
 	https://storage.googleapis.com/download.tensorflow.org/models/tflite/mobilenet_v1_224_android_quant_2017_11_08.zip;name=android_quant_label  \
 	https://storage.googleapis.com/download.tensorflow.org/models/inception_v3_2016_08_28_frozen.pb.tar.gz;name=inception_v3  \
@@ -198,6 +204,18 @@ SRC_URI[mobilenet_v2_0_35_96.md5sum] = "febca108cd0b73a5fd5f584a6fc95939"
 SRC_URI[mobilenet_v2_0_35_96.sha256sum] = "282996bca7d799d0172ce5d34ac59dea497c4c75f069a8b466bb944c6f843353"
 SRC_URI[mobilenet_v2_1.0_224_quant.md5sum] = "04b4cc2536e1a51b9d29e98921b4970b"
 SRC_URI[mobilenet_v2_1.0_224_quant.sha256sum] = "d6a04d780f76f656c902413be432eb349ec4a458240e3739119eb44977f77a79"
+SRC_URI[mobilenet_v3_large_1.0_224.md5sum] = "539c3186043d5725ef01d5bc6dd1d8a4"
+SRC_URI[mobilenet_v3_large_1.0_224.sha256sum] = "9be8563f92022f412c82f2811d670888d6db998e2da9af3e71415fdde2f4f504"
+SRC_URI[mobilenet_v3_large_1.0_224_quant.md5sum] = "c72724f7067091c6a02f04923d0bb66c"
+SRC_URI[mobilenet_v3_large_1.0_224_quant.sha256sum] = "42cfd69fb70c48dde56dc3f2c872bdeb4fdc9beb3105e4b164dde7c49b7a2702"
+SRC_URI[mobilenet_v3_large_0.75_224.md5sum] = "fe46e947f5136fc478708a387bddff74"
+SRC_URI[mobilenet_v3_large_0.75_224.sha256sum] = "4346e7893769d3f8ac79e28e7924b351bf8348a8a4d5e7a606260003e706aea5"
+SRC_URI[mobilenet_v3_small_1.0_224.md5sum] = "9d59adb54114287e5ee7015e7ce96dc1"
+SRC_URI[mobilenet_v3_small_1.0_224.sha256sum] = "e60ad9f450f892ae56f8b9122ffc750d88940d9e6b63f6dc70649179fb3a9065"
+SRC_URI[mobilenet_v3_small_1.0_224_quant.md5sum] = "357be4891027d76e731afe3a813cac28"
+SRC_URI[mobilenet_v3_small_1.0_224_quant.sha256sum] = "58ecd8c4c5b0a330f1d72c0a3d7bc6073ff771e14b052da336691246ee8e178f"
+SRC_URI[mobilenet_v3_small_0.75_224.md5sum] = "237ae52459ba3ff111184f2fb3824520"
+SRC_URI[mobilenet_v3_small_0.75_224.sha256sum] = "fffd2e437434f319623ecf26cdbebdb933dcd753afa38e7c2f78cb59c6fc470f"
 SRC_URI[nasnet_mobile_2018_04_27.md5sum] = "398345d7af082c173d90989d44d856db"
 SRC_URI[nasnet_mobile_2018_04_27.sha256sum] = "b3a3c5471f23f165e49fe0c2e56a3c503eeaa6f85d97f22369e3c36088e127c5"
 SRC_URI[inception_v3_lite_quant.md5sum] = "793957d66db09148bc2b11a4b6358b02"
@@ -249,6 +267,7 @@ do_install () {
 	install -d ${D}/home/root/models/tensorflow/InceptionV3_Quant
 	install -d ${D}/home/root/models/tensorflowlite/Mobile_Net_V1_Model
 	install -d ${D}/home/root/models/tensorflowlite/Mobile_Net_V2_Model
+	install -d ${D}/home/root/models/tensorflowlite/Mobile_Net_V3_Model
 	install -d ${D}/home/root/models/tensorflowlite/NasNet
 	install -d ${D}/home/root/models/tensorflowlite/Mobile_InceptionV3
 	install -d ${D}/home/root/models/tensorflowlite/Squeezenet
@@ -259,10 +278,12 @@ do_install () {
 	install -d ${D}/home/root/models/darknet
 	install -m 0644 ${S}/mobilenet_v1*.tflite ${D}/home/root/models/tensorflowlite/Mobile_Net_V1_Model/
 	install -m 0644 ${S}/mobilenet_v2*.tflite ${D}/home/root/models/tensorflowlite/Mobile_Net_V2_Model/
+	install -m 0644 ${S}/v3*/v3*.tflite ${D}/home/root/models/tensorflowlite/Mobile_Net_V3_Model/
 	install -m 0644 ${S}/nasnet*.tflite ${D}/home/root/models/tensorflowlite/NasNet/
 	install -m 0644 ${S}/squeezenet*.tflite ${D}/home/root/models/tensorflowlite/Squeezenet/
 	install -m 0644 ${S}/labels.txt ${D}/home/root/models/tensorflowlite/Mobile_Net_V1_Model/
 	install -m 0644 ${S}/labels.txt ${D}/home/root/models/tensorflowlite/Mobile_Net_V2_Model/
+	install -m 0644 ${S}/labels.txt ${D}/home/root/models/tensorflowlite/Mobile_Net_V3_Model/
 	install -m 0644 ${S}/labels.txt ${D}/home/root/models/tensorflowlite/NasNet/
 	install -m 0644 ${S}/labels.txt ${D}/home/root/models/tensorflowlite/Squeezenet/
 	install -m 0644 ${S}/imagenet_slim_labels.txt ${D}/home/root/models/tensorflow/InceptionV3/

@@ -408,3 +408,33 @@ Source:http://code.qt.io/qt/qtcharts.git
 Branch:5.6
 Commit:4cdf7b5ca4e72c815ead5a1b2044adb54e10d9d0
 License:GPLv3
+
+FileName:v3-large_224_1.0_float.tflite
+Source:https://storage.googleapis.com/mobilenet_v3/checkpoints/v3-large_224_1.0_float.tgz
+License:Apache License 2.0
+md5sum:08bb68ee9d8293c05abc418b6b91e223
+
+FileName:v3-large_224_1.0_uint8.tflite
+Source:https://storage.googleapis.com/mobilenet_v3/checkpoints/v3-large_224_1.0_uint8.tgz
+License:Apache License 2.0
+md5sum:1484fb7681e4fab95ece716ca008b2d6
+
+FileName:v3-large_224_0.75_float.tflite
+Source:https://storage.googleapis.com/mobilenet_v3/checkpoints/v3-large_224_0.75_float.tgz
+License:Apache License 2.0
+md5sum:06cdbd5af5f85bf0780fa22d59ddbce8
+
+FileName:v3-small_224_1.0_float.tflite
+Source:https://storage.googleapis.com/mobilenet_v3/checkpoints/v3-small_224_1.0_float.tgz
+License:Apache License 2.0
+md5sum:26aa60f953f60eb6f5d3b000dc57c691
+
+FileName:v3-small_224_1.0_uint8.tflite
+Source:https://storage.googleapis.com/mobilenet_v3/checkpoints/v3-small_224_1.0_uint8.tgz
+License:Apache License 2.0
+md5sum:ccb8ae45715756e4d3f5b3e0b80ff6d1
+
+FileName:v3-small_224_0.75_float.tflite
+Source:https://storage.googleapis.com/mobilenet_v3/checkpoints/v3-small_224_0.75_float.tgz
+License:Apache License 2.0
+md5sum:199395c4015267e29eae1a4acbe2a83b

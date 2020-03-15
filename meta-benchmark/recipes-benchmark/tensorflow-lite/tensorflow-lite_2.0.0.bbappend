@@ -12,8 +12,9 @@ SRC_URI += " \
 	file://patch/0001-Fix-image-resize-crash-in-certain-caess.patch \
 	file://run_TF_measurement.py \
 	file://test_file_list_Inception_Net_V3.txt \
-	file://test_file_list_Mobile_Net_V2.txt \
 	file://test_file_list_Mobile_Net_V1.txt \
+	file://test_file_list_Mobile_Net_V2.txt \
+	file://test_file_list_Mobile_Net_V3.txt \
 	file://test_file_list_Nasnet.txt \
 	file://test_file_list_Mnasnet.txt \
 	file://test_file_list_Squeezenet.txt \
@@ -33,8 +34,9 @@ do_install_append() {
 	install -m 0555 ${S}/tensorflow-lite-benchmark ${D}${bindir}/tensorflow-lite-benchmark/
 	install -m 0555 ${S}/../run_TF_measurement.py ${D}${bindir}/tensorflow-lite-benchmark/
 	install -m 0644 ${S}/../test_file_list_Inception_Net_V3.txt ${D}${bindir}/tensorflow-lite-benchmark/
-	install -m 0644 ${S}/../test_file_list_Mobile_Net_V2.txt ${D}${bindir}/tensorflow-lite-benchmark/
 	install -m 0644 ${S}/../test_file_list_Mobile_Net_V1.txt ${D}${bindir}/tensorflow-lite-benchmark/
+	install -m 0644 ${S}/../test_file_list_Mobile_Net_V2.txt ${D}${bindir}/tensorflow-lite-benchmark/
+	install -m 0644 ${S}/../test_file_list_Mobile_Net_V3.txt ${D}${bindir}/tensorflow-lite-benchmark/
 	install -m 0644 ${S}/../test_file_list_Nasnet.txt ${D}${bindir}/tensorflow-lite-benchmark/
 	install -m 0644 ${S}/../test_file_list_Mnasnet.txt ${D}${bindir}/tensorflow-lite-benchmark/
 	install -m 0644 ${S}/../test_file_list_Squeezenet.txt ${D}${bindir}/tensorflow-lite-benchmark/

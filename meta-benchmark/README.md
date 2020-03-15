@@ -81,6 +81,9 @@ Some examples can be found below (assuming 2 cores and inference 30 times):
 ./run_TF_measurement.py test_file_list_Mobile_Net_V2.txt \
 /home/root/models/tensorflowlite/Mobile_Net_V2_Model/ 30 2
 
+./run_TF_measurement.py test_file_list_Mobile_Net_V3.txt \
+/home/root/models/tensorflowlite/Mobile_Net_V3_Model/ 30 2
+
 ./run_TF_measurement.py test_file_list_Nasnet.txt \
 /home/root/models/tensorflowlite/NasNet/ 30 2
 
