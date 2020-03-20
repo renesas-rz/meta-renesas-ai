@@ -32,6 +32,9 @@ SRC_URI[label_tpu.sha256sum] = "50f42753c6c6a76d4257b5f72cb506e6b8f7266cf8819edf
 
 DEPENDS = "libusb1 tensorflow-lite"
 
+# Set "direct" for maximum clock, or "throttled" for reduced clock speed
+GOOGLE_CORAL_SPEED ?= "direct"
+
 do_compile_prepend_arm () {
 	TFLITE_LIB_DIR_ARCH="lib"
 	TPU_LIB_DIR_ARCH="armv7a"
@@ -49,7 +52,7 @@ do_compile() {
 		-I . -I edgetpu -I libedgetpu/  \
 		-I ${STAGING_DIR_TARGET}/usr/include/tensorflow/lite/tools/make/downloads/flatbuffers/include \
 		-lstdc++ -lpthread -lm -ldl ${STAGING_DIR_TARGET}/usr/${TFLITE_LIB_DIR_ARCH}/libtensorflow-lite.a \
-		-l:libedgetpu.so.1.0 -L libedgetpu/direct/${TPU_LIB_DIR_ARCH} ${LDFLAGS}
+		-l:libedgetpu.so.1.0 -L libedgetpu/${GOOGLE_CORAL_SPEED}/${TPU_LIB_DIR_ARCH} ${LDFLAGS}
 
 	${CXX} -std=c++11 ${S}/src/cpp/examples/minimal.cc \
 		${S}/src/cpp/examples/model_utils.cc \
@@ -57,27 +60,33 @@ do_compile() {
 		-I . -I edgetpu -I libedgetpu/  \
 		-I ${STAGING_DIR_TARGET}/usr/include/tensorflow/lite/tools/make/downloads/flatbuffers/include \
 		-lstdc++ -lpthread -lm -ldl ${STAGING_DIR_TARGET}/usr/${TFLITE_LIB_DIR_ARCH}/libtensorflow-lite.a \
-		-l:libedgetpu.so.1.0 -L libedgetpu/direct/${TPU_LIB_DIR_ARCH} ${LDFLAGS}
+		-l:libedgetpu.so.1.0 -L libedgetpu/${GOOGLE_CORAL_SPEED}/${TPU_LIB_DIR_ARCH} ${LDFLAGS}
 }
 
 do_install_append_arm () {
-	#Install 32bit library
-	install -m 0555 ${S}/libedgetpu/direct/armv7a/libedgetpu.so.1 ${D}${libdir}/
+	# Install "maximum" and "throttled" libraries in case user wants to switch at run time
+	install -m 0555 ${S}/libedgetpu/direct/armv7a/libedgetpu.so.1 ${D}${libdir}/libedgetpu_direct.so.1
+	install -m 0555 ${S}/libedgetpu/throttled/armv7a/libedgetpu.so.1 ${D}${libdir}/libedgetpu_throttled.so.1
+
+	ln -rsf ${D}${libdir}/libedgetpu_${GOOGLE_CORAL_SPEED}.so.1 ${D}${libdir}/libedgetpu.so.1
 }
 
 do_install_append_aarch64 () {
-	#Install 64bit library
-	install -m 0555 ${S}/libedgetpu/direct/aarch64/libedgetpu.so.1 ${D}${libdir}/
+	# Install "maximum" and "throttled" libraries in case user wants to switch at run time
+	install -m 0555 ${S}/libedgetpu/direct/aarch64/libedgetpu.so.1 ${D}${libdir}/libedgetpu_direct.so.1
+	install -m 0555 ${S}/libedgetpu/throttled/aarch64/libedgetpu.so.1 ${D}${libdir}/libedgetpu_throttled.so.1
+
+	ln -rsf ${D}${libdir}/libedgetpu_${GOOGLE_CORAL_SPEED}.so.1 ${D}${libdir}/libedgetpu.so.1
 }
 
 do_install() {
-	#Install header files
+	# Install header files
 	install -d ${D}${libdir}
 	install -d ${D}${includedir}/${PN}-${PV}
 	install -m 0555 ${S}/libedgetpu/edgetpu_c.h ${D}${includedir}/${PN}-${PV}/
 	install -m 0555 ${S}/libedgetpu/edgetpu.h ${D}${includedir}/${PN}-${PV}/
 
-	#Install example code
+	# Install example code
 	install -d ${D}${bindir}/${PN}-${PV}/models
 	install -d ${D}${bindir}/${PN}-${PV}/images
 	install -m 0644 ${S}/../mobilenet_v2_1.0_224_quant_edgetpu.tflite ${D}${bindir}/${PN}-${PV}/models/
@@ -92,6 +101,8 @@ do_install() {
 
 FILES_${PN} = "\
 	${libdir}/libedgetpu.so.1 \
+	${libdir}/libedgetpu_direct.so.1 \
+	${libdir}/libedgetpu_throttled.so.1 \
 "
 
 FILES_${PN}-dev = " \
