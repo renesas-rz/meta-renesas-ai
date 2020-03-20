@@ -8,7 +8,7 @@ LICENSE = "Apache-2.0"
 
 LIC_FILES_CHKSUM = "file://LICENSE;md5=80651d10fcb4d58e5cb4c839df037144"
 
-COMPATIBLE_MACHINE = "(iwg20m-g1m|iwg21m|iwg22m|hihope-rzg2m|ek874)"
+COMPATIBLE_MACHINE = "(iwg20m-g1m|iwg21m|iwg22m|hihope-rzg2m|hihope-rzg2n|ek874)"
 
 S = "${WORKDIR}/git"
 

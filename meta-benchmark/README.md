@@ -52,7 +52,8 @@ cd /usr/bin/tensorflowBenchmark
 ```bash
 cd /usr/bin/tensorflow-lite-benchmark
 
-# Test on iwg20m, iwg22m or ek874 with 2 cores (inference run 30 times)
+# Test on iwg20m, iwg22m, hihope-rzg2n or ek874 with 2 cores
+(inference run 30 times)
 ./run_TF_measurement.py test_file_list_Inception_Net_V3.txt \
 /home/root/models/tensorflowlite/Mobile_InceptionV3/ 30 2
 
