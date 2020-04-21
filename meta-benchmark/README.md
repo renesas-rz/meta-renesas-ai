@@ -11,6 +11,7 @@ Each framework has its own benchmark tool.
 * For TensorFlow-lite, it is tensorflow-lite-benchmark
 * For ONNX Runtime, it is onnxruntime_benchmark
 * For OpenCV, it is opencv-benchmark.sh
+* For PyTorch, it is pytorch-benchmark.sh
 
 The output of each benchmark tool shows the average inference time and the
 standard deviation for each available model, which are printed in the terminal.
@@ -106,4 +107,83 @@ cd /usr/bin/opencvBenchmark
 
 # Run inference 30 times
 ./opencv-benchmark.sh
+```
+
+## PyTorch
+```bash
+cd /usr/bin/pytorch-benchmark
+
+# Run script that runs benchmarks for all models
+# AlexNet, MnasNet, MobileNet v2, ResNet, and Inception v3
+./pytorch-benchmark.sh
+```
+
+#### Run models individually
+```bash
+# Run script with --help for information
+python alexnet.py --help
+
+usage: alexnet.py [-h] [--count INFERENCE COUNT] Model Label Image
+
+AlexNet Inference
+
+positional arguments:
+  Model
+  Label
+  Image
+
+optional arguments:
+  -h, --help            show this help message and exit
+  --count INFERENCE COUNT
+                        Change inference count, defaults to 30
+
+# Example command with default inference count of 30
+python alexnet.py alexnet-owt-4df8aa71.pth imagenet_classes.txt grace_hopper.jpg
+
+# Number of inference runs can be changed with --count
+python alexnet.py alexnet-owt-4df8aa71.pth imagenet_classes.txt grace_hopper.jpg --count 50
+```
+#### Other models
+Other models can also be tested such as MnasNet, MobileNet v2,
+ResNet and Inception v3.
+
+Please note that to run Inception v3 models, python-scipy must be added to your image.
+
+For RZ/G1 devices:
+
+ - Uncomment the following line in the `local.conf`:
+```
+require ${META_PYTORCH_DIR}/templates/python-scipy/python-scipy_RZ-G1.conf
+```
+
+For RZ/G2 devices:
+
+ - Uncomment the following line in the `local.conf`:
+```
+#require ${META_PYTORCH_DIR}/templates/python-scipy/python-scipy_RZ-G2.conf
+```
+ - Comment the following line in the `local.conf`:
+```
+INCOMPATIBLE_LICENSE = "GPLv3 GPLv3+"
+```
+This will enable GPLv3 licensed software, please make sure you fully understand the
+implications of enabling license GPLv3 by reading the relevant documents
+(e.g. https://www.gnu.org/licenses/gpl-3.0.en.html).
+
+#### More Examples
+The commands to run benchmarking for these models are similar to
+that above.
+
+```bash
+# MnasNet
+python mnasnet.py mnasnet1.0_top1_73.512-f206786ef8.pth imagenet_classes.txt grace_hopper.jpg
+
+# MobileNet v2
+python mobilenet_v2.py mobilenet_v2-b0353104.pth imagenet_classes.txt grace_hopper.jpg
+
+# ResNet
+python resnet152.py resnet152-b121ed2d.pth imagenet_classes.txt grace_hopper.jpg
+
+#Inception v3
+python inception_v3.py inception_v3_google-1a9a5a14.pth imagenet_classes.txt grace_hopper.jpg
 ```
