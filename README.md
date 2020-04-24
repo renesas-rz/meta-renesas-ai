@@ -6,7 +6,7 @@ and RZ/G2 platforms.
 The layers should be used with the official Renesas RZ/G1 Yocto Poky BSP based
 on the CIP Kernel:  
 URI: **https://github.com/renesas-rz/meta-renesas.git**  
-Revision: certified-linux-v2.1.4 (950981698a9fc62a3738de4050a6f633bb18136f)
+tag: certified-linux-v2.1.5 (8c60fa1de1ffc3fd9db2b8005be0f7ae17f6d691)
 
 ### For RZ/G2 ###
 The layers should be used with the official Renesas RZ/G2 Yocto Poky BSP based
