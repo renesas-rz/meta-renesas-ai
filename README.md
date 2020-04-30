@@ -43,13 +43,16 @@ project requirements.
 | TensorFlow      | v2.0.0    | TensorFlow                             | CPU                              |
 | TensorFlow Lite | v2.0.0    | TensorFlow Lite                        | CPU<br>Coral USB TPU (diploria2) |
 
-Supported Platforms:  
-- Renesas RZ/G1M iwg20m
-- Renesas RZ/G1H iwg21m
-- Renesas RZ/G1E iwg22m
-- Renesas RZ/G2M hihope-rzg2m
-- Renesas RZ/G2N hihope-rzg2n
-- Renesas RZ/G2E ek874
+### Supported Embedded Platforms ###
+
+| SoC            | Platform                 |
+| :------------- | :----------------------- |
+| Renesas RZ/G2M | HopeRun hihope-rzg2m     |
+| Renesas RZ/G2N | HopeRun hihope-rzg2n     |
+| Renesas RZ/G2E | Silicon Linux ek874      |
+| Renesas RZ/G1H | iWave Systems iwg21m     |
+| Renesas RZ/G1M | iWave Systems iwg20m-g1m |
+| Renesas RZ/G1E | iWave Systems iwg22m     |
 
 ---
 
