@@ -2,13 +2,13 @@
 This OpenEmbedded/Yocto layer collector adds AI tools support to Renesas RZ/G1
 and RZ/G2 platforms.
 
-### For RZ/G1 ###
+#### For RZ/G1 ####
 The layers should be used with the official Renesas RZ/G1 Yocto Poky BSP based
 on the CIP Kernel:  
 URI: **https://github.com/renesas-rz/meta-renesas.git**  
 tag: certified-linux-v2.1.5 (8c60fa1de1ffc3fd9db2b8005be0f7ae17f6d691)
 
-### For RZ/G2 ###
+#### For RZ/G2 ####
 The layers should be used with the official Renesas RZ/G2 Yocto Poky BSP based
 on the CIP Kernel:
 URI: **https://github.com/renesas-rz/meta-rzg2.git**  
@@ -32,23 +32,23 @@ build conf directory is usually the first thing the user wants to do, but
 the configuration must be inspected and further customized according to the
 project requirements.
 
+### Supported Frameworks/Versions ###
 
-Supported AI tools:  
-- TensorFlow (v2.0.0)  
-- TensorFlow Lite (v2.0.0)  
-- Caffe2 (v0.8.1)  
-- Arm Neural Network SDK (v19.08.01)  
-- ONNX Runtime (v1.1.2)  
-- OpenCV (v4.1.1)  
-- Google Coral USB TPU (diploria2)
-
+| Framework       | Version   | Parser(s)                              | Inference Hardware               |
+| :-------------- | :-------- | :------------------------------------- | :------------------------------- |
+| ArmNN           | v19.08.01 | ONNX<br>TensorFlow<br>TensorFlow Lite  | CPU                              |
+| Caffe2          | v0.8.1    | Caffe2                                 | CPU                              |
+| ONNX Runtime    | v1.1.2    | ONNX                                   | CPU                              |
+| OpenCV          | v4.1.1    | Caffe<br>DarkNet<br>ONNX<br>TensorFlow | CPU                              |
+| TensorFlow      | v2.0.0    | TensorFlow                             | CPU                              |
+| TensorFlow Lite | v2.0.0    | TensorFlow Lite                        | CPU<br>Coral USB TPU (diploria2) |
 
 Supported Platforms:  
-- Renesas RZ/G1M iwg20m  
-- Renesas RZ/G1H iwg21m  
-- Renesas RZ/G1E iwg22m  
-- Renesas RZ/G2M hihope-rzg2m  
-- Renesas RZ/G2N hihope-rzg2n  
+- Renesas RZ/G1M iwg20m
+- Renesas RZ/G1H iwg21m
+- Renesas RZ/G1E iwg22m
+- Renesas RZ/G2M hihope-rzg2m
+- Renesas RZ/G2N hihope-rzg2n
 - Renesas RZ/G2E ek874
 
 ---
