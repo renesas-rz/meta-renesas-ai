@@ -10,7 +10,7 @@ S = "${WORKDIR}/git"
 SRC_URI = "git://github.com/pytorch/vision.git;protocol=git"
 SRCREV = "3bd7a405093742e837b2dc48d3c83fc16614d5df"
 
-COMPATIBLE_MACHINE = "(x86_64|iwg20m-g1m|iwg21m|iwg22m|hihope-rzg2m|ek874)"
+COMPATIBLE_MACHINE = "(x86_64|iwg20m-g1m|iwg21m|iwg22m|hihope-rzg2m|hihope-rzg2n|ek874)"
 
 inherit pythonnative setuptools
 
