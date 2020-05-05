@@ -9,7 +9,7 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=c6379001ecb47e2a0420c40177fc1125"
 
 DEPENDS = "jpeg zlib tiff freetype libpng jpeg"
 
-inherit pkgconfig setuptools
+inherit pkgconfig setuptools3
 
 SRCREV = "e5bd7eb6235cc24b9c8d3e7ce51ed48a780c7c70"
 SRC_URI = " \

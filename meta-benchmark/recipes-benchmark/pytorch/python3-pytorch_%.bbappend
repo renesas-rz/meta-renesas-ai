@@ -28,7 +28,7 @@ SRC_URI[resnet152-b121ed2d.md5sum] = "d3ddb494358a7e95e49187829ec97395"
 SRC_URI[resnet152-b121ed2d.sha256sum] = "b121ed2db97ec7e9f55a91300ceaf85a326de955e8a4ae09e3a0c8170d27f14f"
 
 RDEPENDS_${PN} += " \
-	torchvision \
+	python3-torchvision \
 "
 
 do_install_append() {

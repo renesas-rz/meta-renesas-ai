@@ -13,12 +13,12 @@ SRC_URI[sha256sum] = "ecbe6413ca90b8e19f8475bfa303ac001e81b04ec600d17fa7f816271f
 
 S = "${WORKDIR}/scipy-${PV}"
 
-RDEPENDS_${PN} = "${PYTHON_PN}-numpy ${PYTHON_PN}-multiprocessing lapack"
-DEPENDS = "${PYTHON_PN}-numpy ${PYTHON_PN}-numpy-native lapack"
+DEPENDS = "python3-numpy python3-numpy-native lapack"
+RDEPENDS_${PN} = "python3-numpy python3-multiprocessing lapack"
 
 CLEANBROKEN = "1"
 
-inherit setuptools
+inherit setuptools3
 
 export LAPACK = "${STAGING_LIBDIR}"
 export BLAS = "${STAGING_LIBDIR}"

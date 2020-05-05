@@ -12,14 +12,14 @@ RZ/G2 families of System on Chips.
 
 In order to add PyTorch support to your project, make sure `pytorch` is
 listed as a dependency to your recipe/package. This can be done by adding
-`IMAGE_INSTALL_append = " pytorch"` to the `local.conf`
+`IMAGE_INSTALL_append = " python3-pytorch"` to the `local.conf`
 
 The PyTorch library can be verified by running the following command in the
-terminal: `python -c "import torch; print(torch.__version__)"`
+terminal: `python3 -c "import torch; print(torch.__version__)"`
 
 *meta-pytorch* also includes a recipe for TorchVision, a library useful for
 vision-based machine learning. TorchVision support can be added to your project
-by adding `IMAGE_INSTALL_append = " torchvision"` to the `local.conf`.
+by adding `IMAGE_INSTALL_append = " python3-torchvision"` to the `local.conf`.
 
 ## Additional Model Support
 
@@ -30,14 +30,14 @@ TorchVision, Scipy must be added to your project.
 
  - Uncomment the following line in the `local.conf`:
 ```
-#require ${META_PYTORCH_DIR}/recipes-devtools/python/python-scipy/python-scipy_RZ-G1.conf
+#require ${META_PYTORCH_DIR}/templates/python3-scipy/python3-scipy_RZ-G1.conf
 ```
 
 ### For RZ/G2 devices:
 
  - Uncomment the following line in the `local.conf`:
 ```
-#require ${META_PYTORCH_DIR}/recipes-devtools/python/python-scipy/python-scipy_RZ-G2.conf
+#require ${META_PYTORCH_DIR}/templates/python3-scipy/python3-scipy_RZ-G2.conf
 ```
  - Comment the following line in the `local.conf`:
 ```

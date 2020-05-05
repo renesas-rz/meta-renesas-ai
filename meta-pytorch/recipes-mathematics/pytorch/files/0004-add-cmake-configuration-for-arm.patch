@@ -17,7 +17,7 @@ index 9e1ac2dafe..dd7127b88f 100644
  
  set(CMAKE_INSTALL_MESSAGE NEVER)
 +set(CMAKE_SYSTEM_PROCESSOR "armv7l")
-+set(PROTOBUF_LIBRARY "${PROJECT_SOURCE_DIR}/../recipe-sysroot/usr/lib/libprotobuf.so")
++set(PROTOBUF_LIBRARY "${CMAKE_SYSROOT}/usr/lib/libprotobuf.so")
  set(CMAKE_BUILD_TYPE "RelWithDebInfo")
  set(GLIBCXX_USE_CXX11_ABI "0")
  set(CMAKE_CROSSCOMPILING "1")
