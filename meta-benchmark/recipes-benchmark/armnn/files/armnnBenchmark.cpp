@@ -45,6 +45,17 @@
 
 #define NUMBER_RUN_TESTS 30
 
+/*
+ * Mark benchmarking output with the format:
+ * Framework, model, model type, mean, stdev,
+ */
+std::list<std::string> bench;
+enum Parser { caffe, tensorflow, tfLite, onnx };
+Parser test_parser;
+std::string benched_model;
+std::string benched_type;
+#define ARMNN_VERSION "Arm NN SDK v19.08.01"
+
 std::map<int,std::string> label_file_map;
 
 std::string base_path = "/usr/bin/armnn/examples";
@@ -125,6 +136,9 @@ void CaculateAvergeDeviation(vector<double>& time_vec)
     std::cout << "Average Time Takes " << (mean) << " ms"<< std::endl;
 
     std::cout << "Standard Deviation " << stdev << std::endl;
+
+    /* Add the metrics for parsing */
+    bench.push_back(std::to_string(mean) + "," + std::to_string(stdev) + ",");
 }
 
 template<typename TParser, typename TDataType>
@@ -236,6 +250,27 @@ int MainImpl(const char* modelPath,
             time_vector.push_back(timeTakenS*1000.0);
         }
 
+	bench.push_back("AI_BENCHMARK_MARKER,");
+	bench.push_back(ARMNN_VERSION);
+        switch (test_parser) {
+            case caffe:
+                bench.push_back(": Caffe,");
+            break;
+
+            case tensorflow:
+                bench.push_back(": TensorFlow,");
+            break;
+
+            case tfLite:
+                bench.push_back(": TensorFlow Lite,");
+            break;
+
+            case onnx:
+                bench.push_back(": ONNX,");
+            break;
+        }
+        bench.push_back(benched_model);
+        bench.push_back(benched_type);
         CaculateAvergeDeviation(time_vector);
 
         if(isFloatModel)
@@ -514,6 +549,7 @@ int RunTest(const std::string& modelFormat,
     if (modelFormat.find("caffe") != std::string::npos)
     {
 #if defined(ARMNN_CAFFE_PARSER)
+        test_parser = caffe;
         return MainImpl<armnnCaffeParser::ICaffeParser, TDataType>(modelPath.c_str(), isFloatModel,bNeedSoftMax,"caffe",
                                                                inputName.c_str(), &inputTensorShape,
                                                                inputTensorDataFilePath.c_str(), inputImageName,
@@ -527,6 +563,7 @@ int RunTest(const std::string& modelFormat,
     else if (modelFormat.find("onnx") != std::string::npos)
     {
 #if defined(ARMNN_ONNX_PARSER)
+        test_parser = onnx;
         return MainImpl<armnnOnnxParser::IOnnxParser, float>(modelPath.c_str(), isFloatModel, bNeedSoftMax, "onnx",
                                                          inputName.c_str(), &inputTensorShape,
                                                          inputTensorDataFilePath.c_str(), inputImageName,
@@ -540,6 +577,7 @@ int RunTest(const std::string& modelFormat,
     else if (modelFormat.find("tensorflow") != std::string::npos)
     {
 #if defined(ARMNN_TF_PARSER)
+        test_parser = tensorflow;
         return MainImpl<armnnTfParser::ITfParser, TDataType>(modelPath.c_str(), isFloatModel, bNeedSoftMax,"tensorflow",
                                                          inputName.c_str(), &inputTensorShape,
                                                          inputTensorDataFilePath.c_str(), inputImageName,
@@ -559,6 +597,8 @@ int RunTest(const std::string& modelFormat,
               for tflite files";
             return EXIT_FAILURE;
         }
+
+        test_parser = tfLite;
         return MainImpl<armnnTfLiteParser::ITfLiteParser, TDataType>(modelPath.c_str(), isFloatModel,bNeedSoftMax, "tflite",
                                                                  inputName.c_str(), &inputTensorShape,
                                                                  inputTensorDataFilePath.c_str(), inputImageName,
@@ -632,19 +672,32 @@ int main(int argc, const char* argv[])
         std::cout << "====================" << std::endl;
         std::cout << "current model is " << *it << std::endl;
 
+        benched_model = *it + ",";
+
         if(params.isFloatModel)
         {
+            benched_type = "Float,";
             RunTest<float>(params.modelFormat, params.isFloatModel, params.bNeedSoftMax, params.inputTensorShape, params.modelPath,\
             params.inputName, inputImagePath, inputImageName,\
             params.inputImageWidth,params.inputImageHeight, params.outputName, enableProfiling, subgraphId);
         }
         else
         {
+            benched_type = "Quant,";
             RunTest<uint8_t>(params.modelFormat, params.isFloatModel, params.bNeedSoftMax, params.inputTensorShape, params.modelPath,\
             params.inputName, inputImagePath, inputImageName,\
             params.inputImageWidth,params.inputImageHeight, params.outputName, enableProfiling, subgraphId);
         }
+            bench.push_back("\n");
     }
+
+    /* Output benchmarks */
+    for (std::string ben : bench) {
+        std::cout << ben;
+    }
+    std::cout << std::endl;
+
+    bench.clear();
 
     return 0;
 }
