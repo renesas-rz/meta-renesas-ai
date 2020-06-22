@@ -40,7 +40,7 @@ project requirements.
 | Caffe2          | v0.8.1    | Caffe2                                 | CPU                              |
 | ONNX Runtime    | v1.1.2    | ONNX                                   | CPU                              |
 | OpenCV          | v4.1.1    | Caffe<br>DarkNet<br>ONNX<br>TensorFlow | CPU                              |
-| PyTorch         | v1.5.0    | PyTorch                                | CPU                              |
+| PyTorch         | v1.5.1    | PyTorch                                | CPU                              |
 | TensorFlow      | v2.0.2    | TensorFlow                             | CPU                              |
 | TensorFlow Lite | v2.0.2    | TensorFlow Lite                        | CPU<br>Coral USB TPU (diploria2) |
 

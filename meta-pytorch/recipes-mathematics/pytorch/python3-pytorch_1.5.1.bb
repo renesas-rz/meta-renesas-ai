@@ -13,7 +13,7 @@ SRC_URI = " \
 	file://0002-remove-cwd-from-lib_path-to-make-it-relative-for-cro.patch \
 "
 
-SRCREV = "4ff3872a2099993bf7e8c588f7182f3df777205b"
+SRCREV = "3c31d73c875d9a4a6ea8a843b9a0d1b19fbe36f3"
 
 SRC_URI_append_arm = " \
 	file://0003-add-armv7l-processor-into-check-condition-cpuinfo.patch \
