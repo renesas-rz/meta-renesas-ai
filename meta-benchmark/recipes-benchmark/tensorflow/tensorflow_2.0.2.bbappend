@@ -20,7 +20,7 @@ do_compile_append() {
 
 do_install_append() {
 	install -d ${D}${bindir}/tensorflowBenchmark
-	install -m 0555 ${S}/tensorflowBenchmark ${D}${bindir}/tensorflowBenchmark/ 
+	install -m 0555 ${S}/tensorflowBenchmark ${D}${bindir}/tensorflowBenchmark/
 }
 
 FILES_${PN} += "\

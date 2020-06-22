@@ -3,7 +3,7 @@ LICENSE = "Apache-2.0"
 
 LIC_FILES_CHKSUM = "file://LICENSE;md5=64a34301f8e355f57ec992c2af3e5157"
 
-SRCREV = "64c3d382cadf7bbe8e7e99884bede8284ff67f56"
+SRCREV = "2c2fdd3205a8d31e5f09a71ac7eb52b8c0294a60"
 
 SRC_URI = " \
 	git://github.com/tensorflow/tensorflow.git;branch=r2.0 \

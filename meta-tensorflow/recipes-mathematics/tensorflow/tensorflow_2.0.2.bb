@@ -8,7 +8,7 @@ PACKAGES += "${PN}-examples ${PN}-examples-dbg"
 
 S = "${WORKDIR}/git"
 
-SRCREV = "64c3d382cadf7bbe8e7e99884bede8284ff67f56"
+SRCREV = "2c2fdd3205a8d31e5f09a71ac7eb52b8c0294a60"
 
 SRC_URI = " \
 	git://github.com/tensorflow/tensorflow.git;branch=r2.0 \
