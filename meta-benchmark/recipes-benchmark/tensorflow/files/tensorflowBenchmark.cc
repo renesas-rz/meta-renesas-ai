@@ -36,9 +36,13 @@ limitations under the License.
 
 // 9 July 2019. Add timing measurement change - jianming.qiao@bp.renesas.com
 
+#include <string>
+#include <list>
 #include <fstream>
 #include <utility>
 #include <vector>
+#include <iostream>
+#include <iterator>
 #include <sys/time.h>
 #include <numeric>
 
@@ -61,6 +65,14 @@ limitations under the License.
 #include "tensorflow/core/platform/types.h"
 #include "tensorflow/core/public/session.h"
 #include "tensorflow/core/util/command_line_flags.h"
+
+#define TENSORFLOW_VERSION "TensorFlow 2.0.2,"
+
+/*
+ * Mark benchmarking output with the format:
+ * Framework, model, model type, mean, stdev,
+ */
+std::list<std::string> bench;
 
 // These are all common classes it's handy to reference with no namespace.
 using tensorflow::Flag;
@@ -93,6 +105,10 @@ void CaculateAvergeDeviation(std::vector<double>& time_vec)
     std::cout << "Average Time Takes " << (mean) << " ms"<< std::endl;
 
     std::cout << "Standard Deviation " << stdev << std::endl;
+
+    /* Add the metrics for parsing */
+    bench.push_back(std::to_string(mean) + "," + std::to_string(stdev) + ",");
+    bench.push_back("\n");
 }
 
 
@@ -353,12 +369,25 @@ int main(int argc, char* argv[]) {
     return -1;
   }
 
+  bench.push_back("AI_BENCHMARK_MARKER,");
+  bench.push_back(TENSORFLOW_VERSION);
+
   // We need to call this to set up global state for TensorFlow.
   tensorflow::port::InitMain(argv[0], &argc, &argv);
   if (argc > 1) {
     LOG(ERROR) << "Unknown argument " << argv[1] << "\n" << usage;
     return -1;
   }
+
+  /* tensorflow::string can still be printed in an iostream */
+  std::string benched_model(graph + ",");
+  benched_model = benched_model.substr(benched_model.find_last_of('/')+1);
+  bench.push_back(benched_model);
+
+  if (graph.find("uant") == string::npos)
+    bench.push_back("Float,");
+  else
+    bench.push_back("Quant,");
 
   // First we load and initialize the model.
   std::unique_ptr<tensorflow::Session> session;
@@ -436,6 +465,14 @@ int main(int argc, char* argv[]) {
     LOG(ERROR) << "Running print failed: " << print_status;
     return -1;
   }
+
+  /* Output benchmarks */
+  for (std::string ben : bench) {
+    std::cout << ben;
+  }
+  std::cout << std::endl;
+
+  bench.clear();
 
   return 0;
 }
