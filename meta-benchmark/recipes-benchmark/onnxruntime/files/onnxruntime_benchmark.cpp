@@ -15,11 +15,20 @@
 #include <sys/time.h>
 #include <numeric>
 #include <algorithm>
+#include <list>
+#include <iostream>
 
+#define ONNX_VERSION "ONNX Runtime v1.1.2,"
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
 
 const OrtApi* g_ort = OrtGetApiBase()->GetApi(ORT_API_VERSION);
+
+/*
+ * Mark benchmarking output with the format:
+ * Framework, model, model type, mean, stdev,
+ */
+std::list<std::string> bench;
 
 // helper function to check for status
 void CheckStatus(OrtStatus* status)
@@ -79,6 +88,9 @@ void CaculateAvergeDeviation(std::vector<double>& time_vec)
     printf("Total Time Takes %f ms\n", sum);
     printf("Average Time Takes  %f ms\n", mean);
     printf("Standard Deviation  %f\n", stdev);
+
+    /* Add the metrics for parsing */
+    bench.push_back(std::to_string(mean) + "," + std::to_string(stdev) + ",");
 }
 
 
@@ -106,14 +118,14 @@ int main(int argc, char* argv[])
 
   std::map<std::string, std::string> onnx_models_map =
   {
-      {"model.onnx", "softmaxout_1"},
-      {"mobilenetv2-1.0.onnx", "mobilenetv20_output_flatten0_reshape0"}
+      {"Squeezenet_v1.1", "softmaxout_1"},
+      {"MobileNet_v2_1.0_224", "mobilenetv20_output_flatten0_reshape0"}
   };
 
   std::map<std::string, std::string> onnx_models_path_map =
   {
-      {"model.onnx", "/usr/bin/onnxruntime/examples/unitest/squeezenet/model.onnx"},
-      {"mobilenetv2-1.0.onnx", "/usr/bin/onnxruntime/examples/inference/mobilenetv2-1.0.onnx"}
+      {"Squeezenet_v1.1", "/usr/bin/onnxruntime/examples/unitest/squeezenet/model.onnx"},
+      {"MobileNet_v2_1.0_224", "/usr/bin/onnxruntime/examples/inference/mobilenetv2-1.0.onnx"}
   };
 
   auto it = onnx_models_map.find(model_name);
@@ -147,6 +159,13 @@ int main(int argc, char* argv[])
   printf("Current Model is %s\n",it->first.c_str());
   printf("Number of inputs = %zu\n", num_input_nodes);
 
+  bench.push_back("AI_BENCHMARK_MARKER,");
+  bench.push_back(ONNX_VERSION);
+  bench.push_back(it->first.c_str());
+  bench.push_back(",");
+
+  ONNXTensorElementDataType type;
+
   // iterate over all input nodes
   for (size_t i = 0; i < num_input_nodes; i++) {
     // print input node names
@@ -160,7 +179,6 @@ int main(int argc, char* argv[])
     status = g_ort->SessionGetInputTypeInfo(session, i, &typeinfo);
     const OrtTensorTypeAndShapeInfo* tensor_info;
     CheckStatus(g_ort->CastTypeInfoToTensorInfo(typeinfo, &tensor_info));
-    ONNXTensorElementDataType type;
     CheckStatus(g_ort->GetTensorElementType(tensor_info, &type));
     printf("Input %zu : type=%d\n", i, type);
 
@@ -173,6 +191,11 @@ int main(int argc, char* argv[])
 
     g_ort->ReleaseTypeInfo(typeinfo);
   }
+
+  if (type == ONNX_TENSOR_ELEMENT_DATA_TYPE_FLOAT)
+            bench.push_back("Float,");
+  else
+            bench.push_back("Unknown,");
 
   size_t input_tensor_size = 224 * 224 * 3;
 
@@ -277,6 +300,14 @@ int main(int argc, char* argv[])
   g_ort->ReleaseSessionOptions(session_options);
   g_ort->ReleaseEnv(env);
   printf("Done!\n");
+
+  /* Output benchmarks */
+  for (std::string ben : bench) {
+      std::cout << ben;
+  }
+  std::cout << std::endl;
+
+  bench.clear();
 
   return 0;
 }

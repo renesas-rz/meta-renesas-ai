@@ -1,2 +1,2 @@
-model.onnx
-mobilenetv2-1.0.onnx
+Squeezenet_v1.1
+MobileNet_v2_1.0_224
