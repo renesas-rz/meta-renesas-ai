@@ -19,11 +19,21 @@
 #include <sys/types.h>
 #include <sys/uio.h>
 #include <unistd.h>
+#include <list>
+#include <string>
 
 #include <opencv2/dnn.hpp>
 #include <opencv2/imgproc.hpp>
 #include <opencv2/highgui.hpp>
 #include <opencv2/core/utils/filesystem.hpp>
+
+#define OPENCV_VERSION "OpenCV v4.1.1,"
+
+/*
+ * Mark benchmarking output with the format:
+ * Framework, model, model type, mean, stdev,
+ */
+std::list<std::string> bench;
 
 std::string keys =
     "{ help  h     | | Print help message. }"
@@ -66,12 +76,15 @@ void CaculateAvergeDeviation(std::vector<double>& time_vec)
                    std::bind2nd(std::minus<double>(), mean));
     double sq_sum = std::inner_product(diff.begin(), diff.end(), diff.begin(), 0.0);
     double stdev = std::sqrt(sq_sum / time_vec.size());
-          
+
     std::cout << "Total Time Takes " << (sum) << " ms"<< std::endl;
 
     std::cout << "Average Time Takes " << (mean) << " ms"<< std::endl;
 
     std::cout << "Standard Deviation " << stdev << std::endl;
+
+    bench.push_back(std::to_string(mean) + "," + std::to_string(stdev) + ",");
+    bench.push_back("\n");
 }
 
 std::string genArgument(const std::string& argName, const std::string& help,
@@ -98,7 +111,7 @@ std::string genArgument(const std::string& argName, const std::string& help,
                 if (!value.empty())
                 {
                     if (value.isReal())
-                        defaultVal = format("%f", (float)value);
+                       	defaultVal = format("%f", (float)value);
                     else if (value.isString())
                         defaultVal = (std::string)value;
                     else if (value.isInt())
@@ -170,6 +183,9 @@ std::string genPreprocArguments(const std::string& modelName, const std::string&
 
 int main(int argc, char** argv)
 {
+    bench.push_back("AI_BENCHMARK_MARKER,");
+    bench.push_back(OPENCV_VERSION);
+
     CommandLineParser parser(argc, argv, keys);
 
     const std::string modelName = parser.get<String>("@alias");
@@ -196,6 +212,12 @@ int main(int argc, char** argv)
     int backendId = parser.get<int>("backend");
     int targetId = parser.get<int>("target");
     int number_of_inferences = parser.get<int>("counter");
+
+    std::string benched_model(model.c_str());
+    benched_model = benched_model.substr(benched_model.find_last_of('/')+1);
+
+    bench.push_back(benched_model + ",");
+    bench.push_back("Float,");
 
     // Open file with classes names.
     if (parser.has("classes"))
@@ -242,7 +264,7 @@ int main(int argc, char** argv)
             //waitKey();
             //break;
             printf("Invalid image!\n");
-            return -1;	
+            return -1;
         }
 
         //! [Create a 4D blob from a frame]
@@ -258,11 +280,11 @@ int main(int argc, char** argv)
         net.forward();
 
         Mat prob;
-       
+
         std::vector<double> time_vector;
 
         struct timeval start_time, stop_time;
-                
+
         for(int i = 0;i < number_of_inferences;i++)
         {
             gettimeofday(&start_time, nullptr);
@@ -289,5 +311,14 @@ int main(int argc, char** argv)
                                    confidence);
         printf("Top 1 prediction result: %s\n",label.c_str());
     }
+
+    /* Output benchmarks */
+    for (std::string ben : bench) {
+      std::cout << ben;
+    }
+    std::cout << std::endl;
+
+    bench.clear();
+
     return 0;
 }
