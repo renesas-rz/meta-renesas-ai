@@ -1,20 +1,20 @@
 #!/usr/bin/env python2
 
 '''
-Copyright (C) 2019 Renesas Electronics Corp. 
+Copyright (C) 2019 Renesas Electronics Corp.
 This file is licensed under the terms of the MIT License
 This program is licensed "as is" without any warranty of any
 kind, whether express or implied.
 '''
 
-import sys  
+import sys
 import os
 import commands
 import subprocess
 from subprocess import call
 import numpy as np
 
-def main(): 
+def main():
    print("Tensorflow Lite Test App")
 
    if len(sys.argv) != 5:
@@ -37,14 +37,14 @@ def main():
 
    number_of_cores = int(sys.argv[4])
 
-   with open(filepath) as fp:  
+   with open(filepath) as fp:
        for line in fp:
 	   if not len(line.strip()) == 0:
 	       list = []
 	       list_tmp = []
 
 	       run_label_image(line,base_direcotry_path,'labels.txt',number_of_cores,number_of_iteration,list_tmp,list)
-		  
+
 	       print("Average Time" + " at Model " + line + str(Average(list_tmp)) + " ms ")
                print("Standard Deviation" + " at Model " + line + str(Average(list)))
 
@@ -60,12 +60,12 @@ def run_label_image(model_file_name,base_direcotry,label_file_name,number_of_thr
         count = 0
         if line.find("Average Time") != -1:
             line = line.split(" ")
-            list.insert(count, float(line[3])) 
+            list.insert(count, float(line[3]))
             count = count + 1
-        elif line.find("Standard Deviation") != -1:                                                                                                                                                                 
-            line = line.split(" ")                                                                                                                                                                          
-            list_dev.insert(count, float(line[2]))      
-        
+        elif line.find("Standard Deviation") != -1:
+            line = line.split(" ")
+            list_dev.insert(count, float(line[2]))
+
 
 def run_command(command):
     #Debug
@@ -73,7 +73,7 @@ def run_command(command):
     p = subprocess.Popen(command,shell=True,
                          stdout=subprocess.PIPE,
                          stderr=subprocess.STDOUT)
-    return iter(p.stdout.readline, b'') 
+    return iter(p.stdout.readline, b'')
 
-if __name__ == '__main__':  
+if __name__ == '__main__':
    main()

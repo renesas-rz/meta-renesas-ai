@@ -65,7 +65,7 @@ void CaculateAvergeDeviation(std::vector<double>& time_vec)
                    std::bind2nd(std::minus<double>(), mean));
     double sq_sum = std::inner_product(diff.begin(), diff.end(), diff.begin(), 0.0);
     double stdev = std::sqrt(sq_sum / time_vec.size());
-          
+
     std::cout << "Total Time Takes " << (sum) << " ms"<< std::endl;
 
     std::cout << "Average Time Takes " << (mean) << " ms"<< std::endl;
@@ -217,7 +217,7 @@ void RunInference(Settings* s) {
   std::vector<double> time_vector;
 
   struct timeval start_time, stop_time;
-  
+
   for (int i = 0; i < s->loop_count; i++) {
     gettimeofday(&start_time, nullptr);
     if (interpreter->Invoke() != kTfLiteOk) {
@@ -231,7 +231,7 @@ void RunInference(Settings* s) {
   }
 
   CaculateAvergeDeviation(time_vector);
-  
+
   const int output_size = 1000;
   const size_t num_results = 5;
   const float threshold = 0.001f;
