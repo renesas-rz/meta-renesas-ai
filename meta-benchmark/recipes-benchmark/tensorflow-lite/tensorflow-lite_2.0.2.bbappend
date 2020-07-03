@@ -17,6 +17,7 @@ SRC_URI += " \
 	file://test_file_list_Mobile_Net_V3.txt \
 	file://test_file_list_Nasnet.txt \
 	file://test_file_list_Mnasnet.txt \
+	file://test_file_list_Resnet.txt \
 	file://test_file_list_Squeezenet.txt \
 "
 
@@ -39,6 +40,7 @@ do_install_append() {
 	install -m 0644 ${S}/../test_file_list_Mobile_Net_V3.txt ${D}${bindir}/tensorflow-lite-benchmark/
 	install -m 0644 ${S}/../test_file_list_Nasnet.txt ${D}${bindir}/tensorflow-lite-benchmark/
 	install -m 0644 ${S}/../test_file_list_Mnasnet.txt ${D}${bindir}/tensorflow-lite-benchmark/
+	install -m 0644 ${S}/../test_file_list_Resnet.txt ${D}${bindir}/tensorflow-lite-benchmark/
 	install -m 0644 ${S}/../test_file_list_Squeezenet.txt ${D}${bindir}/tensorflow-lite-benchmark/
 }
 

@@ -68,8 +68,8 @@ cd /usr/bin/tensorflow-lite-benchmark
 ```
 
 Other models can also be tested such as MnasNet, MobileNet v1, MobileNet v2,
-Nasnet and Squeezenet. The steps to run benchmarking for these models are almost
-the same as above.
+Nasnet, Resnet and Squeezenet. The steps to run benchmarking for these models
+are almost the same as above.
 
 Some examples can be found below (assuming 2 cores and inference 30 times):
 
@@ -88,6 +88,9 @@ Some examples can be found below (assuming 2 cores and inference 30 times):
 
 ./run_TF_measurement.py test_file_list_Nasnet.txt \
 /home/root/models/tensorflowlite/NasNet/ 30 2
+
+./run_TF_measurement.py test_file_list_Resnet.txt \
+/home/root/models/tensorflowlite/Resnet/ 30 2
 
 ./run_TF_measurement.py test_file_list_Squeezenet.txt \
 /home/root/models/tensorflowlite/Squeezenet/ 30 2

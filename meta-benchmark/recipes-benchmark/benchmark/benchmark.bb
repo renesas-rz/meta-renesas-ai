@@ -3,7 +3,7 @@ LICENSE = "Apache-2.0"
 LICENSE_FLAGS = "commercial"
 LIC_FILES_CHKSUM = " \
         file://license/COPYING;md5=c4e89413e9e0e6a372520647a3fae1ae \
-        file://license/LICENSES;md5=f45ef5591030973d68d21a967e92b32e \
+        file://license/LICENSES;md5=8d20b58b243160c86661891607a0d385 \
 "
 
 S = "${WORKDIR}"
@@ -90,6 +90,8 @@ SRC_URI = " \
 	https://github.com/pjreddie/darknet/raw/master/cfg/darknet19.cfg;name=darkent19_cfg \
 	https://github.com/pjreddie/darknet/raw/master/cfg/darknet.cfg;name=darkent_cfg \
 	https://pjreddie.com/media/files/darknet.weights;name=darkent_weights \
+	https://storage.googleapis.com/download.tensorflow.org/models/tflite_11_05_08/resnet_v2_101.tgz;name=resnet_v2_101_float \
+	https://storage.googleapis.com/download.tensorflow.org/models/tflite/model_zoo/upload_20180427/inception_resnet_v2_2018_04_27.tgz;name=inception_resnet_v2_float \
 "
 
 SRC_URI[mobilenet_v1_1_0_224.md5sum] = "d5f69cef81ad8afb335d9727a17c462a"
@@ -256,6 +258,10 @@ SRC_URI[darkent_weights.md5sum] = "ee60922067d60576744437eede06642a"
 SRC_URI[darkent_weights.sha256sum] = "1b5ddb91b85aba5dfd552ec4528d3f9243779c92e7c698a4659c79ea1d87de59"
 SRC_URI[darkent19_cfg.md5sum] = "6d7d2d970b6351e0f5c2795a86f28bad"
 SRC_URI[darkent19_cfg.sha256sum] = "7ac495cfb9f37c780ae5ea451dda4754ec147ae9820fa14b2fdd52f8e6426971"
+SRC_URI[resnet_v2_101_float.md5sum] = "e85b06c92f547108397650318c9f556a"
+SRC_URI[resnet_v2_101_float.sha256sum] = "c624931eed69e4a6c5d7b67e76d0303f6d868cefc4c9f5108619c1fc1ce2eb89"
+SRC_URI[inception_resnet_v2_float.md5sum] = "59d4080bd81c1b675d2124672d8afe4c"
+SRC_URI[inception_resnet_v2_float.sha256sum] = "fb16b93ff2b2bcda0da5cdfd25a8d5b8b74438943dae738db659bad0d3d48ff1"
 
 SRC_URI += " \
         file://models \
@@ -272,6 +278,7 @@ do_install () {
 	install -d ${D}/home/root/models/tensorflowlite/Mobile_InceptionV3
 	install -d ${D}/home/root/models/tensorflowlite/Squeezenet
 	install -d ${D}/home/root/models/tensorflowlite/MnasNet
+	install -d ${D}/home/root/models/tensorflowlite/Resnet
 	install -d ${D}/home/root/models/armnn
 	install -d ${D}/home/root/models/caffe
 	install -d ${D}/home/root/models/onnx
@@ -281,11 +288,14 @@ do_install () {
 	install -m 0644 ${S}/v3*/v3*.tflite ${D}/home/root/models/tensorflowlite/Mobile_Net_V3_Model/
 	install -m 0644 ${S}/nasnet*.tflite ${D}/home/root/models/tensorflowlite/NasNet/
 	install -m 0644 ${S}/squeezenet*.tflite ${D}/home/root/models/tensorflowlite/Squeezenet/
+	install -m 0644 ${S}/inception_resnet_v2.tflite ${D}/home/root/models/tensorflowlite/Resnet/
+	install -m 0644 ${S}/resnet_v2_101_299.tflite ${D}/home/root/models/tensorflowlite/Resnet/
 	install -m 0644 ${S}/labels.txt ${D}/home/root/models/tensorflowlite/Mobile_Net_V1_Model/
 	install -m 0644 ${S}/labels.txt ${D}/home/root/models/tensorflowlite/Mobile_Net_V2_Model/
 	install -m 0644 ${S}/labels.txt ${D}/home/root/models/tensorflowlite/Mobile_Net_V3_Model/
 	install -m 0644 ${S}/labels.txt ${D}/home/root/models/tensorflowlite/NasNet/
 	install -m 0644 ${S}/labels.txt ${D}/home/root/models/tensorflowlite/Squeezenet/
+	install -m 0644 ${S}/labels.txt ${D}/home/root/models/tensorflowlite/Resnet/
 	install -m 0644 ${S}/imagenet_slim_labels.txt ${D}/home/root/models/tensorflow/InceptionV3/
 	install -m 0644 ${S}/imagenet_slim_labels.txt ${D}/home/root/models/tensorflow/InceptionV3_Quant/
 	install -m 0644 ${S}/imagenet_slim_labels.txt ${D}/home/root/models/tensorflowlite/Mobile_InceptionV3/

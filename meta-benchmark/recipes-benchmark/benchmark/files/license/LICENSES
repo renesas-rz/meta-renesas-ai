@@ -15,12 +15,12 @@ md5sum:11b681a638da9ec33a37b192185a2d20
 
 FileName:synset_words.txt
 Source:inspired from https://github.com/avoroshilov/tf-squeezenet/blob/master/synset_words.txt
-License:Unknownn
+License:Unknown
 md5sum:3717997f5be3920fe9769d915634a322
 
 FileName:sqz_full.pckl
 Source:inspired from https://github.com/avoroshilov/tf-squeezenet/blob/master/sqz_full.mat
-License:Unknownn
+License:Unknown
 md5sum:b5e36a1bf3a0593035343ec50dde66c1
 
 FileName:predict_net.pb
@@ -35,7 +35,7 @@ md5sum:a589d31d93c44d353ae2cd92af4d5a3f
 
 FileName:ilsvrc_2012_mean.npy
 Source:https://github.com/BVLC/caffe/raw/master/python/caffe/imagenet/ilsvrc_2012_mean.npy
-License:Unknownn
+License:Unknown
 md5sum:28a998b87558ea0cac23c83e718636b1
 
 FileName:imagenet_slim_labels.txt
@@ -45,7 +45,7 @@ md5sum:4f669cc9d57b8bd5fa65d3d8d518bdb7
 
 FileName:alexnet_codes
 Source:https://gist.githubusercontent.com/aaronmarkham/cd3a6b6ac071eca6f7b4a6e40e6038aa/raw/9edb4038a37da6b5a44c3b5bc52e448ff09bfe5b/alexnet_codes
-License:Unknownn
+License:Unknown
 md5sum:a5934b290b736a967348d42405bc37b6
 
 FileName:labels.txt
@@ -438,3 +438,33 @@ FileName:v3-small_224_0.75_float.tflite
 Source:https://storage.googleapis.com/mobilenet_v3/checkpoints/v3-small_224_0.75_float.tgz
 License:Apache License 2.0
 md5sum:199395c4015267e29eae1a4acbe2a83b
+
+FileName:inception_resnet_v2.tflite
+Source:https://storage.googleapis.com/download.tensorflow.org/models/tflite/model_zoo/upload_20180427/inception_resnet_v2_2018_04_27.tgz
+License:Apache License 2.0
+md5sum:59d4080bd81c1b675d2124672d8afe4c
+
+FileName:inception_resnet_v2_quant.tflite
+Source:Converted from inception_resnet_v2.tflite
+License:Apache License 2.0
+md5sum:bcc2d020c7c96749c1eb3c48dcb596bb
+
+FileName:resnet_float.tflite
+Source:https://android.googlesource.com/platform/test/mlts/models/+archive/982ff5d52744f8b81583b42a86eefb676dcbbc40.tar.gz
+License:Apache License 2.0
+md5sum:6c0dd3efd0ce4c1421acab80955fdf95
+
+FileName:resnet_quantized.tflite
+Source:https://android.googlesource.com/platform/test/mlts/models/+archive/982ff5d52744f8b81583b42a86eefb676dcbbc40.tar.gz
+License:Apache License 2.0
+md5sum:a0f48909330cefd0a0cdf5ebf2d66656
+
+FileName:resnet_v2_101_299.tflite
+Source:https://storage.googleapis.com/download.tensorflow.org/models/tflite_11_05_08/resnet_v2_101.tgz
+License:Apache License 2.0
+md5sum:e85b06c92f547108397650318c9f556a
+
+FileName:resnet_v2_101_299_quant.tflite
+Source:Converted from resnet_v2_101_299.tflite
+License:Apache License 2.0
+md5sum:9f54dfc686b93330f41bb617248a66fe
