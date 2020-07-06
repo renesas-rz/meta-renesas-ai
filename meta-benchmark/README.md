@@ -42,6 +42,10 @@ cd /usr/bin/google-coral-benchmark
 # Resnet (inference run 30 times)
 ./run_TPU_measurement.py test_file_list_Resnet.txt \
 /home/root/models/google-coral/Resnet/ 30
+
+# MobileNet V2 (inference run 30 times)
+./run_TPU_measurement.py test_file_list_MobileNet_v2.txt \
+/home/root/models/google-coral/Mobile_Net_V2_Model/ 30
 ```
 
 ## TensorFlow

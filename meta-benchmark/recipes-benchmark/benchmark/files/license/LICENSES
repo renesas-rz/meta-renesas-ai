@@ -483,3 +483,8 @@ FileName:resnet_v2_101_299_quant_edgetpu.tflite
 Source:Converted from resnet_v2_101_299_quant.tflite
 License:Apache License 2.0
 md5sum:23aa5e51ba36d30eff5e5b2bd05dd126
+
+FileName:mobilenet_v2_1.0_224_quant_edgetpu.tflite
+Source:https://dl.google.com/coral/canned_models/mobilenet_v2_1.0_224_quant_edgetpu.tflite
+License:Apache License 2.0
+md5sum:5c5a507ac190a46fd7d8ae8550ef745a
