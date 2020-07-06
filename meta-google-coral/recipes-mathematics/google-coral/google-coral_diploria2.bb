@@ -14,8 +14,8 @@ SRC_URI += " \
 	https://dl.google.com/coral/canned_models/mobilenet_v2_1.0_224_quant_edgetpu.tflite;name=mobilenet_tpu \
 	https://dl.google.com/coral/canned_models/imagenet_labels.txt;name=label_tpu \
 	git://github.com/google/benchmark.git;protocol=https;name=benchmark;subdir=${WORKDIR}/benchmark;destsuffix=benchmark \
-	file://label_image/* \
-	file://images/* \
+	file://label_image/ \
+	file://images/ \
 "
 
 S = "${WORKDIR}/git"

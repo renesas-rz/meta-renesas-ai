@@ -449,6 +449,11 @@ Source:Converted from inception_resnet_v2.tflite
 License:Apache License 2.0
 md5sum:bcc2d020c7c96749c1eb3c48dcb596bb
 
+FileName:inception_resnet_v2_quant_edgetpu.tflite
+Source:Converted from inception_resnet_v2_quant.tflite
+License:Apache License 2.0
+md5sum:493fb0f8fb7550f9513d7cab64056320
+
 FileName:resnet_float.tflite
 Source:https://android.googlesource.com/platform/test/mlts/models/+archive/982ff5d52744f8b81583b42a86eefb676dcbbc40.tar.gz
 License:Apache License 2.0
@@ -459,6 +464,11 @@ Source:https://android.googlesource.com/platform/test/mlts/models/+archive/982ff
 License:Apache License 2.0
 md5sum:a0f48909330cefd0a0cdf5ebf2d66656
 
+FileName:resnet_quantized_edgetpu.tflite
+Source:Converted from resnet_quantized.tflite
+License:Apache License 2.0
+md5sum:d1116922e52d63cc687e1a0b29cf4f20
+
 FileName:resnet_v2_101_299.tflite
 Source:https://storage.googleapis.com/download.tensorflow.org/models/tflite_11_05_08/resnet_v2_101.tgz
 License:Apache License 2.0
@@ -468,3 +478,8 @@ FileName:resnet_v2_101_299_quant.tflite
 Source:Converted from resnet_v2_101_299.tflite
 License:Apache License 2.0
 md5sum:9f54dfc686b93330f41bb617248a66fe
+
+FileName:resnet_v2_101_299_quant_edgetpu.tflite
+Source:Converted from resnet_v2_101_299_quant.tflite
+License:Apache License 2.0
+md5sum:23aa5e51ba36d30eff5e5b2bd05dd126

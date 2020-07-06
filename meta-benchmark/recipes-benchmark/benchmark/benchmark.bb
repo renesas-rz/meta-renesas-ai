@@ -3,7 +3,7 @@ LICENSE = "Apache-2.0"
 LICENSE_FLAGS = "commercial"
 LIC_FILES_CHKSUM = " \
         file://license/COPYING;md5=c4e89413e9e0e6a372520647a3fae1ae \
-        file://license/LICENSES;md5=8d20b58b243160c86661891607a0d385 \
+        file://license/LICENSES;md5=14b082269873137b902e0feca4c4e8f0 \
 "
 
 S = "${WORKDIR}"
@@ -283,6 +283,7 @@ do_install () {
 	install -d ${D}/home/root/models/caffe
 	install -d ${D}/home/root/models/onnx
 	install -d ${D}/home/root/models/darknet
+	install -d ${D}/home/root/models/google-coral/Resnet
 	install -m 0644 ${S}/mobilenet_v1*.tflite ${D}/home/root/models/tensorflowlite/Mobile_Net_V1_Model/
 	install -m 0644 ${S}/mobilenet_v2*.tflite ${D}/home/root/models/tensorflowlite/Mobile_Net_V2_Model/
 	install -m 0644 ${S}/v3*/v3*.tflite ${D}/home/root/models/tensorflowlite/Mobile_Net_V3_Model/
@@ -296,6 +297,7 @@ do_install () {
 	install -m 0644 ${S}/labels.txt ${D}/home/root/models/tensorflowlite/NasNet/
 	install -m 0644 ${S}/labels.txt ${D}/home/root/models/tensorflowlite/Squeezenet/
 	install -m 0644 ${S}/labels.txt ${D}/home/root/models/tensorflowlite/Resnet/
+	install -m 0644 ${S}/labels.txt ${D}/home/root/models/google-coral/Resnet/
 	install -m 0644 ${S}/imagenet_slim_labels.txt ${D}/home/root/models/tensorflow/InceptionV3/
 	install -m 0644 ${S}/imagenet_slim_labels.txt ${D}/home/root/models/tensorflow/InceptionV3_Quant/
 	install -m 0644 ${S}/imagenet_slim_labels.txt ${D}/home/root/models/tensorflowlite/Mobile_InceptionV3/
@@ -314,6 +316,7 @@ do_install () {
 	cp -r ${S}/models/tensorflowlite/* ${D}/home/root/models/tensorflowlite/
 	cp -r ${S}/models/tensorflow/* ${D}/home/root/models/tensorflow/
 	cp -r ${S}/models/armnn/* ${D}/home/root/models/armnn/
+	cp -r ${S}/models/google-coral/* ${D}/home/root/models/google-coral/
 }
 
 FILES_${PN} = " \

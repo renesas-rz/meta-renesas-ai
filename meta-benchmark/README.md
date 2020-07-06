@@ -7,6 +7,7 @@ Each framework has its own benchmark tool.
 
 * For Arm NN SDK, it is armnnBenchmark
 * For Caffe2, it is caffe2_Benchmark.sh
+* For Google Coral TPU, it is google-coral-tpu-benchmark
 * For TensorFlow, it is tensorflowBenchmark
 * For TensorFlow-lite, it is tensorflow-lite-benchmark
 * For ONNX Runtime, it is onnxruntime_benchmark
@@ -32,6 +33,15 @@ cd /usr/bin/caffe2Benchmark
 
 # Run inference 30 times
 ./caffe2_Benchmark.sh
+```
+
+## Google Coral TPU
+```bash
+cd /usr/bin/google-coral-benchmark
+
+# Resnet (inference run 30 times)
+./run_TPU_measurement.py test_file_list_Resnet.txt \
+/home/root/models/google-coral/Resnet/ 30
 ```
 
 ## TensorFlow
