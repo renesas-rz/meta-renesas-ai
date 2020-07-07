@@ -3,7 +3,7 @@ LICENSE = "Apache-2.0"
 LICENSE_FLAGS = "commercial"
 LIC_FILES_CHKSUM = " \
         file://license/COPYING;md5=c4e89413e9e0e6a372520647a3fae1ae \
-        file://license/LICENSES;md5=4c89e7acf1416615179d1c5a4eac4f32 \
+        file://license/LICENSES;md5=4dddb78d1e43796f8e2713558084e4c2 \
 "
 
 S = "${WORKDIR}"
@@ -80,6 +80,8 @@ SRC_URI = " \
 	https://s3.amazonaws.com/download.caffe2.ai/models/squeezenet/init_net.pb;name=squeezenet_init_net_caffe2  \
 	https://github.com/BVLC/caffe/raw/master/python/caffe/imagenet/ilsvrc_2012_mean.npy;name=squeezenet_mean_caffe2  \
 	https://gist.githubusercontent.com/aaronmarkham/cd3a6b6ac071eca6f7b4a6e40e6038aa/raw/9edb4038a37da6b5a44c3b5bc52e448ff09bfe5b/alexnet_codes;name=alexnet_codes  \
+	https://storage.googleapis.com/download.tensorflow.org/models/tflite/model_zoo/upload_20180427/inception_v4_2018_04_27.tgz;name=inception_v4_float \
+	https://storage.googleapis.com/download.tensorflow.org/models/inception_v4_299_quant_20181026.tgz;name=inception_v4_quant \
 	https://github.com/DeepScale/SqueezeNet/blob/master/SqueezeNet_v1.1/squeezenet_v1.1.caffemodel?raw=true;downloadfilename=squeezenet_v1.1.caffemodel;name=squeezenet_caffe \
 	https://github.com/DeepScale/SqueezeNet/raw/master/SqueezeNet_v1.1/deploy.prototxt;name=squeezenet_caffe_proto \
 	https://s3.amazonaws.com/onnx-model-zoo/squeezenet/squeezenet1.1/squeezenet1.1.onnx;name=squeezenet_onnx \
@@ -231,6 +233,10 @@ SRC_URI[android_quant_label.md5sum] = "ad2ba2089114cf03a5b8189bc4c09c59"
 SRC_URI[android_quant_label.sha256sum] = "23f814d1c076bdf03715dfb6cab3713aa4fbdf040fd5448c43196bd2e97a4c1b"
 SRC_URI[inception_v3.md5sum] = "a904ddf15593d03c7dd786d552e22d73"
 SRC_URI[inception_v3.sha256sum] = "7045b72a954af4dce36346f478610acdccbf149168fa25c78e54e32f0c723d6d"
+SRC_URI[inception_v4_float.md5sum] = "97da95494e4a4d755cf79d636c726bcb"
+SRC_URI[inception_v4_float.sha256sum] = "305e45035c690f7a064b5babe27ea68a4e6da5819147c7c94319963c6f256467"
+SRC_URI[inception_v4_quant.md5sum] = "2dff9819d610b98768927530f57a25d3"
+SRC_URI[inception_v4_quant.sha256sum] = "e26c7fc6928efe9c63642eec0a72f8ae3fd9e12c04b25845c50ac4b8828e18f7"
 SRC_URI[squeezenet_predict_net_caffe2.md5sum] = "694bfdd02e9ccb57bfc4acb451fbfb2d"
 SRC_URI[squeezenet_predict_net_caffe2.sha256sum] = "d20be00eb448d3952265620357132916aba8744b027937b56c469b001b46472b"
 SRC_URI[squeezenet_init_net_caffe2.md5sum] = "a589d31d93c44d353ae2cd92af4d5a3f"
@@ -274,11 +280,13 @@ SRC_URI += " \
 do_install () {
 	install -d ${D}/home/root/models/tensorflow/InceptionV3
 	install -d ${D}/home/root/models/tensorflow/InceptionV3_Quant
+	install -d ${D}/home/root/models/tensorflow/InceptionV4
 	install -d ${D}/home/root/models/tensorflowlite/Mobile_Net_V1_Model
 	install -d ${D}/home/root/models/tensorflowlite/Mobile_Net_V2_Model
 	install -d ${D}/home/root/models/tensorflowlite/Mobile_Net_V3_Model
 	install -d ${D}/home/root/models/tensorflowlite/NasNet
 	install -d ${D}/home/root/models/tensorflowlite/Mobile_InceptionV3
+	install -d ${D}/home/root/models/tensorflowlite/Mobile_InceptionV4
 	install -d ${D}/home/root/models/tensorflowlite/Squeezenet
 	install -d ${D}/home/root/models/tensorflowlite/MnasNet
 	install -d ${D}/home/root/models/tensorflowlite/Resnet
@@ -309,6 +317,10 @@ do_install () {
 	install -m 0644 ${S}/imagenet_slim_labels.txt ${D}/home/root/models/tensorflowlite/Mobile_InceptionV3/
 	install -m 0644 ${S}/inception_v3*.tflite ${D}/home/root/models/tensorflowlite/Mobile_InceptionV3/
 	install -m 0644 ${S}/inception_v3_2016_08_28_frozen.pb ${D}/home/root/models/tensorflow/InceptionV3/
+	install -m 0644 ${S}/imagenet_slim_labels.txt ${D}/home/root/models/tensorflow/InceptionV4/
+	install -m 0644 ${S}/imagenet_slim_labels.txt ${D}/home/root/models/tensorflowlite/Mobile_InceptionV4/
+	install -m 0644 ${S}/inception_v4*.tflite ${D}/home/root/models/tensorflowlite/Mobile_InceptionV4/
+	install -m 0644 ${S}/inception_v4*.pb ${D}/home/root/models/tensorflow/InceptionV4/
 	install -m 0644 ${S}/squeezenet_v1.1.caffemodel ${D}/home/root/models/caffe/
 	install -m 0644 ${S}/deploy.prototxt ${D}/home/root/models/caffe/
 	install -m 0644 ${S}/squeezenet1.1.onnx ${D}/home/root/models/onnx/

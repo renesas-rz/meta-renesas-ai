@@ -358,6 +358,26 @@ Source:https://download.tensorflow.org/models/tflite_11_05_08/inception_v3_quant
 License:Apache License 2.0
 md5sum:eee364b713cef15f8fe7f66eacfdf1af
 
+FileName:inception_v4.pb
+Source:https://storage.googleapis.com/download.tensorflow.org/models/tflite/model_zoo/upload_20180427/inception_v4_2018_04_27.tgz
+License:Apache License 2.0
+md5sum:457ab835205c75b735d6c24db6a22b8a
+
+FileName:inception_v4.tflite
+Source:https://storage.googleapis.com/download.tensorflow.org/models/tflite/model_zoo/upload_20180427/inception_v4_2018_04_27.tgz
+License:Apache License 2.0
+md5sum:825d8b84161b6bbb69b709e82ecc423d
+
+FileName:inception_v4_299_quant_frozen.pb
+Source:https://storage.googleapis.com/download.tensorflow.org/models/inception_v4_299_quant_20181026.tgz
+License:Apache License 2.0
+md5sum:273859444a48bb580a4bbd3792ba7384
+
+FileName:inception_v4_299_quant.tflite
+Source:https://storage.googleapis.com/download.tensorflow.org/models/inception_v4_299_quant_20181026.tgz
+License:Apache License 2.0
+md5sum:b6118707ddb115d3d0604de3c6577866
+
 FileName:squeezenet.tflite
 Source:https://storage.googleapis.com/download.tensorflow.org/models/tflite/model_zoo/upload_20180427/squeezenet_2018_04_27.tgz
 License:Apache License 2.0

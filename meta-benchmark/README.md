@@ -61,6 +61,18 @@ cd /usr/bin/tensorflowBenchmark
 ./tensorflowBenchmark --image="/usr/bin/tensorflow/examples/grace_hopper.jpg" \
 --graph="/home/root/models/tensorflow/InceptionV3_Quant/inception_v3_2016_08_28_frozen_Quant.pb" \
 --labels="/home/root/models/tensorflow/InceptionV3_Quant/imagenet_slim_labels.txt"
+
+# Inception v4 (inference run 30 times)
+./tensorflowBenchmark --image="/usr/bin/tensorflow/examples/grace_hopper.jpg" \
+--graph="/home/root/models/tensorflow/InceptionV4/inception_v4.pb" \
+--labels="/home/root/models/tensorflow/InceptionV4/imagenet_slim_labels.txt" \
+--output_layer="InceptionV4/Logits/Predictions"
+
+# Test Inception v4 quant (inference run 30 times)
+./tensorflowBenchmark --image="/usr/bin/tensorflow/examples/grace_hopper.jpg" \
+--graph="/home/root/models/tensorflow/InceptionV4/inception_v4_299_quant_frozen.pb" \
+--labels="/home/root/models/tensorflow/InceptionV4/imagenet_slim_labels.txt" \
+--output_layer="InceptionV4/Logits/Predictions"
 ```
 
 ## TensorFlow Lite
@@ -88,6 +100,9 @@ are almost the same as above.
 Some examples can be found below (assuming 2 cores and inference 30 times):
 
 ```bash
+./run_TF_measurement.py test_file_list_Inception_Net_V4.txt \
+/home/root/models/tensorflowlite/Mobile_InceptionV4/ 30 2
+
 ./run_TF_measurement.py test_file_list_Mnasnet.txt \
 /home/root/models/tensorflowlite/MnasNet/ 30 2
 
