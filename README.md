@@ -6,13 +6,13 @@ and RZ/G2 platforms.
 The layers should be used with the official Renesas RZ/G1 Yocto Poky BSP based
 on the CIP Kernel:  
 URI: **https://github.com/renesas-rz/meta-renesas.git**  
-tag: certified-linux-v2.1.5 (8c60fa1de1ffc3fd9db2b8005be0f7ae17f6d691)
+tag: certified-linux-v2.1.6-update1 (0057f6446b73bf52df89ab0bee6217931da3e43b)
 
 #### For RZ/G2 ####
 The layers should be used with the official Renesas RZ/G2 Yocto Poky BSP based
 on the CIP Kernel:
 URI: **https://github.com/renesas-rz/meta-rzg2.git**  
-tag: BSP-1.0.3 (55713fde8ce5dba2ca0fd68d82b23c660de795f2)
+tag: BSP-1.0.4-update1 (51f302d5ce27f878150c621a9c01b1f5d43f1c61)
 
 
 For each AI tool, please refer to **meta-${AI\_TOOL\_NAME}/README.md**. For
@@ -82,7 +82,7 @@ If needed, the size of the swap file can be set (in MB) in local.conf:
 SWAP_SIZE = "512"
 ```
 
-**rzg[2]-modules-common.inc patches**
+**rzg2-modules-common.inc patch**
 Depending on the build system it is sometimes possible for there to be a build
 failure when more then one out-of-tree Kernel module is built at the same time:
 `"/bin/sh: scripts/mod/modpost: Permission denied"`.
@@ -90,15 +90,10 @@ failure when more then one out-of-tree Kernel module is built at the same time:
 This race condition can be avoided by locking access to kernel_scripts so that
 only one module can use modpost at the same time.
 
-The patches *patches/meta-renesas/0001-include-rzg-modules-common-Fix-race-condition-in-ker.patch*
-and *patches/meta-rzg2/0001-include-rzg2-modules-common-Fix-race-condition-in-ke.patch*
-can be applied to *meta-renesas* and *meta-rzg2* respectively to apply the above
-fix.
+The patch *patches/meta-rzg2/0001-include-rzg2-modules-common-Fix-race-condition-in-ke.patch*
+can be applied to *meta-rzg2* to apply the above fix.
 
 ```
-cd meta-renesas
-git am ../meta-renesas-ai/patches/meta-renesas/0001-include-rzg-modules-common-Fix-race-condition-in-ker.patch
-cd -
 cd meta-rzg2
 git am ../meta-renesas-ai/patches/meta-rzg2/0001-include-rzg2-modules-common-Fix-race-condition-in-ke.patch
 ```
