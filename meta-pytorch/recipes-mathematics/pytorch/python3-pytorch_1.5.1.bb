@@ -26,7 +26,7 @@ SRC_URI_append_aarch64 = " \
 	file://0005-add-cmake-configuration-for-aarch64.patch \
 "
 
-COMPATIBLE_MACHINE = "(x86_64|iwg20m-g1m|iwg21m|iwg22m|hihope-rzg2m|hihope-rzg2n|ek874)"
+COMPATIBLE_MACHINE = "(x86_64|iwg20m-g1m|iwg21m|iwg22m|hihope-rzg2h|hihope-rzg2m|hihope-rzg2n|ek874)"
 
 inherit python3native setuptools3
 

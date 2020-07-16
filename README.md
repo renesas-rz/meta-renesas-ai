@@ -48,6 +48,7 @@ project requirements.
 
 | SoC            | Platform                 |
 | :------------- | :----------------------- |
+| Renesas RZ/G2H | HopeRun hihope-rzg2h     |
 | Renesas RZ/G2M | HopeRun hihope-rzg2m     |
 | Renesas RZ/G2N | HopeRun hihope-rzg2n     |
 | Renesas RZ/G2E | Silicon Linux ek874      |
