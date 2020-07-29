@@ -158,3 +158,5 @@ while i < test_loop_count:
 #Caculate Means and STD
 print "Caffe2 Prediction Average time(msecs): ",np.mean(timingResult)
 print "Caffe2 Prediction STD: ",np.std(timingResult)
+
+print("AI_BENCHMARK_MARKER,Caffe2 v0.8.1,{0},Float,{1:.2f},{2:.2f},".format(MODEL_NAME, np.mean(timingResult), np.std(timingResult)))
