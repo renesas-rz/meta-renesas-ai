@@ -50,6 +50,13 @@ def main():
 
                print("\n")
 
+               if "quant" not in line:
+                   model_type = ",Float,"
+               else:
+                   model_type = ",Quant,"
+
+               print("AI_BENCHMARK_MARKER,Google Coral TPU diploria2: TensorFlow Lite," + line.rstrip() + model_type + str(Average(list_tmp)) + "," + str(Average(list)) + ",")
+
 def Average(lst):
     return sum(lst) / len(lst)
 
