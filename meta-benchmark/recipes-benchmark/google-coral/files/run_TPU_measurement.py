@@ -22,16 +22,16 @@ def main():
    if len(sys.argv) != 4:
        print("invalid parameters")
        print("Example python run_TPU_measurement.py test_file_list_Resnet.txt /home/root/models/google-coral/Resnet 30")
-       sys.exit()
+       sys.exit(1)
 
    filepath = sys.argv[1]
    if not filepath:
        print("need to provide model list file")
-       sys.exit()
+       sys.exit(1)
 
    if not os.path.isfile(filepath):
        print("File path {} does not exist. Exiting...".format(filepath))
-       sys.exit()
+       sys.exit(1)
 
    base_directory_path = sys.argv[2]
 
