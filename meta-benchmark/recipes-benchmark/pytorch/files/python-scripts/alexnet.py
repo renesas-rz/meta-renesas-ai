@@ -61,9 +61,9 @@ total_time = np.sum(inference_times)
 average_time = np.mean(inference_times)
 standard_deviation = np.std(inference_times)
 
-print("Total time = {0:.0f}ms".format(total_time))
-print("Average time = {0:.0f}ms".format(average_time))
-print("Standard deviation = {0:.0f}ms".format(standard_deviation))
+print("Total time = {0:.2f}ms".format(total_time))
+print("Average time = {0:.2f}ms".format(average_time))
+print("Standard deviation = {0:.2f}ms".format(standard_deviation))
 
 percentage = torch.nn.functional.softmax(out, dim=1)[0] * 100
 
