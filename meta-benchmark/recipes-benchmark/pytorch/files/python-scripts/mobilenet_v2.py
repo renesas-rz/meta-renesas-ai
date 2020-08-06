@@ -32,7 +32,7 @@ mobilenet_v2.load_state_dict(torch.load(model_location))
 with open(label_location) as f:
     labels = [line.strip() for line in f.readlines()]
 
-transform = transforms.Compose([            
+transform = transforms.Compose([
     transforms.Resize(256),                    #resize image to 256x256
     transforms.CenterCrop(224),                #crop image to 224x224
     transforms.ToTensor(),                     #convert to pytorch tensor
@@ -70,3 +70,5 @@ percentage = torch.nn.functional.softmax(out, dim=1)[0] * 100
 _, indices = torch.sort(out, descending=True)
 for idx in indices[0][:5]:
     print((labels[idx], percentage[idx].item()))
+
+print("AI_BENCHMARK_MARKER,PyTorch v1.5.1,{0},Float,{1:.2f},{2:.2f},".format(model_location.strip(), average_time, standard_deviation))
