@@ -17,7 +17,7 @@ import numpy as np
 def main():
    print("Tensorflow Lite Test App")
 
-   if len(sys.argv) != 5:
+   if len(sys.argv) != 5 and len(sys.argv) != 6:
        print("invalid parameters")
        print("Example python run_TF_measurement.py test_file_list_Mobile_Net_V1.txt /home/root/models/mobileNetModels/Mobile_Net_V1_Modle/ 30 2 ")
        sys.exit()
@@ -37,6 +37,11 @@ def main():
 
    number_of_cores = int(sys.argv[4])
 
+   if len(sys.argv) == 6:
+     benchmark = sys.argv[5].lower() == 'benchmark'
+   else:
+     benchmark = False
+
    with open(filepath) as fp:
        for line in fp:
 	   if not len(line.strip()) == 0:
@@ -46,9 +51,16 @@ def main():
 	       run_label_image(line,base_direcotry_path,'labels.txt',number_of_cores,number_of_iteration,list_tmp,list)
 
 	       print("Average Time" + " at Model " + line + str(Average(list_tmp)) + " ms ")
-               print("Standard Deviation" + " at Model " + line + str(Average(list)))
+	       print("Standard Deviation" + " at Model " + line + str(Average(list)))
+	       print("\n")
 
-               print("\n")
+               if "quant" not in line:
+                   model_type = ",Float,"
+               else:
+                   model_type = ",Quant,"
+
+               if benchmark == True:
+                   print("AI_BENCHMARK_MARKER,TensorFlow Lite v2.0.2," + line.rstrip() + model_type + str(Average(list_tmp)) + "," + str(Average(list)) + ",")
 
 def Average(lst):
     return sum(lst) / len(lst)

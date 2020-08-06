@@ -97,6 +97,13 @@ Other models can also be tested such as MnasNet, MobileNet v1, MobileNet v2,
 Nasnet, Resnet and Squeezenet. The steps to run benchmarking for these models
 are almost the same as above.
 
+Outputting metrics in a parsable format can also be completed by adding the
+"benchmark" flag. For example:
+```bash
+./run_TF_measurement.py test_file_list_Mobile_Net_V2.txt \
+/home/root/models/tensorflowlite/Mobile_Net_V2_Model/ 30 2 benchmark
+```
+
 Some examples can be found below (assuming 2 cores and inference 30 times):
 
 ```bash
