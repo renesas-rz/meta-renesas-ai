@@ -20,16 +20,16 @@ def main():
    if len(sys.argv) != 5 and len(sys.argv) != 6:
        print("invalid parameters")
        print("Example python run_TF_measurement.py test_file_list_Mobile_Net_V1.txt /home/root/models/mobileNetModels/Mobile_Net_V1_Modle/ 30 2 ")
-       sys.exit()
+       sys.exit(1)
 
    filepath = sys.argv[1]
    if not filepath:
        print("need to provide model list file")
-       sys.exit()
+       sys.exit(1)
 
    if not os.path.isfile(filepath):
        print("File path {} does not exist. Exiting...".format(filepath))
-       sys.exit()
+       sys.exit(1)
 
    base_direcotry_path = sys.argv[2]
 
