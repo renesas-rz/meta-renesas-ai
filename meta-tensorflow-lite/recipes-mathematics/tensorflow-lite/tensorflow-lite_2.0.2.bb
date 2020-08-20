@@ -12,6 +12,7 @@ SRC_URI = " \
 	file://0001-Fix-asm-mov-error.patch \
 	file://0001-Remove-GPU-and-NNAPI.patch \
 	file://0001-Use-wget-instead-of-curl-to-fetch-https-source.patch \
+	file://0001-download-dependencies-Update-EIGEN_URL.patch \
 "
 PR = "r0"
 
