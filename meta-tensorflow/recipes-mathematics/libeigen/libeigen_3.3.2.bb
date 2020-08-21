@@ -6,15 +6,15 @@ LICENSE = "MPL-2.0"
 LIC_FILES_CHKSUM = "file://COPYING.MPL2;md5=815ca599c9df247a0c7f619bab123dad"
 
 SRC_URI = " \
-	http://bitbucket.org/eigen/eigen/get/${PV}.tar.bz2 \
+	https://gitlab.com/libeigen/eigen/-/archive/${PV}/eigen-${PV}.tar.bz2 \
 	file://0001-CMakeLists.txt-install-FindEigen3.cmake-script.patch \
 	file://0002-neon-jacobiRotation.patch \
 "
 
-SRC_URI[md5sum] = "7a94c3280ae1961bc8df5e3bd304013a"
-SRC_URI[sha256sum] = "3e1fa6e8c45635938193f84fee6c35a87fac26ee7c39c68c230e5080c4a8fe98"
+SRC_URI[md5sum] = "b4af1024a8a2a33f6fb3358c6a2dd3d7"
+SRC_URI[sha256sum] = "a530aa818520bb4e9f36e099696ca1a087e6d8e564f7e50abb544f5ac91d519f"
 
-S = "${WORKDIR}/eigen-eigen-da9b4e14c255"
+S = "${WORKDIR}/eigen-${PV}"
 
 inherit cmake
 
