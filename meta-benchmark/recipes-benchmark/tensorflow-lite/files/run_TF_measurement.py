@@ -15,7 +15,7 @@ from subprocess import call
 import numpy as np
 
 def main():
-   print("Tensorflow Lite Test App")
+   print("TensorFlow Lite Test App")
 
    if len(sys.argv) != 5 and len(sys.argv) != 6:
        print("invalid parameters")
@@ -60,7 +60,7 @@ def main():
                    model_type = ",Quant,"
 
                if benchmark == True:
-                   print("AI_BENCHMARK_MARKER,TensorFlow Lite v2.0.2," + line.rstrip() + model_type + str(Average(list_tmp)) + "," + str(Average(list)) + ",")
+                   print("AI_BENCHMARK_MARKER,TensorFlow Lite v2.3.1," + line.rstrip() + model_type + str(Average(list_tmp)) + "," + str(Average(list)) + ",")
 
 def Average(lst):
     return sum(lst) / len(lst)

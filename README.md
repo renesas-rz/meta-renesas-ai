@@ -8,12 +8,18 @@ on the CIP Kernel:
 URI: **https://github.com/renesas-rz/meta-renesas.git**  
 tag: certified-linux-v2.1.6-update1 (0057f6446b73bf52df89ab0bee6217931da3e43b)
 
+The meta-rzg1-gcc-linaro meta-layer should be used for the compatible
+compiler with TensorFlow. Read meta-rzg1-gcc-linaro/READEME.md for more details.
+
+The meta-rzg1-gcc-linaro meta-layer should be used when including TensorFlow
+v2.3+ as GCC v7.3 is required. Read meta-rzg1-gcc-linaro/READEME.md for more
+details.
+
 #### For RZ/G2 ####
 The layers should be used with the official Renesas RZ/G2 Yocto Poky BSP based
 on the CIP Kernel:
 URI: **https://github.com/renesas-rz/meta-rzg2.git**  
 tag: BSP-1.0.4-update1 (51f302d5ce27f878150c621a9c01b1f5d43f1c61)
-
 
 For each AI tool, please refer to **meta-${AI\_TOOL\_NAME}/README.md**. For
 example:  
@@ -41,8 +47,8 @@ project requirements.
 | ONNX Runtime    | v1.1.2    | ONNX                                   | CPU                              |
 | OpenCV          | v4.1.1    | Caffe<br>DarkNet<br>ONNX<br>TensorFlow | CPU                              |
 | PyTorch         | v1.5.1    | PyTorch                                | CPU                              |
-| TensorFlow      | v2.0.2    | TensorFlow                             | CPU                              |
-| TensorFlow Lite | v2.0.2    | TensorFlow Lite                        | CPU<br>Coral USB TPU (diploria2) |
+| TensorFlow      | v2.3.1    | TensorFlow                             | CPU                              |
+| TensorFlow Lite | v2.3.1    | TensorFlow Lite                        | CPU<br>Coral USB TPU (diploria2) |
 
 ### Supported Embedded Platforms ###
 

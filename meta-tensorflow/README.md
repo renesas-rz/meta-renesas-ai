@@ -24,7 +24,7 @@ beneficial when you just want to populate an SDK for developing an application
 based on TensorFlow.
 
 
-After the build is complete, both Tensorflow C (*libtensorflow_cc.so*) and C++
+After the build is complete, both TensorFlow C (*libtensorflow_cc.so*) and C++
 (*libtensorflow.so*) libraries will be generated.
 
 The C++ library can be verified with the TensorFlow image classification sample

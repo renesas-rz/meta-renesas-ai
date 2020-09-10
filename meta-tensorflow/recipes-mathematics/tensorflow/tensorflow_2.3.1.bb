@@ -2,50 +2,23 @@ DESCRIPTION = "TensorFlow C/C++ Libraries"
 LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=64a34301f8e355f57ec992c2af3e5157"
 
-DEPENDS = "bazel-native util-linux-native python-futures-native"
+DEPENDS = "bazel-native util-linux-native python-futures-native python-numpy-native"
 RDEPENDS_${PN}-dev += "libeigen-dev"
 PACKAGES += "${PN}-examples ${PN}-examples-dbg"
 
 S = "${WORKDIR}/git"
 
-SRCREV = "2c2fdd3205a8d31e5f09a71ac7eb52b8c0294a60"
+# Tag v2.3.1
+SRCREV = "fcc4b966f1265f466e82617020af93670141b009"
 
 SRC_URI = " \
-	git://github.com/tensorflow/tensorflow.git;branch=r2.0 \
-	file://0001-Add-Tensorflow-2.0-cross-compile-support.patch \
+	git://github.com/tensorflow/tensorflow.git;branch=r2.3 \
+	file://0001-Add-Tensorflow-2.3-cross-compile-support.patch \
 	file://0001-Support-both-python2-and-python3.patch \
 	file://0001-Use-hard-float-point-flag-instead-of-soft-float-poin.patch \
-	file://Fix-alignment-issue-in-arm-neon-platform.patch;apply=no \
 	file://Patching-nsync-library-on-the-fly-via-bazel.patch \
+	file://Fix-alignment-issue-in-arm-neon-platform.patch;apply=no \
 	file://Remove-python-support-from-label_image-example-applicati.patch \
-"
-
-SRC_URI_append_iwg20m-g1m = " \
-	file://TensorFlow-crosscompile-arm-a15.patch \
-"
-
-SRC_URI_append_iwg21m = " \
-	file://TensorFlow-crosscompile-arm-a15.patch \
-"
-
-SRC_URI_append_iwg22m = " \
-        file://TensorFlow-crosscompile-arm-a7.patch \
-"
-
-SRC_URI_append_hihope-rzg2h = " \
-        file://TensorFlow-crosscompile-aarch64-a57a53.patch \
-"
-
-SRC_URI_append_hihope-rzg2m = " \
-        file://TensorFlow-crosscompile-aarch64-a57a53.patch \
-"
-
-SRC_URI_append_hihope-rzg2n = " \
-        file://TensorFlow-crosscompile-aarch64-a57.patch \
-"
-
-SRC_URI_append_ek874 = " \
-        file://TensorFlow-crosscompile-aarch64-a53.patch \
 "
 
 COMPATIBLE_MACHINE = "(iwg20m-g1m|iwg21m|iwg22m|hihope-rzg2h|hihope-rzg2m|hihope-rzg2n|ek874)"
@@ -61,12 +34,11 @@ do_configure () {
 	SED_COMMAND="${SED_COMMAND}; s#%%CT_ROOT_DIR%%#${CT_DIR}#g"
 	SED_COMMAND="${SED_COMMAND}; s#%%CT_GCC_VERSION%%#${GCC_VERSION}#g"
 	SED_COMMAND="${SED_COMMAND}; s#%%CT_STAGING_DIR%%#${STAGING_DIR_HOST}#g"
-
         SED_COMMAND="${SED_COMMAND}; s#%%WORKDIR%%#${WORKDIR}#g"
 
-        sed -i "${SED_COMMAND}" ${S}/BUILD.yocto_compiler \
-                                ${S}/third_party/toolchains/yocto/CROSSTOOL.tpl \
-                                ${S}/WORKSPACE
+        sed -i "${SED_COMMAND}" ${S}/third_party/toolchains/yocto/cc_toolchain_config.bzl \
+				${S}/third_party/toolchains/yocto/yocto_compiler.BUILD \
+				${S}/WORKSPACE
 
 	cd ${S}
 
@@ -100,24 +72,42 @@ do_configure () {
 	cp ${WORKDIR}/Fix-alignment-issue-in-arm-neon-platform.patch ${S}/third_party/
 }
 
-do_compile_prepend_arm () {
-	TF_ARCH="--cpu=armeabi-v7a"
-}
-
-do_compile_prepend_aarch64 () {
-	TF_ARCH="--cpu=arm64-v8a"
-}
 
 do_compile () {
 	export HTTP_PROXY=${HTTP_PROXY}
 	export HTTPS_PROXY=${HTTPS_PROXY}
 	export http_proxy=${HTTP_PROXY}
 	export https_proxy=${HTTPS_PROXY}
+	export STAGING_DIR_NATIVE=${STAGING_DIR_NATIVE}
+	export WORKDIR=${WORKDIR}
 
-	unset $(printenv | cut -d "=" -f1 | grep -Ev '^PATH$|^BAZEL_FLAGS$|^HTTP_PROXY$|^HTTPS_PROXY$')
+	unset $(printenv | cut -d "=" -f1 | grep -Ev '^PATH$|^BAZEL_FLAGS$|^HTTP_PROXY$|^HTTPS_PROXY$|^STAGING_DIR_NATIVE$|^WORKDIR$')
 
+	export PATH="${STAGING_DIR_NATIVE}/usr/bin/python-native/:$PATH"
 	export JAVA_HOME=${STAGING_BINDIR_NATIVE}/openjdk-1.8-native
 
+	if [ "${MACHINE}" = "iwg20m-g1m" ] ; then
+		TF_ARCH="--cpu=armeabi-v7a-a15"
+	fi
+	if [ "${MACHINE}" = "iwg22m" ] ; then
+		TF_ARCH="--cpu=armeabi-v7a-a7"
+	fi
+	if [ "${MACHINE}" = "iwg21m" ] ; then
+		TF_ARCH="--cpu=armeabi-v7a-a7-a15"
+	fi
+	if [ "${MACHINE}" = "hihope-rzg2h" ] || [ "${MACHINE}" = "hihope-rzg2m" ] ; then
+		TF_ARCH="--cpu=arm64-v8a-a57-a53"
+	fi
+	if [ "${MACHINE}" = "hihope-rzg2n" ] ; then
+		TF_ARCH="--cpu=arm64-v8a-a57"
+	fi
+	if [ "${MACHINE}" = "ek874" ] ; then
+		TF_ARCH="--cpu=arm64-v8a-a53"
+	fi
+
+	export STAGING_INCDIR="${STAGING_DIR_NATIVE}/usr/"
+	export PYTHON_BIN_PATH="${STAGING_DIR_NATIVE}/usr/bin/python-native/python"
+	export PYTHON_LIB_PATH="${STAGING_DIR_NATIVE}/usr/lib/python2.7/site-packages/"
 	bazel $BAZEL_FLAGS build \
 		--config=monolithic \
 		--config=noaws \
@@ -126,45 +116,15 @@ do_compile () {
 		--define=build_with_mkl_dnn_only=false \
 		--define=build_with_mkl_dnn_v1_only=false \
 		--define=tensorflow_mkldnn_contraction_kernel=0 \
-		--define=using_clang=false \
-		-c opt \
-		--copt=-DARM_NON_MOBILE \
 		${TF_ARCH} \
-		--crosstool_top=@local_config_yocto_compiler//:toolchain \
+		-c opt \
+		--crosstool_top=//third_party/toolchains/yocto:yocto_toolchain \
 		--verbose_failures \
+		--repo_env=PYTHON_BIN_PATH="${STAGING_DIR_NATIVE}/usr/bin/python-native/python" \
+		--repo_env=PYTHON_LIB_PATH="${STAGING_DIR_NATIVE}/usr/lib/python2.7/site-packages/" \
 		//tensorflow:libtensorflow.so \
-		//tensorflow:libtensorflow_framework.so
-
-	bazel $BAZEL_FLAGS build \
-		--config=monolithic \
-		--config=noaws \
-		--define=build_with_mkl=false \
-		--define=enable_mkl=false \
-		--define=build_with_mkl_dnn_only=false \
-		--define=build_with_mkl_dnn_v1_only=false \
-		--define=tensorflow_mkldnn_contraction_kernel=0 \
-		--define=using_clang=false \
-		-c opt \
-		--copt=-DARM_NON_MOBILE \
-		${TF_ARCH} \
-		--crosstool_top=@local_config_yocto_compiler//:toolchain \
-		--verbose_failures \
-		//tensorflow:libtensorflow_cc.so
-
-	bazel $BAZEL_FLAGS build \
-		--config=monolithic \
-		--config=noaws \
-		--define=build_with_mkl=false \
-		--define=enable_mkl=false \
-		--define=build_with_mkl_dnn_only=false \
-		--define=build_with_mkl_dnn_v1_only=false \
-		--define=tensorflow_mkldnn_contraction_kernel=0 \
-		--define=using_clang=false \
-		-c opt \
-		--copt=-DARM_NON_MOBILE \
-		${TF_ARCH} \
-		--crosstool_top=@local_config_yocto_compiler//:toolchain \
-		--verbose_failures \
+		//tensorflow:libtensorflow_cc.so \
+		//tensorflow:libtensorflow_framework.so \
 		tensorflow/examples/label_image/...
 }
 
@@ -181,7 +141,7 @@ do_install () {
 		${D}${libdir}
 
 	install -d ${D}${includedir}/tensorflow
-	cd ${S}/bazel-genfiles/tensorflow
+	cd ${S}/bazel-bin/tensorflow
 	cp --parents \
 		$(find . -name "*.h*") \
 		${D}${includedir}/tensorflow

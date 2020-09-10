@@ -10,11 +10,32 @@ SRC_URI += " \
 "
 
 do_compile_append() {
+
+	if [ "${MACHINE}" = "iwg20m-g1m" ] ; then
+		OPT_DIR="armeabi-v7a-a15"
+	fi
+	if [ "${MACHINE}" = "iwg22m" ] ; then
+		OPT_DIR="armeabi-v7a-a7"
+	fi
+	if [ "${MACHINE}" = "iwg21m" ] ; then
+		OPT_DIR="armeabi-v7a-a7-a15"
+	fi
+	if [ "${MACHINE}" = "hihope-rzg2h" ] || [ "${MACHINE}" = "hihope-rzg2m" ] ; then
+		OPT_DIR="arm64-v8a-a57-a53"
+	fi
+	if [ "${MACHINE}" = "hihope-rzg2n" ] ; then
+		OPT_DIR="arm64-v8a-a57"
+	fi
+	if [ "${MACHINE}" = "ek874" ] ; then
+		OPT_DIR="arm64-v8a-a53"
+	fi
+
 	${CXX} -std=c++11 ../tensorflowBenchmark.cc -o tensorflowBenchmark \
 		-I . -I ./bazel-genfiles -I ${STAGING_DIR_TARGET}/usr/include/eigen3 \
-		-I ${STAGING_DIR_TARGET}/usr/include -L ./bazel-bin/tensorflow/ \
+		-I ${STAGING_DIR_TARGET}/usr/include -L ${WORKDIR}/git/bazel-bin/tensorflow/ \
 		-I ${WORKDIR}/output_base/external/com_google_absl/ \
 		-I ${WORKDIR}/output_base/external/com_google_protobuf/src/ \
+		-I ${WORKDIR}/output_base/execroot/org_tensorflow/bazel-out/${OPT_DIR}-opt/bin/ \
 		-ltensorflow_cc -lstdc++ -lm ${LDFLAGS}
 }
 

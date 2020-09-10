@@ -193,12 +193,13 @@ void RunInference(Settings* s) {
 
   switch (interpreter->tensor(input)->type) {
     case kTfLiteFloat32:
-      s->input_floating = true;
+      s->input_type = kTfLiteFloat32;
       resize<float>(interpreter->typed_tensor<float>(input), in.data(),
                     image_height, image_width, image_channels, wanted_height,
                     wanted_width, wanted_channels, s);
       break;
     case kTfLiteUInt8:
+      s->input_type = kTfLiteUInt8;
       resize<uint8_t>(interpreter->typed_tensor<uint8_t>(input), in.data(),
                       image_height, image_width, image_channels, wanted_height,
                       wanted_width, wanted_channels, s);
@@ -242,12 +243,12 @@ void RunInference(Settings* s) {
   switch (interpreter->tensor(output)->type) {
     case kTfLiteFloat32:
       get_top_n<float>(interpreter->typed_output_tensor<float>(0), output_size,
-                       num_results, threshold, &top_results, true);
+                       num_results, threshold, &top_results, kTfLiteFloat32);
       break;
     case kTfLiteUInt8:
       get_top_n<uint8_t>(interpreter->typed_output_tensor<uint8_t>(0),
                          output_size, num_results, threshold, &top_results,
-                         false);
+                         kTfLiteUInt8);
       break;
     default:
       LOG(FATAL) << "cannot handle output type "

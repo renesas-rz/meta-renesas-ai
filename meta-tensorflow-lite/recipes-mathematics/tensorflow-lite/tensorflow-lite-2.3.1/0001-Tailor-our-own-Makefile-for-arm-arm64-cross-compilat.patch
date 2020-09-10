@@ -1,6 +1,6 @@
-From d5e55c52a7288d074e807146db2583c157359b0f Mon Sep 17 00:00:00 2001
-From: Jianming Qiao <jianming.qiao@bp.renesas.com>
-Date: Sat, 14 Sep 2019 14:12:03 +0100
+From 7444dd1eabb3da15fc52e05968a7f0bc26bf4449 Mon Sep 17 00:00:00 2001
+From: Fabrizio Castro <fabrizio.castro.jz@renesas.com>
+Date: Wed, 18 Nov 2020 13:38:48 +0000
 Subject: [PATCH] Tailor our own Makefile for arm/arm64 cross-compilation
 
 This Makefile supports cross-compilation for the following:
@@ -10,26 +10,37 @@ This Makefile supports cross-compilation for the following:
    benchmarking a TensorFlow Lite model)
 4. "minimal" application (An example for parsing model information)
 
-The contents of tensorflow/contrib/lite/Makefile.internal has been
-inspired from the contents of tensorflow/contrib/lite/Makefile.
+tensorflow/contrib/lite/Makefile.internal has been based on
+tensorflow/contrib/lite/Makefile.
 
 From repository:
 https://github.com/tensorflow/tensorflow.git
+
 Tag:
-v2.0.0 (64c3d382cadf7bbe8e7e99884bede8284ff67f56)
+v2.3.1 (fcc4b966f1265f466e82617020af93670141b009)
 
 Signed-off-by: Jianming Qiao <jianming.qiao@bp.renesas.com>
+Signed-off-by: Gareth Williams <gareth.williams.jx@renesas.com>
 ---
- tensorflow/lite/tools/make/Makefile.internal | 312 +++++++++++++++++++
- 1 file changed, 312 insertions(+)
+ Makefile                                     |   1 +
+ tensorflow/lite/tools/make/Makefile.internal | 348 +++++++++++++++++++++++++++
+ 2 files changed, 349 insertions(+)
+ create mode 100644 Makefile
  create mode 100644 tensorflow/lite/tools/make/Makefile.internal
 
+diff --git a/Makefile b/Makefile
+new file mode 100644
+index 0000000..3f73044
+--- /dev/null
++++ b/Makefile
+@@ -0,0 +1 @@
++include ./tensorflow/lite/tools/make/Makefile.internal
 diff --git a/tensorflow/lite/tools/make/Makefile.internal b/tensorflow/lite/tools/make/Makefile.internal
 new file mode 100644
-index 000000000000..957bb79afa5a
+index 0000000..2064739
 --- /dev/null
 +++ b/tensorflow/lite/tools/make/Makefile.internal
-@@ -0,0 +1,312 @@
+@@ -0,0 +1,348 @@
 +# Make uses /bin/sh by default, which is incompatible with the bashisms seen
 +# below.
 +SHELL := /bin/bash
@@ -39,18 +50,9 @@ index 000000000000..957bb79afa5a
 +	MAKEFILE_DIR := $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
 +endif
 +
-+# Try to figure out the host system
-+HOST_OS :=
-+ifeq ($(OS),Windows_NT)
-+	HOST_OS = windows
-+else
-+	UNAME_S := $(shell uname -s)
-+	ifeq ($(UNAME_S),Linux)
-+		HOST_OS := linux
-+	endif
-+	ifeq ($(UNAME_S),Darwin)
-+		HOST_OS := osx
-+	endif
++UNAME_S := $(shell uname -s)
++ifeq ($(UNAME_S),Linux)
++	HOST_OS := linux
 +endif
 +
 +HOST_ARCH := $(shell if uname -m | grep -q i[345678]86; then echo x86_32; else uname -m; fi)
@@ -75,6 +77,7 @@ index 000000000000..957bb79afa5a
 +-I$(MAKEFILE_DIR)/downloads/eigen \
 +-I$(MAKEFILE_DIR)/downloads/absl \
 +-I$(MAKEFILE_DIR)/downloads/gemmlowp \
++-I$(MAKEFILE_DIR)/downloads/ruy \
 +-I$(MAKEFILE_DIR)/downloads/farmhash/src \
 +-I$(MAKEFILE_DIR)/downloads/flatbuffers/include \
 +-I$(OBJDIR)
@@ -86,14 +89,18 @@ index 000000000000..957bb79afa5a
 +-lpthread \
 +-lm \
 +-lz \
-+-latomic
++-ldl
++
++#-latomic
 +
 +# There are no rules for compiling objects for the host system (since we don't
 +# generate things like the protobuf compiler that require that), so all of
 +# these settings are for the target compiler.
-+CXXFLAGS += $(EXTRA_CXXFLAGS)
-+CXXFLAGS += --std=c++11
-+ARFLAGS ?= -r
++CFLAGS := -O3 -DNDEBUG -fPIC $(EXTRA_CFLAGS)
++CXXFLAGS := $(CFLAGS) --std=c++11 $(EXTRA_CXXFLAGS)
++ARFLAGS := -r
++TARGET_TOOLCHAIN_PREFIX :=
++CC_PREFIX :=
 +
 +ifeq ($(HOST_OS),windows)
 +CXXFLAGS += -fext-numeric-literals -D__LITTLE_ENDIAN__
@@ -115,55 +122,67 @@ index 000000000000..957bb79afa5a
 +# build files.
 +
 +PROFILER_SRCS := \
++	tensorflow/lite/profiling/memory_info.cc \
++	tensorflow/lite/profiling/platform_profiler.cc \
 +	tensorflow/lite/profiling/time.cc
 +PROFILE_SUMMARIZER_SRCS := \
 +	tensorflow/lite/profiling/profile_summarizer.cc \
++	tensorflow/lite/profiling/profile_summary_formatter.cc \
 +	tensorflow/core/util/stats_calculator.cc
 +
 +CMD_LINE_TOOLS_SRCS := \
-+	tensorflow/lite/tools/command_line_flags.cc
++	tensorflow/lite/tools/command_line_flags.cc \
++	tensorflow/lite/tools/tool_params.cc
 +
 +CORE_CC_ALL_SRCS := \
 +$(wildcard tensorflow/lite/*.cc) \
 +$(wildcard tensorflow/lite/*.c) \
 +$(wildcard tensorflow/lite/c/*.c) \
++$(wildcard tensorflow/lite/c/*.cc) \
 +$(wildcard tensorflow/lite/core/*.cc) \
 +$(wildcard tensorflow/lite/core/api/*.cc) \
-+tensorflow/lite/experimental/resource_variable/*.cc \
-+tensorflow/lite/experimental/ruy/allocator.cc \
-+tensorflow/lite/experimental/ruy/block_map.cc \
-+tensorflow/lite/experimental/ruy/blocking_counter.cc \
-+tensorflow/lite/experimental/ruy/context.cc \
-+tensorflow/lite/experimental/ruy/detect_dotprod.cc \
-+tensorflow/lite/experimental/ruy/kernel_arm32.cc \
-+tensorflow/lite/experimental/ruy/kernel_arm64.cc \
-+tensorflow/lite/experimental/ruy/pack_arm.cc \
-+tensorflow/lite/experimental/ruy/pmu.cc \
-+tensorflow/lite/experimental/ruy/thread_pool.cc \
-+tensorflow/lite/experimental/ruy/trace.cc \
-+tensorflow/lite/experimental/ruy/trmul.cc \
-+tensorflow/lite/experimental/ruy/tune.cc \
-+tensorflow/lite/experimental/ruy/wait.cc
++$(wildcard tensorflow/lite/experimental/resource/*.cc) \
++$(wildcard tensorflow/lite/tools/make/downloads/ruy/ruy/*.cc)
++
 +ifneq ($(BUILD_TYPE),micro)
 +CORE_CC_ALL_SRCS += \
 +$(wildcard tensorflow/lite/kernels/*.cc) \
 +$(wildcard tensorflow/lite/kernels/internal/*.cc) \
 +$(wildcard tensorflow/lite/kernels/internal/optimized/*.cc) \
 +$(wildcard tensorflow/lite/kernels/internal/reference/*.cc) \
++$(wildcard tensorflow/lite/tools/optimize/sparsity/*.cc) \
 +$(PROFILER_SRCS) \
 +tensorflow/lite/tools/make/downloads/farmhash/src/farmhash.cc \
 +tensorflow/lite/tools/make/downloads/fft2d/fftsg.c \
++tensorflow/lite/tools/make/downloads/fft2d/fftsg2d.c \
 +tensorflow/lite/tools/make/downloads/flatbuffers/src/util.cpp
++CORE_CC_ALL_SRCS += \
++	$(shell find tensorflow/lite/tools/make/downloads/absl/absl/ \
++	             -type f -name \*.cc | grep -v test | grep -v benchmark | grep -v synchronization | grep -v debugging | grep -v hash | grep -v flags | grep -v random)
 +endif
 +# Remove any duplicates.
 +CORE_CC_ALL_SRCS := $(sort $(CORE_CC_ALL_SRCS))
 +CORE_CC_EXCLUDE_SRCS := \
 +$(wildcard tensorflow/lite/*test.cc) \
 +$(wildcard tensorflow/lite/*/*test.cc) \
++$(wildcard tensorflow/lite/*/*/benchmark.cc) \
++$(wildcard tensorflow/lite/*/*/example*.cc) \
++$(wildcard tensorflow/lite/*/*/test*.cc) \
 +$(wildcard tensorflow/lite/*/*/*test.cc) \
++$(wildcard tensorflow/lite/*/*/*tool.cc) \
++$(wildcard tensorflow/lite/*/*/*/benchmark.cc) \
++$(wildcard tensorflow/lite/*/*/*/example*.cc) \
++$(wildcard tensorflow/lite/*/*/*/test*.cc) \
 +$(wildcard tensorflow/lite/*/*/*/*test.cc) \
++$(wildcard tensorflow/lite/*/*/*/*tool.cc) \
++$(wildcard tensorflow/lite/*/*/*/*/*/benchmark.cc) \
++$(wildcard tensorflow/lite/*/*/*/*/*/example*.cc) \
++$(wildcard tensorflow/lite/*/*/*/*/*/test*.cc) \
++$(wildcard tensorflow/lite/*/*/*/*/*/*test.cc) \
++$(wildcard tensorflow/lite/*/*/*/*/*/*tool.cc) \
 +$(wildcard tensorflow/lite/kernels/*test_main.cc) \
-+$(wildcard tensorflow/lite/kernels/*test_util.cc) \
++$(wildcard tensorflow/lite/kernels/*test_util*.cc) \
++tensorflow/lite/tflite_with_xnnpack.cc \
 +$(MINIMAL_SRCS)
 +
 +BUILD_WITH_MMAP ?= true
@@ -197,17 +216,45 @@ index 000000000000..957bb79afa5a
 +endif
 +ifeq ($(BUILD_WITH_NNAPI),true)
 +	CORE_CC_ALL_SRCS += tensorflow/lite/delegates/nnapi/nnapi_delegate.cc
-+  CORE_CC_ALL_SRCS += tensorflow/lite/delegates/nnapi/quant_lstm_sup.cc
++	CORE_CC_ALL_SRCS += tensorflow/lite/delegates/nnapi/quant_lstm_sup.cc
 +	CORE_CC_ALL_SRCS += tensorflow/lite/nnapi/nnapi_implementation.cc
++	CORE_CC_ALL_SRCS += tensorflow/lite/nnapi/nnapi_util.cc
 +	LIBS += -lrt
 +else
 +	CORE_CC_ALL_SRCS += tensorflow/lite/delegates/nnapi/nnapi_delegate_disabled.cc
 +	CORE_CC_ALL_SRCS += tensorflow/lite/nnapi/nnapi_implementation_disabled.cc
 +endif
 +
++# Temporary fix for ruy compilation error.
++# TODO(b/158800055): Remove this hack once the ruy version is correctly bumped.
++CORE_CC_EXCLUDE_SRCS += tensorflow/lite/tools/make/downloads/ruy/ruy/prepare_packed_matrices.cc
++
++
++BUILD_WITH_RUY ?= false
++ifeq ($(TARGET_ARCH),aarch64)
++	BUILD_WITH_RUY=true
++endif
++ifeq ($(BUILD_WITH_RUY),true)
++
++  CXXFLAGS += -DTFLITE_WITH_RUY
++endif
++
++
++BUILD_WITH_RUY_PROFILER ?= false
++ifeq ($(BUILD_WITH_RUY_PROFILER),true)
++  CORE_CC_ALL_SRCS += tensorflow/lite/tools/make/downloads/ruy/ruy/profiler/instrumentation.cc
++  CORE_CC_ALL_SRCS += tensorflow/lite/tools/make/downloads/ruy/ruy/profiler/profiler.cc
++  CORE_CC_ALL_SRCS += tensorflow/lite/tools/make/downloads/ruy/ruy/profiler/treeview.cc
++  CXXFLAGS += -DRUY_PROFILER
++endif
++
++# Not to include XNNPACK.
++CXXFLAGS += -DTFLITE_WITHOUT_XNNPACK
++
++BUILD_WITH_NNAPI ?= false
++
 +CORE_CC_EXCLUDE_SRCS += tensorflow/lite/minimal_logging_android.cc
 +CORE_CC_EXCLUDE_SRCS += tensorflow/lite/minimal_logging_ios.cc
-+
 +
 +# Filter out all the excluded files.
 +TF_LITE_CC_SRCS := $(filter-out $(CORE_CC_EXCLUDE_SRCS), $(CORE_CC_ALL_SRCS))
@@ -343,5 +390,5 @@ index 000000000000..957bb79afa5a
 +
 +-include $(patsubst %,$(DEPDIR)/%.d,$(basename $(ALL_SRCS)))
 -- 
-2.17.1
+2.7.4
 

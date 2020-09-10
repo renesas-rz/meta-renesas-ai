@@ -3,16 +3,14 @@ LICENSE = "Apache-2.0"
 
 LIC_FILES_CHKSUM = "file://LICENSE;md5=64a34301f8e355f57ec992c2af3e5157"
 
-SRCREV = "2c2fdd3205a8d31e5f09a71ac7eb52b8c0294a60"
+# tag v2.3.1
+SRCREV = "fcc4b966f1265f466e82617020af93670141b009"
 
 SRC_URI = " \
-	git://github.com/tensorflow/tensorflow.git;branch=r2.0 \
-	file://0001-creating-a-new-Makefile-that-triggers-Makefile.inter.patch \
+	git://github.com/tensorflow/tensorflow.git;branch=r2.3 \
 	file://0001-Tailor-our-own-Makefile-for-arm-arm64-cross-compilat.patch \
-	file://0001-Fix-asm-mov-error.patch \
 	file://0001-Remove-GPU-and-NNAPI.patch \
 	file://0001-Use-wget-instead-of-curl-to-fetch-https-source.patch \
-	file://0001-download-dependencies-Update-EIGEN_URL.patch \
 "
 PR = "r0"
 

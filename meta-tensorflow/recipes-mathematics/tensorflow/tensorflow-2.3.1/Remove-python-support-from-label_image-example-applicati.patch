@@ -1,0 +1,38 @@
+From c414eacae39867a8e2ae120a1524ab3a35675b43 Mon Sep 17 00:00:00 2001
+From: Gareth Williams <gareth.williams.jx@renesas.com>
+Date: Mon, 14 Sep 2020 10:00:18 +0100
+Subject: [PATCH] Remove Python support from label_image example application
+
+In TensorFlow v2.0, the Bazel build file for label_image has been
+updated to include python support. Since we are not currently
+supporting TensorFlow Python, we need to remove Python usage from
+label_image.
+
+Signed-off-by: Gareth Williams <gareth.williams.jx@renesas.com>
+Signed-off-by: Jianming Qiao <jianming.qiao@bp.renesas.com>
+---
+ tensorflow/examples/label_image/BUILD | 11 -----------
+ 1 file changed, 11 deletions(-)
+
+diff --git a/tensorflow/examples/label_image/BUILD b/tensorflow/examples/label_image/BUILD
+index 7c3a6dca1b..f426245255 100644
+--- a/tensorflow/examples/label_image/BUILD
++++ b/tensorflow/examples/label_image/BUILD
+@@ -51,14 +51,3 @@ tf_cc_binary(
+         ],
+     }),
+ )
+-
+-py_binary(
+-    name = "label_image_py",
+-    srcs = ["label_image.py"],
+-    main = "label_image.py",
+-    python_version = "PY3",
+-    srcs_version = "PY2AND3",
+-    deps = [
+-        "//tensorflow:tensorflow_py",
+-    ],
+-)
+-- 
+2.25.1
+

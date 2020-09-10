@@ -1,6 +1,6 @@
-From 593ec502a8f8a4bce3317ff699f53712ef325a39 Mon Sep 17 00:00:00 2001
-From: Jianming Qiao <jianming.qiao@bp.renesas.com>
-Date: Thu, 5 Dec 2019 00:36:29 +0000
+From ea9e9752e60ad94973e9725123b0c0348db5ca09 Mon Sep 17 00:00:00 2001
+From: Gareth Williams <gareth.williams.jx@renesas.com>
+Date: Wed, 18 Nov 2020 13:01:47 +0000
 Subject: [PATCH] Support both python2 and python3
 
 In Python3, it should be written as "import builtins"
@@ -12,21 +12,23 @@ Signed-off-by: Jianming Qiao <jianming.qiao@bp.renesas.com>
  1 file changed, 4 insertions(+), 1 deletion(-)
 
 diff --git a/tensorflow/tools/git/gen_git_source.py b/tensorflow/tools/git/gen_git_source.py
-index d29b535..c6a07d8 100755
+index 0cb1d00..30eb42a 100755
 --- a/tensorflow/tools/git/gen_git_source.py
 +++ b/tensorflow/tools/git/gen_git_source.py
-@@ -26,7 +26,10 @@ NOTE: this script is only used in opensource.
+@@ -27,9 +27,12 @@ NOTE: this script is only used in opensource.
  from __future__ import absolute_import
  from __future__ import division
  from __future__ import print_function
--from builtins import bytes  # pylint: disable=redefined-builtin
 +try:
 +    import builtins
 +except ImportError:
 +    import __builtin__ as builtins
+ 
  import argparse
+-from builtins import bytes  # pylint: disable=redefined-builtin
  import json
  import os
+ import shutil
 -- 
 2.7.4
 

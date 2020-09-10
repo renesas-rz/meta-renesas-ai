@@ -1,37 +1,32 @@
-From 74214b5efcb9314cce29dbe726e8d67c5832ccbd Mon Sep 17 00:00:00 2001
-From: Jianming Qiao <jianming.qiao@bp.renesas.com>
-Date: Fri, 13 Sep 2019 00:52:28 +0100
+From 2073ee7cbec7edcf470ed9b268e2d46e54b10737 Mon Sep 17 00:00:00 2001
+From: Gareth Williams <gareth.williams.jx@renesas.com>
+Date: Fri, 11 Sep 2020 14:43:00 +0100
 Subject: [PATCH] Remove GPU and NNAPI
 
-Signed-off-by: Jianming Qiao <jianming.qiao@bp.renesas.com>
+Signed-off-by: Gareth Williams <gareth.williams.jx@renesas.com>
 ---
- .../lite/examples/label_image/label_image.cc       | 52 ----------------------
- 1 file changed, 52 deletions(-)
+ .../lite/examples/label_image/label_image.cc  | 69 -------------------
+ 1 file changed, 69 deletions(-)
 
 diff --git a/tensorflow/lite/examples/label_image/label_image.cc b/tensorflow/lite/examples/label_image/label_image.cc
-index 0fa9229..b0580fd 100644
+index 5967c23be3..6c951abff0 100644
 --- a/tensorflow/lite/examples/label_image/label_image.cc
 +++ b/tensorflow/lite/examples/label_image/label_image.cc
-@@ -55,47 +55,6 @@ double get_us(struct timeval t) { return (t.tv_sec * 1000000 + t.tv_usec); }
+@@ -60,64 +60,6 @@ double get_us(struct timeval t) { return (t.tv_sec * 1000000 + t.tv_usec); }
  using TfLiteDelegatePtr = tflite::Interpreter::TfLiteDelegatePtr;
  using TfLiteDelegatePtrMap = std::map<std::string, TfLiteDelegatePtr>;
  
 -TfLiteDelegatePtr CreateGPUDelegate(Settings* s) {
 -#if defined(__ANDROID__)
--  TfLiteGpuDelegateOptions options;
--  options.metadata = TfLiteGpuDelegateGetModelMetadata(s->model->GetModel());
--  if (s->allow_fp16) {
--    options.compile_options.precision_loss_allowed = 1;
--  } else {
--    options.compile_options.precision_loss_allowed = 0;
--  }
--  options.compile_options.preferred_gl_object_type =
--      TFLITE_GL_OBJECT_TYPE_FASTEST;
--  options.compile_options.dynamic_batch_enabled = 0;
--
--  return evaluation::CreateGPUDelegate(s->model, &options);
+-  TfLiteGpuDelegateOptionsV2 gpu_opts = TfLiteGpuDelegateOptionsV2Default();
+-  gpu_opts.inference_preference =
+-      TFLITE_GPU_INFERENCE_PREFERENCE_SUSTAINED_SPEED;
+-  gpu_opts.inference_priority1 =
+-      s->allow_fp16 ? TFLITE_GPU_INFERENCE_PRIORITY_MIN_LATENCY
+-                    : TFLITE_GPU_INFERENCE_PRIORITY_MAX_PRECISION;
+-  return evaluation::CreateGPUDelegate(&gpu_opts);
 -#else
--  return evaluation::CreateGPUDelegate(s->model);
+-  return evaluation::CreateGPUDelegate();
 -#endif
 -}
 -
@@ -51,16 +46,38 @@ index 0fa9229..b0580fd 100644
 -    if (!delegate) {
 -      LOG(INFO) << "NNAPI acceleration is unsupported on this platform.";
 -    } else {
--      delegates.emplace("NNAPI", evaluation::CreateNNAPIDelegate());
+-      delegates.emplace("NNAPI", std::move(delegate));
 -    }
 -  }
+-
+-  if (s->hexagon_delegate) {
+-    const std::string libhexagon_path("/data/local/tmp");
+-    auto delegate =
+-        evaluation::CreateHexagonDelegate(libhexagon_path, s->profiling);
+-
+-    if (!delegate) {
+-      LOG(INFO) << "Hexagon acceleration is unsupported on this platform.";
+-    } else {
+-      delegates.emplace("Hexagon", std::move(delegate));
+-    }
+-  }
+-
+-  if (s->xnnpack_delegate) {
+-    auto delegate = evaluation::CreateXNNPACKDelegate(s->number_of_threads);
+-    if (!delegate) {
+-      LOG(INFO) << "XNNPACK acceleration is unsupported on this platform.";
+-    } else {
+-      delegates.emplace("XNNPACK", std::move(delegate));
+-    }
+-  }
+-
 -  return delegates;
 -}
 -
  // Takes a file name, and loads a list of labels from it, one per line, and
  // returns a vector of the strings. It pads with empty strings so the length
  // of the result is a multiple of 16, because our model expects that.
-@@ -162,7 +121,6 @@ void RunInference(Settings* s) {
+@@ -186,7 +128,6 @@ void RunInference(Settings* s) {
      exit(-1);
    }
  
@@ -68,7 +85,7 @@ index 0fa9229..b0580fd 100644
    interpreter->SetAllowFp16PrecisionForFp32(s->allow_fp16);
  
    if (s->verbose) {
-@@ -203,16 +161,6 @@ void RunInference(Settings* s) {
+@@ -227,16 +168,6 @@ void RunInference(Settings* s) {
      LOG(INFO) << "number of outputs: " << outputs.size() << "\n";
    }
  
@@ -86,5 +103,5 @@ index 0fa9229..b0580fd 100644
      LOG(FATAL) << "Failed to allocate tensors!";
    }
 -- 
-2.7.4
+2.25.1
 

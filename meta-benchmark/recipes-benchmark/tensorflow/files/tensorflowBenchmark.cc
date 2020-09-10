@@ -66,7 +66,7 @@ limitations under the License.
 #include "tensorflow/core/public/session.h"
 #include "tensorflow/core/util/command_line_flags.h"
 
-#define TENSORFLOW_VERSION "TensorFlow 2.0.2,"
+#define TENSORFLOW_VERSION "TensorFlow 2.3.1,"
 
 /*
  * Mark benchmarking output with the format:
@@ -79,6 +79,7 @@ using tensorflow::Flag;
 using tensorflow::Tensor;
 using tensorflow::Status;
 using tensorflow::string;
+using tensorflow::tstring;
 using tensorflow::int32;
 
 #define TEST_NUMBER 30
@@ -162,7 +163,7 @@ static Status ReadEntireFile(tensorflow::Env* env, const string& filename,
                                         "' expected ", file_size, " got ",
                                         data.size());
   }
-  output->scalar<string>()() = string(data);
+  output->scalar<tstring>()() = tstring(data);
   return Status::OK();
 }
 
