@@ -56,6 +56,14 @@ project requirements.
 | Renesas RZ/G1M | iWave Systems iwg20m-g1m |
 | Renesas RZ/G1E | iWave Systems iwg22m     |
 
+### Build Script ###
+A simple build script has been created to manage the build process.  
+Before running the script you will need to download the relevant proprietary
+libraries from the Renesas website. See the Renesas RZ/G[12] BSP readme file for details on how to do this.
+
+Run `./scripts/build-rzg-ai-bsp.sh -h` to get an overview on how to use the
+script.
+
 ---
 
 ## Notes ##
