@@ -9,91 +9,91 @@ LIC_FILES_CHKSUM = " \
 S = "${WORKDIR}"
 
 SRC_URI = " \
-	http://download.tensorflow.org/models/mobilenet_v1_2018_02_22/mobilenet_v1_1.0_224.tgz;name=mobilenet_v1_1_0_224  \
-	http://download.tensorflow.org/models/mobilenet_v1_2018_02_22/mobilenet_v1_1.0_192.tgz;name=mobilenet_v1_1_0_192  \
-	http://download.tensorflow.org/models/mobilenet_v1_2018_02_22/mobilenet_v1_1.0_160.tgz;name=mobilenet_v1_1_0_160  \
-	http://download.tensorflow.org/models/mobilenet_v1_2018_02_22/mobilenet_v1_1.0_128.tgz;name=mobilenet_v1_1_0_128  \
-	http://download.tensorflow.org/models/mobilenet_v1_2018_02_22/mobilenet_v1_0.75_224.tgz;name=mobilenet_v1_0_75_224  \
-	http://download.tensorflow.org/models/mobilenet_v1_2018_02_22/mobilenet_v1_0.75_192.tgz;name=mobilenet_v1_0_75_192  \
-	http://download.tensorflow.org/models/mobilenet_v1_2018_02_22/mobilenet_v1_0.75_160.tgz;name=mobilenet_v1_0_75_160  \
-	http://download.tensorflow.org/models/mobilenet_v1_2018_02_22/mobilenet_v1_0.75_128.tgz;name=mobilenet_v1_0_75_128  \
-	http://download.tensorflow.org/models/mobilenet_v1_2018_02_22/mobilenet_v1_0.5_224.tgz;name=mobilenet_v1_0_50_224  \
-	http://download.tensorflow.org/models/mobilenet_v1_2018_02_22/mobilenet_v1_0.5_192.tgz;name=mobilenet_v1_0_50_192  \
-	http://download.tensorflow.org/models/mobilenet_v1_2018_02_22/mobilenet_v1_0.5_160.tgz;name=mobilenet_v1_0_50_160  \
-	http://download.tensorflow.org/models/mobilenet_v1_2018_02_22/mobilenet_v1_0.5_128.tgz;name=mobilenet_v1_0_50_128  \
-	http://download.tensorflow.org/models/mobilenet_v1_2018_02_22/mobilenet_v1_0.25_224.tgz;name=mobilenet_v1_0_25_224  \
-	http://download.tensorflow.org/models/mobilenet_v1_2018_02_22/mobilenet_v1_0.25_192.tgz;name=mobilenet_v1_0_25_192  \
-	http://download.tensorflow.org/models/mobilenet_v1_2018_02_22/mobilenet_v1_0.25_160.tgz;name=mobilenet_v1_0_25_160  \
-	http://download.tensorflow.org/models/mobilenet_v1_2018_02_22/mobilenet_v1_0.25_128.tgz;name=mobilenet_v1_0_25_128  \
-	http://download.tensorflow.org/models/mobilenet_v1_2018_08_02/mobilenet_v1_1.0_224_quant.tgz;name=mobilenet_v1_1_0_224_quant  \
-	http://download.tensorflow.org/models/mobilenet_v1_2018_08_02/mobilenet_v1_1.0_192_quant.tgz;name=mobilenet_v1_1_0_192_quant  \
-	http://download.tensorflow.org/models/mobilenet_v1_2018_08_02/mobilenet_v1_1.0_160_quant.tgz;name=mobilenet_v1_1_0_160_quant  \
-	http://download.tensorflow.org/models/mobilenet_v1_2018_08_02/mobilenet_v1_1.0_128_quant.tgz;name=mobilenet_v1_1_0_128_quant  \
-	http://download.tensorflow.org/models/mobilenet_v1_2018_08_02/mobilenet_v1_0.75_224_quant.tgz;name=mobilenet_v1_0_75_224_quant  \
-	http://download.tensorflow.org/models/mobilenet_v1_2018_08_02/mobilenet_v1_0.75_192_quant.tgz;name=mobilenet_v1_0_75_192_quant  \
-	http://download.tensorflow.org/models/mobilenet_v1_2018_08_02/mobilenet_v1_0.75_160_quant.tgz;name=mobilenet_v1_0_75_160_quant  \
-	http://download.tensorflow.org/models/mobilenet_v1_2018_08_02/mobilenet_v1_0.75_128_quant.tgz;name=mobilenet_v1_0_75_128_quant  \
-	http://download.tensorflow.org/models/mobilenet_v1_2018_08_02/mobilenet_v1_0.5_224_quant.tgz;name=mobilenet_v1_0_50_224_quant  \
-	http://download.tensorflow.org/models/mobilenet_v1_2018_08_02/mobilenet_v1_0.5_192_quant.tgz;name=mobilenet_v1_0_50_192_quant  \
-	http://download.tensorflow.org/models/mobilenet_v1_2018_08_02/mobilenet_v1_0.5_160_quant.tgz;name=mobilenet_v1_0_50_160_quant  \
-	http://download.tensorflow.org/models/mobilenet_v1_2018_08_02/mobilenet_v1_0.5_128_quant.tgz;name=mobilenet_v1_0_50_128_quant  \
-	http://download.tensorflow.org/models/mobilenet_v1_2018_08_02/mobilenet_v1_0.25_224_quant.tgz;name=mobilenet_v1_0_25_224_quant  \
-	http://download.tensorflow.org/models/mobilenet_v1_2018_08_02/mobilenet_v1_0.25_192_quant.tgz;name=mobilenet_v1_0_25_192_quant  \
-	http://download.tensorflow.org/models/mobilenet_v1_2018_08_02/mobilenet_v1_0.25_160_quant.tgz;name=mobilenet_v1_0_25_160_quant  \
-	http://download.tensorflow.org/models/mobilenet_v1_2018_08_02/mobilenet_v1_0.25_128_quant.tgz;name=mobilenet_v1_0_25_128_quant  \
-	https://storage.googleapis.com/mobilenet_v2/checkpoints/mobilenet_v2_1.4_224.tgz;name=mobilenet_v2_1_4_224  \
-	https://storage.googleapis.com/mobilenet_v2/checkpoints/mobilenet_v2_1.3_224.tgz;name=mobilenet_v2_1_3_224  \
-	https://storage.googleapis.com/mobilenet_v2/checkpoints/mobilenet_v2_1.0_224.tgz;name=mobilenet_v2_1_0_224  \
-	https://storage.googleapis.com/mobilenet_v2/checkpoints/mobilenet_v2_1.0_192.tgz;name=mobilenet_v2_1_0_192  \
-	https://storage.googleapis.com/mobilenet_v2/checkpoints/mobilenet_v2_1.0_160.tgz;name=mobilenet_v2_1_0_160  \
-	https://storage.googleapis.com/mobilenet_v2/checkpoints/mobilenet_v2_1.0_128.tgz;name=mobilenet_v2_1_0_128  \
-	https://storage.googleapis.com/mobilenet_v2/checkpoints/mobilenet_v2_1.0_96.tgz;name=mobilenet_v2_1_0_96  \
-	https://storage.googleapis.com/mobilenet_v2/checkpoints/mobilenet_v2_0.75_224.tgz;name=mobilenet_v2_0_75_224  \
-	https://storage.googleapis.com/mobilenet_v2/checkpoints/mobilenet_v2_0.75_192.tgz;name=mobilenet_v2_0_75_192  \
-	https://storage.googleapis.com/mobilenet_v2/checkpoints/mobilenet_v2_0.75_160.tgz;name=mobilenet_v2_0_75_160  \
-	https://storage.googleapis.com/mobilenet_v2/checkpoints/mobilenet_v2_0.75_128.tgz;name=mobilenet_v2_0_75_128  \
-	https://storage.googleapis.com/mobilenet_v2/checkpoints/mobilenet_v2_0.75_96.tgz;name=mobilenet_v2_0_75_96  \
-	https://storage.googleapis.com/mobilenet_v2/checkpoints/mobilenet_v2_0.5_224.tgz;name=mobilenet_v2_0_5_224  \
-	https://storage.googleapis.com/mobilenet_v2/checkpoints/mobilenet_v2_0.5_192.tgz;name=mobilenet_v2_0_5_192  \
-	https://storage.googleapis.com/mobilenet_v2/checkpoints/mobilenet_v2_0.5_160.tgz;name=mobilenet_v2_0_5_160  \
-	https://storage.googleapis.com/mobilenet_v2/checkpoints/mobilenet_v2_0.5_128.tgz;name=mobilenet_v2_0_5_128  \
-	https://storage.googleapis.com/mobilenet_v2/checkpoints/mobilenet_v2_0.5_96.tgz;name=mobilenet_v2_0_5_96  \
-	https://storage.googleapis.com/mobilenet_v2/checkpoints/mobilenet_v2_0.35_224.tgz;name=mobilenet_v2_0_35_224  \
-	https://storage.googleapis.com/mobilenet_v2/checkpoints/mobilenet_v2_0.35_192.tgz;name=mobilenet_v2_0_35_192  \
-	https://storage.googleapis.com/mobilenet_v2/checkpoints/mobilenet_v2_0.35_160.tgz;name=mobilenet_v2_0_35_160  \
-	https://storage.googleapis.com/mobilenet_v2/checkpoints/mobilenet_v2_0.35_128.tgz;name=mobilenet_v2_0_35_128  \
-	https://storage.googleapis.com/mobilenet_v2/checkpoints/mobilenet_v2_0.35_96.tgz;name=mobilenet_v2_0_35_96  \
-	http://download.tensorflow.org/models/tflite_11_05_08/mobilenet_v2_1.0_224_quant.tgz;name=mobilenet_v2_1.0_224_quant  \
-	https://storage.googleapis.com/mobilenet_v3/checkpoints/v3-large_224_1.0_float.tgz;name=mobilenet_v3_large_1.0_224  \
-	https://storage.googleapis.com/mobilenet_v3/checkpoints/v3-large_224_1.0_uint8.tgz;name=mobilenet_v3_large_1.0_224_quant  \
-	https://storage.googleapis.com/mobilenet_v3/checkpoints/v3-large_224_0.75_float.tgz;name=mobilenet_v3_large_0.75_224  \
-	https://storage.googleapis.com/mobilenet_v3/checkpoints/v3-small_224_1.0_float.tgz;name=mobilenet_v3_small_1.0_224  \
-	https://storage.googleapis.com/mobilenet_v3/checkpoints/v3-small_224_1.0_uint8.tgz;name=mobilenet_v3_small_1.0_224_quant  \
-	https://storage.googleapis.com/mobilenet_v3/checkpoints/v3-small_224_0.75_float.tgz;name=mobilenet_v3_small_0.75_224  \
-	https://storage.googleapis.com/download.tensorflow.org/models/tflite/model_zoo/upload_20180427/nasnet_mobile_2018_04_27.tgz;name=nasnet_mobile_2018_04_27 \
-	https://storage.googleapis.com/download.tensorflow.org/models/tflite/mobilenet_v1_224_android_quant_2017_11_08.zip;name=android_quant_label  \
-	https://storage.googleapis.com/download.tensorflow.org/models/inception_v3_2016_08_28_frozen.pb.tar.gz;name=inception_v3  \
-	https://download.tensorflow.org/models/tflite_11_05_08/inception_v3_quant.tgz;name=inception_v3_lite_quant \
-	https://storage.googleapis.com/download.tensorflow.org/models/tflite/model_zoo/upload_20180427/inception_v3_2018_04_27.tgz;name=inception_v3_lite \
-	https://storage.googleapis.com/download.tensorflow.org/models/tflite/model_zoo/upload_20180427/squeezenet_2018_04_27.tgz;name=squeezenet_lite \
-	https://s3.amazonaws.com/download.caffe2.ai/models/squeezenet/predict_net.pb;name=squeezenet_predict_net_caffe2  \
-	https://s3.amazonaws.com/download.caffe2.ai/models/squeezenet/init_net.pb;name=squeezenet_init_net_caffe2  \
-	https://github.com/BVLC/caffe/raw/master/python/caffe/imagenet/ilsvrc_2012_mean.npy;name=squeezenet_mean_caffe2  \
-	https://storage.googleapis.com/download.tensorflow.org/models/tflite/model_zoo/upload_20180427/inception_v4_2018_04_27.tgz;name=inception_v4_float \
-	https://storage.googleapis.com/download.tensorflow.org/models/inception_v4_299_quant_20181026.tgz;name=inception_v4_quant \
-	https://github.com/DeepScale/SqueezeNet/blob/master/SqueezeNet_v1.1/squeezenet_v1.1.caffemodel?raw=true;downloadfilename=squeezenet_v1.1.caffemodel;name=squeezenet_caffe \
-	https://github.com/DeepScale/SqueezeNet/raw/master/SqueezeNet_v1.1/deploy.prototxt;name=squeezenet_caffe_proto \
-	https://s3.amazonaws.com/onnx-model-zoo/squeezenet/squeezenet1.1/squeezenet1.1.onnx;name=squeezenet_onnx \
-	https://s3.amazonaws.com/onnx-model-zoo/mobilenet/mobilenetv2-1.0/mobilenetv2-1.0.onnx;name=mobilenetv2_onnx \
-	https://github.com/opencv/opencv/raw/master/samples/data/dnn/classification_classes_ILSVRC2012.txt;name=ilsvrc_label \
-	https://github.com/pjreddie/darknet/raw/master/data/imagenet.shortnames.list;name=darknet_label \
-	https://pjreddie.com/media/files/darknet19.weights;name=darkent19_weights \
-	https://github.com/pjreddie/darknet/raw/master/cfg/darknet19.cfg;name=darkent19_cfg \
-	https://github.com/pjreddie/darknet/raw/master/cfg/darknet.cfg;name=darkent_cfg \
-	https://pjreddie.com/media/files/darknet.weights;name=darkent_weights \
-	https://storage.googleapis.com/download.tensorflow.org/models/tflite_11_05_08/resnet_v2_101.tgz;name=resnet_v2_101_float \
-	https://storage.googleapis.com/download.tensorflow.org/models/tflite/model_zoo/upload_20180427/inception_resnet_v2_2018_04_27.tgz;name=inception_resnet_v2_float \
-	https://github.com/google-coral/test_data/raw/master/mobilenet_v2_1.0_224_quant_edgetpu.tflite;name=mobilenet_v2_1.0_224_quant_edgetpu \
+	http://download.tensorflow.org/models/mobilenet_v1_2018_02_22/mobilenet_v1_1.0_224.tgz;name=mobilenet_v1_1_0_224;subdir=tflite \
+	http://download.tensorflow.org/models/mobilenet_v1_2018_02_22/mobilenet_v1_1.0_192.tgz;name=mobilenet_v1_1_0_192;subdir=tflite \
+	http://download.tensorflow.org/models/mobilenet_v1_2018_02_22/mobilenet_v1_1.0_160.tgz;name=mobilenet_v1_1_0_160;subdir=tflite \
+	http://download.tensorflow.org/models/mobilenet_v1_2018_02_22/mobilenet_v1_1.0_128.tgz;name=mobilenet_v1_1_0_128;subdir=tflite \
+	http://download.tensorflow.org/models/mobilenet_v1_2018_02_22/mobilenet_v1_0.75_224.tgz;name=mobilenet_v1_0_75_224;subdir=tflite \
+	http://download.tensorflow.org/models/mobilenet_v1_2018_02_22/mobilenet_v1_0.75_192.tgz;name=mobilenet_v1_0_75_192;subdir=tflite \
+	http://download.tensorflow.org/models/mobilenet_v1_2018_02_22/mobilenet_v1_0.75_160.tgz;name=mobilenet_v1_0_75_160;subdir=tflite \
+	http://download.tensorflow.org/models/mobilenet_v1_2018_02_22/mobilenet_v1_0.75_128.tgz;name=mobilenet_v1_0_75_128;subdir=tflite \
+	http://download.tensorflow.org/models/mobilenet_v1_2018_02_22/mobilenet_v1_0.5_224.tgz;name=mobilenet_v1_0_50_224;subdir=tflite \
+	http://download.tensorflow.org/models/mobilenet_v1_2018_02_22/mobilenet_v1_0.5_192.tgz;name=mobilenet_v1_0_50_192;subdir=tflite \
+	http://download.tensorflow.org/models/mobilenet_v1_2018_02_22/mobilenet_v1_0.5_160.tgz;name=mobilenet_v1_0_50_160;subdir=tflite \
+	http://download.tensorflow.org/models/mobilenet_v1_2018_02_22/mobilenet_v1_0.5_128.tgz;name=mobilenet_v1_0_50_128;subdir=tflite \
+	http://download.tensorflow.org/models/mobilenet_v1_2018_02_22/mobilenet_v1_0.25_224.tgz;name=mobilenet_v1_0_25_224;subdir=tflite \
+	http://download.tensorflow.org/models/mobilenet_v1_2018_02_22/mobilenet_v1_0.25_192.tgz;name=mobilenet_v1_0_25_192;subdir=tflite \
+	http://download.tensorflow.org/models/mobilenet_v1_2018_02_22/mobilenet_v1_0.25_160.tgz;name=mobilenet_v1_0_25_160;subdir=tflite \
+	http://download.tensorflow.org/models/mobilenet_v1_2018_02_22/mobilenet_v1_0.25_128.tgz;name=mobilenet_v1_0_25_128;subdir=tflite \
+	http://download.tensorflow.org/models/mobilenet_v1_2018_08_02/mobilenet_v1_1.0_224_quant.tgz;name=mobilenet_v1_1_0_224_quant;subdir=tflite \
+	http://download.tensorflow.org/models/mobilenet_v1_2018_08_02/mobilenet_v1_1.0_192_quant.tgz;name=mobilenet_v1_1_0_192_quant;subdir=tflite \
+	http://download.tensorflow.org/models/mobilenet_v1_2018_08_02/mobilenet_v1_1.0_160_quant.tgz;name=mobilenet_v1_1_0_160_quant;subdir=tflite \
+	http://download.tensorflow.org/models/mobilenet_v1_2018_08_02/mobilenet_v1_1.0_128_quant.tgz;name=mobilenet_v1_1_0_128_quant;subdir=tflite \
+	http://download.tensorflow.org/models/mobilenet_v1_2018_08_02/mobilenet_v1_0.75_224_quant.tgz;name=mobilenet_v1_0_75_224_quant;subdir=tflite \
+	http://download.tensorflow.org/models/mobilenet_v1_2018_08_02/mobilenet_v1_0.75_192_quant.tgz;name=mobilenet_v1_0_75_192_quant;subdir=tflite \
+	http://download.tensorflow.org/models/mobilenet_v1_2018_08_02/mobilenet_v1_0.75_160_quant.tgz;name=mobilenet_v1_0_75_160_quant;subdir=tflite \
+	http://download.tensorflow.org/models/mobilenet_v1_2018_08_02/mobilenet_v1_0.75_128_quant.tgz;name=mobilenet_v1_0_75_128_quant;subdir=tflite \
+	http://download.tensorflow.org/models/mobilenet_v1_2018_08_02/mobilenet_v1_0.5_224_quant.tgz;name=mobilenet_v1_0_50_224_quant;subdir=tflite \
+	http://download.tensorflow.org/models/mobilenet_v1_2018_08_02/mobilenet_v1_0.5_192_quant.tgz;name=mobilenet_v1_0_50_192_quant;subdir=tflite \
+	http://download.tensorflow.org/models/mobilenet_v1_2018_08_02/mobilenet_v1_0.5_160_quant.tgz;name=mobilenet_v1_0_50_160_quant;subdir=tflite \
+	http://download.tensorflow.org/models/mobilenet_v1_2018_08_02/mobilenet_v1_0.5_128_quant.tgz;name=mobilenet_v1_0_50_128_quant;subdir=tflite \
+	http://download.tensorflow.org/models/mobilenet_v1_2018_08_02/mobilenet_v1_0.25_224_quant.tgz;name=mobilenet_v1_0_25_224_quant;subdir=tflite \
+	http://download.tensorflow.org/models/mobilenet_v1_2018_08_02/mobilenet_v1_0.25_192_quant.tgz;name=mobilenet_v1_0_25_192_quant;subdir=tflite \
+	http://download.tensorflow.org/models/mobilenet_v1_2018_08_02/mobilenet_v1_0.25_160_quant.tgz;name=mobilenet_v1_0_25_160_quant;subdir=tflite \
+	http://download.tensorflow.org/models/mobilenet_v1_2018_08_02/mobilenet_v1_0.25_128_quant.tgz;name=mobilenet_v1_0_25_128_quant;subdir=tflite \
+	https://storage.googleapis.com/mobilenet_v2/checkpoints/mobilenet_v2_1.4_224.tgz;name=mobilenet_v2_1_4_224;subdir=tflite \
+	https://storage.googleapis.com/mobilenet_v2/checkpoints/mobilenet_v2_1.3_224.tgz;name=mobilenet_v2_1_3_224;subdir=tflite \
+	https://storage.googleapis.com/mobilenet_v2/checkpoints/mobilenet_v2_1.0_224.tgz;name=mobilenet_v2_1_0_224;subdir=tflite \
+	https://storage.googleapis.com/mobilenet_v2/checkpoints/mobilenet_v2_1.0_192.tgz;name=mobilenet_v2_1_0_192;subdir=tflite \
+	https://storage.googleapis.com/mobilenet_v2/checkpoints/mobilenet_v2_1.0_160.tgz;name=mobilenet_v2_1_0_160;subdir=tflite \
+	https://storage.googleapis.com/mobilenet_v2/checkpoints/mobilenet_v2_1.0_128.tgz;name=mobilenet_v2_1_0_128;subdir=tflite \
+	https://storage.googleapis.com/mobilenet_v2/checkpoints/mobilenet_v2_1.0_96.tgz;name=mobilenet_v2_1_0_96;subdir=tflite \
+	https://storage.googleapis.com/mobilenet_v2/checkpoints/mobilenet_v2_0.75_224.tgz;name=mobilenet_v2_0_75_224;subdir=tflite \
+	https://storage.googleapis.com/mobilenet_v2/checkpoints/mobilenet_v2_0.75_192.tgz;name=mobilenet_v2_0_75_192;subdir=tflite \
+	https://storage.googleapis.com/mobilenet_v2/checkpoints/mobilenet_v2_0.75_160.tgz;name=mobilenet_v2_0_75_160;subdir=tflite \
+	https://storage.googleapis.com/mobilenet_v2/checkpoints/mobilenet_v2_0.75_128.tgz;name=mobilenet_v2_0_75_128;subdir=tflite \
+	https://storage.googleapis.com/mobilenet_v2/checkpoints/mobilenet_v2_0.75_96.tgz;name=mobilenet_v2_0_75_96;subdir=tflite \
+	https://storage.googleapis.com/mobilenet_v2/checkpoints/mobilenet_v2_0.5_224.tgz;name=mobilenet_v2_0_5_224;subdir=tflite \
+	https://storage.googleapis.com/mobilenet_v2/checkpoints/mobilenet_v2_0.5_192.tgz;name=mobilenet_v2_0_5_192;subdir=tflite \
+	https://storage.googleapis.com/mobilenet_v2/checkpoints/mobilenet_v2_0.5_160.tgz;name=mobilenet_v2_0_5_160;subdir=tflite \
+	https://storage.googleapis.com/mobilenet_v2/checkpoints/mobilenet_v2_0.5_128.tgz;name=mobilenet_v2_0_5_128;subdir=tflite \
+	https://storage.googleapis.com/mobilenet_v2/checkpoints/mobilenet_v2_0.5_96.tgz;name=mobilenet_v2_0_5_96;subdir=tflite \
+	https://storage.googleapis.com/mobilenet_v2/checkpoints/mobilenet_v2_0.35_224.tgz;name=mobilenet_v2_0_35_224;subdir=tflite \
+	https://storage.googleapis.com/mobilenet_v2/checkpoints/mobilenet_v2_0.35_192.tgz;name=mobilenet_v2_0_35_192;subdir=tflite \
+	https://storage.googleapis.com/mobilenet_v2/checkpoints/mobilenet_v2_0.35_160.tgz;name=mobilenet_v2_0_35_160;subdir=tflite \
+	https://storage.googleapis.com/mobilenet_v2/checkpoints/mobilenet_v2_0.35_128.tgz;name=mobilenet_v2_0_35_128;subdir=tflite \
+	https://storage.googleapis.com/mobilenet_v2/checkpoints/mobilenet_v2_0.35_96.tgz;name=mobilenet_v2_0_35_96;subdir=tflite \
+	http://download.tensorflow.org/models/tflite_11_05_08/mobilenet_v2_1.0_224_quant.tgz;name=mobilenet_v2_1.0_224_quant;subdir=tflite \
+	https://storage.googleapis.com/mobilenet_v3/checkpoints/v3-large_224_1.0_float.tgz;name=mobilenet_v3_large_1.0_224;subdir=tflite \
+	https://storage.googleapis.com/mobilenet_v3/checkpoints/v3-large_224_1.0_uint8.tgz;name=mobilenet_v3_large_1.0_224_quant;subdir=tflite \
+	https://storage.googleapis.com/mobilenet_v3/checkpoints/v3-large_224_0.75_float.tgz;name=mobilenet_v3_large_0.75_224;subdir=tflite \
+	https://storage.googleapis.com/mobilenet_v3/checkpoints/v3-small_224_1.0_float.tgz;name=mobilenet_v3_small_1.0_224;subdir=tflite \
+	https://storage.googleapis.com/mobilenet_v3/checkpoints/v3-small_224_1.0_uint8.tgz;name=mobilenet_v3_small_1.0_224_quant;subdir=tflite \
+	https://storage.googleapis.com/mobilenet_v3/checkpoints/v3-small_224_0.75_float.tgz;name=mobilenet_v3_small_0.75_224;subdir=tflite \
+	https://storage.googleapis.com/download.tensorflow.org/models/tflite/model_zoo/upload_20180427/nasnet_mobile_2018_04_27.tgz;name=nasnet_mobile_2018_04_27;subdir=tflite \
+	https://storage.googleapis.com/download.tensorflow.org/models/tflite/mobilenet_v1_224_android_quant_2017_11_08.zip;name=android_quant_label;subdir=tflite \
+	https://storage.googleapis.com/download.tensorflow.org/models/inception_v3_2016_08_28_frozen.pb.tar.gz;name=inception_v3;subdir=tflite \
+	https://download.tensorflow.org/models/tflite_11_05_08/inception_v3_quant.tgz;name=inception_v3_lite_quant;subdir=tflite \
+	https://storage.googleapis.com/download.tensorflow.org/models/tflite/model_zoo/upload_20180427/inception_v3_2018_04_27.tgz;name=inception_v3_lite;subdir=tflite \
+	https://storage.googleapis.com/download.tensorflow.org/models/tflite/model_zoo/upload_20180427/squeezenet_2018_04_27.tgz;name=squeezenet_lite;subdir=tflite \
+	https://s3.amazonaws.com/download.caffe2.ai/models/squeezenet/predict_net.pb;name=squeezenet_predict_net_caffe2;subdir=caffe2 \
+	https://s3.amazonaws.com/download.caffe2.ai/models/squeezenet/init_net.pb;name=squeezenet_init_net_caffe2;subdir=caffe2 \
+	https://github.com/BVLC/caffe/raw/master/python/caffe/imagenet/ilsvrc_2012_mean.npy;name=squeezenet_mean_caffe2;subdir=caffe2 \
+	https://storage.googleapis.com/download.tensorflow.org/models/tflite/model_zoo/upload_20180427/inception_v4_2018_04_27.tgz;name=inception_v4_float;subdir=tflite \
+	https://storage.googleapis.com/download.tensorflow.org/models/inception_v4_299_quant_20181026.tgz;name=inception_v4_quant;subdir=tflite \
+	https://github.com/DeepScale/SqueezeNet/blob/master/SqueezeNet_v1.1/squeezenet_v1.1.caffemodel?raw=true;downloadfilename=squeezenet_v1.1.caffemodel;name=squeezenet_caffe;subdir=caffe2 \
+	https://github.com/DeepScale/SqueezeNet/raw/master/SqueezeNet_v1.1/deploy.prototxt;name=squeezenet_caffe_proto;subdir=caffe2 \
+	https://s3.amazonaws.com/onnx-model-zoo/squeezenet/squeezenet1.1/squeezenet1.1.onnx;name=squeezenet_onnx;subdir=onnx \
+	https://s3.amazonaws.com/onnx-model-zoo/mobilenet/mobilenetv2-1.0/mobilenetv2-1.0.onnx;name=mobilenetv2_onnx;subdir=onnx \
+	https://github.com/opencv/opencv/raw/master/samples/data/dnn/classification_classes_ILSVRC2012.txt;name=ilsvrc_label;subdir=onnx \
+	https://github.com/pjreddie/darknet/raw/master/data/imagenet.shortnames.list;name=darknet_label;subdir=opencv \
+	https://pjreddie.com/media/files/darknet19.weights;name=darkent19_weights;subdir=opencv \
+	https://github.com/pjreddie/darknet/raw/master/cfg/darknet19.cfg;name=darkent19_cfg;subdir=opencv \
+	https://github.com/pjreddie/darknet/raw/master/cfg/darknet.cfg;name=darkent_cfg;subdir=opencv \
+	https://pjreddie.com/media/files/darknet.weights;name=darkent_weights;subdir=opencv \
+	https://storage.googleapis.com/download.tensorflow.org/models/tflite_11_05_08/resnet_v2_101.tgz;name=resnet_v2_101_float;subdir=tflite \
+	https://storage.googleapis.com/download.tensorflow.org/models/tflite/model_zoo/upload_20180427/inception_resnet_v2_2018_04_27.tgz;name=inception_resnet_v2_float;subdir=tflite \
+	https://github.com/google-coral/test_data/raw/master/mobilenet_v2_1.0_224_quant_edgetpu.tflite;name=mobilenet_v2_1.0_224_quant_edgetpu;subdir=tpu \
 "
 
 SRC_URI[mobilenet_v1_1_0_224.md5sum] = "d5f69cef81ad8afb335d9727a17c462a"
@@ -295,41 +295,41 @@ do_install () {
 	install -d ${D}/home/root/models/darknet
 	install -d ${D}/home/root/models/google-coral/Resnet
 	install -d ${D}/home/root/models/google-coral/Mobile_Net_V2_Model
-	install -m 0644 ${S}/mobilenet_v1*.tflite ${D}/home/root/models/tensorflowlite/Mobile_Net_V1_Model/
-	install -m 0644 ${S}/mobilenet_v2*.tflite ${D}/home/root/models/tensorflowlite/Mobile_Net_V2_Model/
-	install -m 0644 ${S}/v3*/v3*.tflite ${D}/home/root/models/tensorflowlite/Mobile_Net_V3_Model/
-	install -m 0644 ${S}/nasnet*.tflite ${D}/home/root/models/tensorflowlite/NasNet/
-	install -m 0644 ${S}/squeezenet*.tflite ${D}/home/root/models/tensorflowlite/Squeezenet/
-	install -m 0644 ${S}/inception_resnet_v2.tflite ${D}/home/root/models/tensorflowlite/Resnet/
-	install -m 0644 ${S}/resnet_v2_101_299.tflite ${D}/home/root/models/tensorflowlite/Resnet/
-	install -m 0644 ${S}/mobilenet_v2_1.0_224_quant_edgetpu.tflite ${D}/home/root/models/google-coral/Mobile_Net_V2_Model/
-	install -m 0644 ${S}/labels.txt ${D}/home/root/models/tensorflowlite/Mobile_Net_V1_Model/
-	install -m 0644 ${S}/labels.txt ${D}/home/root/models/tensorflowlite/Mobile_Net_V2_Model/
-	install -m 0644 ${S}/labels.txt ${D}/home/root/models/tensorflowlite/Mobile_Net_V3_Model/
-	install -m 0644 ${S}/labels.txt ${D}/home/root/models/tensorflowlite/NasNet/
-	install -m 0644 ${S}/labels.txt ${D}/home/root/models/tensorflowlite/Squeezenet/
-	install -m 0644 ${S}/labels.txt ${D}/home/root/models/tensorflowlite/Resnet/
-	install -m 0644 ${S}/labels.txt ${D}/home/root/models/google-coral/Resnet/
-	install -m 0644 ${S}/labels.txt ${D}/home/root/models/google-coral/Mobile_Net_V2_Model/
-	install -m 0644 ${S}/imagenet_slim_labels.txt ${D}/home/root/models/tensorflow/InceptionV3/
-	install -m 0644 ${S}/imagenet_slim_labels.txt ${D}/home/root/models/tensorflow/InceptionV3_Quant/
-	install -m 0644 ${S}/imagenet_slim_labels.txt ${D}/home/root/models/tensorflowlite/Mobile_InceptionV3/
-	install -m 0644 ${S}/inception_v3*.tflite ${D}/home/root/models/tensorflowlite/Mobile_InceptionV3/
-	install -m 0644 ${S}/inception_v3_2016_08_28_frozen.pb ${D}/home/root/models/tensorflow/InceptionV3/
-	install -m 0644 ${S}/imagenet_slim_labels.txt ${D}/home/root/models/tensorflow/InceptionV4/
-	install -m 0644 ${S}/imagenet_slim_labels.txt ${D}/home/root/models/tensorflowlite/Mobile_InceptionV4/
-	install -m 0644 ${S}/inception_v4*.tflite ${D}/home/root/models/tensorflowlite/Mobile_InceptionV4/
-	install -m 0644 ${S}/inception_v4*.pb ${D}/home/root/models/tensorflow/InceptionV4/
-	install -m 0644 ${S}/squeezenet_v1.1.caffemodel ${D}/home/root/models/caffe/
-	install -m 0644 ${S}/deploy.prototxt ${D}/home/root/models/caffe/
-	install -m 0644 ${S}/squeezenet1.1.onnx ${D}/home/root/models/onnx/
-	install -m 0644 ${S}/mobilenetv2-1.0.onnx ${D}/home/root/models/onnx/
-	install -m 0644 ${S}/classification_classes_ILSVRC2012.txt ${D}/home/root/models/onnx/
-	install -m 0644 ${S}/darknet19.cfg ${D}/home/root/models/darknet/
-	install -m 0644 ${S}/darknet.cfg ${D}/home/root/models/darknet/
-	install -m 0644 ${S}/imagenet.shortnames.list ${D}/home/root/models/darknet/
-	install -m 0644 ${S}/darknet.weights ${D}/home/root/models/darknet/
-	install -m 0644 ${S}/darknet19.weights ${D}/home/root/models/darknet/
+	install -m 0644 ${S}/tflite/mobilenet_v1*.tflite ${D}/home/root/models/tensorflowlite/Mobile_Net_V1_Model/
+	install -m 0644 ${S}/tflite/mobilenet_v2*.tflite ${D}/home/root/models/tensorflowlite/Mobile_Net_V2_Model/
+	install -m 0644 ${S}/tflite/v3*/v3*.tflite ${D}/home/root/models/tensorflowlite/Mobile_Net_V3_Model/
+	install -m 0644 ${S}/tflite/nasnet*.tflite ${D}/home/root/models/tensorflowlite/NasNet/
+	install -m 0644 ${S}/tflite/squeezenet*.tflite ${D}/home/root/models/tensorflowlite/Squeezenet/
+	install -m 0644 ${S}/tflite/inception_resnet_v2.tflite ${D}/home/root/models/tensorflowlite/Resnet/
+	install -m 0644 ${S}/tflite/resnet_v2_101_299.tflite ${D}/home/root/models/tensorflowlite/Resnet/
+	install -m 0644 ${S}/tpu/mobilenet_v2_1.0_224_quant_edgetpu.tflite ${D}/home/root/models/google-coral/Mobile_Net_V2_Model/
+	install -m 0644 ${S}/tflite/labels.txt ${D}/home/root/models/tensorflowlite/Mobile_Net_V1_Model/
+	install -m 0644 ${S}/tflite/labels.txt ${D}/home/root/models/tensorflowlite/Mobile_Net_V2_Model/
+	install -m 0644 ${S}/tflite/labels.txt ${D}/home/root/models/tensorflowlite/Mobile_Net_V3_Model/
+	install -m 0644 ${S}/tflite/labels.txt ${D}/home/root/models/tensorflowlite/NasNet/
+	install -m 0644 ${S}/tflite/labels.txt ${D}/home/root/models/tensorflowlite/Squeezenet/
+	install -m 0644 ${S}/tflite/labels.txt ${D}/home/root/models/tensorflowlite/Resnet/
+	install -m 0644 ${S}/tflite/labels.txt ${D}/home/root/models/google-coral/Resnet/
+	install -m 0644 ${S}/tflite/labels.txt ${D}/home/root/models/google-coral/Mobile_Net_V2_Model/
+	install -m 0644 ${S}/tflite/imagenet_slim_labels.txt ${D}/home/root/models/tensorflow/InceptionV3/
+	install -m 0644 ${S}/tflite/imagenet_slim_labels.txt ${D}/home/root/models/tensorflow/InceptionV3_Quant/
+	install -m 0644 ${S}/tflite/imagenet_slim_labels.txt ${D}/home/root/models/tensorflowlite/Mobile_InceptionV3/
+	install -m 0644 ${S}/tflite/inception_v3*.tflite ${D}/home/root/models/tensorflowlite/Mobile_InceptionV3/
+	install -m 0644 ${S}/tflite/inception_v3_2016_08_28_frozen.pb ${D}/home/root/models/tensorflow/InceptionV3/
+	install -m 0644 ${S}/tflite/imagenet_slim_labels.txt ${D}/home/root/models/tensorflow/InceptionV4/
+	install -m 0644 ${S}/tflite/imagenet_slim_labels.txt ${D}/home/root/models/tensorflowlite/Mobile_InceptionV4/
+	install -m 0644 ${S}/tflite/inception_v4*.tflite ${D}/home/root/models/tensorflowlite/Mobile_InceptionV4/
+	install -m 0644 ${S}/tflite/inception_v4*.pb ${D}/home/root/models/tensorflow/InceptionV4/
+	install -m 0644 ${S}/caffe2/squeezenet_v1.1.caffemodel ${D}/home/root/models/caffe/
+	install -m 0644 ${S}/caffe2/deploy.prototxt ${D}/home/root/models/caffe/
+	install -m 0644 ${S}/onnx/squeezenet1.1.onnx ${D}/home/root/models/onnx/
+	install -m 0644 ${S}/onnx/mobilenetv2-1.0.onnx ${D}/home/root/models/onnx/
+	install -m 0644 ${S}/onnx/classification_classes_ILSVRC2012.txt ${D}/home/root/models/onnx/
+	install -m 0644 ${S}/opencv/darknet19.cfg ${D}/home/root/models/darknet/
+	install -m 0644 ${S}/opencv/darknet.cfg ${D}/home/root/models/darknet/
+	install -m 0644 ${S}/opencv/imagenet.shortnames.list ${D}/home/root/models/darknet/
+	install -m 0644 ${S}/opencv/darknet.weights ${D}/home/root/models/darknet/
+	install -m 0644 ${S}/opencv/darknet19.weights ${D}/home/root/models/darknet/
 	cp -r ${S}/models/tensorflowlite/* ${D}/home/root/models/tensorflowlite/
 	cp -r ${S}/models/tensorflow/* ${D}/home/root/models/tensorflow/
 	cp -r ${S}/models/armnn/* ${D}/home/root/models/armnn/
