@@ -79,7 +79,6 @@ SRC_URI = " \
 	https://s3.amazonaws.com/download.caffe2.ai/models/squeezenet/predict_net.pb;name=squeezenet_predict_net_caffe2  \
 	https://s3.amazonaws.com/download.caffe2.ai/models/squeezenet/init_net.pb;name=squeezenet_init_net_caffe2  \
 	https://github.com/BVLC/caffe/raw/master/python/caffe/imagenet/ilsvrc_2012_mean.npy;name=squeezenet_mean_caffe2  \
-	https://gist.githubusercontent.com/aaronmarkham/cd3a6b6ac071eca6f7b4a6e40e6038aa/raw/9edb4038a37da6b5a44c3b5bc52e448ff09bfe5b/alexnet_codes;name=alexnet_codes  \
 	https://storage.googleapis.com/download.tensorflow.org/models/tflite/model_zoo/upload_20180427/inception_v4_2018_04_27.tgz;name=inception_v4_float \
 	https://storage.googleapis.com/download.tensorflow.org/models/inception_v4_299_quant_20181026.tgz;name=inception_v4_quant \
 	https://github.com/DeepScale/SqueezeNet/blob/master/SqueezeNet_v1.1/squeezenet_v1.1.caffemodel?raw=true;downloadfilename=squeezenet_v1.1.caffemodel;name=squeezenet_caffe \
