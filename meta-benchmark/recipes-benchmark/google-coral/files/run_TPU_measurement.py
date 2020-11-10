@@ -6,7 +6,16 @@ This file is licensed under the terms of the MIT License
 This program is licensed "as is" without any warranty of any
 kind, whether express or implied.
 
-Script based on meta-benchmark/recipes-benchmark/tensorflow-lite/run_TF_measurement.py
+Script based on
+meta-benchmark/recipes-benchmark/tensorflow-lite/run_TF_measurement.py
+
+Model list files (parameter 1) should contain a list of model names and their
+corresponding labels file name. E.g.
+mobilenet_v2_1.0_224_inat_insect_quant_edgetpu.tflite inat_insect_labels.txt
+mobilenet_v2_1.0_224_inat_plant_quant_edgetpu.tflite inat_plant_labels.txt
+mobilenet_v2_1.0_224_inat_bird_quant_edgetpu.tflite inat_bird_labels.txt
+
+Model and label files should be in the same directory
 '''
 
 import sys
@@ -22,7 +31,6 @@ def main():
 	if len(sys.argv) != 4:
 		print("Invalid parameters")
 		print("Example python run_TPU_measurement.py test_file_list_Resnet.txt /home/root/models/google-coral/Resnet 30")
-
 		sys.exit(1)
 
 	filepath = sys.argv[1]
@@ -34,7 +42,7 @@ def main():
 		print("File path {} does not exist. Exiting...".format(filepath))
 		sys.exit(1)
 
-	base_directory_path = sys.argv[2]
+	base_directory_path = sys.argv[2]+"/"
 
 	number_of_iteration = int(sys.argv[3])
 
@@ -44,24 +52,34 @@ def main():
 				list = []
 				list_tmp = []
 
-			run_label_image(line,base_directory_path,'labels.txt',number_of_iteration,list_tmp,list)
+			model_name = line.split()[0]
+			label_file = line.split()[1]
 
-			print("Average Time" + " at Model " + line + str(Average(list_tmp)) + " ms ")
-			print("Standard Deviation" + " at Model " + line + str(Average(list)))
+			if not os.path.isfile(base_directory_path + model_name):
+				print("Model {} does not exist. Exiting...".format(base_directory_path + model_name))
+				sys.exit(1)
 
-			print("\n")
+			if not os.path.isfile(base_directory_path + label_file):
+				print("Label file {} does not exist. Exiting...".format(base_directory_path + label_file))
+				sys.exit(1)
+
+			run_label_image(model_name, base_directory_path, label_file, number_of_iteration, list_tmp, list)
+
+			print("Average Time" + " at Model " + model_name + " "+ str(Average(list_tmp)) + " ms ")
+			print("Standard Deviation" + " at Model " + model_name + " " + str(Average(list)))
 
 			if "quant" not in line:
 				model_type = ",Float,"
 			else:
 				model_type = ",Quant,"
 
-			print("AI_BENCHMARK_MARKER,Google Coral TPU diploria2: TensorFlow Lite," + line.rstrip() + model_type + str(Average(list_tmp)) + "," + str(Average(list)) + ",")
+			print("AI_BENCHMARK_MARKER,Google Coral TPU diploria2: TensorFlow Lite," + model_name.rstrip() + model_type + str(Average(list_tmp)) + "," + str(Average(list)) + ",")
+			print('')
 
 def Average(lst):
 	return sum(lst) / len(lst)
 
-def run_label_image(model_file_name,base_directory,label_file_name,times_to_run,list,list_dev):
+def run_label_image(model_file_name, base_directory, label_file_name, times_to_run, list, list_dev):
 	command = "/usr/bin/google-coral-benchmark/google-coral-tpu-benchmark -i /usr/bin/google-coral/images/grace_hopper_224_224.bmp -c %s -l %s -m %s" % (times_to_run, label_file_name, base_directory+model_file_name)
 
 	for line in run_command(command):
@@ -76,8 +94,6 @@ def run_label_image(model_file_name,base_directory,label_file_name,times_to_run,
 
 
 def run_command(command):
-	#Debug
-	#print("Run Command: " + command)
 	p = subprocess.Popen(command,shell=True,
 			     stdout=subprocess.PIPE,
 			     stderr=subprocess.STDOUT)

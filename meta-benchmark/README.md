@@ -43,9 +43,17 @@ cd /usr/bin/google-coral-benchmark
 ./run_TPU_measurement.py test_file_list_Resnet.txt \
 /home/root/models/google-coral/Resnet/ 30
 
-# MobileNet V2 (inference run 30 times)
-./run_TPU_measurement.py test_file_list_MobileNet_v2.txt \
-/home/root/models/google-coral/Mobile_Net_V2_Model/ 30
+# MobileNet (inference run 30 times)
+./run_TPU_measurement.py test_file_list_MobileNet.txt \
+/home/root/models/google-coral/Mobile_Net_Model/ 30
+
+# Inception (inference run 30 times)
+./run_TPU_measurement.py test_file_list_Inception.txt \
+/home/root/models/google-coral/Mobile_Inception_Model/ 30
+
+# EfficientNet (inference run 30 times)
+./run_TPU_measurement.py test_file_list_EfficientNet.txt \
+/home/root/models/google-coral/Mobile_Efficient_Net_Model/ 30
 ```
 
 ## TensorFlow

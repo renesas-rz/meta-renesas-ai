@@ -11,7 +11,9 @@ SRC_URI += " \
 	file://google-coral-benchmark \
 	file://labels.txt \
 	file://test_file_list_Resnet.txt \
-	file://test_file_list_MobileNet_v2.txt \
+	file://test_file_list_MobileNet.txt \
+	file://test_file_list_Inception.txt \
+	file://test_file_list_EfficientNet.txt \
 	file://run_TPU_measurement.py \
 "
 
@@ -30,7 +32,9 @@ do_install_append() {
 	install -m 0555 ${S}/../google-coral-tpu-benchmark ${D}${bindir}/google-coral-benchmark/
 	install -m 0644 ${S}/../labels.txt ${D}${bindir}/google-coral-benchmark/
 	install -m 0644 ${S}/../test_file_list_Resnet.txt ${D}${bindir}/google-coral-benchmark/
-	install -m 0644 ${S}/../test_file_list_MobileNet_v2.txt ${D}${bindir}/google-coral-benchmark/
+	install -m 0644 ${S}/../test_file_list_MobileNet.txt ${D}${bindir}/google-coral-benchmark/
+	install -m 0644 ${S}/../test_file_list_Inception.txt ${D}${bindir}/google-coral-benchmark/
+	install -m 0644 ${S}/../test_file_list_EfficientNet.txt ${D}${bindir}/google-coral-benchmark/
 	install -m 0555 ${S}/../run_TPU_measurement.py ${D}${bindir}/google-coral-benchmark/
 }
 

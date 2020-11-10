@@ -1,0 +1,3 @@
+efficientnet-edgetpu-S_quant_edgetpu.tflite labels.txt
+efficientnet-edgetpu-M_quant_edgetpu.tflite labels.txt
+efficientnet-edgetpu-L_quant_edgetpu.tflite labels.txt

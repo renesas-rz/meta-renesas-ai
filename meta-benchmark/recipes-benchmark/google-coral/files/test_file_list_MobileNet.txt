@@ -1,0 +1,5 @@
+mobilenet_v1_1.0_224_quant_edgetpu.tflite labels.txt
+mobilenet_v2_1.0_224_quant_edgetpu.tflite labels.txt
+mobilenet_v2_1.0_224_inat_insect_quant_edgetpu.tflite inat_insect_labels.txt
+mobilenet_v2_1.0_224_inat_plant_quant_edgetpu.tflite inat_plant_labels.txt
+mobilenet_v2_1.0_224_inat_bird_quant_edgetpu.tflite inat_bird_labels.txt
