@@ -1,0 +1,5 @@
+# short-description: Create SD card image with a rootfs
+# long-description: Creates a single partitioned SD card image with
+# a root filesystem
+
+part / --source rootfs --ondisk mmcblk --fstype=ext4 --label root --align 4
