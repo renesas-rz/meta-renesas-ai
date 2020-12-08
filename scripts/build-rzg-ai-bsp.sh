@@ -345,14 +345,14 @@ case ${RZG_AI_BSP_VER} in
 	if [ ${FAMILY} == "rzg1" ]; then
 		RZG_BSP_VER="certified-linux-v2.1.6-update1"
 	elif [ ${FAMILY} == "rzg2" ]; then
-		RZG_BSP_VER="BSP-1.0.4-update1"
+		RZG_BSP_VER="BSP-1.0.6-update1"
 	fi
 	;;
 *)
 	if [ ${FAMILY} == "rzg1" ]; then
 		RZG_BSP_VER="certified-linux-v2.1.6-update1"
 	elif [ ${FAMILY} == "rzg2" ]; then
-		RZG_BSP_VER="BSP-1.0.4-update1"
+		RZG_BSP_VER="BSP-1.0.6-update1"
 	fi
 	;;
 esac

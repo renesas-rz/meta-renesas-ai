@@ -19,7 +19,7 @@ details.
 The layers should be used with the official Renesas RZ/G2 Yocto Poky BSP based
 on the CIP Kernel:
 URI: **https://github.com/renesas-rz/meta-rzg2.git**  
-tag: BSP-1.0.4-update1 (51f302d5ce27f878150c621a9c01b1f5d43f1c61)
+tag: BSP-1.0.6-update1 (bc6b6c8a7f9bf35e284c7337da07878c9bccefee)
 
 For each AI tool, please refer to **meta-${AI\_TOOL\_NAME}/README.md**. For
 example:  
