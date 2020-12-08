@@ -48,7 +48,7 @@ project requirements.
 | OpenCV          | v4.1.1    | Caffe<br>DarkNet<br>ONNX<br>TensorFlow | CPU                              |
 | PyTorch         | v1.5.1    | PyTorch                                | CPU                              |
 | TensorFlow      | v2.3.1    | TensorFlow                             | CPU                              |
-| TensorFlow Lite | v2.3.1    | TensorFlow Lite                        | CPU<br>Coral USB TPU (diploria2) |
+| TensorFlow Lite | v2.3.1    | TensorFlow Lite                        | CPU<br>Coral USB TPU (frogfish) |
 
 ### Supported Embedded Platforms ###
 

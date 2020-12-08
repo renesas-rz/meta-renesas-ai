@@ -73,7 +73,7 @@ def main():
 			else:
 				model_type = ",Quant,"
 
-			print("AI_BENCHMARK_MARKER,Google Coral TPU diploria2: TensorFlow Lite," + model_name.rstrip() + model_type + str(Average(list_tmp)) + "," + str(Average(list)) + ",")
+			print("AI_BENCHMARK_MARKER,Google Coral TPU frogfish: TensorFlow Lite," + model_name.rstrip() + model_type + str(Average(list_tmp)) + "," + str(Average(list)) + ",")
 			print('')
 
 def Average(lst):

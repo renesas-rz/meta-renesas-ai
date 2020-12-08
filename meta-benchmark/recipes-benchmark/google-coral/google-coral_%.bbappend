@@ -18,13 +18,13 @@ SRC_URI += " \
 "
 
 do_compile_append() {
-        ${CXX} -std=c++11 ${S}/../google-coral-benchmark/label_image.cc \
-                ${S}/../google-coral-benchmark/bitmap_helpers.cc \
-                -o ${S}/../google-coral-tpu-benchmark \
-                -I . -I edgetpu -I libedgetpu/  \
-                -I ${STAGING_DIR_TARGET}/usr/include/tensorflow/lite/tools/make/downloads/flatbuffers/include \
-                -lstdc++ -lpthread -lm -ldl ${STAGING_DIR_TARGET}/usr/${TFLITE_LIB_DIR_ARCH}/libtensorflow-lite.a \
-                -l:libedgetpu.so.1.0 -L libedgetpu/${GOOGLE_CORAL_SPEED}/${TPU_LIB_DIR_ARCH} ${LDFLAGS}
+	${CXX} -std=c++11 ${S}/../google-coral-benchmark/label_image.cc \
+		${S}/../google-coral-benchmark/bitmap_helpers.cc \
+		-o ${S}/../google-coral-tpu-benchmark \
+		-I . -I ${S}/tflite/public/ \
+		-I ${STAGING_DIR_TARGET}/usr/include/tensorflow/lite/tools/make/downloads/flatbuffers/include \
+		-lstdc++ -lpthread -lm -ldl ${STAGING_DIR_TARGET}/usr/${TFLITE_LIB_DIR_ARCH}/libtensorflow-lite.a \
+		-L ${WORKDIR}/${TPU_LIB_DIR_ARCH}/${GOOGLE_CORAL_SPEED}/ -l:libedgetpu.so.1.0 ${LDFLAGS} 
 }
 
 do_install_append() {

@@ -3,24 +3,27 @@ inferencing to existing systems."
 SUMMARY = "Google Coral USB TPU Accelerator"
 HOMEPAGE = "https://github.com/google-coral"
 LICENSE = "Apache-2.0"
-LIC_FILES_CHKSUM = "file://LICENSE;md5=d8927f3331d2b3e321b7dd1925166d25"
+LIC_FILES_CHKSUM = "file://LICENSE;md5=86d3f3a95c324c9479bd8986968f4327"
 
 COMPATIBLE_MACHINE = "(iwg20m-g1m|iwg21m|iwg22m|hihope-rzg2h|hihope-rzg2m|hihope-rzg2n|ek874)"
 
 PACKAGES += "${PN}-examples"
 
 SRC_URI += " \
-	gitsm://github.com/google-coral/edgetpu.git;protocol=https;name=edgetpu \
+	git://github.com/google-coral/libedgetpu.git;protocol=https;name=libedgetpu \
 	https://dl.google.com/coral/canned_models/mobilenet_v2_1.0_224_quant_edgetpu.tflite;name=mobilenet_tpu \
 	https://dl.google.com/coral/canned_models/imagenet_labels.txt;name=label_tpu \
 	git://github.com/google/benchmark.git;protocol=https;name=benchmark;subdir=${WORKDIR}/benchmark;destsuffix=benchmark \
 	file://label_image/ \
 	file://images/ \
+	file://armv7a/ \
+	file://aarch64/ \
+	file://0001-Select-Tensorflow-v2.3.1.patch \
 "
 
 S = "${WORKDIR}/git"
 
-SRCREV_edgetpu = "14237f65ba07b7b1d8287e9f60dd20c88562871a"
+SRCREV_libedgetpu = "14eee1a076aa1af7ec1ae3c752be79ae2604a708"
 
 SRCREV_benchmark = "090faecb454fbd6e6e17a75ef8146acb037118d4"
 
@@ -49,42 +52,36 @@ do_compile() {
 	${CXX} -std=c++11 ${S}/../label_image/label_image.cc \
 		${S}/../label_image/bitmap_helpers.cc \
 		-o ${S}/../label_image_tpu \
-		-I . -I edgetpu -I libedgetpu/  \
+		-I . -I ${S}/tflite/public/ \
 		-I ${STAGING_DIR_TARGET}/usr/include/tensorflow/lite/tools/make/downloads/flatbuffers/include \
 		-lstdc++ -lpthread -lm -ldl ${STAGING_DIR_TARGET}/usr/${TFLITE_LIB_DIR_ARCH}/libtensorflow-lite.a \
-		-l:libedgetpu.so.1.0 -L libedgetpu/${GOOGLE_CORAL_SPEED}/${TPU_LIB_DIR_ARCH} ${LDFLAGS}
-
-	${CXX} -std=c++11 ${S}/src/cpp/examples/minimal.cc \
-		${S}/src/cpp/examples/model_utils.cc \
-		-o ${S}/../minimal \
-		-I . -I edgetpu -I libedgetpu/  \
-		-I ${STAGING_DIR_TARGET}/usr/include/tensorflow/lite/tools/make/downloads/flatbuffers/include \
-		-lstdc++ -lpthread -lm -ldl ${STAGING_DIR_TARGET}/usr/${TFLITE_LIB_DIR_ARCH}/libtensorflow-lite.a \
-		-l:libedgetpu.so.1.0 -L libedgetpu/${GOOGLE_CORAL_SPEED}/${TPU_LIB_DIR_ARCH} ${LDFLAGS}
+		-L ${WORKDIR}/${TPU_LIB_DIR_ARCH}/${GOOGLE_CORAL_SPEED}/ -l:libedgetpu.so.1.0 ${LDFLAGS}
 }
 
 do_install_append_arm () {
 	# Install "maximum" and "throttled" libraries in case user wants to switch at run time
-	install -m 0555 ${S}/libedgetpu/direct/armv7a/libedgetpu.so.1 ${D}${libdir}/libedgetpu_direct.so.1
-	install -m 0555 ${S}/libedgetpu/throttled/armv7a/libedgetpu.so.1 ${D}${libdir}/libedgetpu_throttled.so.1
+	install -m 0555 ${WORKDIR}/armv7a/direct/libedgetpu.so.1.0 ${D}${libdir}/libedgetpu_direct.so.1
+	install -m 0555 ${WORKDIR}/armv7a/throttled/libedgetpu.so.1.0 ${D}${libdir}/libedgetpu_throttled.so.1
 
-	ln -rsf ${D}${libdir}/libedgetpu_${GOOGLE_CORAL_SPEED}.so.1 ${D}${libdir}/libedgetpu.so.1
+	ln -rsf ${D}${libdir}/libedgetpu_${GOOGLE_CORAL_SPEED}.so.1 ${D}${libdir}/libedgetpu.so.1.0
+	ln -rsf ${D}${libdir}/libedgetpu.so.1.0 ${D}${libdir}/libedgetpu.so.1
 }
 
 do_install_append_aarch64 () {
 	# Install "maximum" and "throttled" libraries in case user wants to switch at run time
-	install -m 0555 ${S}/libedgetpu/direct/aarch64/libedgetpu.so.1 ${D}${libdir}/libedgetpu_direct.so.1
-	install -m 0555 ${S}/libedgetpu/throttled/aarch64/libedgetpu.so.1 ${D}${libdir}/libedgetpu_throttled.so.1
+	install -m 0555 ${WORKDIR}/aarch64/direct/libedgetpu.so.1.0 ${D}${libdir}/libedgetpu_direct.so.1
+	install -m 0555 ${WORKDIR}/aarch64/throttled/libedgetpu.so.1.0 ${D}${libdir}/libedgetpu_throttled.so.1
 
-	ln -rsf ${D}${libdir}/libedgetpu_${GOOGLE_CORAL_SPEED}.so.1 ${D}${libdir}/libedgetpu.so.1
+	ln -rsf ${D}${libdir}/libedgetpu_${GOOGLE_CORAL_SPEED}.so.1 ${D}${libdir}/libedgetpu.so.1.0
+	ln -rsf ${D}${libdir}/libedgetpu.so.1.0 ${D}${libdir}/libedgetpu.so.1
 }
 
 do_install() {
 	# Install header files
 	install -d ${D}${libdir}
 	install -d ${D}${includedir}/${PN}-${PV}
-	install -m 0555 ${S}/libedgetpu/edgetpu_c.h ${D}${includedir}/${PN}-${PV}/
-	install -m 0555 ${S}/libedgetpu/edgetpu.h ${D}${includedir}/${PN}-${PV}/
+	install -m 0555 ${S}/tflite/public/edgetpu_c.h ${D}${includedir}/${PN}-${PV}/
+	install -m 0555 ${S}/tflite/public/edgetpu.h ${D}${includedir}/${PN}-${PV}/
 
 	# Install example code
 	install -d ${D}${bindir}/${PN}-${PV}/models
@@ -94,13 +91,13 @@ do_install() {
 	install -m 0644 ${S}/../images/parrot.bmp ${D}${bindir}/${PN}-${PV}/images/
 	install -m 0644 ${S}/../images/grace_hopper_224_224.bmp ${D}${bindir}/${PN}-${PV}/images/
 	install -m 0555 ${S}/../label_image_tpu ${D}${bindir}/${PN}-${PV}/
-	install -m 0555 ${S}/../minimal ${D}${bindir}/${PN}-${PV}/
 	cd ${D}${bindir}
 	ln -sf ${PN}-${PV} ${PN}
 }
 
 FILES_${PN} = "\
 	${libdir}/libedgetpu.so.1 \
+	${libdir}/libedgetpu.so.1.0 \
 	${libdir}/libedgetpu_direct.so.1 \
 	${libdir}/libedgetpu_throttled.so.1 \
 "

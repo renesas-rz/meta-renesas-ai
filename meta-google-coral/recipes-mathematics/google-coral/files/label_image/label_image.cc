@@ -79,8 +79,8 @@ void RunInference(Settings* s) {
     exit(-1);
   }
 
-  edgetpu::EdgeTpuContext* edgetpu_context =
-	  edgetpu::EdgeTpuManager::GetSingleton()->NewEdgeTpuContext().release();
+  std::shared_ptr<edgetpu::EdgeTpuContext> edgetpu_context =
+	  edgetpu::EdgeTpuManager::GetSingleton()->OpenDevice();
   std::unique_ptr<tflite::FlatBufferModel> model;
   std::unique_ptr<tflite::Interpreter> interpreter;
   model = tflite::FlatBufferModel::BuildFromFile(s->model_name.c_str());
@@ -90,18 +90,16 @@ void RunInference(Settings* s) {
   }
   LOG(INFO) << "Loaded model " << s->model_name << "\n";
   model->error_reporter();
-  LOG(INFO) << "resolved reporter\n";
 
   tflite::ops::builtin::BuiltinOpResolver resolver;
   resolver.AddCustom(edgetpu::kCustomOp, edgetpu::RegisterCustomOp());
 
-  tflite::InterpreterBuilder(*model, resolver)(&interpreter);
-  if (!interpreter) {
+  if (tflite::InterpreterBuilder(*model, resolver)(&interpreter) != kTfLiteOk) {
     LOG(FATAL) << "Failed to construct interpreter\n";
     exit(-1);
   }
+  interpreter->SetExternalContext(kTfLiteEdgeTpuContext, edgetpu_context.get());
 
-  interpreter->SetExternalContext(kTfLiteEdgeTpuContext, edgetpu_context);
   interpreter->UseNNAPI(s->accel);
   interpreter->SetAllowFp16PrecisionForFp32(s->allow_fp16);
 
@@ -116,7 +114,7 @@ void RunInference(Settings* s) {
       if (interpreter->tensor(i)->name)
         LOG(INFO) << i << ": " << interpreter->tensor(i)->name << ", "
                   << interpreter->tensor(i)->bytes << ", "
-                  << interpreter->tensor(i)->type << ", "
+                  << interpreter->tensor(i)->type << ","
                   << interpreter->tensor(i)->params.scale << ", "
                   << interpreter->tensor(i)->params.zero_point << "\n";
     }
@@ -145,7 +143,8 @@ void RunInference(Settings* s) {
   }
 
   if (interpreter->AllocateTensors() != kTfLiteOk) {
-    LOG(FATAL) << "Failed to allocate tensors!";
+    LOG(FATAL) << "Failed to allocate tensors!\n";
+    exit(-1);
   }
 
   if (s->verbose) PrintInterpreterState(interpreter.get());

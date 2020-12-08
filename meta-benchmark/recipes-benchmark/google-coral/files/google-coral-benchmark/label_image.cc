@@ -131,7 +131,6 @@ void RunInference(Settings* s) {
   }
   LOG(INFO) << "Loaded model " << s->model_name << "\n";
   model->error_reporter();
-  LOG(INFO) << "resolved reporter\n";
 
   tflite::ops::builtin::BuiltinOpResolver resolver;
   resolver.AddCustom(edgetpu::kCustomOp, edgetpu::RegisterCustomOp());
@@ -189,8 +188,8 @@ void RunInference(Settings* s) {
 
   if (interpreter->AllocateTensors() != kTfLiteOk) {
     LOG(FATAL) << "Failed to allocate tensors!";
+    exit(-1);
   }
-
   if (s->verbose) PrintInterpreterState(interpreter.get());
 
   // get input dimension from the input tensor metadata

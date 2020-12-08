@@ -15,7 +15,7 @@ is listed as a dependency to your recipe/package. Listing *google-coral-dev* in
 SDK for developing an application based on Google Coral.
 
 After the build is complete the dynamic C++ Google Coral library
-(*libedgetup.so.1*) will be generated.
+(*libedgetpu.so.1*) will be generated.
 
 The library can be verified with the Google Coral sample image classification
 application named *label_image_tpu* which is included in the build (included by
@@ -31,38 +31,22 @@ cd /usr/bin/google-coral/
 
 The output of a healthy execution should look like the following:  
 ```
-Loaded model ./models/mobilenet_v2_1.0_224_quant_edgetpu.tflite
-resolved reporter
-INFO: Initialized TensorFlow Lite runtime.
+Loaded model ./models/resnet_v2_101_299_quant_edgetpu.tflite
 invoked
-average time: 16.723 ms
+average time: 13.281 ms
 1: 89   89  macaw
 ```
 
-
-To use *minimal*:  
-```
-cd /usr/bin/google-coral/
-./minimal ./models/mobilenet_v2_1.0_224_quant_edgetpu.tflite ./images/grace_hopper_224_224.bmp
-```
-
-The output of a healthy execution should look like the following:  
-```
-INFO: Initialized TensorFlow Lite runtime.
-[Image analysis] max value index: 653 value: 0.878906
-```
-
 ## Google Coral USB clock speed
-Google's [install.sh](https://github.com/google-coral/edgetpu/blob/diploria2/scripts/runtime/install.sh#L86)
+Google's [install.sh](https://github.com/google-coral/libedgetpu/blob/release-frogfish/scripts/install.sh#L109)
 script states the following warning:
-
-> Warning: During normal operation, the Edge TPU Accelerator may heat up,
-> depending on the computation workloads and operating frequency. Touching the
-> metal part of the device after it has been operating for an extended period of
-> time may lead to discomfort and/or skin burns. As such, when running at the
-> default operating frequency, the device is intended to safely operate at an
-> ambient temperature of 35C or less. Or when running at the maximum operating
-> frequency, it should be operated at an ambient temperature of 25C or less.
+> Warning: If you're using the Coral USB Accelerator, it may heat up during operation, depending
+> on the computation workloads and operating frequency. Touching the metal part of the USB
+> Accelerator after it has been operating for an extended period of time may lead to discomfort
+> and/or skin burns. As such, if you enable the Edge TPU runtime using the maximum operating
+> frequency, the USB Accelerator should be operated at an ambient temperature of 25°C or less.
+> Alternatively, if you enable the Edge TPU runtime using the reduced operating frequency, then
+> the device is intended to safely operate at an ambient temperature of 35°C or less.
 >
 > Google does not accept any responsibility for any loss or damage if the device
 > is operated outside of the recommended ambient temperature range.
