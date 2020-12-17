@@ -97,22 +97,6 @@ If needed, the size of the swap file can be set (in MB) in local.conf:
 SWAP_SIZE = "512"
 ```
 
-**rzg2-modules-common.inc patch**
-Depending on the build system it is sometimes possible for there to be a build
-failure when more then one out-of-tree Kernel module is built at the same time:
-`"/bin/sh: scripts/mod/modpost: Permission denied"`.
-
-This race condition can be avoided by locking access to kernel_scripts so that
-only one module can use modpost at the same time.
-
-The patch *patches/meta-rzg2/0001-include-rzg2-modules-common-Fix-race-condition-in-ke.patch*
-can be applied to *meta-rzg2* to apply the above fix.
-
-```
-cd meta-rzg2
-git am ../meta-renesas-ai/patches/meta-rzg2/0001-include-rzg2-modules-common-Fix-race-condition-in-ke.patch
-```
-
 ---
 
 
