@@ -14,7 +14,7 @@ set -e
 
 ################################################################################
 # Global parameters
-RZG_AI_BSP_VER="v3.5.1"
+RZG_AI_BSP_VER="v4.0.0"
 WORK_DIR="${PWD}"
 COMMAND_NAME="$0"
 INSTALL_DEPENDENCIES=false
@@ -341,16 +341,23 @@ copy_output () {
 clear
 
 case ${RZG_AI_BSP_VER} in
-"v3.5.1")
+"v4.0.0")
 	if [ ${FAMILY} == "rzg1" ]; then
-		RZG_BSP_VER="certified-linux-v2.1.6-update1"
+		RZG_BSP_VER="certified-linux-v2.1.7"
 	elif [ ${FAMILY} == "rzg2" ]; then
 		RZG_BSP_VER="BSP-1.0.6-update1"
 	fi
 	;;
-*)
+"v3.5.1")
 	if [ ${FAMILY} == "rzg1" ]; then
 		RZG_BSP_VER="certified-linux-v2.1.6-update1"
+	elif [ ${FAMILY} == "rzg2" ]; then
+		RZG_BSP_VER="BSP-1.0.4-update1"
+	fi
+	;;
+*)
+	if [ ${FAMILY} == "rzg1" ]; then
+		RZG_BSP_VER="certified-linux-v2.1.7"
 	elif [ ${FAMILY} == "rzg2" ]; then
 		RZG_BSP_VER="BSP-1.0.6-update1"
 	fi
