@@ -94,13 +94,13 @@ RDEPENDS_${PN}-tensorflow-dev += "${PN}-tensorflow"
 
 RDEPENDS_${PN}-tensorflow-lite += "${PN}"
 
-REDENDS_${PN}-tensorflow-lite-examples += "${PN}-tensorflow-lite"
+RDEPENDS_${PN}-tensorflow-lite-examples += "${PN}-tensorflow-lite"
 
-REDENDS_${PN}-tensorflow-lite-examples-dbg += "${PN}-tensorflow-lite"
+RDEPENDS_${PN}-tensorflow-lite-examples-dbg += "${PN}-tensorflow-lite"
 
-REDENDS_${PN}-tensorflow-lite-dbg += "${PN}-tensorflow-lite"
+RDEPENDS_${PN}-tensorflow-lite-dbg += "${PN}-tensorflow-lite"
 
-REDENDS_${PN}-tensorflow-lite-dev += "${PN}-tensorflow-lite"
+RDEPENDS_${PN}-tensorflow-lite-dev += "${PN}-tensorflow-lite"
 
 RDEPENDS_${PN}-onnx += "${PN}"
 
