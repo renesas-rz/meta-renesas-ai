@@ -21,7 +21,6 @@
 #include "armnnOnnxParser/IOnnxParser.hpp"
 #endif
 
-#include "CsvReader.hpp"
 #include "InferenceTest.hpp"
 
 #include <Logging.hpp>
