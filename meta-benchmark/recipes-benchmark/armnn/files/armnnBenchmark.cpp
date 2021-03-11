@@ -53,7 +53,7 @@ enum Parser { caffe, tensorflow, tfLite, onnx };
 Parser test_parser;
 std::string benched_model;
 std::string benched_type;
-#define ARMNN_VERSION "Arm NN SDK v19.08.01"
+#define ARMNN_VER_BENCH "Arm NN SDK v19.08.01"
 
 std::map<int,std::string> label_file_map;
 
@@ -248,7 +248,7 @@ int MainImpl(const char* modelPath,
         }
 
 	bench.push_back("AI_BENCHMARK_MARKER,");
-	bench.push_back(ARMNN_VERSION);
+	bench.push_back(ARMNN_VER_BENCH);
         switch (test_parser) {
             case caffe:
                 bench.push_back(": Caffe,");
