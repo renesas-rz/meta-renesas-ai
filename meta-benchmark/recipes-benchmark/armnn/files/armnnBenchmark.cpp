@@ -189,8 +189,8 @@ int MainImpl(const char* modelPath,
         {
             if(mode_type == "onnx")
             {
-                ImagePreprocessor<TDataType>  Image(inputTensorDataFilePath, inputImageWidth, inputImageHeight, imageSet,\
-                                                    255.0f, {{0.485f, 0.456f, 0.406f}}, {{0.229f, 0.224f, 0.225f}},\
+                ImagePreprocessor<TDataType>  Image(inputTensorDataFilePath, inputImageWidth, inputImageHeight, imageSet,
+                                                    255.0f, {{0.485f, 0.456f, 0.406f}}, {{0.229f, 0.224f, 0.225f}},
                                                     ImagePreprocessor<TDataType>::DataFormat::NCHW);
 
                 TestCaseData = Image.GetTestCaseData(0);
@@ -209,7 +209,7 @@ int MainImpl(const char* modelPath,
             auto inputBinding = model.GetInputBindingInfo();
             printf("Scale %f\n", inputBinding.second.GetQuantizationScale());
             printf("Offset %d\n", inputBinding.second.GetQuantizationOffset());
-            ImagePreprocessor<TDataType> Image(inputTensorDataFilePath, inputImageWidth, inputImageHeight, imageSet,\
+            ImagePreprocessor<TDataType> Image(inputTensorDataFilePath, inputImageWidth, inputImageHeight, imageSet,
                                                 1, {{0, 0, 0}}, {{1, 1, 1}});
 
             TestCaseData = Image.GetTestCaseData(0);
@@ -666,16 +666,16 @@ int main(int argc, const char* argv[])
         if(params.isFloatModel)
         {
             benched_type = "Float,";
-            RunTest<float>(params.modelFormat, params.isFloatModel, params.inputTensorShape, params.modelPath,\
-            params.inputName, inputImagePath, inputImageName,\
+            RunTest<float>(params.modelFormat, params.isFloatModel, params.inputTensorShape, params.modelPath,
+            params.inputName, inputImagePath, inputImageName,
             params.inputImageWidth,params.inputImageHeight, params.outputName, enableProfiling, subgraphId);
         }
         else
         {
             benched_type = "Quant,";
-            RunTest<uint8_t>(params.modelFormat, params.isFloatModel, params.inputTensorShape, params.modelPath,\
-            params.inputName, inputImagePath, inputImageName,\
-            params.inputImageWidth,params.inputImageHeight, params.outputName, enableProfiling, subgraphId);
+            RunTest<uint8_t>(params.modelFormat, params.isFloatModel, params.inputTensorShape, params.modelPath,
+            params.inputName, inputImagePath, inputImageName,
+            params.inputImageWidth, params.inputImageHeight, params.outputName, enableProfiling, subgraphId);
         }
             bench.push_back("\n");
     }
