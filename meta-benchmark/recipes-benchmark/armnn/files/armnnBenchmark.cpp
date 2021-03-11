@@ -28,12 +28,6 @@
 #include "ImagePreprocessor.hpp"
 #include "InferenceTestImage.hpp"
 
-#include <boost/algorithm/string/trim.hpp>
-#include <boost/algorithm/string/split.hpp>
-#include <boost/algorithm/string/classification.hpp>
-#include <boost/program_options.hpp>
-#include <boost/variant.hpp>
-
 #include <iostream>
 #include <fstream>
 #include <functional>
@@ -53,7 +47,7 @@ enum Parser { caffe, tensorflow, tfLite, onnx };
 Parser test_parser;
 std::string benched_model;
 std::string benched_type;
-#define ARMNN_VER_BENCH "Arm NN SDK v19.08.01"
+#define ARMNN_VER_BENCH "Arm NN SDK v20.11"
 
 std::map<int,std::string> label_file_map;
 
@@ -99,12 +93,12 @@ int ProcessResult(std::vector<TDataType>& output,InferenceModelInternal::Quantiz
         }
     }
 
-    BOOST_LOG_TRIVIAL(info) << "= Prediction values for test ";
+    std::cout << "= Prediction values for test ";
 
     auto it = resultMap.rbegin();
     for (int i=0; i<5 && it != resultMap.rend(); ++i)
     {
-        BOOST_LOG_TRIVIAL(info) << "Top(" << (i+1) << ") prediction is " << it->second <<
+        std::cout << "Top(" << (i+1) << ") prediction is " << it->second <<
             " with confidence: " << 100.0*(it->first) << "%";
 
         if(mode_type == "onnx")
@@ -160,11 +154,11 @@ int MainImpl(const char* modelPath,
     std::ifstream inputTensorFile(inputTensorDataFilePath);
     if (!inputTensorFile.good())
     {
-        BOOST_LOG_TRIVIAL(fatal) << "Failed to load input tensor data file from " << inputTensorDataFilePath;
+        std::cout << "Failed to load input tensor data file from " << inputTensorDataFilePath;
         return EXIT_FAILURE;
     }
 
-    using TContainer = boost::variant<std::vector<float>, std::vector<int>, std::vector<unsigned char>>;
+    using TContainer = mapbox::util::variant<std::vector<float>, std::vector<int>, std::vector<unsigned char>>;
 
     std::vector<TContainer> inputDataContainers;
 
@@ -273,19 +267,19 @@ int MainImpl(const char* modelPath,
         if(isFloatModel)
         {
             std::vector<float> output;
-            output = boost::get<std::vector<float>>(outputDataContainers[0]);
+            output = mapbox::util::get<std::vector<float>>(outputDataContainers[0]);
             ProcessResult<float>(output,model.GetQuantizationParams(),mode_type);
         }
         else
         {
             std::vector<unsigned char> output;
-            output = boost::get<std::vector<unsigned char>>(outputDataContainers[0]);
+            output = mapbox::util::get<std::vector<unsigned char>>(outputDataContainers[0]);
             ProcessResult<unsigned char>(output,model.GetQuantizationParams(),mode_type);
         }
     }
     catch (armnn::Exception const& e)
     {
-        BOOST_LOG_TRIVIAL(fatal) << "Armnn Error: " << e.what();
+        std::cout << "Armnn Error: " << e.what();
         return EXIT_FAILURE;
     }
 
@@ -537,7 +531,7 @@ int RunTest(const std::string& modelFormat,
     }
     else
     {
-        BOOST_LOG_TRIVIAL(fatal) << "Unknown model format: '" << modelFormat << "'. Please include 'binary' or 'text'";
+        std::cout << "Unknown model format: '" << modelFormat << "'. Please include 'binary' or 'text'";
         return EXIT_FAILURE;
     }
 
@@ -552,7 +546,7 @@ int RunTest(const std::string& modelFormat,
                                                                inputImageWidth, inputImageHeight, outputName.c_str(),
                                                                enableProfiling, subgraphId, runtime);
 #else
-        BOOST_LOG_TRIVIAL(fatal) << "Not built with Caffe parser support.";
+        std::cout << "Not built with Caffe parser support.";
         return EXIT_FAILURE;
 #endif
     }
@@ -566,7 +560,7 @@ int RunTest(const std::string& modelFormat,
                                                          inputImageWidth, inputImageHeight, outputName.c_str(),
                                                          enableProfiling, subgraphId, runtime);
 #else
-        BOOST_LOG_TRIVIAL(fatal) << "Not built with Onnx parser support.";
+        std::cout << "Not built with Onnx parser support.";
         return EXIT_FAILURE;
 #endif
     }
@@ -580,7 +574,7 @@ int RunTest(const std::string& modelFormat,
                                                          inputImageWidth, inputImageHeight, outputName.c_str(),
                                                          enableProfiling, subgraphId, runtime);
 #else
-        BOOST_LOG_TRIVIAL(fatal) << "Not built with Tensorflow parser support.";
+        std::cout << "Not built with Tensorflow parser support.";
         return EXIT_FAILURE;
 #endif
     }
@@ -589,7 +583,7 @@ int RunTest(const std::string& modelFormat,
 #if defined(ARMNN_TF_LITE_PARSER)
         if (! isModelBinary)
         {
-            BOOST_LOG_TRIVIAL(fatal) << "Unknown model format: '" << modelFormat << "'. Only 'binary' format supported \
+            std::cout << "Unknown model format: '" << modelFormat << "'. Only 'binary' format supported \
               for tflite files";
             return EXIT_FAILURE;
         }
@@ -601,14 +595,14 @@ int RunTest(const std::string& modelFormat,
                                                                  inputImageWidth, inputImageHeight, outputName.c_str(),
                                                                  enableProfiling, subgraphId, runtime);
 #else
-        BOOST_LOG_TRIVIAL(fatal) << "Unknown model format: '" << modelFormat <<
+        std::cout << "Unknown model format: '" << modelFormat <<
             "'. Please include 'caffe', 'tensorflow', 'tflite' or 'onnx'";
         return EXIT_FAILURE;
 #endif
     }
     else
     {
-        BOOST_LOG_TRIVIAL(fatal) << "Unknown model format: '" << modelFormat <<
+        std::cout << "Unknown model format: '" << modelFormat <<
                                  "'. Please include 'caffe', 'tensorflow', 'tflite' or 'onnx'";
         return EXIT_FAILURE;
     }
@@ -643,7 +637,6 @@ int main(int argc, const char* argv[])
     armnn::LogSeverity level = armnn::LogSeverity::Debug;
 #endif
     armnn::ConfigureLogging(true, true, level);
-    armnnUtils::ConfigureLogging(boost::log::core::get().get(), true, true, level);
 
     initModelTable();
 
