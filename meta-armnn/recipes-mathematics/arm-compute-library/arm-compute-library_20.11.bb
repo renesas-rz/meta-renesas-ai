@@ -9,13 +9,14 @@ HOMEPAGE = "https://developer.arm.com/technologies/compute-library"
 DESCRIPTION = "Arm Compute Library"
 LICENSE = "MIT"
 
-LIC_FILES_CHKSUM = "file://LICENSE;md5=8948bc85114b3b716576ef8d732f034f"
+LIC_FILES_CHKSUM = "file://LICENSE;md5=a700d9de43fc22e998001a63c3feb1d2"
 
-SRCREV = "975dfe175e3d7c62c27598b1c0e8e77ed90df463"
+# Tag v20.11
+SRCREV = "49b8f9080cf2a24da986b6f156c7418ee3d28478"
 
 SRC_URI = " \
 	git://github.com/ARM-software/ComputeLibrary.git \
-	file://0001-Adding-support-for-building-arm-and-aarch64-CL-with-.patch \
+	file://0001-Add-support-for-building-arm-and-aarch64-CL-with-Sco.patch \
 "
 
 COMPATIBLE_MACHINE = "(iwg20m-g1m|iwg21m|iwg22m|hihope-rzg2h|hihope-rzg2m|hihope-rzg2n|ek874)"
@@ -53,17 +54,17 @@ do_install() {
 	cp $CP_ARGS ${S}/support ${D}${datadir}/${BPN}/.
 }
 
-FILES_${PN} = "${libdir}/libarm_compute_core.so.16.0.0 \
-               ${libdir}/libarm_compute_graph.so.16.0.0 \
-               ${libdir}/libarm_compute.so.16.0.0 \
+FILES_${PN} = "${libdir}/libarm_compute_core.so.21.0.0 \
+               ${libdir}/libarm_compute_graph.so.21.0.0 \
+               ${libdir}/libarm_compute.so.21.0.0 \
 "
 
 #Symlink .so files should go into the -dev package
 FILES_${PN}-dev = "${datadir}/arm-compute-library \
-                   ${libdir}/libarm_compute_graph.so.16 \
-                   ${libdir}/libarm_compute.so.16 \
+                   ${libdir}/libarm_compute_graph.so.21 \
+                   ${libdir}/libarm_compute.so.21 \
                    ${libdir}/libarm_compute.so \
-                   ${libdir}/libarm_compute_core.so.16 \
+                   ${libdir}/libarm_compute_core.so.21 \
                    ${libdir}/libarm_compute_core.so \
                    ${libdir}/libarm_compute_graph.so \
 "
