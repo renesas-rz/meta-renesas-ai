@@ -39,7 +39,7 @@ project requirements.
 
 | Framework       | Version   | Parser(s)                              | Inference Hardware               |
 | :-------------- | :-------- | :------------------------------------- | :------------------------------- |
-| ArmNN           | v19.08.01 | ONNX<br>TensorFlow<br>TensorFlow Lite  | CPU                              |
+| ArmNN           | v20.11    | ONNX<br>TensorFlow<br>TensorFlow Lite  | CPU                              |
 | Caffe2          | v0.8.1    | Caffe2                                 | CPU                              |
 | ONNX Runtime    | v1.1.2    | ONNX                                   | CPU                              |
 | OpenCV          | v4.1.1    | Caffe<br>DarkNet<br>ONNX<br>TensorFlow | CPU                              |

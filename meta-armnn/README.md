@@ -67,11 +67,11 @@ $ export ARMNN_TF_LITE_SCHEMA_PATH="/usr/include/armnn-tensorflow-lite/schema/sc
 2. Execute *UnitTests* by running the following commands:
 ```
 $ cd /usr/bin/armnn/examples/UnitTests/
-$ ./UnitTests
+$ ./UnitTests -- --dynamic-backend-build-dir "/usr/bin/armnn/examples/UnitTests/"
 ```
 3. The output of a healthy execution should look like the following:
 ```
-Running 877 test cases...
+Running 3432 test cases...
 
 *** No errors detected
 ```
@@ -99,34 +99,42 @@ Your number was 1
 ```
 $ cd /usr/bin/armnn/examples/tensorflow
 $ ./TfMobileNet-Armnn -d /usr/bin/armnn/examples/images/ \
-  --model-dir /usr/bin/armnn/examples/tensorflow/models/
+  --model-dir /usr/bin/armnn/examples/tensorflow/models/ \
+  --compute CpuAcc
 ```
 
 2. The output of a healthy execution should look like the following:
 ```
-ArmNN v20190200
+Info: ArmNN v23.0.0
 
-= Prediction values for test #0
-Top(1) prediction is 653 with confidence: 77.9504%
-Top(2) prediction is 466 with confidence: 4.85107%
-Top(3) prediction is 458 with confidence: 1.30864%
-Top(4) prediction is 452 with confidence: 0.530625%
-Top(5) prediction is 440 with confidence: 0.338392%
-= Prediction values for test #1
-Top(1) prediction is 653 with confidence: 77.9504%
-Top(2) prediction is 466 with confidence: 4.85107%
-Top(3) prediction is 458 with confidence: 1.30864%
-Top(4) prediction is 452 with confidence: 0.530625%
-Top(5) prediction is 440 with confidence: 0.338392%
-= Prediction values for test #2
-Top(1) prediction is 653 with confidence: 77.9504%
-Top(2) prediction is 466 with confidence: 4.85107%
-Top(3) prediction is 458 with confidence: 1.30864%
-Top(4) prediction is 452 with confidence: 0.530625%
-Top(5) prediction is 440 with confidence: 0.338392%
-Total time for 3 test cases: 0.521 seconds
-Average time per test case: 173.741 ms
-Overall accuracy: 1.000
+Info: Initialization time: 0.25 ms
+
+Info: Network parsing time: 803.19 ms
+
+Info: Optimization time: 507.50 ms
+
+Info: = Prediction values for test #0
+Info: Top(1) prediction is 653 with value: 0.779505
+Info: Top(2) prediction is 466 with value: 0.0485093
+Info: Top(3) prediction is 458 with value: 0.0130863
+Info: Top(4) prediction is 452 with value: 0.0053063
+Info: Top(5) prediction is 440 with value: 0.00338388
+Info: = Prediction values for test #1
+Info: Top(1) prediction is 653 with value: 0.779505
+Info: Top(2) prediction is 466 with value: 0.0485093
+Info: Top(3) prediction is 458 with value: 0.0130863
+Info: Top(4) prediction is 452 with value: 0.0053063
+Info: Top(5) prediction is 440 with value: 0.00338388
+Info: = Prediction values for test #2
+Info: Top(1) prediction is 653 with value: 0.779505
+Info: Top(2) prediction is 466 with value: 0.0485093
+Info: Top(3) prediction is 458 with value: 0.0130863
+Info: Top(4) prediction is 452 with value: 0.0053063
+Info: Top(5) prediction is 440 with value: 0.00338388
+Info: Total time for 3 test cases: 0.328 seconds
+Info: Average time per test case: 109.256 ms
+Info: Overall accuracy: 1.000
+Info: Shutdown time: 5.94 ms
 ```
 
 ### TfLiteMobilenetQuantized-Armnn
@@ -135,31 +143,30 @@ Overall accuracy: 1.000
 ```
 $ cd /usr/bin/armnn/examples/tensorflow-lite
 $ ./TfLiteMobilenetQuantized-Armnn -d /usr/bin/armnn/examples/images/ \
-  --model-dir /usr/bin/armnn/examples/tensorflow-lite/models/
+  --model-dir /usr/bin/armnn/examples/tensorflow-lite/models/ \
+  --compute CpuAcc
 ```
 
 2. The output of a healthy execution should look like the following:
 ```
-ArmNN v20190200
+Info: ArmNN v23.0.0
 
-= Prediction values for test #0
-Top(1) prediction is 653 with confidence: 63.2812%
-Top(2) prediction is 458 with confidence: 7.03125%
-Top(3) prediction is 452 with confidence: 1.5625%
-Top(4) prediction is 0 with confidence: 0%
-= Prediction values for test #1
-Top(1) prediction is 653 with confidence: 63.2812%
-Top(2) prediction is 458 with confidence: 7.03125%
-Top(3) prediction is 452 with confidence: 1.5625%
-Top(4) prediction is 0 with confidence: 0%
-= Prediction values for test #2
-Top(1) prediction is 653 with confidence: 63.2812%
-Top(2) prediction is 458 with confidence: 7.03125%
-Top(3) prediction is 452 with confidence: 1.5625%
-Top(4) prediction is 0 with confidence: 0%
-Total time for 3 test cases: 0.549 seconds
-Average time per test case: 183.192 ms
-Overall accuracy: 1.000
+Info: Initialization time: 0.23 ms
+
+Info: Network parsing time: 81.42 ms
+
+Info: Optimization time: 7.57 ms
+
+Info: = Prediction values for test #0
+Info: Top(1) prediction is 653 with value: 0.753906
+Info: Top(2) prediction is 907 with value: 0.140625
+Info: Top(3) prediction is 458 with value: 0.0195312
+Info: Top(4) prediction is 466 with value: 0.0117188
+Info: Top(5) prediction is 452 with value: 0.00390625
+Info: Total time for 1 test cases: 0.059 seconds
+Info: Average time per test case: 58.698 ms
+Info: Overall accuracy: 1.000
+Info: Shutdown time: 0.99 ms
 ```
 
 ### OnnxMobileNet-Armnn
@@ -167,34 +174,42 @@ Overall accuracy: 1.000
 ```
 $ cd /usr/bin/armnn/examples/onnx
 $ ./OnnxMobileNet-Armnn -d /usr/bin/armnn/examples/images/ \
-  --model-dir /usr/bin/armnn/examples/onnx/models/
+  --model-dir /usr/bin/armnn/examples/onnx/models/ \
+  --compute CpuAcc
 ```
 
 2. The output of a healthy execution should look like the following:
 ```
-ArmNN v20190200
+Info: ArmNN v23.0.0
 
-= Prediction values for test #0
-Top(1) prediction is 652 with confidence: 1317.76%
-Top(2) prediction is 457 with confidence: 1111.57%
-Top(3) prediction is 451 with confidence: 920.582%
-Top(4) prediction is 439 with confidence: 873.52%
-Top(5) prediction is 400 with confidence: 713.39%
-= Prediction values for test #1
-Top(1) prediction is 652 with confidence: 1317.76%
-Top(2) prediction is 457 with confidence: 1111.57%
-Top(3) prediction is 451 with confidence: 920.582%
-Top(4) prediction is 439 with confidence: 873.52%
-Top(5) prediction is 400 with confidence: 713.39%
-= Prediction values for test #2
-Top(1) prediction is 652 with confidence: 1317.76%
-Top(2) prediction is 457 with confidence: 1111.57%
-Top(3) prediction is 451 with confidence: 920.582%
-Top(4) prediction is 439 with confidence: 873.52%
-Top(5) prediction is 400 with confidence: 713.39%
-Total time for 3 test cases: 0.790 seconds
-Average time per test case: 263.615 ms
-Overall accuracy: 1.000
+Info: Initialization time: 0.26 ms
+
+Info: Network parsing time: 434.05 ms
+
+Info: Optimization time: 106.05 ms
+
+Info: = Prediction values for test #0
+Info: Top(1) prediction is 652 with value: 13.1776
+Info: Top(2) prediction is 457 with value: 11.1157
+Info: Top(3) prediction is 451 with value: 9.20582
+Info: Top(4) prediction is 439 with value: 8.7352
+Info: Top(5) prediction is 400 with value: 7.13391
+Info: = Prediction values for test #1
+Info: Top(1) prediction is 652 with value: 13.1776
+Info: Top(2) prediction is 457 with value: 11.1157
+Info: Top(3) prediction is 451 with value: 9.20582
+Info: Top(4) prediction is 439 with value: 8.7352
+Info: Top(5) prediction is 400 with value: 7.13391
+Info: = Prediction values for test #2
+Info: Top(1) prediction is 652 with value: 13.1776
+Info: Top(2) prediction is 457 with value: 11.1157
+Info: Top(3) prediction is 451 with value: 9.20582
+Info: Top(4) prediction is 439 with value: 8.7352
+Info: Top(5) prediction is 400 with value: 7.13391
+Info: Total time for 3 test cases: 0.597 seconds
+Info: Average time per test case: 199.073 ms
+Info: Overall accuracy: 1.000
+Info: Shutdown time: 8.35 ms
 ```
 
 ### RenesasSample-Armnn
@@ -209,7 +224,7 @@ $ ./RenesasSample-Armnn
 
 2. The following models will be run automatically:
 * TensorFlow: mobilenet v1.0.224
-* TensorFlow Lite: mobilent quant v1.0.224 
+* TensorFlow Lite: mobilenet quant v1.0.224
 
 ### ExecuteNetwork
 *ExecuteNetwork* is a generic model inference test application,
@@ -228,23 +243,34 @@ $ cd /usr/bin/armnn/examples/ExecuteNetwork/
 $ ./ExecuteNetwork -f tensorflow-binary -i input \
   -o MobilenetV1/Predictions/Reshape_1 \
   -d /usr/bin/armnn/examples/images/rsz_grace_hopper.csv -s 1,224,224,3 \
-  -m /usr/bin/armnn/examples/tensorflow/models/mobilenet_v1_1.0_224_frozen.pb
+  -m /usr/bin/armnn/examples/tensorflow/models/mobilenet_v1_1.0_224_frozen.pb \
+  --compute CpuAcc
 ```
 2. It prints out the ouput tensor, for example,
 ```
-ArmNN v20190200
+Info: ArmNN v23.0.0
+
+Info: Initialization time: 0.26 ms
+
+Info: Network parsing time: 798.51 ms
+
+Info: Optimization time: 438.73 ms
 
 MobilenetV1/Predictions/Reshape_1: 0.000000 0.000000 0.000007 0.000001 0.000000...
+Info:
+Inference time: 111.66 ms
+
+Info: Shutdown time: 2.00 ms
 ```
 
 ## Supported Frameworks and Operators
 The Arm NN SDK supports the following operators:
 
 TensorFlow:  
-**https://github.com/ARM-software/armnn/blob/branches/armnn_19_02/src/armnnTfParser/TensorFlowSupport.md**
+**https://github.com/ARM-software/armnn/blob/branches/armnn_20_11/src/armnnTfParser/TensorFlowSupport.md**
 
 TensorFlow Lite:  
-**https://github.com/ARM-software/armnn/blob/branches/armnn_19_02/src/armnnTfLiteParser/TensorFlowLiteSupport.md**
+**https://github.com/ARM-software/armnn/blob/branches/armnn_20_11/src/armnnTfLiteParser/TensorFlowLiteSupport.md**
 
 ONNX:  
-**https://github.com/ARM-software/armnn/blob/branches/armnn_19_02/src/armnnOnnxParser/OnnxSupport.md**
+**https://github.com/ARM-software/armnn/blob/branches/armnn_20_11/src/armnnOnnxParser/OnnxSupport.md**

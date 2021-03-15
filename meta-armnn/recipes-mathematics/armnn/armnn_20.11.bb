@@ -46,15 +46,18 @@ SRC_URI = " \
 	file://0001-Add-generic-Arm-NN-SDK-inference-framework-and-test-.patch \
 	file://0001-Do-not-use-the-CMAKE_FIND_ROOT_PATH-variable-when-lo.patch \
 	file://files/rsz_grace_hopper.csv \
-	git://github.com/tensorflow/tensorflow.git;name=tensorflow;branch=r2.0;subdir=${WORKDIR}/tensorflow;destsuffix=tensorflow \
-	gitsm://github.com/onnx/onnx.git;protocol=https;name=onnx;branch=master;subdir=${WORKDIR}/onnx;destsuffix=onnx \
+	git://github.com/tensorflow/tensorflow.git;name=tensorflow;branch=r2.3;subdir=${WORKDIR}/tensorflow;destsuffix=tensorflow \
+	gitsm://github.com/onnx/onnx.git;protocol=https;name=onnx;branch=rel-1.6.0;subdir=${WORKDIR}/onnx;destsuffix=onnx \
 "
 
-SRCREV_armnn = "68efb0770a73c8939a7a0f59ac5e028e0e5f0bb4"
+# v20.11
+SRCREV_armnn = "fa52dfeebeda690399d1d32fbeca1d9c33994deb"
 
-SRCREV_tensorflow = "1cf0898dd4331baf93fe77205550f2c2e6c90ee5"
+# v2.3.1
+SRCREV_tensorflow = "fcc4b966f1265f466e82617020af93670141b009"
 
-SRCREV_onnx = "bae6333e149a59a3faa9c4d9c44974373dcf5256"
+# v1.6.0
+SRCREV_onnx = "553df22c67bee5f0fe6599cff60f1afc6748c635"
 
 SRC_URI[mobilenet.md5sum] = "d5f69cef81ad8afb335d9727a17c462a"
 SRC_URI[mobilenet.sha256sum] = "1ccb74dbd9c5f7aea879120614e91617db9534bdfaa53dfea54b7c14162e126b"
@@ -76,6 +79,7 @@ DEPENDS = " \
 	stb \
 	flatbuffers \
 	arm-compute-library \
+	vim-native \
 "
 
 RDEPENDS_${PN} += "arm-compute-library protobuf boost"
@@ -139,15 +143,15 @@ EXTRA_OECMAKE=" \
 EXTRA_OECMAKE_append_arm=" \
 	-DARMCOMPUTE_BUILD_DIR=${STAGING_DIR_TARGET}/usr/lib/ \
 	-DFLATBUFFERS_LIBRARY=${STAGING_DIR_TARGET}/usr/lib/libflatbuffers.a \
-	-DPROTOBUF_LIBRARY_DEBUG=${STAGING_DIR_TARGET}/usr/lib/libprotobuf.so.16.0.0 \
-	-DPROTOBUF_LIBRARY_RELEASE=${STAGING_DIR_TARGET}/usr/lib/libprotobuf.so.16.0.0 \
+	-DPROTOBUF_LIBRARY_DEBUG=${STAGING_DIR_TARGET}/usr/lib/libprotobuf.so.23.0.4 \
+	-DPROTOBUF_LIBRARY_RELEASE=${STAGING_DIR_TARGET}/usr/lib/libprotobuf.so.23.0.4 \
 "
 
 EXTRA_OECMAKE_append_aarch64=" \
 	-DARMCOMPUTE_BUILD_DIR=${STAGING_DIR_TARGET}/usr/lib64/ \
 	-DFLATBUFFERS_LIBRARY=${STAGING_DIR_TARGET}/usr/lib64/libflatbuffers.a \
-	-DPROTOBUF_LIBRARY_DEBUG=${STAGING_DIR_TARGET}/usr/lib64/libprotobuf.so.16.0.0 \
-	-DPROTOBUF_LIBRARY_RELEASE=${STAGING_DIR_TARGET}/usr/lib64/libprotobuf.so.16.0.0 \
+	-DPROTOBUF_LIBRARY_DEBUG=${STAGING_DIR_TARGET}/usr/lib64/libprotobuf.so.23.0.4 \
+	-DPROTOBUF_LIBRARY_RELEASE=${STAGING_DIR_TARGET}/usr/lib64/libprotobuf.so.23.0.4 \
 "
 
 do_configure_prepend() {
@@ -307,13 +311,20 @@ do_install_append() {
 	chrpath -d ${D}${bindir}/${PN}-${PV}/examples/UnitTests/src/backends/backendsCommon/test/backendsTestPath6/*
 
 	chrpath -d ${D}${bindir}/${PN}-${PV}/examples/UnitTests/src/backends/dynamic/reference/*
+
+	# Remove files that are not needed
+	find ${D} -iname "*.cmake" -exec rm -f '{}' \;
+	rm -rf ${D}${libdir}/cmake/
 }
 
 CXXFLAGS += "-fopenmp"
 LIBS += "-larmpl_lp64_mp"
 
 FILES_${PN} = " \
-	${libdir}/libarmnn.so \
+	${libdir}/libarmnn.so* \
+	${libdir}/libarmnnBasePipeServer.so* \
+	${libdir}/libtimelineDecoder.so* \
+	${libdir}/libtimelineDecoderJson.so* \
 "
 
 FILES_${PN}-dev = " \
@@ -321,6 +332,7 @@ FILES_${PN}-dev = " \
 	${includedir}/armnnDeserializer \
 	${includedir}/armnnSerializer \
 	${includedir}/armnnQuantizer \
+	${includedir}/armnnUtils \
 "
 
 FILES_${PN}-dbg = " \
@@ -356,12 +368,12 @@ FILES_${PN}-tensorflow-lite-examples-dbg = " \
 "
 
 FILES_${PN}-tensorflow-lite = " \
-	${libdir}/libarmnnTfLiteParser.so \
+	${libdir}/libarmnnTfLiteParser.so* \
 	${includedir}/armnn-tensorflow-lite/schema \
 "
 
 FILES_${PN}-tensorflow-lite-dbg = " \
-	${libdir}/.debug/libarmnnTfLiteParser.so \
+	${libdir}/.debug/libarmnnTfLiteParser.so* \
 "
 
 FILES_${PN}-tensorflow-lite-dev = " \
@@ -377,7 +389,7 @@ FILES_${PN}-tensorflow-examples-dbg = " \
 "
 
 FILES_${PN}-tensorflow = " \
-	${libdir}/libarmnnTfParser.so \
+	${libdir}/libarmnnTfParser.so* \
 "
 
 FILES_${PN}-tensorflow-dbg = " \
@@ -397,7 +409,7 @@ FILES_${PN}-onnx-examples-dbg = " \
 "
 
 FILES_${PN}-onnx = " \
-	${libdir}/libarmnnOnnxParser.so \
+	${libdir}/libarmnnOnnxParser.so* \
 "
 
 FILES_${PN}-onnx-dbg = " \
@@ -411,6 +423,9 @@ FILES_${PN}-onnx-dev = " \
 
 FILES_${PN}-dev += "${libdir}/cmake/*"
 INSANE_SKIP_${PN}-dev = "dev-elf"
-INSANE_SKIP_${PN} = "dev-deps"
+INSANE_SKIP_${PN} = "dev-deps dev-so"
 INSANE_SKIP_${PN}-examples = "dev-so libdir"
 INSANE_SKIP_${PN}-examples-dbg = "libdir"
+INSANE_SKIP_${PN}-onnx = "dev-so"
+INSANE_SKIP_${PN}-tensorflow = "dev-so"
+INSANE_SKIP_${PN}-tensorflow-lite = "dev-so"
