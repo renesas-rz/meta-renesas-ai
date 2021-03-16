@@ -105,36 +105,38 @@ $ ./TfMobileNet-Armnn -d /usr/bin/armnn/examples/images/ \
 
 2. The output of a healthy execution should look like the following:
 ```
-Info: ArmNN v23.0.0
+Info: ArmNN v24.0.0
 
-Info: Initialization time: 0.25 ms
+Info: Initialization time: 0.58 ms
 
-Info: Network parsing time: 803.19 ms
+Info: Network parsing time: 1161.79 ms
 
-Info: Optimization time: 507.50 ms
+Info: Optimization time: 444.44 ms
+
+Info: Network loading time: 262.00 ms
 
 Info: = Prediction values for test #0
 Info: Top(1) prediction is 653 with value: 0.779505
-Info: Top(2) prediction is 466 with value: 0.0485093
+Info: Top(2) prediction is 466 with value: 0.0485094
 Info: Top(3) prediction is 458 with value: 0.0130863
-Info: Top(4) prediction is 452 with value: 0.0053063
+Info: Top(4) prediction is 452 with value: 0.00530631
 Info: Top(5) prediction is 440 with value: 0.00338388
 Info: = Prediction values for test #1
 Info: Top(1) prediction is 653 with value: 0.779505
-Info: Top(2) prediction is 466 with value: 0.0485093
+Info: Top(2) prediction is 466 with value: 0.0485094
 Info: Top(3) prediction is 458 with value: 0.0130863
-Info: Top(4) prediction is 452 with value: 0.0053063
+Info: Top(4) prediction is 452 with value: 0.00530631
 Info: Top(5) prediction is 440 with value: 0.00338388
 Info: = Prediction values for test #2
 Info: Top(1) prediction is 653 with value: 0.779505
-Info: Top(2) prediction is 466 with value: 0.0485093
+Info: Top(2) prediction is 466 with value: 0.0485094
 Info: Top(3) prediction is 458 with value: 0.0130863
-Info: Top(4) prediction is 452 with value: 0.0053063
+Info: Top(4) prediction is 452 with value: 0.00530631
 Info: Top(5) prediction is 440 with value: 0.00338388
-Info: Total time for 3 test cases: 0.328 seconds
-Info: Average time per test case: 109.256 ms
+Info: Total time for 3 test cases: 0.323 seconds
+Info: Average time per test case: 107.704 ms
 Info: Overall accuracy: 1.000
-Info: Shutdown time: 5.94 ms
+Info: Shutdown time: 4.44 ms
 ```
 
 ### TfLiteMobilenetQuantized-Armnn
@@ -149,13 +151,15 @@ $ ./TfLiteMobilenetQuantized-Armnn -d /usr/bin/armnn/examples/images/ \
 
 2. The output of a healthy execution should look like the following:
 ```
-Info: ArmNN v23.0.0
+Info: ArmNN v24.0.0
 
-Info: Initialization time: 0.23 ms
+Info: Initialization time: 0.24 ms
 
-Info: Network parsing time: 81.42 ms
+Info: Network parsing time: 148.77 ms
 
-Info: Optimization time: 7.57 ms
+Info: Optimization time: 5.50 ms
+
+Info: Network loading time: 144.47 ms
 
 Info: = Prediction values for test #0
 Info: Top(1) prediction is 653 with value: 0.753906
@@ -163,10 +167,10 @@ Info: Top(2) prediction is 907 with value: 0.140625
 Info: Top(3) prediction is 458 with value: 0.0195312
 Info: Top(4) prediction is 466 with value: 0.0117188
 Info: Top(5) prediction is 452 with value: 0.00390625
-Info: Total time for 1 test cases: 0.059 seconds
-Info: Average time per test case: 58.698 ms
+Info: Total time for 1 test cases: 0.058 seconds
+Info: Average time per test case: 58.245 ms
 Info: Overall accuracy: 1.000
-Info: Shutdown time: 0.99 ms
+Info: Shutdown time: 1.05 ms
 ```
 
 ### OnnxMobileNet-Armnn
@@ -180,13 +184,15 @@ $ ./OnnxMobileNet-Armnn -d /usr/bin/armnn/examples/images/ \
 
 2. The output of a healthy execution should look like the following:
 ```
-Info: ArmNN v23.0.0
+Info: ArmNN v24.0.0
 
-Info: Initialization time: 0.26 ms
+Info: Initialization time: 0.30 ms
 
-Info: Network parsing time: 434.05 ms
+Info: Network parsing time: 394.41 ms
 
-Info: Optimization time: 106.05 ms
+Info: Optimization time: 101.85 ms
+
+Info: Network loading time: 320.24 ms
 
 Info: = Prediction values for test #0
 Info: Top(1) prediction is 652 with value: 13.1776
@@ -206,10 +212,10 @@ Info: Top(2) prediction is 457 with value: 11.1157
 Info: Top(3) prediction is 451 with value: 9.20582
 Info: Top(4) prediction is 439 with value: 8.7352
 Info: Top(5) prediction is 400 with value: 7.13391
-Info: Total time for 3 test cases: 0.597 seconds
-Info: Average time per test case: 199.073 ms
+Info: Total time for 3 test cases: 0.600 seconds
+Info: Average time per test case: 200.022 ms
 Info: Overall accuracy: 1.000
-Info: Shutdown time: 8.35 ms
+Info: Shutdown time: 4.68 ms
 ```
 
 ### RenesasSample-Armnn
@@ -248,29 +254,31 @@ $ ./ExecuteNetwork -f tensorflow-binary -i input \
 ```
 2. It prints out the ouput tensor, for example,
 ```
-Info: ArmNN v23.0.0
+Info: ArmNN v24.0.0
 
-Info: Initialization time: 0.26 ms
+Info: Initialization time: 0.32 ms
 
-Info: Network parsing time: 798.51 ms
+Info: Network parsing time: 816.35 ms
 
-Info: Optimization time: 438.73 ms
+Info: Optimization time: 439.34 ms
+
+Info: Network loading time: 234.68 ms
 
 MobilenetV1/Predictions/Reshape_1: 0.000000 0.000000 0.000007 0.000001 0.000000...
 Info:
-Inference time: 111.66 ms
+Inference time: 124.84 ms
 
-Info: Shutdown time: 2.00 ms
+Info: Shutdown time: 5.53 ms
 ```
 
 ## Supported Frameworks and Operators
 The Arm NN SDK supports the following operators:
 
 TensorFlow:  
-**https://github.com/ARM-software/armnn/blob/branches/armnn_20_11/src/armnnTfParser/TensorFlowSupport.md**
+**https://arm-software.github.io/armnn/21.02/parsers.xhtml#S7_tf_parser**
 
-TensorFlow Lite:  
-**https://github.com/ARM-software/armnn/blob/branches/armnn_20_11/src/armnnTfLiteParser/TensorFlowLiteSupport.md**
+TensorFlow Lite:
+**https://arm-software.github.io/armnn/21.02/parsers.xhtml#S6_tf_lite_parser**
 
 ONNX:  
-**https://github.com/ARM-software/armnn/blob/branches/armnn_20_11/src/armnnOnnxParser/OnnxSupport.md**
+**https://arm-software.github.io/armnn/21.02/parsers.xhtml#S5_onnx_parser**

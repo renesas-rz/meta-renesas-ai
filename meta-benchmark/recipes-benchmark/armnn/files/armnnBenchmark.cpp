@@ -47,7 +47,7 @@ enum Parser { caffe, tensorflow, tfLite, onnx };
 Parser test_parser;
 std::string benched_model;
 std::string benched_type;
-#define ARMNN_VER_BENCH "Arm NN SDK v20.11"
+#define ARMNN_VER_BENCH "Arm NN SDK v21.02"
 
 std::map<int,std::string> label_file_map;
 
