@@ -76,6 +76,38 @@ Running 3432 test cases...
 *** No errors detected
 ```
 
+### DelegateUnitTests
+1. Execute *DelegateUnitTests* with CPU Acceleration by running the following commands:
+```
+$ cd /usr/bin/armnn/examples/DelegateUnitTests
+$ ./DelegateUnitTests --test-suite=*CpuAcc*
+```
+2. The output of a healthy execution should look like the following:
+```
+[doctest] doctest version is "2.4.0"
+[doctest] run with "--help" for options
+INFO: TfLiteArmnnDelegate: Created TfLite ArmNN delegate.
+===============================================================================
+[doctest] test cases:    166 |    166 passed |      0 failed |    347 skipped
+[doctest] assertions:  12367 |  12367 passed |      0 failed |
+[doctest] Status: SUCCESS!
+```
+3. Execute *DelegateUnitTests* with CPU Reference by running the following commands:
+```
+$ cd /usr/bin/armnn/examples/DelegateUnitTests
+$ ./DelegateUnitTests --test-suite=*CpuRef*
+```
+4. The output of a healthy execution should look like the following:
+```
+[doctest] doctest version is "2.4.0"
+[doctest] run with "--help" for options
+INFO: TfLiteArmnnDelegate: Created TfLite ArmNN delegate.
+===============================================================================
+[doctest] test cases:    176 |    176 passed |      0 failed |    337 skipped
+[doctest] assertions:  12800 |  12800 passed |      0 failed |
+[doctest] Status: SUCCESS!
+```
+
 ### SimpleSample
 In this sample application the user's single input number is multiplied by 1.0f
 using a fully connected layer with a single neuron to produce an output number

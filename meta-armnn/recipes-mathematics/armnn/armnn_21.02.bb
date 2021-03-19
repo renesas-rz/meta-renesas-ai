@@ -80,6 +80,7 @@ DEPENDS = " \
 	flatbuffers \
 	arm-compute-library \
 	vim-native \
+	tensorflow-lite \
 "
 
 RDEPENDS_${PN} += "arm-compute-library protobuf boost"
@@ -105,6 +106,7 @@ RDEPENDS_${PN}-tensorflow-lite-examples-dbg += "${PN}-tensorflow-lite"
 RDEPENDS_${PN}-tensorflow-lite-dbg += "${PN}-tensorflow-lite"
 
 RDEPENDS_${PN}-tensorflow-lite-dev += "${PN}-tensorflow-lite"
+RDEPENDS_${PN}-tensorflow-lite-staticdev += "${PN}-tensorflow-lite"
 
 RDEPENDS_${PN}-onnx += "${PN}"
 
@@ -138,10 +140,15 @@ EXTRA_OECMAKE=" \
 	-DTHIRD_PARTY_INCLUDE_DIRS=${STAGING_DIR_HOST}${includedir} \
 	-DBUILD_ARMNN_EXAMPLES=1 \
 	-DCMAKE_CXX_IMPLICIT_INCLUDE_DIRECTORIES=${STAGING_INCDIR} \
+	-DBUILD_ARMNN_TFLITE_DELEGATE=1 \
+	-DTfLite_INCLUDE_DIR=${STAGING_DIR_TARGET}/usr/include/tensorflow_lite/ \
+	-DTfLite_Schema_INCLUDE_PATH=${WORKDIR}/tensorflow/tensorflow/lite/schema/ \
+	-DCMAKE_CXX_STANDARD_LIBRARIES="-ldl" \
 "
 
 EXTRA_OECMAKE_append_arm=" \
 	-DARMCOMPUTE_BUILD_DIR=${STAGING_DIR_TARGET}/usr/lib/ \
+	-DTfLite_LIB=${STAGING_DIR_TARGET}/usr/lib/libtensorflow-lite.a \
 	-DFLATBUFFERS_LIBRARY=${STAGING_DIR_TARGET}/usr/lib/libflatbuffers.a \
 	-DPROTOBUF_LIBRARY_DEBUG=${STAGING_DIR_TARGET}/usr/lib/libprotobuf.so.23.0.4 \
 	-DPROTOBUF_LIBRARY_RELEASE=${STAGING_DIR_TARGET}/usr/lib/libprotobuf.so.23.0.4 \
@@ -149,6 +156,7 @@ EXTRA_OECMAKE_append_arm=" \
 
 EXTRA_OECMAKE_append_aarch64=" \
 	-DARMCOMPUTE_BUILD_DIR=${STAGING_DIR_TARGET}/usr/lib64/ \
+	-DTfLite_LIB=${STAGING_DIR_TARGET}/usr/lib64/libtensorflow-lite.a \
 	-DFLATBUFFERS_LIBRARY=${STAGING_DIR_TARGET}/usr/lib64/libflatbuffers.a \
 	-DPROTOBUF_LIBRARY_DEBUG=${STAGING_DIR_TARGET}/usr/lib64/libprotobuf.so.23.0.4 \
 	-DPROTOBUF_LIBRARY_RELEASE=${STAGING_DIR_TARGET}/usr/lib64/libprotobuf.so.23.0.4 \
@@ -171,6 +179,7 @@ do_configure_prepend() {
 
 do_install_append() {
 	install -d ${D}${bindir}/${PN}-${PV}/examples/UnitTests
+	install -d ${D}${bindir}/${PN}-${PV}/examples/DelegateUnitTests
 	install -d ${D}${bindir}/${PN}-${PV}/examples/SampleApp
 	install -d ${D}${bindir}/${PN}-${PV}/examples/tensorflow
 	install -d ${D}${bindir}/${PN}-${PV}/examples/tensorflow-lite
@@ -207,6 +216,12 @@ do_install_append() {
 		${D}${bindir}/${PN}-${PV}/examples/UnitTests/
 
 	chrpath -d ${D}${bindir}/${PN}-${PV}/examples/UnitTests/*
+
+	install -m 0555 \
+		${WORKDIR}/build/delegate/DelegateUnitTests \
+		${D}${bindir}/${PN}-${PV}/examples/DelegateUnitTests/
+
+	chrpath -d ${D}${bindir}/${PN}-${PV}/examples/DelegateUnitTests/*
 
 	install -m 0555 \
 		${WORKDIR}/build/tests/RenesasSample-Armnn \
@@ -325,6 +340,7 @@ FILES_${PN} = " \
 	${libdir}/libarmnnBasePipeServer.so* \
 	${libdir}/libtimelineDecoder.so* \
 	${libdir}/libtimelineDecoderJson.so* \
+	${libdir}/libarmnnDelegate.so* \
 "
 
 FILES_${PN}-dev = " \
@@ -343,6 +359,7 @@ FILES_${PN}-dbg = " \
 FILES_${PN}-examples = " \
 	${bindir}/${PN} \
 	${bindir}/${PN}-${PV}/examples/UnitTests \
+	${bindir}/${PN}-${PV}/examples/DelegateUnitTests \
 	${bindir}/${PN}-${PV}/examples/SampleApp \
 	${bindir}/${PN}-${PV}/examples/RenesasSample-Armnn \
 	${bindir}/${PN}-${PV}/examples/images \
