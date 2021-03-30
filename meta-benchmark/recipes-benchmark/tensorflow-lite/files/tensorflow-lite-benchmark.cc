@@ -25,12 +25,12 @@ limitations under the License.
 #include <unordered_set>
 #include <vector>
 #include <numeric>
-#include <fcntl.h>      // NOLINT(build/include_order)
-#include <getopt.h>     // NOLINT(build/include_order)
-#include <sys/time.h>   // NOLINT(build/include_order)
-#include <sys/types.h>  // NOLINT(build/include_order)
-#include <sys/uio.h>    // NOLINT(build/include_order)
-#include <unistd.h>     // NOLINT(build/include_order)
+#include <fcntl.h>
+#include <getopt.h>
+#include <sys/time.h>
+#include <sys/types.h>
+#include <sys/uio.h>
+#include <unistd.h>
 
 #include "tensorflow/lite/kernels/register.h"
 #include "tensorflow/lite/model.h"
@@ -40,7 +40,6 @@ limitations under the License.
 #include "tensorflow/lite/examples/label_image/bitmap_helpers.h"
 #include "tensorflow/lite/examples/label_image/get_top_n.h"
 
-// check NEON
 #include "tensorflow/lite/kernels/internal/optimized/cpu_check.h"
 
 #define LOG(x) std::cerr
@@ -71,9 +70,9 @@ void CaculateAvergeDeviation(std::vector<double>& time_vec)
     std::cout << "Standard Deviation " << stdev << std::endl;
 }
 
-// Takes a file name, and loads a list of labels from it, one per line, and
-// returns a vector of the strings. It pads with empty strings so the length
-// of the result is a multiple of 16, because our model expects that.
+/* Takes a file name, and loads a list of labels from it, one per line, and  *
+ * returns a vector of the strings. It pads with empty strings so the length *
+ * of the result is a multiple of 16, because our model expects that.	     */
 TfLiteStatus ReadLabelsFile(const string& file_name,
                             std::vector<string>* result,
                             size_t* found_label_count) {
@@ -166,8 +165,8 @@ void RunInference(Settings* s) {
 
   if (s->verbose) PrintInterpreterState(interpreter.get());
 
-  // get input dimension from the input tensor metadata
-  // assuming one input only
+  /* get input dimension from the input tensor metadata *
+   * assuming one input only				*/
   TfLiteIntArray* dims = interpreter->tensor(input)->dims;
   int wanted_height = dims->data[1];
   int wanted_width = dims->data[2];
@@ -192,7 +191,6 @@ void RunInference(Settings* s) {
       exit(-1);
   }
 
-  //warm up
   if (interpreter->Invoke() != kTfLiteOk) {
       LOG(FATAL) << "Failed to invoke tflite!\n";
   }
@@ -295,14 +293,14 @@ int Main(int argc, char** argv) {
 
     switch (c) {
       case 'a':
-        s.accel = strtol(optarg, nullptr, 10);  // NOLINT(runtime/deprecated_fn)
+        s.accel = strtol(optarg, nullptr, 10);
         break;
       case 'b':
         s.input_mean = strtod(optarg, nullptr);
         break;
       case 'c':
         s.loop_count =
-            strtol(optarg, nullptr, 10);  // NOLINT(runtime/deprecated_fn)
+            strtol(optarg, nullptr, 10);
         break;
       case 'i':
         s.input_bmp_name = optarg;
@@ -315,18 +313,18 @@ int Main(int argc, char** argv) {
         break;
       case 'p':
         s.profiling =
-            strtol(optarg, nullptr, 10);  // NOLINT(runtime/deprecated_fn)
+            strtol(optarg, nullptr, 10);
         break;
       case 's':
         s.input_std = strtod(optarg, nullptr);
         break;
       case 't':
-        s.number_of_threads = strtol(  // NOLINT(runtime/deprecated_fn)
+        s.number_of_threads = strtol(
             optarg, nullptr, 10);
         break;
       case 'v':
         s.verbose =
-            strtol(optarg, nullptr, 10);  // NOLINT(runtime/deprecated_fn)
+            strtol(optarg, nullptr, 10);
         break;
       case 'h':
       case '?':
@@ -341,8 +339,8 @@ int Main(int argc, char** argv) {
   return 0;
 }
 
-}  // namespace label_image
-}  // namespace tflite
+}  /* namespace label_image */
+}  /* namespace tflite */
 
 int main(int argc, char** argv) {
 
