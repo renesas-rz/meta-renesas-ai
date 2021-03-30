@@ -31,7 +31,7 @@ def main():
        print("File path {} does not exist. Exiting...".format(filepath))
        sys.exit(1)
 
-   base_direcotry_path = sys.argv[2]
+   base_directory_path = sys.argv[2]
 
    number_of_iteration = int(sys.argv[3])
 
@@ -48,7 +48,7 @@ def main():
 	       list = []
 	       list_tmp = []
 
-	       run_label_image(line,base_direcotry_path,'labels.txt',number_of_cores,number_of_iteration,list_tmp,list)
+	       run_label_image(line,base_directory_path,'labels.txt',number_of_cores,number_of_iteration,list_tmp,list)
 
 	       print("Average Time" + " at Model " + line + str(Average(list_tmp)) + " ms ")
 	       print("Standard Deviation" + " at Model " + line + str(Average(list)))
@@ -65,8 +65,8 @@ def main():
 def Average(lst):
     return sum(lst) / len(lst)
 
-def run_label_image(model_file_name,base_direcotry,label_file_name,number_of_threads,times_to_run,list,list_dev):
-    command = "/usr/bin/tensorflow-lite-benchmark/tensorflow-lite-benchmark -i /usr/bin/tensorflow-lite/examples/grace_hopper.bmp -c %s -l %s -t %d -m %s" % (times_to_run, label_file_name, number_of_threads, base_direcotry+model_file_name)
+def run_label_image(model_file_name,base_directory,label_file_name,number_of_threads,times_to_run,list,list_dev):
+    command = "/usr/bin/tensorflow-lite-benchmark/tensorflow-lite-benchmark -i /usr/bin/tensorflow-lite/examples/grace_hopper.bmp -c %s -l %s -t %d -m %s" % (times_to_run, label_file_name, number_of_threads, base_directory+model_file_name)
 
     for line in run_command(command):
         count = 0
