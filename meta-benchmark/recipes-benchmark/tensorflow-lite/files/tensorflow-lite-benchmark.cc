@@ -75,7 +75,8 @@ void CaculateAvergeDeviation(std::vector<double>& time_vec)
  * of the result is a multiple of 16, because our model expects that.	     */
 TfLiteStatus ReadLabelsFile(const string& file_name,
                             std::vector<string>* result,
-                            size_t* found_label_count) {
+                            size_t* found_label_count)
+{
   std::ifstream file(file_name);
   if (!file) {
     LOG(FATAL) << "Labels file " << file_name << " not found\n";
@@ -83,18 +84,19 @@ TfLiteStatus ReadLabelsFile(const string& file_name,
   }
   result->clear();
   string line;
-  while (std::getline(file, line)) {
+  while (std::getline(file, line))
     result->push_back(line);
-  }
+
   *found_label_count = result->size();
   const int padding = 16;
-  while (result->size() % padding) {
+  while (result->size() % padding)
     result->emplace_back();
-  }
+
   return kTfLiteOk;
 }
 
-void RunInference(Settings* s) {
+void RunInference(Settings* s)
+{
   if (!s->model_name.c_str()) {
     LOG(ERROR) << "no model file name\n";
     exit(-1);
@@ -136,9 +138,8 @@ void RunInference(Settings* s) {
     }
   }
 
-  if (s->number_of_threads != -1) {
+  if (s->number_of_threads != -1)
     interpreter->SetNumThreads(s->number_of_threads);
-  }
 
   interpreter->SetProfiler(NULL);
 
@@ -149,7 +150,8 @@ void RunInference(Settings* s) {
                                      &image_height, &image_channels, s);
 
   int input = interpreter->inputs()[0];
-  if (s->verbose) LOG(INFO) << "input: " << input << "\n";
+  if (s->verbose) 
+    LOG(INFO) << "input: " << input << "\n";
 
   const std::vector<int> inputs = interpreter->inputs();
   const std::vector<int> outputs = interpreter->outputs();
@@ -159,11 +161,11 @@ void RunInference(Settings* s) {
     LOG(INFO) << "number of outputs: " << outputs.size() << "\n";
   }
 
-  if (interpreter->AllocateTensors() != kTfLiteOk) {
+  if (interpreter->AllocateTensors() != kTfLiteOk)
     LOG(FATAL) << "Failed to allocate tensors!";
-  }
 
-  if (s->verbose) PrintInterpreterState(interpreter.get());
+  if (s->verbose)
+    PrintInterpreterState(interpreter.get());
 
   /* get input dimension from the input tensor metadata *
    * assuming one input only				*/
@@ -191,9 +193,9 @@ void RunInference(Settings* s) {
       exit(-1);
   }
 
-  if (interpreter->Invoke() != kTfLiteOk) {
+  if (interpreter->Invoke() != kTfLiteOk)
       LOG(FATAL) << "Failed to invoke tflite!\n";
-  }
+
 
   std::vector<double> time_vector;
 
@@ -201,9 +203,9 @@ void RunInference(Settings* s) {
 
   for (int i = 0; i < s->loop_count; i++) {
     gettimeofday(&start_time, nullptr);
-    if (interpreter->Invoke() != kTfLiteOk) {
+    if (interpreter->Invoke() != kTfLiteOk)
       LOG(FATAL) << "Failed to invoke tflite!\n";
-    }
+
     gettimeofday(&stop_time, nullptr);
 
     double diff = timedifference_msec(start_time,stop_time);
@@ -249,7 +251,8 @@ void RunInference(Settings* s) {
   }
 }
 
-void display_usage() {
+void display_usage()
+{
   LOG(INFO) << "label_image\n"
             << "--accelerated, -a: [0|1], use Android NNAPI or not\n"
             << "--count, -c: loop interpreter->Invoke() for certain times\n"
@@ -264,7 +267,8 @@ void display_usage() {
             << "\n";
 }
 
-int Main(int argc, char** argv) {
+int Main(int argc, char** argv)
+{
   Settings s;
 
   int c;
@@ -342,7 +346,7 @@ int Main(int argc, char** argv) {
 }  /* namespace label_image */
 }  /* namespace tflite */
 
-int main(int argc, char** argv) {
-
+int main(int argc, char** argv)
+{
   return tflite::label_image::Main(argc, argv);
 }
