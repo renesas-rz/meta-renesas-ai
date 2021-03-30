@@ -1,7 +1,7 @@
 #!/usr/bin/env python2
 
 '''
-Copyright (C) 2019 Renesas Electronics Corp.
+Copyright (C) 2021 Renesas Electronics Corp.
 This file is licensed under the terms of the MIT License
 This program is licensed "as is" without any warranty of any
 kind, whether express or implied.
