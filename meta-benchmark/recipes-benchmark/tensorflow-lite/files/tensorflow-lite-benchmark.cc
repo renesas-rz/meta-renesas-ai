@@ -48,8 +48,6 @@ limitations under the License.
 namespace tflite {
 namespace label_image {
 
-double get_us(struct timeval t) { return (t.tv_sec * 1000000 + t.tv_usec); }
-
 static double timedifference_msec(struct timeval t0, struct timeval t1)
 {
     return (double)((t1.tv_sec - t0.tv_sec) * 1000.0f + (t1.tv_usec - t0.tv_usec) / 1000.0f);
@@ -95,22 +93,6 @@ TfLiteStatus ReadLabelsFile(const string& file_name,
     result->emplace_back();
   }
   return kTfLiteOk;
-}
-
-void PrintProfilingInfo(const profiling::ProfileEvent* e, uint32_t op_index,
-                        TfLiteRegistration registration) {
-  // output something like
-  // time (ms) , Node xxx, OpCode xxx, symblic name
-  //      5.352, Node   5, OpCode   4, DEPTHWISE_CONV_2D
-
-  LOG(INFO) << std::fixed << std::setw(10) << std::setprecision(3)
-            << (e->end_timestamp_us - e->begin_timestamp_us) / 1000.0
-            << ", Node " << std::setw(3) << std::setprecision(3) << op_index
-            << ", OpCode " << std::setw(3) << std::setprecision(3)
-            << registration.builtin_code << ", "
-            << EnumNameBuiltinOperator(
-                   static_cast<BuiltinOperator>(registration.builtin_code))
-            << "\n";
 }
 
 void RunInference(Settings* s) {
