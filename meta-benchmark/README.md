@@ -5,7 +5,7 @@ TensorFlow Lite, ONNX Runtime and OpenCV.
 
 Each framework has its own benchmark tool.
 
-* For Arm NN SDK, it is armnnBenchmark
+* For Arm NN SDK, it is armnnBenchmark and armnnTFLiteDelegateBenchmark
 * For Caffe2, it is caffe2_Benchmark.sh
 * For Google Coral TPU, it is google-coral-tpu-benchmark
 * For TensorFlow, it is tensorflowBenchmark
@@ -25,6 +25,13 @@ cd /usr/bin/armnnBenchmark
 
 # Run inference 30 times
 ./armnnBenchmark
+```
+```bash
+cd /usr/bin/armnnDelegateBenchmark
+
+# Run inference 30 times on each TfLite model
+./run_Delegate_measurement.py test_model_list_armnnDelegate.txt \
+/home/root/models/tensorflowlite/ 30 2 warning
 ```
 
 ## Caffe2
