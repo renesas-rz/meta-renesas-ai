@@ -64,9 +64,7 @@ void CaculateAvergeDeviation(std::vector<double>& time_vec)
     double stdev = std::sqrt(sq_sum / time_vec.size());
 
     std::cout << "Total Time Takes " << (sum) << " ms"<< std::endl;
-
     std::cout << "Average Time Takes " << (mean) << " ms"<< std::endl;
-
     std::cout << "Standard Deviation " << stdev << std::endl;
 }
 
@@ -77,18 +75,22 @@ TfLiteStatus ReadLabelsFile(const string& file_name,
                             std::vector<string>* result,
                             size_t* found_label_count)
 {
+  string line;
+  const int padding = 16;
+
   std::ifstream file(file_name);
   if (!file) {
     LOG(FATAL) << "Labels file " << file_name << " not found\n";
     return kTfLiteError;
   }
+
   result->clear();
-  string line;
+
   while (std::getline(file, line))
     result->push_back(line);
 
   *found_label_count = result->size();
-  const int padding = 16;
+
   while (result->size() % padding)
     result->emplace_back();
 
@@ -97,25 +99,31 @@ TfLiteStatus ReadLabelsFile(const string& file_name,
 
 void RunInference(Settings* s)
 {
+  std::unique_ptr<tflite::FlatBufferModel> model;
+  std::unique_ptr<tflite::Interpreter> interpreter;
+  tflite::ops::builtin::BuiltinOpResolver resolver;
+  std::vector<double> time_vector;
+  int image_width = 224;
+  int image_height = 224;
+  int image_channels = 3;
+
   if (!s->model_name.c_str()) {
     LOG(ERROR) << "no model file name\n";
     exit(-1);
   }
 
-  std::unique_ptr<tflite::FlatBufferModel> model;
-  std::unique_ptr<tflite::Interpreter> interpreter;
   model = tflite::FlatBufferModel::BuildFromFile(s->model_name.c_str());
   if (!model) {
     LOG(FATAL) << "\nFailed to mmap model " << s->model_name << "\n";
     exit(-1);
   }
+
   LOG(INFO) << "Loaded model " << s->model_name << "\n";
   model->error_reporter();
   LOG(INFO) << "resolved reporter\n";
 
-  tflite::ops::builtin::BuiltinOpResolver resolver;
-
   tflite::InterpreterBuilder(*model, resolver)(&interpreter);
+
   if (!interpreter) {
     LOG(FATAL) << "Failed to construct interpreter\n";
     exit(-1);
@@ -143,13 +151,11 @@ void RunInference(Settings* s)
 
   interpreter->SetProfiler(NULL);
 
-  int image_width = 224;
-  int image_height = 224;
-  int image_channels = 3;
   std::vector<uint8_t> in = read_bmp(s->input_bmp_name, &image_width,
                                      &image_height, &image_channels, s);
 
   int input = interpreter->inputs()[0];
+
   if (s->verbose) 
     LOG(INFO) << "input: " << input << "\n";
 
@@ -195,9 +201,6 @@ void RunInference(Settings* s)
 
   if (interpreter->Invoke() != kTfLiteOk)
       LOG(FATAL) << "Failed to invoke tflite!\n";
-
-
-  std::vector<double> time_vector;
 
   struct timeval start_time, stop_time;
 
@@ -270,8 +273,8 @@ void display_usage()
 int Main(int argc, char** argv)
 {
   Settings s;
-
   int c;
+
   while (1) {
     static struct option long_options[] = {
         {"accelerated", required_argument, nullptr, 'a'},
