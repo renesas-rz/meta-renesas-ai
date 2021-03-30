@@ -118,12 +118,12 @@ void RunInference(Settings* s)
     exit(-1);
   }
 
-  LOG(INFO) << "Loaded model " << s->model_name << "\n";
+  if (s->verbose)
+    LOG(INFO) << "Loaded model " << s->model_name << "\n";
+
   model->error_reporter();
-  LOG(INFO) << "resolved reporter\n";
 
   tflite::InterpreterBuilder(*model, resolver)(&interpreter);
-
   if (!interpreter) {
     LOG(FATAL) << "Failed to construct interpreter\n";
     exit(-1);
@@ -195,7 +195,7 @@ void RunInference(Settings* s)
       break;
     default:
       LOG(FATAL) << "cannot handle input type "
-                 << interpreter->tensor(input)->type << " yet";
+                 << interpreter->tensor(input)->type << "\n";
       exit(-1);
   }
 
@@ -206,6 +206,7 @@ void RunInference(Settings* s)
 
   for (int i = 0; i < s->loop_count; i++) {
     gettimeofday(&start_time, nullptr);
+
     if (interpreter->Invoke() != kTfLiteOk)
       LOG(FATAL) << "Failed to invoke tflite!\n";
 
@@ -237,7 +238,7 @@ void RunInference(Settings* s)
       break;
     default:
       LOG(FATAL) << "cannot handle output type "
-                 << interpreter->tensor(input)->type << " yet";
+                 << interpreter->tensor(input)->type << "\n";
       exit(-1);
   }
 
