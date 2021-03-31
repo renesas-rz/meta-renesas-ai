@@ -234,3 +234,23 @@ python3 resnet152.py resnet152-b121ed2d.pth imagenet_classes.txt grace_hopper.jp
 #Inception v3
 python3 inception_v3.py inception_v3_google-1a9a5a14.pth imagenet_classes.txt grace_hopper.jpg
 ```
+
+## Sample Build Configurations
+Two sets of configuration templates are included in the *templates* directory.
+These allow different frameworks that use compatible dependencies to be easily
+built together.
+
+### armnn+coral+tf+tfl
+This incorporates:
+* ArmNN SDK
+* TensorFlow
+* TensorFlow Lite (including Google Coral TPU support)
+* Various pre-built models that can be used for testing/benchmarking
+
+### caffe2+onnx+opencv+pytorch
+This incorporates:
+* Caffe2
+* ONNX Runtime
+* OpenCV
+* PyTorch
+* Various pre-built models that can be used for testing/benchmarking
