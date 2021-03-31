@@ -1,6 +1,7 @@
 FILESEXTRAPATHS_prepend := "${THISDIR}/files:"
 
 RDEPENDS_${PN} += " \
+	models-google-coral \
 	python \
 	python-pip \
 	python-setuptools \
@@ -24,7 +25,7 @@ do_compile_append() {
 		-I . -I ${S}/tflite/public/ \
 		-I ${STAGING_DIR_TARGET}/usr/include/tensorflow/lite/tools/make/downloads/flatbuffers/include \
 		-lstdc++ -lpthread -lm -ldl ${STAGING_DIR_TARGET}/usr/${TFLITE_LIB_DIR_ARCH}/libtensorflow-lite.a \
-		-L ${WORKDIR}/${TPU_LIB_DIR_ARCH}/${GOOGLE_CORAL_SPEED}/ -l:libedgetpu.so.1.0 ${LDFLAGS} 
+		-L ${WORKDIR}/${TPU_LIB_DIR_ARCH}/${GOOGLE_CORAL_SPEED}/ -l:libedgetpu.so.1.0 ${LDFLAGS}
 }
 
 do_install_append() {

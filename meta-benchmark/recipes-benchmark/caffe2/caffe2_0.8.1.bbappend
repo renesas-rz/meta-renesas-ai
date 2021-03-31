@@ -1,5 +1,7 @@
 FILESEXTRAPATHS_prepend := "${THISDIR}/files:"
 
+RDEPENDS_${PN} += "models-caffe2"
+
 SRC_URI += " \
 	file://alexnet_codes \
 	file://caffe2_Benchmark.sh \

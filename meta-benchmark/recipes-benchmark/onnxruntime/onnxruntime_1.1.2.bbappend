@@ -1,5 +1,7 @@
 FILESEXTRAPATHS_prepend := "${THISDIR}/files:"
 
+RDEPENDS_${PN} += "models-onnx"
+
 SRC_URI += " \
 	file://onnxruntime_benchmark.cpp \
 	file://test_file_list_models.txt \

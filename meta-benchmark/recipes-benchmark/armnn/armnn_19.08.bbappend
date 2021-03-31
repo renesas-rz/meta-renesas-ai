@@ -1,5 +1,7 @@
 FILESEXTRAPATHS_prepend := "${THISDIR}/files:"
 
+RDEPENDS_${PN} += "models-armnn"
+
 SRC_URI += " \
 	file://armnnBenchmark.cpp \
 "

@@ -1,6 +1,7 @@
 FILESEXTRAPATHS_prepend := "${THISDIR}/files:"
 
 DEPENDS += "libeigen"
+RDEPENDS_${PN} += "models-tensorflow"
 
 #tensorflowBenchmark.cc is originally from https://github.com/tensorflow/tensorflow/blob/master/tensorflow/examples/label_image/main.cc
 #at branch r1.10, commit sha 656e7a2b347c3c6eb76a6c130ed4b1def567b6c1

@@ -1,6 +1,7 @@
 FILESEXTRAPATHS_prepend := "${THISDIR}/files:"
 
 RDEPENDS_${PN} += " \
+	models-tensorflow-lite \
 	python \
 	python-pip \
 	python-setuptools \

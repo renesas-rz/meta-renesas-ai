@@ -1,4 +1,4 @@
-DESCRIPTION = "AI Framework Benchmark Test"
+DESCRIPTION = "Models for TensorFlow Lite benchmarking"
 LICENSE = "Apache-2.0"
 LICENSE_FLAGS = "commercial"
 LIC_FILES_CHKSUM = " \
@@ -9,6 +9,9 @@ LIC_FILES_CHKSUM = " \
 S = "${WORKDIR}"
 
 SRC_URI = " \
+        file://models/tensorflowlite \
+        file://license/LICENSES \
+        file://license/COPYING \
 	http://download.tensorflow.org/models/mobilenet_v1_2018_02_22/mobilenet_v1_1.0_224.tgz;name=mobilenet_v1_1_0_224;subdir=tflite \
 	http://download.tensorflow.org/models/mobilenet_v1_2018_02_22/mobilenet_v1_1.0_192.tgz;name=mobilenet_v1_1_0_192;subdir=tflite \
 	http://download.tensorflow.org/models/mobilenet_v1_2018_02_22/mobilenet_v1_1.0_160.tgz;name=mobilenet_v1_1_0_160;subdir=tflite \
@@ -76,38 +79,10 @@ SRC_URI = " \
 	https://download.tensorflow.org/models/tflite_11_05_08/inception_v3_quant.tgz;name=inception_v3_lite_quant;subdir=tflite \
 	https://storage.googleapis.com/download.tensorflow.org/models/tflite/model_zoo/upload_20180427/inception_v3_2018_04_27.tgz;name=inception_v3_lite;subdir=tflite \
 	https://storage.googleapis.com/download.tensorflow.org/models/tflite/model_zoo/upload_20180427/squeezenet_2018_04_27.tgz;name=squeezenet_lite;subdir=tflite \
-	https://s3.amazonaws.com/download.caffe2.ai/models/squeezenet/predict_net.pb;name=squeezenet_predict_net_caffe2;subdir=caffe2 \
-	https://s3.amazonaws.com/download.caffe2.ai/models/squeezenet/init_net.pb;name=squeezenet_init_net_caffe2;subdir=caffe2 \
-	https://github.com/BVLC/caffe/raw/master/python/caffe/imagenet/ilsvrc_2012_mean.npy;name=squeezenet_mean_caffe2;subdir=caffe2 \
 	https://storage.googleapis.com/download.tensorflow.org/models/tflite/model_zoo/upload_20180427/inception_v4_2018_04_27.tgz;name=inception_v4_float;subdir=tflite \
 	https://storage.googleapis.com/download.tensorflow.org/models/inception_v4_299_quant_20181026.tgz;name=inception_v4_quant;subdir=tflite \
-	https://github.com/DeepScale/SqueezeNet/blob/master/SqueezeNet_v1.1/squeezenet_v1.1.caffemodel?raw=true;downloadfilename=squeezenet_v1.1.caffemodel;name=squeezenet_caffe;subdir=caffe2 \
-	https://github.com/DeepScale/SqueezeNet/raw/master/SqueezeNet_v1.1/deploy.prototxt;name=squeezenet_caffe_proto;subdir=caffe2 \
-	https://s3.amazonaws.com/onnx-model-zoo/squeezenet/squeezenet1.1/squeezenet1.1.onnx;name=squeezenet_onnx;subdir=onnx \
-	https://s3.amazonaws.com/onnx-model-zoo/mobilenet/mobilenetv2-1.0/mobilenetv2-1.0.onnx;name=mobilenetv2_onnx;subdir=onnx \
-	https://github.com/opencv/opencv/raw/master/samples/data/dnn/classification_classes_ILSVRC2012.txt;name=ilsvrc_label;subdir=onnx \
-	https://github.com/pjreddie/darknet/raw/master/data/imagenet.shortnames.list;name=darknet_label;subdir=opencv \
-	https://pjreddie.com/media/files/darknet19.weights;name=darkent19_weights;subdir=opencv \
-	https://github.com/pjreddie/darknet/raw/master/cfg/darknet19.cfg;name=darkent19_cfg;subdir=opencv \
-	https://github.com/pjreddie/darknet/raw/master/cfg/darknet.cfg;name=darkent_cfg;subdir=opencv \
-	https://pjreddie.com/media/files/darknet.weights;name=darkent_weights;subdir=opencv \
 	https://storage.googleapis.com/download.tensorflow.org/models/tflite_11_05_08/resnet_v2_101.tgz;name=resnet_v2_101_float;subdir=tflite \
 	https://storage.googleapis.com/download.tensorflow.org/models/tflite/model_zoo/upload_20180427/inception_resnet_v2_2018_04_27.tgz;name=inception_resnet_v2_float;subdir=tflite \
-	https://github.com/google-coral/test_data/raw/master/efficientnet-edgetpu-S_quant_edgetpu.tflite;name=efficientnet-edgetpu-S_quant_edgetpu;subdir=tpu \
-	https://github.com/google-coral/test_data/raw/master/efficientnet-edgetpu-M_quant_edgetpu.tflite;name=efficientnet-edgetpu-M_quant_edgetpu;subdir=tpu \
-	https://github.com/google-coral/test_data/raw/master/efficientnet-edgetpu-L_quant_edgetpu.tflite;name=efficientnet-edgetpu-L_quant_edgetpu;subdir=tpu \
-	https://github.com/google-coral/test_data/raw/master/mobilenet_v1_1.0_224_quant_edgetpu.tflite;name=mobilenet_v1_1.0_224_quant_edgetpu;subdir=tpu \
-	https://github.com/google-coral/test_data/raw/master/mobilenet_v2_1.0_224_quant_edgetpu.tflite;name=mobilenet_v2_1.0_224_quant_edgetpu;subdir=tpu \
-	https://github.com/google-coral/test_data/raw/master/mobilenet_v2_1.0_224_inat_insect_quant_edgetpu.tflite;name=mobilenet_v2_1.0_224_inat_insect_quant_edgetpu;subdir=tpu \
-	https://github.com/google-coral/test_data/raw/master/inat_insect_labels.txt;name=inat_insect_labels;subdir=tpu \
-	https://github.com/google-coral/test_data/raw/master/mobilenet_v2_1.0_224_inat_plant_quant_edgetpu.tflite;name=mobilenet_v2_1.0_224_inat_plant_quant_edgetpu;subdir=tpu \
-	https://github.com/google-coral/test_data/raw/master/inat_plant_labels.txt;name=inat_plant_labels;subdir=tpu \
-	https://github.com/google-coral/test_data/raw/master/mobilenet_v2_1.0_224_inat_bird_quant_edgetpu.tflite;name=mobilenet_v2_1.0_224_inat_bird_quant_edgetpu;subdir=tpu \
-	https://github.com/google-coral/test_data/raw/master/inat_bird_labels.txt;name=inat_bird_labels;subdir=tpu \
-	https://github.com/google-coral/test_data/raw/master/inception_v1_224_quant_edgetpu.tflite;name=inception_v1_224_quant_edgetpu;subdir=tpu \
-	https://github.com/google-coral/test_data/raw/master/inception_v2_224_quant_edgetpu.tflite;name=inception_v2_224_quant_edgetpu;subdir=tpu \
-	https://github.com/google-coral/test_data/raw/master/inception_v3_299_quant_edgetpu.tflite;name=inception_v3_299_quant_edgetpu;subdir=tpu \
-	https://github.com/google-coral/test_data/raw/master/inception_v4_299_quant_edgetpu.tflite;name=inception_v4_299_quant_edgetpu;subdir=tpu \
 "
 
 SRC_URI[mobilenet_v1_1_0_224.md5sum] = "d5f69cef81ad8afb335d9727a17c462a"
@@ -250,78 +225,12 @@ SRC_URI[inception_v4_float.md5sum] = "97da95494e4a4d755cf79d636c726bcb"
 SRC_URI[inception_v4_float.sha256sum] = "305e45035c690f7a064b5babe27ea68a4e6da5819147c7c94319963c6f256467"
 SRC_URI[inception_v4_quant.md5sum] = "2dff9819d610b98768927530f57a25d3"
 SRC_URI[inception_v4_quant.sha256sum] = "e26c7fc6928efe9c63642eec0a72f8ae3fd9e12c04b25845c50ac4b8828e18f7"
-SRC_URI[squeezenet_predict_net_caffe2.md5sum] = "694bfdd02e9ccb57bfc4acb451fbfb2d"
-SRC_URI[squeezenet_predict_net_caffe2.sha256sum] = "d20be00eb448d3952265620357132916aba8744b027937b56c469b001b46472b"
-SRC_URI[squeezenet_init_net_caffe2.md5sum] = "a589d31d93c44d353ae2cd92af4d5a3f"
-SRC_URI[squeezenet_init_net_caffe2.sha256sum] = "d8115221de899d081a1a83785bf0dbaeea19463cdf7dbddba662cc7abb4f32dc"
-SRC_URI[squeezenet_mean_caffe2.md5sum] = "28a998b87558ea0cac23c83e718636b1"
-SRC_URI[squeezenet_mean_caffe2.sha256sum] = "97eefba7e046ee097121ad18564329636d2f9c153b748c7313653cae8594a149"
-SRC_URI[alexnet_codes.md5sum] = "c42575d776b80646aaa9720b3e65e6c6"
-SRC_URI[alexnet_codes.sha256sum] = "1b0d7b1c4c9ffb3212ff103f2b162813739bc6bc4ebdcc71a58ba7e3cb22a9aa"
-SRC_URI[squeezenet_caffe.md5sum] = "0357e4e11d173c72a01615888826bc8e"
-SRC_URI[squeezenet_caffe.sha256sum] = "72b912ace512e8621f8ff168a7d72af55910d3c7c9445af8dfbff4c2ee960142"
-SRC_URI[squeezenet_caffe_proto.md5sum] = "425b30ccf1181cce57c5d0cbd85f9c06"
-SRC_URI[squeezenet_caffe_proto.sha256sum] = "d041bfb2ab4b32fda4ff6c6966684132f2924e329916aa5bfe9285c6b23e3d1c"
-SRC_URI[squeezenet_onnx.md5sum] = "497ad0774f4e0b59e4f2c77ae88fcdfc"
-SRC_URI[squeezenet_onnx.sha256sum] = "1eeff551a67ae8d565ca33b572fc4b66e3ef357b0eb2863bb9ff47a918cc4088"
-SRC_URI[mobilenetv2_onnx.md5sum] = "1b8a2fd91dc2b6c78f3cfe846cf16c88"
-SRC_URI[mobilenetv2_onnx.sha256sum] = "c1c513582d56afceff8516c73804e484c81c6a830712ab6d682253f4a3cd042f"
-SRC_URI[ilsvrc_label.md5sum] = "4fdfb6d202e9d8e65da14c78b604af95"
-SRC_URI[ilsvrc_label.sha256sum] = "4eb3da435cf544e4a6f390f62c84cb9c9bb68cf8b14e97f8a063452382e5efd2"
-SRC_URI[darknet_label.md5sum] = "f5e3301cbb3ed333bd5f5faf38d18b7f"
-SRC_URI[darknet_label.sha256sum] = "6ba751a14e6470ccaf740476ab79df657925d29d9f29311629eed20f7efb0ed5"
-SRC_URI[darkent19_weights.md5sum] = "1eddf541dc78a2c7ace844cdac886afd"
-SRC_URI[darkent19_weights.sha256sum] = "10419470e9e2ffce52f3d32f7e9a3c206afdb7bde306caa2b7f7dbf097d6dabb"
-SRC_URI[darkent_cfg.md5sum] = "dd251ce35ef435fcd886ee2c99f0fcdb"
-SRC_URI[darkent_cfg.sha256sum] = "7d24fe985303c8889b879b60e0a7ae033e57c719932292eac04d3467f80ada95"
-SRC_URI[darkent_weights.md5sum] = "ee60922067d60576744437eede06642a"
-SRC_URI[darkent_weights.sha256sum] = "1b5ddb91b85aba5dfd552ec4528d3f9243779c92e7c698a4659c79ea1d87de59"
-SRC_URI[darkent19_cfg.md5sum] = "6d7d2d970b6351e0f5c2795a86f28bad"
-SRC_URI[darkent19_cfg.sha256sum] = "7ac495cfb9f37c780ae5ea451dda4754ec147ae9820fa14b2fdd52f8e6426971"
 SRC_URI[resnet_v2_101_float.md5sum] = "e85b06c92f547108397650318c9f556a"
 SRC_URI[resnet_v2_101_float.sha256sum] = "c624931eed69e4a6c5d7b67e76d0303f6d868cefc4c9f5108619c1fc1ce2eb89"
 SRC_URI[inception_resnet_v2_float.md5sum] = "59d4080bd81c1b675d2124672d8afe4c"
 SRC_URI[inception_resnet_v2_float.sha256sum] = "fb16b93ff2b2bcda0da5cdfd25a8d5b8b74438943dae738db659bad0d3d48ff1"
-SRC_URI[efficientnet-edgetpu-S_quant_edgetpu.md5sum] = "c7d6ce02623c51d83c4f2053493fa950"
-SRC_URI[efficientnet-edgetpu-S_quant_edgetpu.sha256sum] = "a7fe60d5e50c4baac6df1d7c042e81f5af0d9a4462ec6b62402858178f1236a0"
-SRC_URI[efficientnet-edgetpu-M_quant_edgetpu.md5sum] = "59a18c6a982ada33832ca7334ed76a1f"
-SRC_URI[efficientnet-edgetpu-M_quant_edgetpu.sha256sum] = "fa624d4bd90f1a9c4b205fa876876c9c51f217ac3cd6f6b67e05b71cebe38ce5"
-SRC_URI[efficientnet-edgetpu-L_quant_edgetpu.md5sum] = "dadc7531f3a3902e31b4fca2b2b78b6b"
-SRC_URI[efficientnet-edgetpu-L_quant_edgetpu.sha256sum] = "834eafb26b31dfe1c2b9ddf4f5bc3096491c32861ffbd787959e4c603dac3f2a"
-SRC_URI[mobilenet_v1_1.0_224_quant_edgetpu.md5sum] = "69290271b2c3ec8be9006836a66d2248"
-SRC_URI[mobilenet_v1_1.0_224_quant_edgetpu.sha256sum] = "15eba6787496c09d181791303572e051cc2e60547cad2a9e22c40409453ee0b0"
-SRC_URI[mobilenet_v2_1.0_224_quant_edgetpu.md5sum] = "15d70bb6904ecc9c509faeb2ec867f9f"
-SRC_URI[mobilenet_v2_1.0_224_quant_edgetpu.sha256sum] = "245767c007ee553bb2d3e4f23330dc05d284f0ea4b515caf9e9ba4a326dfb69c"
-SRC_URI[mobilenet_v2_1.0_224_inat_insect_quant_edgetpu.md5sum] = "388d6f79aaa34965f8ae6b776c884079"
-SRC_URI[mobilenet_v2_1.0_224_inat_insect_quant_edgetpu.sha256sum] = "03e08e9e6839995a170a4643d2ffcfeffc4fedba440c0f7e0d464ef092e86f93"
-SRC_URI[inat_insect_labels.md5sum] = "0f348cbce21cccb44f14716d6fcd5376"
-SRC_URI[inat_insect_labels.sha256sum] = "4912a91e047f17e4af9cea410f5a7c55680cbdb8cebc7a3c67d4a3f236b365ea"
-SRC_URI[mobilenet_v2_1.0_224_inat_plant_quant_edgetpu.md5sum] = "f7887574dc1d9829e1995e7ae5ec4e18"
-SRC_URI[mobilenet_v2_1.0_224_inat_plant_quant_edgetpu.sha256sum] = "d78329df56978bb81fc06a34b985ed43bed90705809e8ea2319ea9394755086a"
-SRC_URI[inat_plant_labels.md5sum] = "d992885b9d4ee31649a9fcbf514518a4"
-SRC_URI[inat_plant_labels.sha256sum] = "c3d744325edcf1e325637518be3103f63f7a63fd6fdc7f95e7ce6221ab97aaf5"
-SRC_URI[mobilenet_v2_1.0_224_inat_bird_quant_edgetpu.md5sum] = "975bd188c72acd0b6dfa2570c25a78f0"
-SRC_URI[mobilenet_v2_1.0_224_inat_bird_quant_edgetpu.sha256sum] = "0400fbd9c119fe74540e6e37d145b86391bc9a2a3e354c376de28f5aaf045d43"
-SRC_URI[inat_bird_labels.md5sum] = "5432df2f330e7ac478ef1940349831aa"
-SRC_URI[inat_bird_labels.sha256sum] = "f6eeb8056e52fe72a878c0f84ef7c9c8a393841e7d8f0800f257646e6a96c527"
-SRC_URI[inception_v1_224_quant_edgetpu.md5sum] = "4ab4a45b6dbd4fa92397c341b1ee58a9"
-SRC_URI[inception_v1_224_quant_edgetpu.sha256sum] = "1bf69c82819ee7f21a57096ac0a3a5968ded3cb148ba49b65b27390e48182e57"
-SRC_URI[inception_v2_224_quant_edgetpu.md5sum] = "35a77705f23f24f19147d1d818b4827d"
-SRC_URI[inception_v2_224_quant_edgetpu.sha256sum] = "917262345d35051fab5f8473e38aeb5d41b61f7734f83569d72f5c396b5a6268"
-SRC_URI[inception_v3_299_quant_edgetpu.md5sum] = "bfd1a10275dcfdadc857e5891d5af38b"
-SRC_URI[inception_v3_299_quant_edgetpu.sha256sum] = "aff3432403df57b3f0172f8553f9cf29b41fb7ee2391d1b0e9f740c261c13399"
-SRC_URI[inception_v4_299_quant_edgetpu.md5sum] = "e3317f8aec7cc60deb37fa61ee7360c0"
-SRC_URI[inception_v4_299_quant_edgetpu.sha256sum] = "bd1926ed63ff1f6c961823d3f96dc31dfe0ad87c6d439bb013e81898c9e42bd8"
 
-SRC_URI += " \
-        file://models \
-        file://license/LICENSES \
-        file://license/COPYING \
-"
 do_install () {
-	install -d ${D}/home/root/models/tensorflow/InceptionV3
-	install -d ${D}/home/root/models/tensorflow/InceptionV3_Quant
-	install -d ${D}/home/root/models/tensorflow/InceptionV4
 	install -d ${D}/home/root/models/tensorflowlite/Mobile_Net_V1_Model
 	install -d ${D}/home/root/models/tensorflowlite/Mobile_Net_V2_Model
 	install -d ${D}/home/root/models/tensorflowlite/Mobile_Net_V3_Model
@@ -331,14 +240,6 @@ do_install () {
 	install -d ${D}/home/root/models/tensorflowlite/Squeezenet
 	install -d ${D}/home/root/models/tensorflowlite/MnasNet
 	install -d ${D}/home/root/models/tensorflowlite/Resnet
-	install -d ${D}/home/root/models/armnn
-	install -d ${D}/home/root/models/caffe
-	install -d ${D}/home/root/models/onnx
-	install -d ${D}/home/root/models/darknet
-	install -d ${D}/home/root/models/google-coral/Resnet
-	install -d ${D}/home/root/models/google-coral/Efficient_Net_Model
-	install -d ${D}/home/root/models/google-coral/Mobile_Net_Model
-	install -d ${D}/home/root/models/google-coral/Inception_Model
 	install -m 0644 ${S}/tflite/mobilenet_v1*.tflite ${D}/home/root/models/tensorflowlite/Mobile_Net_V1_Model/
 	install -m 0644 ${S}/tflite/mobilenet_v2*.tflite ${D}/home/root/models/tensorflowlite/Mobile_Net_V2_Model/
 	install -m 0644 ${S}/tflite/v3*/v3*.tflite ${D}/home/root/models/tensorflowlite/Mobile_Net_V3_Model/
@@ -346,45 +247,19 @@ do_install () {
 	install -m 0644 ${S}/tflite/squeezenet*.tflite ${D}/home/root/models/tensorflowlite/Squeezenet/
 	install -m 0644 ${S}/tflite/inception_resnet_v2.tflite ${D}/home/root/models/tensorflowlite/Resnet/
 	install -m 0644 ${S}/tflite/resnet_v2_101_299.tflite ${D}/home/root/models/tensorflowlite/Resnet/
-	install -m 0644 ${S}/tpu/efficientnet*edgetpu.tflite ${D}/home/root/models/google-coral/Efficient_Net_Model/
-	install -m 0644 ${S}/tpu/mobilenet*edgetpu.tflite ${D}/home/root/models/google-coral/Mobile_Net_Model/
-	install -m 0644 ${S}/tpu/inception*edgetpu.tflite ${D}/home/root/models/google-coral/Inception_Model/
 	install -m 0644 ${S}/tflite/labels.txt ${D}/home/root/models/tensorflowlite/Mobile_Net_V1_Model/
 	install -m 0644 ${S}/tflite/labels.txt ${D}/home/root/models/tensorflowlite/Mobile_Net_V2_Model/
 	install -m 0644 ${S}/tflite/labels.txt ${D}/home/root/models/tensorflowlite/Mobile_Net_V3_Model/
 	install -m 0644 ${S}/tflite/labels.txt ${D}/home/root/models/tensorflowlite/NasNet/
 	install -m 0644 ${S}/tflite/labels.txt ${D}/home/root/models/tensorflowlite/Squeezenet/
 	install -m 0644 ${S}/tflite/labels.txt ${D}/home/root/models/tensorflowlite/Resnet/
-	install -m 0644 ${S}/tflite/labels.txt ${D}/home/root/models/google-coral/Resnet/
-	install -m 0644 ${S}/tflite/labels.txt ${D}/home/root/models/google-coral/Efficient_Net_Model/
-	install -m 0644 ${S}/tflite/labels.txt ${D}/home/root/models/google-coral/Mobile_Net_Model/
-	install -m 0644 ${S}/tpu/inat*labels.txt ${D}/home/root/models/google-coral/Mobile_Net_Model/
-	install -m 0644 ${S}/tflite/labels.txt ${D}/home/root/models/google-coral/Inception_Model/
-	install -m 0644 ${S}/tflite/imagenet_slim_labels.txt ${D}/home/root/models/tensorflow/InceptionV3/
-	install -m 0644 ${S}/tflite/imagenet_slim_labels.txt ${D}/home/root/models/tensorflow/InceptionV3_Quant/
 	install -m 0644 ${S}/tflite/imagenet_slim_labels.txt ${D}/home/root/models/tensorflowlite/Mobile_InceptionV3/
 	install -m 0644 ${S}/tflite/inception_v3*.tflite ${D}/home/root/models/tensorflowlite/Mobile_InceptionV3/
-	install -m 0644 ${S}/tflite/inception_v3_2016_08_28_frozen.pb ${D}/home/root/models/tensorflow/InceptionV3/
-	install -m 0644 ${S}/tflite/imagenet_slim_labels.txt ${D}/home/root/models/tensorflow/InceptionV4/
 	install -m 0644 ${S}/tflite/imagenet_slim_labels.txt ${D}/home/root/models/tensorflowlite/Mobile_InceptionV4/
 	install -m 0644 ${S}/tflite/inception_v4*.tflite ${D}/home/root/models/tensorflowlite/Mobile_InceptionV4/
-	install -m 0644 ${S}/tflite/inception_v4*.pb ${D}/home/root/models/tensorflow/InceptionV4/
-	install -m 0644 ${S}/caffe2/squeezenet_v1.1.caffemodel ${D}/home/root/models/caffe/
-	install -m 0644 ${S}/caffe2/deploy.prototxt ${D}/home/root/models/caffe/
-	install -m 0644 ${S}/onnx/squeezenet1.1.onnx ${D}/home/root/models/onnx/
-	install -m 0644 ${S}/onnx/mobilenetv2-1.0.onnx ${D}/home/root/models/onnx/
-	install -m 0644 ${S}/onnx/classification_classes_ILSVRC2012.txt ${D}/home/root/models/onnx/
-	install -m 0644 ${S}/opencv/darknet19.cfg ${D}/home/root/models/darknet/
-	install -m 0644 ${S}/opencv/darknet.cfg ${D}/home/root/models/darknet/
-	install -m 0644 ${S}/opencv/imagenet.shortnames.list ${D}/home/root/models/darknet/
-	install -m 0644 ${S}/opencv/darknet.weights ${D}/home/root/models/darknet/
-	install -m 0644 ${S}/opencv/darknet19.weights ${D}/home/root/models/darknet/
 	cp -r ${S}/models/tensorflowlite/* ${D}/home/root/models/tensorflowlite/
-	cp -r ${S}/models/tensorflow/* ${D}/home/root/models/tensorflow/
-	cp -r ${S}/models/armnn/* ${D}/home/root/models/armnn/
-	cp -r ${S}/models/google-coral/* ${D}/home/root/models/google-coral/
 }
 
 FILES_${PN} = " \
-        /home/root/models \
+        /home/root/models/tensorflowlite \
 "
