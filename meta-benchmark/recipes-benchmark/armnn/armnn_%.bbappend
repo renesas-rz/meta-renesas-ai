@@ -15,13 +15,12 @@ do_compile_append() {
 		${WORKDIR}/build/tests/CMakeFiles/inferenceTest.dir/InferenceTestImage.cpp.o \
 		-o armnnBenchmark -DARMNN_TF_PARSER -DARMNN_TF_LITE_PARSER -DARMNN_ONNX_PARSER \
 		-I ${S}/include -I ${S}/tests -I ${S}/src/armnnUtils \
-		-I ${S}/src/backends/ -I ${S}/src/armnn/ \
-		-I ${STAGING_DIR_TARGET}/usr/include \
+		-I ${S}/src/armnn/ \
 		-I ${S}/third-party/ \
 		-I ${S}/include/armnn/ \
 		-L ${WORKDIR}/build/ \
 		-larmnn -larmnnTfLiteParser -larmnnOnnxParser -larmnnTfParser \
-		-L ${STAGING_DIR_TARGET}/usr/lib/ -lstdc++ -lm -lpthread ${LDFLAGS}
+		-lstdc++ -lm -lpthread ${LDFLAGS}
 }
 
 do_compile_append_aarch64() {
