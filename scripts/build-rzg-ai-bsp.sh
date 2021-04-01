@@ -14,14 +14,15 @@ set -e
 
 ################################################################################
 # Global parameters
-RZG_AI_BSP_VER="v4.0.0"
+RZG_AI_BSP_VER="master"
 WORK_DIR="${PWD}"
 COMMAND_NAME="$0"
 INSTALL_DEPENDENCIES=false
 PLATFORM=""
-FRAMEWORK="benchmark"
+FRAMEWORK="benchmark-a"
+BENCHMARK=true
 PROP_DIR=""
-BUILD="true"
+BUILD=true
 OUTPUT_DIR="${WORK_DIR}/output"
 FAMILY=""
 
@@ -46,10 +47,13 @@ print_help () {
 	 -f <framework>     Select which AI framework to include in the
 	                    filesystem.
 	                    Choose from:
-	                    armnn, benchmark, caffe2, google-coral, onnxruntime,
-	                    opencv, pytorch, tensorflow-lite, tensorflow.
-	                    The benchmark option will automatically include all
-	                    supported frameworks.
+	                    armnn, benchmark-a, benchmark-b, caffe2,
+	                    google-coral, onnxruntime, opencv, pytorch,
+	                    tensorflow, or tensorflow-lite.
+	                    The benchmark-a option will automatically include
+	                    armnn, google-coral tensorflow, and tensorflow-lite.
+	                    The benchmark-b option will automatically include
+	                    caffe2, onnxruntime, opencv and pytorch.
 	                    By default ${FRAMEWORK} will be used.
 	 -l <prop lib dir>  Location when proprietary libraries have been
 	                    downloaded to.
@@ -74,11 +78,21 @@ while getopts ":cdf:l:o:p:h" opt; do
                 ;;
         f)
 		case "${OPTARG}" in
-		"armnn" | "benchmark" | "caffe2" | "google-coral" | \
-		"onnxruntime" | "opencv" | "pytorch" | "tensorflow-lite" | \
-		"tensorflow")
+		"armnn" | "caffe2" | "google-coral" | "onnxruntime" | \
+		"opencv" | "pytorch" | "tensorflow" | "tensorflow-lite")
 			FRAMEWORK="${OPTARG}"
+			BENCHMARK=false
         	        ;;
+
+		"benchmark-a")
+			FRAMEWORK="armnn+coral+tf+tfl"
+			BENCHMARK=true
+			;;
+
+		"benchmark-b")
+			FRAMEWORK="caffe2+onnx+opencv+pytorch"
+			BENCHMARK=true
+			;;
 
 		*)
 			echo " ERROR: -f \"${OPTARG}\" Not supported"
@@ -303,8 +317,11 @@ configure_build () {
 	# This will create and take us to the $WORK_DIR/build directory
 	source poky/oe-init-build-env
 
-	cp $WORK_DIR/meta-renesas-ai/meta-${FRAMEWORK}/templates/${PLATFORM}/*.conf \
-		./conf/
+	if ${BENCHMARK}; then
+		cp $WORK_DIR/meta-renesas-ai/meta-benchmark/templates/${FRAMEWORK}/${PLATFORM}/*.conf ./conf/
+	else
+		cp $WORK_DIR/meta-renesas-ai/meta-${FRAMEWORK}/templates/${PLATFORM}/*.conf ./conf/
+	fi
 }
 
 do_build () {
@@ -341,20 +358,6 @@ copy_output () {
 clear
 
 case ${RZG_AI_BSP_VER} in
-"v4.0.0")
-	if [ ${FAMILY} == "rzg1" ]; then
-		RZG_BSP_VER="certified-linux-v2.1.7"
-	elif [ ${FAMILY} == "rzg2" ]; then
-		RZG_BSP_VER="BSP-1.0.6-update1"
-	fi
-	;;
-"v3.5.1")
-	if [ ${FAMILY} == "rzg1" ]; then
-		RZG_BSP_VER="certified-linux-v2.1.6-update1"
-	elif [ ${FAMILY} == "rzg2" ]; then
-		RZG_BSP_VER="BSP-1.0.4-update1"
-	fi
-	;;
 *)
 	if [ ${FAMILY} == "rzg1" ]; then
 		RZG_BSP_VER="certified-linux-v2.1.7"
