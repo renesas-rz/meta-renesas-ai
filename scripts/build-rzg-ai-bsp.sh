@@ -360,9 +360,9 @@ clear
 case ${RZG_AI_BSP_VER} in
 *)
 	if [ ${FAMILY} == "rzg1" ]; then
-		RZG_BSP_VER="certified-linux-v2.1.7"
+		RZG_BSP_VER="certified-linux-v2.1.8"
 	elif [ ${FAMILY} == "rzg2" ]; then
-		RZG_BSP_VER="BSP-1.0.6-update1"
+		RZG_BSP_VER="BSP-1.0.7"
 	fi
 	;;
 esac

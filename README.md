@@ -6,7 +6,7 @@ and RZ/G2 platforms.
 The layers should be used with the official Renesas RZ/G1 Yocto Poky BSP based
 on the CIP Kernel:  
 URI: **https://github.com/renesas-rz/meta-renesas.git**  
-tag: certified-linux-v2.1.7 (91a7d11cce9d63dec0ccd09de15be33ae3ed28c3)
+tag: certified-linux-v2.1.8 (3a4fae402a34c92fd231e1b8c077a6964a90186f)
 
 The meta-rzg1-gcc-linaro meta-layer should be used when including TensorFlow
 v2.3+ as GCC v7.3 is required. Read *meta-rzg1-gcc-linaro/README.md* for more
@@ -16,7 +16,7 @@ details.
 The layers should be used with the official Renesas RZ/G2 Yocto Poky BSP based
 on the CIP Kernel:  
 URI: **https://github.com/renesas-rz/meta-rzg2.git**  
-tag: BSP-1.0.6-update1 (bc6b6c8a7f9bf35e284c7337da07878c9bccefee)
+tag: BSP-1.0.7 (5ddd7aac729dac64d362e6ee5aa291d9f44dea0f)
 
 For each AI tool, please refer to **meta-${AI\_TOOL\_NAME}/README.md**. For
 example:  
