@@ -87,39 +87,30 @@ RDEPENDS_${PN} += "arm-compute-library protobuf boost"
 
 EXTRANATIVEPATH += "chrpath-native"
 
+# Tensorflow RDEPENDS
 RDEPENDS_${PN}-tensorflow += "${PN}"
-
 RDEPENDS_${PN}-tensorflow-examples += "${PN}-tensorflow"
-
 RDEPENDS_${PN}-tensorflow-examples-dbg += "${PN}-tensorflow"
-
 RDEPENDS_${PN}-tensorflow-dbg += "${PN}-tensorflow"
-
 RDEPENDS_${PN}-tensorflow-dev += "${PN}-tensorflow"
 
+# Tensorflow-lite RDEPENDS
 RDEPENDS_${PN}-tensorflow-lite += "${PN}"
-
 RDEPENDS_${PN}-tensorflow-lite-examples += "${PN}-tensorflow-lite"
-
 RDEPENDS_${PN}-tensorflow-lite-examples-dbg += "${PN}-tensorflow-lite"
-
 RDEPENDS_${PN}-tensorflow-lite-dbg += "${PN}-tensorflow-lite"
-
 RDEPENDS_${PN}-tensorflow-lite-dev += "${PN}-tensorflow-lite"
 RDEPENDS_${PN}-tensorflow-lite-staticdev += "${PN}-tensorflow-lite"
 
+# ONNX RDEPENDS
 RDEPENDS_${PN}-onnx += "${PN}"
-
 RDEPENDS_${PN}-onnx-examples += "${PN}-onnx"
-
 RDEPENDS_${PN}-onnx-examples-dbg += "${PN}-onnx"
-
 RDEPENDS_${PN}-onnx-dbg += "${PN}-onnx"
-
 RDEPENDS_${PN}-onnx-dev += "${PN}-onnx"
 
+# ArmNN RDEPENDS
 RDEPENDS_${PN}-examples += "${PN}"
-
 RDEPENDS_${PN}-examples-dbg += "${PN}"
 
 EXTRA_OECMAKE=" \
@@ -178,14 +169,14 @@ do_configure_prepend() {
 }
 
 do_install_append() {
-	install -d ${D}${bindir}/${PN}-${PV}/examples/UnitTests
 	install -d ${D}${bindir}/${PN}-${PV}/examples/DelegateUnitTests
+	install -d ${D}${bindir}/${PN}-${PV}/examples/ExecuteNetwork
+	install -d ${D}${bindir}/${PN}-${PV}/examples/onnx
+	install -d ${D}${bindir}/${PN}-${PV}/examples/RenesasSample-Armnn
 	install -d ${D}${bindir}/${PN}-${PV}/examples/SampleApp
 	install -d ${D}${bindir}/${PN}-${PV}/examples/tensorflow
 	install -d ${D}${bindir}/${PN}-${PV}/examples/tensorflow-lite
-	install -d ${D}${bindir}/${PN}-${PV}/examples/onnx
-	install -d ${D}${bindir}/${PN}-${PV}/examples/RenesasSample-Armnn
-	install -d ${D}${bindir}/${PN}-${PV}/examples/ExecuteNetwork
+	install -d ${D}${bindir}/${PN}-${PV}/examples/UnitTests
 
 	install -m 0555 \
 		${WORKDIR}/build/samples/SimpleSample \
@@ -346,8 +337,8 @@ FILES_${PN} = " \
 FILES_${PN}-dev = " \
 	${includedir}/armnn \
 	${includedir}/armnnDeserializer \
-	${includedir}/armnnSerializer \
 	${includedir}/armnnQuantizer \
+	${includedir}/armnnSerializer \
 	${includedir}/armnnUtils \
 "
 
@@ -358,89 +349,57 @@ FILES_${PN}-dbg = " \
 
 FILES_${PN}-examples = " \
 	${bindir}/${PN} \
-	${bindir}/${PN}-${PV}/examples/UnitTests \
 	${bindir}/${PN}-${PV}/examples/DelegateUnitTests \
-	${bindir}/${PN}-${PV}/examples/SampleApp \
-	${bindir}/${PN}-${PV}/examples/RenesasSample-Armnn \
-	${bindir}/${PN}-${PV}/examples/images \
 	${bindir}/${PN}-${PV}/examples/ExecuteNetwork \
+	${bindir}/${PN}-${PV}/examples/images \
+	${bindir}/${PN}-${PV}/examples/RenesasSample-Armnn \
+	${bindir}/${PN}-${PV}/examples/SampleApp \
+	${bindir}/${PN}-${PV}/examples/UnitTests \
 	${bindir}/${PN}-${PV}/examples/UnitTests/src/backends/backendsCommon \
 	${bindir}/${PN}-${PV}/examples/UnitTests/src/backends/dynamic \
 "
 
 FILES_${PN}-examples-dbg = " \
-	${bindir}/${PN}-${PV}/examples/SampleApp/.debug \
 	${bindir}/${PN}-${PV}/examples/RenesasSample-Armnn/.debug \
+	${bindir}/${PN}-${PV}/examples/SampleApp/.debug \
 	${bindir}/${PN}-${PV}/examples/UnitTests/.debug \
 	${bindir}/${PN}-${PV}/examples/UnitTests/src/backends/backendsCommon/test/testSharedObject/.debug \
 	${bindir}/${PN}-${PV}/examples/UnitTests/src/backends/backendsCommon/test/testDynamicBackend/.debug \
 "
 
-FILES_${PN}-tensorflow-lite-examples = " \
-	${bindir}/${PN}-${PV}/examples/tensorflow-lite \
-"
+# Tensorflow FILES
+FILES_${PN}-tensorflow-examples = "${bindir}/${PN}-${PV}/examples/tensorflow"
+FILES_${PN}-tensorflow-examples-dbg = "${bindir}/${PN}-${PV}/examples/tensorflow/.debug"
+FILES_${PN}-tensorflow = "${libdir}/libarmnnTfParser.so*"
+FILES_${PN}-tensorflow-dbg = "${libdir}/.debug/libarmnnTfParser.so"
+FILES_${PN}-tensorflow-dev = "${includedir}/armnnTfParser"
 
-FILES_${PN}-tensorflow-lite-examples-dbg = " \
-	${bindir}/${PN}-${PV}/examples/tensorflow-lite/.debug \
-"
-
+# Tensorflow-lite FILES
 FILES_${PN}-tensorflow-lite = " \
 	${libdir}/libarmnnTfLiteParser.so* \
 	${includedir}/armnn-tensorflow-lite/schema \
 "
+FILES_${PN}-tensorflow-lite-dbg = "${libdir}/.debug/libarmnnTfLiteParser.so*"
+FILES_${PN}-tensorflow-lite-dev = "${includedir}/armnnTfLiteParser"
+FILES_${PN}-tensorflow-lite-examples = "${bindir}/${PN}-${PV}/examples/tensorflow-lite"
+FILES_${PN}-tensorflow-lite-examples-dbg = "${bindir}/${PN}-${PV}/examples/tensorflow-lite/.debug"
 
-FILES_${PN}-tensorflow-lite-dbg = " \
-	${libdir}/.debug/libarmnnTfLiteParser.so* \
-"
-
-FILES_${PN}-tensorflow-lite-dev = " \
-	${includedir}/armnnTfLiteParser \
-"
-
-FILES_${PN}-tensorflow-examples = " \
-	${bindir}/${PN}-${PV}/examples/tensorflow \
-"
-
-FILES_${PN}-tensorflow-examples-dbg = " \
-	${bindir}/${PN}-${PV}/examples/tensorflow/.debug \
-"
-
-FILES_${PN}-tensorflow = " \
-	${libdir}/libarmnnTfParser.so* \
-"
-
-FILES_${PN}-tensorflow-dbg = " \
-	${libdir}/.debug/libarmnnTfParser.so \
-"
-
-FILES_${PN}-tensorflow-dev = " \
-	${includedir}/armnnTfParser \
-"
-
-FILES_${PN}-onnx-examples = " \
-	${bindir}/${PN}-${PV}/examples/onnx \
-"
-
-FILES_${PN}-onnx-examples-dbg = " \
-	${bindir}/${PN}-${PV}/examples/onnx/.debug \
-"
-
-FILES_${PN}-onnx = " \
-	${libdir}/libarmnnOnnxParser.so* \
-"
-
-FILES_${PN}-onnx-dbg = " \
-	${libdir}/.debug/libarmnnOnnxParser.so \
-"
-
+# ONNX FILES
+FILES_${PN}-onnx = "${libdir}/libarmnnOnnxParser.so*"
+FILES_${PN}-onnx-dbg = "${libdir}/.debug/libarmnnOnnxParser.so"
 FILES_${PN}-onnx-dev = " \
 	${includedir}/armnnOnnxParser \
 	${includedir}/armnnOnnxParser/IOnnxParser.hpp \
 "
+FILES_${PN}-onnx-examples = "${bindir}/${PN}-${PV}/examples/onnx"
+FILES_${PN}-onnx-examples-dbg = "${bindir}/${PN}-${PV}/examples/onnx/.debug"
 
+# ArmNN Files
 FILES_${PN}-dev += "${libdir}/cmake/*"
-INSANE_SKIP_${PN}-dev = "dev-elf"
+
+
 INSANE_SKIP_${PN} = "dev-deps dev-so"
+INSANE_SKIP_${PN}-dev = "dev-elf"
 INSANE_SKIP_${PN}-examples = "dev-so libdir"
 INSANE_SKIP_${PN}-examples-dbg = "libdir"
 INSANE_SKIP_${PN}-onnx = "dev-so"
