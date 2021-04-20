@@ -28,6 +28,9 @@
 #include "ImagePreprocessor.hpp"
 #include "InferenceTestImage.hpp"
 
+#include <getopt.h>
+#include <fcntl.h>
+
 #include <iostream>
 #include <fstream>
 #include <functional>
@@ -146,7 +149,8 @@ int MainImpl(const char* modelPath,
              const char* outputName,
              bool enableProfiling,
              const size_t subgraphId,
-             const std::shared_ptr<armnn::IRuntime>& runtime = nullptr)
+             const std::shared_ptr<armnn::IRuntime>& runtime = nullptr,
+             bool enableFastMath = false)
 {
     // Loads input tensor.
     std::vector<TDataType> input;
@@ -180,6 +184,7 @@ int MainImpl(const char* modelPath,
         params.m_OutputBindings.push_back(outputName);
         params.m_SubgraphId = subgraphId;
         params.m_ComputeDevices = {armnn::Compute::CpuAcc};
+        params.m_EnableFastMath = enableFastMath;
         InferenceModel<TParser, TDataType> model(params, enableProfiling, "", runtime);
 
         // Executes the model.
@@ -517,6 +522,7 @@ int RunTest(const std::string& modelFormat,
             const std::string& outputName,
             bool enableProfiling,
             const size_t subgraphId,
+            bool enableFastMath = false,
             const std::shared_ptr<armnn::IRuntime>& runtime = nullptr)
 {
     // Parse model binary flag from the model-format string we got from the command-line
@@ -544,7 +550,7 @@ int RunTest(const std::string& modelFormat,
                                                                inputName.c_str(), &inputTensorShape,
                                                                inputTensorDataFilePath.c_str(), inputImageName,
                                                                inputImageWidth, inputImageHeight, outputName.c_str(),
-                                                               enableProfiling, subgraphId, runtime);
+                                                               enableProfiling, subgraphId, runtime, enableFastMath);
 #else
         std::cout << "Not built with Caffe parser support.";
         return EXIT_FAILURE;
@@ -558,7 +564,7 @@ int RunTest(const std::string& modelFormat,
                                                          inputName.c_str(), &inputTensorShape,
                                                          inputTensorDataFilePath.c_str(), inputImageName,
                                                          inputImageWidth, inputImageHeight, outputName.c_str(),
-                                                         enableProfiling, subgraphId, runtime);
+                                                         enableProfiling, subgraphId, runtime, enableFastMath);
 #else
         std::cout << "Not built with Onnx parser support.";
         return EXIT_FAILURE;
@@ -572,7 +578,7 @@ int RunTest(const std::string& modelFormat,
                                                          inputName.c_str(), &inputTensorShape,
                                                          inputTensorDataFilePath.c_str(), inputImageName,
                                                          inputImageWidth, inputImageHeight, outputName.c_str(),
-                                                         enableProfiling, subgraphId, runtime);
+                                                         enableProfiling, subgraphId, runtime, enableFastMath);
 #else
         std::cout << "Not built with Tensorflow parser support.";
         return EXIT_FAILURE;
@@ -593,7 +599,7 @@ int RunTest(const std::string& modelFormat,
                                                                  inputName.c_str(), &inputTensorShape,
                                                                  inputTensorDataFilePath.c_str(), inputImageName,
                                                                  inputImageWidth, inputImageHeight, outputName.c_str(),
-                                                                 enableProfiling, subgraphId, runtime);
+                                                                 enableProfiling, subgraphId, runtime, enableFastMath);
 #else
         std::cout << "Unknown model format: '" << modelFormat <<
             "'. Please include 'caffe', 'tensorflow', 'tflite' or 'onnx'";
@@ -628,7 +634,14 @@ void loadLabelFile(string label_file_name)
     }
 }
 
-int main(int argc, const char* argv[])
+void display_usage() {
+  std::cout << "armnnBenchmark\n"
+            << "--enable-fast-math, -m: use fast maths armnn option\n"
+            << "--help, -h: display this message \n"
+            << "\n";
+}
+
+int main(int argc, char** argv)
 {
     // Configures logging for both the ARMNN library and this test program.
 #ifdef NDEBUG
@@ -643,9 +656,42 @@ int main(int argc, const char* argv[])
     model_params params;
 
     bool enableProfiling = false;
+    bool enableFastMath = false;
     size_t subgraphId = 0;
     string inputImageName = "grace_hopper.jpg";
     string inputImagePath = "/usr/bin/armnn/examples/images/";
+
+    while (1) {
+        int arguement;
+        int option_index = 0;
+
+        static struct option long_options[] = {
+                {"enable-fast-math", no_argument, nullptr, 'm'},
+                {"help", no_argument, nullptr, 'h'},
+                {nullptr, 0, nullptr, 0}
+        };
+
+        arguement = getopt_long(argc, argv, "mfhc:",
+                                long_options, &option_index);
+
+        /* Detect the end of the options. */
+        if (arguement == -1) break;
+
+        switch (arguement) {
+          case 'm':
+              enableFastMath = true;
+          break;
+          case 'h':
+          case '?':
+              display_usage();
+              exit(-1);
+
+          default:
+              std::cout << "Unknown parameter." << std::endl;
+              display_usage();
+              exit(-1);
+        }
+    }
 
     CreateModelTestOrder();
 
@@ -668,14 +714,14 @@ int main(int argc, const char* argv[])
             benched_type = "Float,";
             RunTest<float>(params.modelFormat, params.isFloatModel, params.inputTensorShape, params.modelPath,
             params.inputName, inputImagePath, inputImageName,
-            params.inputImageWidth,params.inputImageHeight, params.outputName, enableProfiling, subgraphId);
+            params.inputImageWidth, params.inputImageHeight, params.outputName, enableProfiling, subgraphId, enableFastMath);
         }
         else
         {
             benched_type = "Quant,";
             RunTest<uint8_t>(params.modelFormat, params.isFloatModel, params.inputTensorShape, params.modelPath,
             params.inputName, inputImagePath, inputImageName,
-            params.inputImageWidth, params.inputImageHeight, params.outputName, enableProfiling, subgraphId);
+            params.inputImageWidth, params.inputImageHeight, params.outputName, enableProfiling, subgraphId, enableFastMath);
         }
             bench.push_back("\n");
     }
