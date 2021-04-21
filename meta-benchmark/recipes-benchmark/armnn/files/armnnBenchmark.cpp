@@ -48,6 +48,7 @@
 std::list<std::string> bench;
 enum Parser { caffe, tensorflow, tfLite, onnx };
 Parser test_parser;
+std::string benched_backend;
 std::string benched_model;
 std::string benched_type;
 #define ARMNN_VER_BENCH "Arm NN SDK v21.02"
@@ -251,23 +252,32 @@ int MainImpl(const char* modelPath,
 
 	bench.push_back("AI_BENCHMARK_MARKER,");
 	bench.push_back(ARMNN_VER_BENCH);
+	bench.push_back(benched_backend);
+
         switch (test_parser) {
             case caffe:
-                bench.push_back(": Caffe,");
+                bench.push_back(": Caffe");
             break;
 
             case tensorflow:
-                bench.push_back(": TensorFlow,");
+                bench.push_back(": TensorFlow");
             break;
 
             case tfLite:
-                bench.push_back(": TensorFlow Lite,");
+                bench.push_back(": TensorFlow Lite");
             break;
 
             case onnx:
-                bench.push_back(": ONNX,");
+                bench.push_back(": ONNX");
             break;
         }
+
+	if(enableFastMath)
+		bench.push_back(" (Fast Math)");
+	if(enableFp16TurboMode)
+		bench.push_back(" (FP16 Turbo)");
+
+        bench.push_back(",");
         bench.push_back(benched_model);
         bench.push_back(benched_type);
         CaculateAvergeDeviation(time_vector);
@@ -671,6 +681,7 @@ int main(int argc, char** argv)
     // Default to the CpuAcc backend, otherwise InferenceModel.hpp
     // will use CpuRef
     std::vector<armnn::BackendId> backend = {armnn::Compute::CpuAcc};
+    benched_backend = " (CpuAcc)";
 
     initModelTable();
 
@@ -709,12 +720,16 @@ int main(int argc, char** argv)
               enableFp16TurboMode = true;
           break;
           case 'c':
-              if(strstr(optarg, "CpuRef"))
+              if (strstr(optarg, "CpuRef")) {
+                  benched_backend = " (CpuRef)";
                   backend = {armnn::Compute::CpuRef};
-              else if (strstr(optarg, "GpuAcc"))
+              } else if (strstr(optarg, "GpuAcc")) {
+                  benched_backend = " (GpuAcc)";
                   backend = {armnn::Compute::GpuAcc};
-              else
+              } else {
+                  benched_backend = " (CpuAcc)";
                   backend = {armnn::Compute::CpuAcc};
+              }
           break;
           case 'h':
           case '?':
