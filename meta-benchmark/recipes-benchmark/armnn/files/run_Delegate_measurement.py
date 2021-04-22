@@ -26,15 +26,17 @@ import numpy as np
 def main():
    print("ArmNN TfLite Delegate Test App")
 
-   if len(sys.argv) != 6 and len(sys.argv) != 7:
+   if len(sys.argv) != 7 and len(sys.argv) != 8:
        print("Invalid parameters...")
        print("Expected parameters are:")
-       print("1) Model List File   - A .txt file listing each model to be tested")
-       print("2) Model Directory   - The path to the directory containing the models listed in (1)")
-       print("3) Interference runs - The number of times to run inference on each model")
-       print("4) Number of Threads - The number of threads to use")
-       print("5) ArmNN Log Level   - The level to set ArmNN to use ")
-       print("Example: python run_Delegate_measurement.py test_model_list_armnnDelegate.txt /home/root/models/tensorflowlite/ 30 2 warning")
+       print("1) Model List File    - A .txt file listing each model to be tested")
+       print("2) Model Directory    - The path to the directory containing the models listed in (1)")
+       print("3) Interference runs  - The number of times to run inference on each model")
+       print("4) Number of Threads  - The number of threads to use")
+       print("5) Delegate selection - The ArmNN delegate to use [none|tflite]")
+       print("6) ArmNN Log Level    - The level to set ArmNN to use [trace|debug|info|warning|error]")
+       print("7) Benchmark          - Optionally add \"benchmark\" to output benchmark results in a parsable format")
+       print("Example: python run_Delegate_measurement.py test_model_list_armnnDelegate.txt /home/root/models/tensorflowlite/ 30 2 tflite warning benchmark")
        sys.exit(1)
 
    filepath = sys.argv[1]
@@ -50,10 +52,11 @@ def main():
    base_directory_path = sys.argv[2]
    number_of_iteration = int(sys.argv[3])
    number_of_cores = int(sys.argv[4])
-   armnnLogLevel = sys.argv[5]
+   armnnDelegate = sys.argv[5]
+   armnnLogLevel = sys.argv[6]
 
-   if len(sys.argv) == 7:
-     benchmark = sys.argv[6].lower() == 'benchmark'
+   if len(sys.argv) == 8:
+     benchmark = sys.argv[7].lower() == 'benchmark'
    else:
      benchmark = False
 
@@ -63,7 +66,7 @@ def main():
 	       list = []
 	       list_tmp = []
 
-	       run_delegate_benchmark(line, base_directory_path, './usr/bin/armnn/examples/tensorflow-lite/models/labels.txt', number_of_cores, number_of_iteration, list_tmp, list, armnnLogLevel)
+	       run_delegate_benchmark(line, base_directory_path, './usr/bin/armnn/examples/tensorflow-lite/models/labels.txt', number_of_cores, number_of_iteration, list_tmp, list, armnnDelegate, armnnLogLevel)
 
 	       print("Average Time" + " at Model " + line + str(Average(list_tmp)) + " ms ")
 	       print("Standard Deviation" + " at Model " + line + str(Average(list)))
@@ -75,13 +78,13 @@ def main():
                    model_type = ",Quant,"
 
                if benchmark == True:
-                   print("AI_BENCHMARK_MARKER,Arm NN SDK v21.02 TfLite Delegate," + line.rstrip().rsplit('/', 1)[1] + model_type + str(Average(list_tmp)) + "," + str(Average(list)) + ",")
+                   print("AI_BENCHMARK_MARKER,Arm NN SDK v21.02 Delegate (" + armnnDelegate + ")," + line.rstrip().rsplit('/', 1)[1] + model_type + str(Average(list_tmp)) + "," + str(Average(list)) + ",")
 
 def Average(lst):
     return sum(lst) / len(lst)
 
-def run_delegate_benchmark(model_file_name, base_directory, label_file_name, number_of_threads, times_to_run, list, list_dev, armnnLogLevel):
-    command = "/usr/bin/armnnDelegateBenchmark/armnnTFLiteDelegateBenchmark -i /usr/bin/armnn-21.02/examples/grace_hopper.bmp -c %s -l %s -t %d -m %s -d tflite -n %s" % (times_to_run, label_file_name, number_of_threads, base_directory+model_file_name.rstrip(), armnnLogLevel)
+def run_delegate_benchmark(model_file_name, base_directory, label_file_name, number_of_threads, times_to_run, list, list_dev, armnnDelegate, armnnLogLevel):
+    command = "/usr/bin/armnnDelegateBenchmark/armnnTFLiteDelegateBenchmark -i /usr/bin/armnn-21.02/examples/grace_hopper.bmp -c %s -l %s -t %d -m %s -d %s -n %s" % (times_to_run, label_file_name, number_of_threads, base_directory+model_file_name.rstrip(), armnnDelegate, armnnLogLevel)
 
     for line in run_command(command):
         count = 0

@@ -29,9 +29,9 @@ cd /usr/bin/armnnBenchmark
 ```bash
 cd /usr/bin/armnnDelegateBenchmark
 
-# Run inference 30 times on each TfLite model
+# Run inference 30 times on each TfLite model using the ArmNN TfLite Delegate
 ./run_Delegate_measurement.py test_model_list_armnnDelegate.txt \
-/home/root/models/tensorflowlite/ 30 2 warning
+/home/root/models/tensorflowlite/ 30 2 tflite warning
 ```
 
 ## Caffe2
