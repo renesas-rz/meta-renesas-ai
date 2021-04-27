@@ -164,6 +164,7 @@ std::string genPreprocArguments(const std::string& modelName, const std::string&
                        "It could be a file with extensions .caffemodel (Caffe), "
                        ".pb (TensorFlow), .t7 or .net (Torch), .weights (Darknet), .bin (OpenVINO).",
                        modelName, zooFile, 'm') +
+           genArgument("modeltype", "Model data type", modelName, zooFile, 'd') +
            genArgument("config", "Path to a text file of model contains network configuration. "
                        "It could be a file with extensions .prototxt (Caffe), .pbtxt (TensorFlow), .cfg (Darknet), .xml (OpenVINO).",
                        modelName, zooFile, 'c') +
@@ -212,12 +213,18 @@ int main(int argc, char** argv)
     int backendId = parser.get<int>("backend");
     int targetId = parser.get<int>("target");
     int number_of_inferences = parser.get<int>("counter");
+    String modelType = parser.get<String>("modeltype");
 
     std::string benched_model(model.c_str());
     benched_model = benched_model.substr(benched_model.find_last_of('/')+1);
 
+    if (!modelType.length()) {
+        printf("modeltype argument missing, exiting application\n");
+        return -1;
+    }
+
     bench.push_back(benched_model + ",");
-    bench.push_back("Float,");
+    bench.push_back(modelType + ",");
 
     // Open file with classes names.
     if (parser.has("classes"))
