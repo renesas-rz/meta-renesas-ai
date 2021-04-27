@@ -9,6 +9,7 @@ from torchvision import transforms
 
 parser = argparse.ArgumentParser(description='ResNet 152 Inference')
 parser.add_argument('Model')
+parser.add_argument('ModelType')
 parser.add_argument('Label')
 parser.add_argument('Image')
 parser.add_argument('--count', dest='Inference Count', type=int, default=30, help='Change inference count, default is 30')
@@ -17,11 +18,13 @@ args = parser.parse_args()
 argv = vars(args)
 
 model_location = argv['Model']
+model_type = argv['ModelType']
 label_location = argv['Label']
 image_location = argv['Image']
 inference_count = argv['Inference Count']
 
 print("Model is ", model_location)
+print("Model Type is ", model_type)
 print("Label is ", label_location)
 print("Image is ", image_location)
 print("Inference count is ", inference_count)
@@ -71,4 +74,4 @@ _, indices = torch.sort(out, descending=True)
 for idx in indices[0][:5]:
     print((labels[idx], percentage[idx].item()))
 
-print("AI_BENCHMARK_MARKER,PyTorch v1.5.1,{0},Float,{1:.2f},{2:.2f},".format(model_location.strip(), average_time, standard_deviation))
+print("AI_BENCHMARK_MARKER,PyTorch v1.5.1,{0},{1},{2:.2f},{3:.2f},".format(model_location.strip(), model_type.strip(), average_time, standard_deviation))

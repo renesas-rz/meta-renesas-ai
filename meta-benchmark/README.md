@@ -183,6 +183,7 @@ AlexNet Inference
 
 positional arguments:
   Model
+  ModelType
   Label
   Image
 
@@ -192,10 +193,10 @@ optional arguments:
                         Change inference count, defaults to 30
 
 # Example command with default inference count of 30
-python3 alexnet.py alexnet-owt-4df8aa71.pth imagenet_classes.txt grace_hopper.jpg
+python3 alexnet.py alexnet-owt-4df8aa71.pth float32 imagenet_classes.txt grace_hopper.jpg
 
 # Number of inference runs can be changed with --count
-python3 alexnet.py alexnet-owt-4df8aa71.pth imagenet_classes.txt grace_hopper.jpg --count 50
+python3 alexnet.py alexnet-owt-4df8aa71.pth float32 imagenet_classes.txt grace_hopper.jpg --count 50
 ```
 #### Other models
 Other models can also be tested such as MnasNet, MobileNet v2,
@@ -230,16 +231,16 @@ that above.
 
 ```bash
 # MnasNet
-python3 mnasnet.py mnasnet1.0_top1_73.512-f206786ef8.pth imagenet_classes.txt grace_hopper.jpg
+python3 mnasnet.py mnasnet1.0_top1_73.512-f206786ef8.pth float32 imagenet_classes.txt grace_hopper.jpg
 
 # MobileNet v2
-python3 mobilenet_v2.py mobilenet_v2-b0353104.pth imagenet_classes.txt grace_hopper.jpg
+python3 mobilenet_v2.py mobilenet_v2-b0353104.pth float32 imagenet_classes.txt grace_hopper.jpg
 
 # ResNet
-python3 resnet152.py resnet152-b121ed2d.pth imagenet_classes.txt grace_hopper.jpg
+python3 resnet152.py resnet152-b121ed2d.pth float32 imagenet_classes.txt grace_hopper.jpg
 
 #Inception v3
-python3 inception_v3.py inception_v3_google-1a9a5a14.pth imagenet_classes.txt grace_hopper.jpg
+python3 inception_v3.py inception_v3_google-1a9a5a14.pth float32 imagenet_classes.txt grace_hopper.jpg
 ```
 
 ## Sample Build Configurations
