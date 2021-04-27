@@ -192,10 +192,59 @@ int main(int argc, char* argv[])
     g_ort->ReleaseTypeInfo(typeinfo);
   }
 
-  if (type == ONNX_TENSOR_ELEMENT_DATA_TYPE_FLOAT)
-            bench.push_back("Float,");
-  else
+  switch (type) {
+    case ONNX_TENSOR_ELEMENT_DATA_TYPE_BFLOAT16:
+            bench.push_back("bfloat16,");
+            break;
+    case ONNX_TENSOR_ELEMENT_DATA_TYPE_BOOL:
+            bench.push_back("bool,");
+            break;
+    case ONNX_TENSOR_ELEMENT_DATA_TYPE_COMPLEX128:
+            bench.push_back("complex128,");
+            break;
+    case ONNX_TENSOR_ELEMENT_DATA_TYPE_COMPLEX64:
+            bench.push_back("complex64,");
+            break;
+    case ONNX_TENSOR_ELEMENT_DATA_TYPE_DOUBLE:
+            bench.push_back("double,");
+            break;
+    case ONNX_TENSOR_ELEMENT_DATA_TYPE_FLOAT:
+            bench.push_back("float32,");
+            break;
+    case ONNX_TENSOR_ELEMENT_DATA_TYPE_FLOAT16:
+            bench.push_back("float16,");
+            break;
+    case ONNX_TENSOR_ELEMENT_DATA_TYPE_INT16:
+            bench.push_back("int16,");
+            break;
+    case ONNX_TENSOR_ELEMENT_DATA_TYPE_INT32:
+            bench.push_back("int32,");
+            break;
+    case ONNX_TENSOR_ELEMENT_DATA_TYPE_INT64:
+            bench.push_back("int64,");
+            break;
+    case ONNX_TENSOR_ELEMENT_DATA_TYPE_INT8:
+            bench.push_back("int8,");
+            break;
+    case ONNX_TENSOR_ELEMENT_DATA_TYPE_STRING:
+            bench.push_back("string,");
+            break;
+    case ONNX_TENSOR_ELEMENT_DATA_TYPE_UINT16:
+            bench.push_back("uint16,");
+            break;
+    case ONNX_TENSOR_ELEMENT_DATA_TYPE_UINT32:
+            bench.push_back("uint32,");
+            break;
+    case ONNX_TENSOR_ELEMENT_DATA_TYPE_UINT64:
+            bench.push_back("uint64,");
+            break;
+    case ONNX_TENSOR_ELEMENT_DATA_TYPE_UINT8:
+            bench.push_back("uint8,");
+            break;
+    case ONNX_TENSOR_ELEMENT_DATA_TYPE_UNDEFINED:
+    default:
             bench.push_back("Unknown,");
+  }
 
   size_t input_tensor_size = 224 * 224 * 3;
 
