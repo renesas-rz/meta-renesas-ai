@@ -13,8 +13,8 @@ IMAGE_LOCATION = sys.argv[2]
 
 print "Image is ", IMAGE_LOCATION
 
-MODEL_squeezenet = 'squeezenet', 'init_net.pb', 'predict_net.pb', 'ilsvrc_2012_mean.npy', 227
-MODEL_mobilenetv2_1_0_224 = 'mobilenetv2', 'init_net.pb', 'predict_net.pb', 'ilsvrc_2012_mean.npy', 224
+MODEL_squeezenet = 'squeezenet', 'init_net.pb', 'predict_net.pb', 'ilsvrc_2012_mean.npy', 227, 'float32'
+MODEL_mobilenetv2_1_0_224 = 'mobilenetv2', 'init_net.pb', 'predict_net.pb', 'ilsvrc_2012_mean.npy', 224, 'float32'
 
 codes =  "./alexnet_codes"
 from datetime import datetime
@@ -159,4 +159,4 @@ while i < test_loop_count:
 print "Caffe2 Prediction Average time(msecs): ",np.mean(timingResult)
 print "Caffe2 Prediction STD: ",np.std(timingResult)
 
-print("AI_BENCHMARK_MARKER,Caffe2 v0.8.1,{0},Float,{1:.2f},{2:.2f},".format(MODEL_NAME, np.mean(timingResult), np.std(timingResult)))
+print("AI_BENCHMARK_MARKER,Caffe2 v0.8.1,{0},{1},{2:.2f},{3:.2f},".format(MODEL_NAME, MODEL[5], np.mean(timingResult), np.std(timingResult)))
