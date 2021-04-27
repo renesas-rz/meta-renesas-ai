@@ -1,4 +1,4 @@
-inception_v1_224_quant_edgetpu.tflite labels.txt
-inception_v2_224_quant_edgetpu.tflite labels.txt
-inception_v3_299_quant_edgetpu.tflite labels.txt
-inception_v4_299_quant_edgetpu.tflite labels.txt
+inception_v1_224_quant_edgetpu.tflite labels.txt uint8
+inception_v2_224_quant_edgetpu.tflite labels.txt uint8
+inception_v3_299_quant_edgetpu.tflite labels.txt uint8
+inception_v4_299_quant_edgetpu.tflite labels.txt uint8

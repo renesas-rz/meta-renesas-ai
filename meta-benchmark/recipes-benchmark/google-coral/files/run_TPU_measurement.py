@@ -49,32 +49,33 @@ def main():
 	with open(filepath) as fp:
 		for line in fp:
 			if not len(line.strip()) == 0:
+				model_details = line.split()
 				list = []
 				list_tmp = []
 
-			model_name = line.split()[0]
-			label_file = line.split()[1]
+				if len(model_details) != 3:
+					print("Invalid line: " + line)
+					sys.exit(1)
 
-			if not os.path.isfile(base_directory_path + model_name):
-				print("Model {} does not exist. Exiting...".format(base_directory_path + model_name))
-				sys.exit(1)
+				model_name = model_details[0]
+				label_file = model_details[1]
+				model_type = model_details[2]
 
-			if not os.path.isfile(base_directory_path + label_file):
-				print("Label file {} does not exist. Exiting...".format(base_directory_path + label_file))
-				sys.exit(1)
+				if not os.path.isfile(base_directory_path + model_name):
+					print("Model {} does not exist. Exiting...".format(base_directory_path + model_name))
+					sys.exit(1)
 
-			run_label_image(model_name, base_directory_path, label_file, number_of_iteration, list_tmp, list)
+				if not os.path.isfile(base_directory_path + label_file):
+					print("Label file {} does not exist. Exiting...".format(base_directory_path + label_file))
+					sys.exit(1)
 
-			print("Average Time" + " at Model " + model_name + " "+ str(Average(list_tmp)) + " ms ")
-			print("Standard Deviation" + " at Model " + model_name + " " + str(Average(list)))
+				run_label_image(model_name, base_directory_path, label_file, number_of_iteration, list_tmp, list)
 
-			if "quant" not in line:
-				model_type = ",Float,"
-			else:
-				model_type = ",Quant,"
+				print("Average Time" + " at Model " + model_name + " "+ str(Average(list_tmp)) + " ms ")
+				print("Standard Deviation" + " at Model " + model_name + " " + str(Average(list)))
 
-			print("AI_BENCHMARK_MARKER,Google Coral TPU frogfish: TensorFlow Lite," + model_name.rstrip() + model_type + str(Average(list_tmp)) + "," + str(Average(list)) + ",")
-			print('')
+				print("AI_BENCHMARK_MARKER,Google Coral TPU frogfish: TensorFlow Lite," + model_name.rstrip() + "," + model_type.rstrip() + "," + str(Average(list_tmp)) + "," + str(Average(list)) + ",")
+				print('')
 
 def Average(lst):
 	return sum(lst) / len(lst)
