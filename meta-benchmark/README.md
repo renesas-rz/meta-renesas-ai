@@ -70,22 +70,26 @@ cd /usr/bin/tensorflowBenchmark
 # Inception v3 (inference run 30 times)
 ./tensorflowBenchmark --image="/usr/bin/tensorflow/examples/grace_hopper.jpg" \
 --graph="/home/root/models/tensorflow/InceptionV3/inception_v3_2016_08_28_frozen.pb" \
+--model_type="float32" \
 --labels="/home/root/models/tensorflow/InceptionV3/imagenet_slim_labels.txt"
 
 # Test Inception v3 quant (inference run 30 times)
 ./tensorflowBenchmark --image="/usr/bin/tensorflow/examples/grace_hopper.jpg" \
 --graph="/home/root/models/tensorflow/InceptionV3_Quant/inception_v3_2016_08_28_frozen_Quant.pb" \
+--model_type="uint8" \
 --labels="/home/root/models/tensorflow/InceptionV3_Quant/imagenet_slim_labels.txt"
 
 # Inception v4 (inference run 30 times)
 ./tensorflowBenchmark --image="/usr/bin/tensorflow/examples/grace_hopper.jpg" \
 --graph="/home/root/models/tensorflow/InceptionV4/inception_v4.pb" \
+--model_type="float32" \
 --labels="/home/root/models/tensorflow/InceptionV4/imagenet_slim_labels.txt" \
 --output_layer="InceptionV4/Logits/Predictions"
 
 # Test Inception v4 quant (inference run 30 times)
 ./tensorflowBenchmark --image="/usr/bin/tensorflow/examples/grace_hopper.jpg" \
 --graph="/home/root/models/tensorflow/InceptionV4/inception_v4_299_quant_frozen.pb" \
+--model_type="uint8" \
 --labels="/home/root/models/tensorflow/InceptionV4/imagenet_slim_labels.txt" \
 --output_layer="InceptionV4/Logits/Predictions"
 ```

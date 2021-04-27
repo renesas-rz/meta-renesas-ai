@@ -338,6 +338,7 @@ int main(int argc, char* argv[]) {
   string image = "tensorflow/examples/label_image/data/grace_hopper.jpg";
   string graph =
       "tensorflow/examples/label_image/data/inception_v3_2016_08_28_frozen.pb";
+  string model_type = "float32";
   string labels =
       "tensorflow/examples/label_image/data/imagenet_slim_labels.txt";
   int32 input_width = 299;
@@ -351,6 +352,7 @@ int main(int argc, char* argv[]) {
   std::vector<Flag> flag_list = {
       Flag("image", &image, "image to be processed"),
       Flag("graph", &graph, "graph to be executed"),
+      Flag("model_type", &model_type, "data type of graph"),
       Flag("labels", &labels, "name of file containing labels"),
       Flag("input_width", &input_width, "resize image to this width in pixels"),
       Flag("input_height", &input_height,
@@ -385,10 +387,7 @@ int main(int argc, char* argv[]) {
   benched_model = benched_model.substr(benched_model.find_last_of('/')+1);
   bench.push_back(benched_model);
 
-  if (graph.find("uant") == string::npos)
-    bench.push_back("Float,");
-  else
-    bench.push_back("Quant,");
+  bench.push_back(model_type + ",");
 
   // First we load and initialize the model.
   std::unique_ptr<tensorflow::Session> session;
