@@ -1,1 +1,1 @@
-squeezenet.tflite
+squeezenet.tflite float32

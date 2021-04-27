@@ -45,22 +45,22 @@ def main():
    with open(filepath) as fp:
        for line in fp:
 	   if not len(line.strip()) == 0:
+	       model_details = line.split()
 	       list = []
 	       list_tmp = []
 
-	       run_tflite_benchmark(line,base_directory_path,'labels.txt',number_of_cores,number_of_iteration,list_tmp,list)
+               if len(model_details) != 2:
+                   print("Invalid line: " + line)
+                   sys.exit(1)
 
-	       print("Average Time" + " at Model " + line + str(Average(list_tmp)) + " ms ")
-	       print("Standard Deviation" + " at Model " + line + str(Average(list)))
+	       run_tflite_benchmark(model_details[0],base_directory_path,'labels.txt',number_of_cores,number_of_iteration,list_tmp,list)
+
+	       print("Average Time" + " at Model " + model_details[0] + str(Average(list_tmp)) + " ms ")
+	       print("Standard Deviation" + " at Model " + model_details[0] + str(Average(list)))
 	       print("\n")
 
-               if "quant" not in line:
-                   model_type = ",Float,"
-               else:
-                   model_type = ",Quant,"
-
                if benchmark == True:
-                   print("AI_BENCHMARK_MARKER,TensorFlow Lite v2.3.1," + line.rstrip() + model_type + str(Average(list_tmp)) + "," + str(Average(list)) + ",")
+                   print("AI_BENCHMARK_MARKER,TensorFlow Lite v2.3.1," + model_details[0].rstrip() + "," +  model_details[1].strip() + "," + str(Average(list_tmp)) + "," + str(Average(list)) + ",")
 
 def Average(lst):
     return sum(lst) / len(lst)

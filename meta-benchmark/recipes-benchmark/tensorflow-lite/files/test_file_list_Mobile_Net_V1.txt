@@ -1,62 +1,32 @@
-mobilenet_v1_1.0_224_quant.tflite
-mobilenet_v1_1.0_192_quant.tflite
-mobilenet_v1_1.0_160_quant.tflite
-mobilenet_v1_1.0_128_quant.tflite
-mobilenet_v1_0.75_224_quant.tflite
-mobilenet_v1_0.75_192_quant.tflite
-mobilenet_v1_0.75_160_quant.tflite
-mobilenet_v1_0.75_128_quant.tflite
-mobilenet_v1_0.5_224_quant.tflite
-mobilenet_v1_0.5_192_quant.tflite
-mobilenet_v1_0.5_160_quant.tflite
-mobilenet_v1_0.5_128_quant.tflite
-mobilenet_v1_0.25_224_quant.tflite
-mobilenet_v1_0.25_192_quant.tflite
-mobilenet_v1_0.25_160_quant.tflite
-mobilenet_v1_0.25_128_quant.tflite
-mobilenet_v1_1.0_224.tflite
-mobilenet_v1_1.0_192.tflite
-mobilenet_v1_1.0_160.tflite
-mobilenet_v1_1.0_128.tflite
-mobilenet_v1_0.75_224.tflite
-mobilenet_v1_0.75_192.tflite
-mobilenet_v1_0.75_160.tflite
-mobilenet_v1_0.75_128.tflite
-mobilenet_v1_0.5_224.tflite
-mobilenet_v1_0.5_192.tflite
-mobilenet_v1_0.5_160.tflite
-mobilenet_v1_0.5_128.tflite
-mobilenet_v1_0.25_224.tflite
-mobilenet_v1_0.25_192.tflite
-mobilenet_v1_0.25_160.tflite
-mobilenet_v1_0.25_128.tflite
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+mobilenet_v1_1.0_224_quant.tflite uint8
+mobilenet_v1_1.0_192_quant.tflite uint8
+mobilenet_v1_1.0_160_quant.tflite uint8
+mobilenet_v1_1.0_128_quant.tflite uint8
+mobilenet_v1_0.75_224_quant.tflite uint8
+mobilenet_v1_0.75_192_quant.tflite uint8
+mobilenet_v1_0.75_160_quant.tflite uint8
+mobilenet_v1_0.75_128_quant.tflite uint8
+mobilenet_v1_0.5_224_quant.tflite uint8
+mobilenet_v1_0.5_192_quant.tflite uint8
+mobilenet_v1_0.5_160_quant.tflite uint8
+mobilenet_v1_0.5_128_quant.tflite uint8
+mobilenet_v1_0.25_224_quant.tflite uint8
+mobilenet_v1_0.25_192_quant.tflite uint8
+mobilenet_v1_0.25_160_quant.tflite uint8
+mobilenet_v1_0.25_128_quant.tflite uint8
+mobilenet_v1_1.0_224.tflite float32
+mobilenet_v1_1.0_192.tflite float32
+mobilenet_v1_1.0_160.tflite float32
+mobilenet_v1_1.0_128.tflite float32
+mobilenet_v1_0.75_224.tflite float32
+mobilenet_v1_0.75_192.tflite float32
+mobilenet_v1_0.75_160.tflite float32
+mobilenet_v1_0.75_128.tflite float32
+mobilenet_v1_0.5_224.tflite float32
+mobilenet_v1_0.5_192.tflite float32
+mobilenet_v1_0.5_160.tflite float32
+mobilenet_v1_0.5_128.tflite float32
+mobilenet_v1_0.25_224.tflite float32
+mobilenet_v1_0.25_192.tflite float32
+mobilenet_v1_0.25_160.tflite float32
+mobilenet_v1_0.25_128.tflite float32

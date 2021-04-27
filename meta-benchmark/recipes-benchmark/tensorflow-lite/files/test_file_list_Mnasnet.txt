@@ -1,8 +1,8 @@
-mnasnet_0.5_224.tflite
-mnasnet_0.75_224.tflite
-mnasnet_1.0_96.tflite
-mnasnet_1.0_128.tflite
-mnasnet_1.0_160.tflite
-mnasnet_1.0_192.tflite
-mnasnet_1.0_224.tflite
-mnasnet_1.3_224.tflite
+mnasnet_0.5_224.tflite float32
+mnasnet_0.75_224.tflite float32
+mnasnet_1.0_96.tflite float32
+mnasnet_1.0_128.tflite float32
+mnasnet_1.0_160.tflite float32
+mnasnet_1.0_192.tflite float32
+mnasnet_1.0_224.tflite float32
+mnasnet_1.3_224.tflite float32

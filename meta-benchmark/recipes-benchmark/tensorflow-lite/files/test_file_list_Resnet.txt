@@ -1,6 +1,6 @@
-resnet_v2_101_299.tflite
-resnet_v2_101_299_quant.tflite
-resnet_float.tflite
-resnet_quantized.tflite
-inception_resnet_v2.tflite
-inception_resnet_v2_quant.tflite
+resnet_v2_101_299.tflite float32
+resnet_v2_101_299_quant.tflite uint8
+resnet_float.tflite float32
+resnet_quantized.tflite uint8
+inception_resnet_v2.tflite float32
+inception_resnet_v2_quant.tflite uint8
