@@ -39,6 +39,8 @@
 #include <iterator>
 #include <numeric>
 
+enum ModelType { MODEL_TYPE_FLOAT32, MODEL_TYPE_UINT8 };
+
 #define NUMBER_RUN_TESTS 30
 
 /*
@@ -67,7 +69,7 @@ std::string base_more_models_path_onnx = base_path + "/onnx/models";
 
 typedef struct model_params {
     std::string modelFormat;
-    bool isFloatModel;
+    ModelType ModelDtype;
     std::string modelPath;
     armnn::TensorShape inputTensorShape;
     std::string inputName;
@@ -139,7 +141,7 @@ void CaculateAvergeDeviation(vector<double>& time_vec)
 
 template<typename TParser, typename TDataType>
 int MainImpl(const char* modelPath,
-             bool isFloatModel,
+             ModelType ModelDtype,
              const string mode_type,
              const char* inputName,
              const armnn::TensorShape* inputTensorShape,
@@ -194,8 +196,10 @@ int MainImpl(const char* modelPath,
         // Executes the model.
         std::unique_ptr<ClassifierTestCaseData<TDataType>> TestCaseData;
 
-        if(isFloatModel)
+        switch(ModelDtype) {
+        case MODEL_TYPE_FLOAT32:
         {
+            std::cout << "float32 Model is loaded" << std::endl;
             if(mode_type == "onnx")
             {
                 ImagePreprocessor<TDataType>  Image(inputTensorDataFilePath, inputImageWidth, inputImageHeight, imageSet,
@@ -211,10 +215,11 @@ int MainImpl(const char* modelPath,
             }
 
             outputDataContainers.push_back(std::vector<float>(model.GetOutputSize()));
+            break;
         }
-        else
+        case MODEL_TYPE_UINT8:
         {
-            std::cout << "Quant Model is loaded" << std::endl;
+            std::cout << "uint8 Model is loaded" << std::endl;
             auto inputBinding = model.GetInputBindingInfo();
             printf("Scale %f\n", inputBinding.second.GetQuantizationScale());
             printf("Offset %d\n", inputBinding.second.GetQuantizationOffset());
@@ -224,7 +229,11 @@ int MainImpl(const char* modelPath,
             TestCaseData = Image.GetTestCaseData(0);
 
             outputDataContainers.push_back(std::vector<uint8_t>(model.GetOutputSize()));
-
+            break;
+        }
+        default:
+            std::cout << "Failed to get test case data, unsupported model type " << ModelDtype;
+            return EXIT_FAILURE;
         }
 
         inputDataContainers.push_back(TestCaseData->m_InputImage);
@@ -282,17 +291,24 @@ int MainImpl(const char* modelPath,
         bench.push_back(benched_type);
         CaculateAvergeDeviation(time_vector);
 
-        if(isFloatModel)
+        switch(ModelDtype) {
+        case MODEL_TYPE_FLOAT32:
         {
             std::vector<float> output;
             output = mapbox::util::get<std::vector<float>>(outputDataContainers[0]);
             ProcessResult<float>(output, model.GetQuantizationParams(), mode_type);
+            break;
         }
-        else
+        case MODEL_TYPE_UINT8:
         {
             std::vector<unsigned char> output;
             output = mapbox::util::get<std::vector<unsigned char>>(outputDataContainers[0]);
             ProcessResult<unsigned char>(output, model.GetQuantizationParams(), mode_type);
+            break;
+        }
+        default:
+            std::cout << "Failed to map vector, unsupported model type " << ModelDtype;
+            return EXIT_FAILURE;
         }
     }
     catch (armnn::Exception const& e)
@@ -383,92 +399,92 @@ void CreateModelTestOrder()
 void initModelTable()
 {
     //Tensorflow model
-    Model_Table["inception_v3_2016_08_28_frozen.pb"] = {"tensorflow-binary", true, common_model_path + "armnn/tensorflow/inception_v3_2016_08_28_frozen_transformed.pb", armnn::TensorShape({ 1, 299, 299, 3}), "input", "InceptionV3/Predictions/Reshape_1", 299, 299};
+    Model_Table["inception_v3_2016_08_28_frozen.pb"] = {"tensorflow-binary", MODEL_TYPE_FLOAT32, common_model_path + "armnn/tensorflow/inception_v3_2016_08_28_frozen_transformed.pb", armnn::TensorShape({ 1, 299, 299, 3}), "input", "InceptionV3/Predictions/Reshape_1", 299, 299};
 
     //Mnasnet Model
-    Model_Table["mnasnet_0.5_224.tflite"] = {"tflite-binary", true, base_more_models_path_tensorflow_lite + "/MnasNet/mnasnet_0.5_224.tflite", armnn::TensorShape({ 1, 224, 224, 3}), "input", "output", 224, 224};
-    Model_Table["mnasnet_0.75_224.tflite"] = {"tflite-binary", true, base_more_models_path_tensorflow_lite + "/MnasNet/mnasnet_0.75_224.tflite", armnn::TensorShape({ 1, 224, 224, 3}), "input", "output", 224, 224};
-    Model_Table["mnasnet_1.0_96.tflite"] = {"tflite-binary", true, base_more_models_path_tensorflow_lite + "/MnasNet/mnasnet_1.0_96.tflite", armnn::TensorShape({ 1, 96, 96, 3}), "input", "output", 96, 96};
-    Model_Table["mnasnet_1.0_128.tflite"] = {"tflite-binary", true, base_more_models_path_tensorflow_lite + "/MnasNet/mnasnet_1.0_128.tflite", armnn::TensorShape({ 1, 128, 128, 3}), "input", "output", 128, 128};
-    Model_Table["mnasnet_1.0_160.tflite"] = {"tflite-binary", true, base_more_models_path_tensorflow_lite + "/MnasNet/mnasnet_1.0_160.tflite", armnn::TensorShape({ 1, 160, 160, 3}), "input", "output", 160, 160};
-    Model_Table["mnasnet_1.0_192.tflite"] = {"tflite-binary", true, base_more_models_path_tensorflow_lite + "/MnasNet/mnasnet_1.0_192.tflite", armnn::TensorShape({ 1, 192, 192, 3}), "input", "output", 192, 192};
-    Model_Table["mnasnet_1.0_224.tflite"] = {"tflite-binary", true, base_more_models_path_tensorflow_lite + "/MnasNet/mnasnet_1.0_224.tflite", armnn::TensorShape({ 1, 224, 224, 3}), "input", "output", 224, 224};
-    Model_Table["mnasnet_1.3_224.tflite"] = {"tflite-binary", true, base_more_models_path_tensorflow_lite + "/MnasNet/mnasnet_1.3_224.tflite", armnn::TensorShape({ 1, 224, 224, 3}), "input", "output", 224, 224};
+    Model_Table["mnasnet_0.5_224.tflite"] = {"tflite-binary", MODEL_TYPE_FLOAT32, base_more_models_path_tensorflow_lite + "/MnasNet/mnasnet_0.5_224.tflite", armnn::TensorShape({ 1, 224, 224, 3}), "input", "output", 224, 224};
+    Model_Table["mnasnet_0.75_224.tflite"] = {"tflite-binary", MODEL_TYPE_FLOAT32, base_more_models_path_tensorflow_lite + "/MnasNet/mnasnet_0.75_224.tflite", armnn::TensorShape({ 1, 224, 224, 3}), "input", "output", 224, 224};
+    Model_Table["mnasnet_1.0_96.tflite"] = {"tflite-binary", MODEL_TYPE_FLOAT32, base_more_models_path_tensorflow_lite + "/MnasNet/mnasnet_1.0_96.tflite", armnn::TensorShape({ 1, 96, 96, 3}), "input", "output", 96, 96};
+    Model_Table["mnasnet_1.0_128.tflite"] = {"tflite-binary", MODEL_TYPE_FLOAT32, base_more_models_path_tensorflow_lite + "/MnasNet/mnasnet_1.0_128.tflite", armnn::TensorShape({ 1, 128, 128, 3}), "input", "output", 128, 128};
+    Model_Table["mnasnet_1.0_160.tflite"] = {"tflite-binary", MODEL_TYPE_FLOAT32, base_more_models_path_tensorflow_lite + "/MnasNet/mnasnet_1.0_160.tflite", armnn::TensorShape({ 1, 160, 160, 3}), "input", "output", 160, 160};
+    Model_Table["mnasnet_1.0_192.tflite"] = {"tflite-binary", MODEL_TYPE_FLOAT32, base_more_models_path_tensorflow_lite + "/MnasNet/mnasnet_1.0_192.tflite", armnn::TensorShape({ 1, 192, 192, 3}), "input", "output", 192, 192};
+    Model_Table["mnasnet_1.0_224.tflite"] = {"tflite-binary", MODEL_TYPE_FLOAT32, base_more_models_path_tensorflow_lite + "/MnasNet/mnasnet_1.0_224.tflite", armnn::TensorShape({ 1, 224, 224, 3}), "input", "output", 224, 224};
+    Model_Table["mnasnet_1.3_224.tflite"] = {"tflite-binary", MODEL_TYPE_FLOAT32, base_more_models_path_tensorflow_lite + "/MnasNet/mnasnet_1.3_224.tflite", armnn::TensorShape({ 1, 224, 224, 3}), "input", "output", 224, 224};
 
     //Squeezenet model
-    Model_Table["squeezenet.tflite"] = {"tflite-binary", true, base_more_models_path_tensorflow_lite + "/Squeezenet/squeezenet.tflite", armnn::TensorShape({ 1, 224, 224, 3}), "Placeholder", "softmax_tensor", 224, 224};
+    Model_Table["squeezenet.tflite"] = {"tflite-binary", MODEL_TYPE_FLOAT32, base_more_models_path_tensorflow_lite + "/Squeezenet/squeezenet.tflite", armnn::TensorShape({ 1, 224, 224, 3}), "Placeholder", "softmax_tensor", 224, 224};
 
     //Tensorflow lite model
-    Model_Table["inception_v3.tflite"] = {"tflite-binary", true, base_more_models_path_tensorflow_lite + "/Mobile_InceptionV3/inception_v3.tflite", armnn::TensorShape({ 1, 299, 299, 3}), "input", "InceptionV3/Predictions/Reshape_1", 299, 299};
-    Model_Table["inception_v3_quant.tflite"] = {"tflite-binary", false, base_more_models_path_tensorflow_lite + "/Mobile_InceptionV3/inception_v3_quant.tflite", armnn::TensorShape({ 1, 299, 299, 3}), "input", "output", 299, 299};
-    Model_Table["inception_v4.tflite"] = {"tflite-binary", true, base_more_models_path_tensorflow_lite + "/Mobile_InceptionV4/inception_v4.tflite", armnn::TensorShape({ 1, 299, 299, 3}), "input", "InceptionV4/Logits/Predictions", 299, 299};
-    Model_Table["inception_v4_299_quant.tflite"] = {"tflite-binary", false, base_more_models_path_tensorflow_lite + "/Mobile_InceptionV4/inception_v4_299_quant.tflite", armnn::TensorShape({ 1, 299, 299, 3}), "input", "InceptionV4/Logits/Predictions", 299, 299};
+    Model_Table["inception_v3.tflite"] = {"tflite-binary", MODEL_TYPE_FLOAT32, base_more_models_path_tensorflow_lite + "/Mobile_InceptionV3/inception_v3.tflite", armnn::TensorShape({ 1, 299, 299, 3}), "input", "InceptionV3/Predictions/Reshape_1", 299, 299};
+    Model_Table["inception_v3_quant.tflite"] = {"tflite-binary", MODEL_TYPE_UINT8, base_more_models_path_tensorflow_lite + "/Mobile_InceptionV3/inception_v3_quant.tflite", armnn::TensorShape({ 1, 299, 299, 3}), "input", "output", 299, 299};
+    Model_Table["inception_v4.tflite"] = {"tflite-binary", MODEL_TYPE_FLOAT32, base_more_models_path_tensorflow_lite + "/Mobile_InceptionV4/inception_v4.tflite", armnn::TensorShape({ 1, 299, 299, 3}), "input", "InceptionV4/Logits/Predictions", 299, 299};
+    Model_Table["inception_v4_299_quant.tflite"] = {"tflite-binary", MODEL_TYPE_UINT8, base_more_models_path_tensorflow_lite + "/Mobile_InceptionV4/inception_v4_299_quant.tflite", armnn::TensorShape({ 1, 299, 299, 3}), "input", "InceptionV4/Logits/Predictions", 299, 299};
 
-   Model_Table["mobilenet_v1_1.0_224_quant.tflite"] = {"tflite-binary", false, base_more_models_path_tensorflow_lite + "/Mobile_Net_V1_Model/mobilenet_v1_1.0_224_quant.tflite", armnn::TensorShape({ 1, 224, 224, 3}), "input", "MobilenetV1/Predictions/Reshape_1", 224, 224};
-    Model_Table["mobilenet_v1_1.0_192_quant.tflite"] = {"tflite-binary", false, base_more_models_path_tensorflow_lite + "/Mobile_Net_V1_Model/mobilenet_v1_1.0_192_quant.tflite", armnn::TensorShape({ 1, 192, 192, 3}), "input", "MobilenetV1/Predictions/Reshape_1", 192, 192};
-    Model_Table["mobilenet_v1_1.0_160_quant.tflite"] = {"tflite-binary", false, base_more_models_path_tensorflow_lite + "/Mobile_Net_V1_Model/mobilenet_v1_1.0_160_quant.tflite", armnn::TensorShape({ 1, 160, 160, 3}), "input", "MobilenetV1/Predictions/Reshape_1", 160, 160};
-    Model_Table["mobilenet_v1_1.0_128_quant.tflite"] = {"tflite-binary", false, base_more_models_path_tensorflow_lite + "/Mobile_Net_V1_Model/mobilenet_v1_1.0_128_quant.tflite", armnn::TensorShape({ 1, 128, 128, 3}), "input","MobilenetV1/Predictions/Reshape_1", 128, 128};
-    Model_Table["mobilenet_v1_0.75_224_quant.tflite"] = {"tflite-binary", false, base_more_models_path_tensorflow_lite + "/Mobile_Net_V1_Model/mobilenet_v1_0.75_224_quant.tflite", armnn::TensorShape({ 1, 224, 224, 3}), "input", "MobilenetV1/Predictions/Reshape_1", 224, 224};
-    Model_Table["mobilenet_v1_0.75_192_quant.tflite"] = {"tflite-binary", false, base_more_models_path_tensorflow_lite + "/Mobile_Net_V1_Model/mobilenet_v1_0.75_192_quant.tflite", armnn::TensorShape({ 1, 192, 192, 3}), "input", "MobilenetV1/Predictions/Reshape_1", 192, 192};
-    Model_Table["mobilenet_v1_0.75_160_quant.tflite"] = {"tflite-binary", false, base_more_models_path_tensorflow_lite + "/Mobile_Net_V1_Model/mobilenet_v1_0.75_160_quant.tflite", armnn::TensorShape({ 1, 160, 160, 3}), "input", "MobilenetV1/Predictions/Reshape_1", 160, 160};
-    Model_Table["mobilenet_v1_0.75_128_quant.tflite"] = {"tflite-binary", false, base_more_models_path_tensorflow_lite + "/Mobile_Net_V1_Model/mobilenet_v1_0.75_128_quant.tflite", armnn::TensorShape({ 1, 128, 128, 3}), "input", "MobilenetV1/Predictions/Reshape_1", 128, 128};
-    Model_Table["mobilenet_v1_0.5_224_quant.tflite"] = {"tflite-binary", false, base_more_models_path_tensorflow_lite + "/Mobile_Net_V1_Model/mobilenet_v1_0.5_224_quant.tflite", armnn::TensorShape({ 1, 224, 224, 3}), "input", "MobilenetV1/Predictions/Reshape_1", 224, 224};
-    Model_Table["mobilenet_v1_0.5_192_quant.tflite"] = {"tflite-binary", false, base_more_models_path_tensorflow_lite + "/Mobile_Net_V1_Model/mobilenet_v1_0.5_192_quant.tflite", armnn::TensorShape({ 1, 192, 192, 3}), "input", "MobilenetV1/Predictions/Reshape_1", 192, 192};
-    Model_Table["mobilenet_v1_0.5_160_quant.tflite"] = {"tflite-binary", false, base_more_models_path_tensorflow_lite + "/Mobile_Net_V1_Model/mobilenet_v1_0.5_160_quant.tflite", armnn::TensorShape({ 1, 160, 160, 3}), "input", "MobilenetV1/Predictions/Reshape_1", 160, 160};
-    Model_Table["mobilenet_v1_0.5_128_quant.tflite"] = {"tflite-binary", false, base_more_models_path_tensorflow_lite + "/Mobile_Net_V1_Model/mobilenet_v1_0.5_128_quant.tflite", armnn::TensorShape({ 1, 128, 128, 3}), "input", "MobilenetV1/Predictions/Reshape_1", 128, 128};
-    Model_Table["mobilenet_v1_0.25_224_quant.tflite"] = {"tflite-binary", false, base_more_models_path_tensorflow_lite + "/Mobile_Net_V1_Model/mobilenet_v1_0.25_224_quant.tflite", armnn::TensorShape({ 1, 224, 224, 3}), "input", "MobilenetV1/Predictions/Reshape_1", 224, 224};
-    Model_Table["mobilenet_v1_0.25_192_quant.tflite"] = {"tflite-binary", false, base_more_models_path_tensorflow_lite + "/Mobile_Net_V1_Model/mobilenet_v1_0.25_192_quant.tflite", armnn::TensorShape({ 1, 192, 192, 3}), "input", "MobilenetV1/Predictions/Reshape_1", 192, 192};
-    Model_Table["mobilenet_v1_0.25_160_quant.tflite"] = {"tflite-binary", false, base_more_models_path_tensorflow_lite + "/Mobile_Net_V1_Model/mobilenet_v1_0.25_160_quant.tflite", armnn::TensorShape({ 1, 160, 160, 3}), "input", "MobilenetV1/Predictions/Reshape_1", 160, 160};
-    Model_Table["mobilenet_v1_0.25_128_quant.tflite"] = {"tflite-binary", false, base_more_models_path_tensorflow_lite + "/Mobile_Net_V1_Model/mobilenet_v1_0.25_128_quant.tflite", armnn::TensorShape({ 1, 128, 128, 3}), "input", "MobilenetV1/Predictions/Reshape_1", 128, 128};
-    Model_Table["mobilenet_v1_1.0_224.tflite"] = {"tflite-binary", true, base_more_models_path_tensorflow_lite + "/Mobile_Net_V1_Model/mobilenet_v1_1.0_224.tflite", armnn::TensorShape({ 1, 224, 224, 3}), "input","MobilenetV1/Predictions/Reshape_1", 224, 224};
-    Model_Table["mobilenet_v1_1.0_192.tflite"] = {"tflite-binary", true, base_more_models_path_tensorflow_lite + "/Mobile_Net_V1_Model/mobilenet_v1_1.0_192.tflite", armnn::TensorShape({ 1, 192, 192, 3}), "input", "MobilenetV1/Predictions/Reshape_1", 192, 192};
-    Model_Table["mobilenet_v1_1.0_160.tflite"] = {"tflite-binary", true, base_more_models_path_tensorflow_lite + "/Mobile_Net_V1_Model/mobilenet_v1_1.0_160.tflite", armnn::TensorShape({ 1, 160, 160, 3}), "input", "MobilenetV1/Predictions/Reshape_1", 160, 160};
-    Model_Table["mobilenet_v1_1.0_128.tflite"] = {"tflite-binary", true, base_more_models_path_tensorflow_lite + "/Mobile_Net_V1_Model/mobilenet_v1_1.0_128.tflite", armnn::TensorShape({ 1, 128, 128, 3}), "input", "MobilenetV1/Predictions/Reshape_1", 128, 128};
-    Model_Table["mobilenet_v1_0.75_224.tflite"] = {"tflite-binary", true, base_more_models_path_tensorflow_lite + "/Mobile_Net_V1_Model/mobilenet_v1_0.75_224.tflite", armnn::TensorShape({ 1, 224, 224, 3}), "input", "MobilenetV1/Predictions/Reshape_1", 224, 224};
-    Model_Table["mobilenet_v1_0.75_192.tflite"] = {"tflite-binary", true, base_more_models_path_tensorflow_lite + "/Mobile_Net_V1_Model/mobilenet_v1_0.75_192.tflite", armnn::TensorShape({ 1, 192, 192, 3}), "input", "MobilenetV1/Predictions/Reshape_1", 192, 192};
-    Model_Table["mobilenet_v1_0.75_160.tflite"] = {"tflite-binary", true, base_more_models_path_tensorflow_lite + "/Mobile_Net_V1_Model/mobilenet_v1_0.75_160.tflite", armnn::TensorShape({ 1, 160, 160, 3}), "input", "MobilenetV1/Predictions/Reshape_1", 160, 160};
-    Model_Table["mobilenet_v1_0.75_128.tflite"] = {"tflite-binary", true, base_more_models_path_tensorflow_lite + "/Mobile_Net_V1_Model/mobilenet_v1_0.75_128.tflite", armnn::TensorShape({ 1, 128, 128, 3}), "input", "MobilenetV1/Predictions/Reshape_1", 128, 128};
-    Model_Table["mobilenet_v1_0.5_224.tflite"] = {"tflite-binary", true, base_more_models_path_tensorflow_lite + "/Mobile_Net_V1_Model/mobilenet_v1_0.5_224.tflite", armnn::TensorShape({ 1, 224, 224, 3}), "input", "MobilenetV1/Predictions/Reshape_1", 224, 224};
-    Model_Table["mobilenet_v1_0.5_192.tflite"] = {"tflite-binary", true, base_more_models_path_tensorflow_lite + "/Mobile_Net_V1_Model/mobilenet_v1_0.5_192.tflite", armnn::TensorShape({ 1, 192, 192, 3}), "input", "MobilenetV1/Predictions/Reshape_1", 192, 192};
-    Model_Table["mobilenet_v1_0.5_160.tflite"] = {"tflite-binary", true, base_more_models_path_tensorflow_lite + "/Mobile_Net_V1_Model/mobilenet_v1_0.5_160.tflite", armnn::TensorShape({ 1, 160, 160, 3}), "input", "MobilenetV1/Predictions/Reshape_1", 160, 160};
-    Model_Table["mobilenet_v1_0.5_128.tflite"] = {"tflite-binary", true, base_more_models_path_tensorflow_lite + "/Mobile_Net_V1_Model/mobilenet_v1_0.5_128.tflite", armnn::TensorShape({ 1, 128, 128, 3}), "input", "MobilenetV1/Predictions/Reshape_1", 128, 128};
-    Model_Table["mobilenet_v1_0.25_224.tflite"] = {"tflite-binary", true, base_more_models_path_tensorflow_lite + "/Mobile_Net_V1_Model/mobilenet_v1_0.25_224.tflite", armnn::TensorShape({ 1, 224, 224, 3}), "input", "MobilenetV1/Predictions/Reshape_1", 224, 224};
-    Model_Table["mobilenet_v1_0.25_192.tflite"] = {"tflite-binary", true, base_more_models_path_tensorflow_lite + "/Mobile_Net_V1_Model/mobilenet_v1_0.25_192.tflite", armnn::TensorShape({ 1, 192, 192, 3}), "input", "MobilenetV1/Predictions/Reshape_1", 192, 192};
-    Model_Table["mobilenet_v1_0.25_160.tflite"] = {"tflite-binary", true, base_more_models_path_tensorflow_lite + "/Mobile_Net_V1_Model/mobilenet_v1_0.25_160.tflite", armnn::TensorShape({ 1, 160, 160, 3}), "input", "MobilenetV1/Predictions/Reshape_1", 160, 160};
-    Model_Table["mobilenet_v1_0.25_128.tflite"] = {"tflite-binary", true, base_more_models_path_tensorflow_lite + "/Mobile_Net_V1_Model/mobilenet_v1_0.25_128.tflite", armnn::TensorShape({ 1, 128, 128, 3}), "input", "MobilenetV1/Predictions/Reshape_1", 128, 128};
+   Model_Table["mobilenet_v1_1.0_224_quant.tflite"] = {"tflite-binary", MODEL_TYPE_UINT8, base_more_models_path_tensorflow_lite + "/Mobile_Net_V1_Model/mobilenet_v1_1.0_224_quant.tflite", armnn::TensorShape({ 1, 224, 224, 3}), "input", "MobilenetV1/Predictions/Reshape_1", 224, 224};
+    Model_Table["mobilenet_v1_1.0_192_quant.tflite"] = {"tflite-binary", MODEL_TYPE_UINT8, base_more_models_path_tensorflow_lite + "/Mobile_Net_V1_Model/mobilenet_v1_1.0_192_quant.tflite", armnn::TensorShape({ 1, 192, 192, 3}), "input", "MobilenetV1/Predictions/Reshape_1", 192, 192};
+    Model_Table["mobilenet_v1_1.0_160_quant.tflite"] = {"tflite-binary", MODEL_TYPE_UINT8, base_more_models_path_tensorflow_lite + "/Mobile_Net_V1_Model/mobilenet_v1_1.0_160_quant.tflite", armnn::TensorShape({ 1, 160, 160, 3}), "input", "MobilenetV1/Predictions/Reshape_1", 160, 160};
+    Model_Table["mobilenet_v1_1.0_128_quant.tflite"] = {"tflite-binary", MODEL_TYPE_UINT8, base_more_models_path_tensorflow_lite + "/Mobile_Net_V1_Model/mobilenet_v1_1.0_128_quant.tflite", armnn::TensorShape({ 1, 128, 128, 3}), "input","MobilenetV1/Predictions/Reshape_1", 128, 128};
+    Model_Table["mobilenet_v1_0.75_224_quant.tflite"] = {"tflite-binary", MODEL_TYPE_UINT8, base_more_models_path_tensorflow_lite + "/Mobile_Net_V1_Model/mobilenet_v1_0.75_224_quant.tflite", armnn::TensorShape({ 1, 224, 224, 3}), "input", "MobilenetV1/Predictions/Reshape_1", 224, 224};
+    Model_Table["mobilenet_v1_0.75_192_quant.tflite"] = {"tflite-binary", MODEL_TYPE_UINT8, base_more_models_path_tensorflow_lite + "/Mobile_Net_V1_Model/mobilenet_v1_0.75_192_quant.tflite", armnn::TensorShape({ 1, 192, 192, 3}), "input", "MobilenetV1/Predictions/Reshape_1", 192, 192};
+    Model_Table["mobilenet_v1_0.75_160_quant.tflite"] = {"tflite-binary", MODEL_TYPE_UINT8, base_more_models_path_tensorflow_lite + "/Mobile_Net_V1_Model/mobilenet_v1_0.75_160_quant.tflite", armnn::TensorShape({ 1, 160, 160, 3}), "input", "MobilenetV1/Predictions/Reshape_1", 160, 160};
+    Model_Table["mobilenet_v1_0.75_128_quant.tflite"] = {"tflite-binary", MODEL_TYPE_UINT8, base_more_models_path_tensorflow_lite + "/Mobile_Net_V1_Model/mobilenet_v1_0.75_128_quant.tflite", armnn::TensorShape({ 1, 128, 128, 3}), "input", "MobilenetV1/Predictions/Reshape_1", 128, 128};
+    Model_Table["mobilenet_v1_0.5_224_quant.tflite"] = {"tflite-binary", MODEL_TYPE_UINT8, base_more_models_path_tensorflow_lite + "/Mobile_Net_V1_Model/mobilenet_v1_0.5_224_quant.tflite", armnn::TensorShape({ 1, 224, 224, 3}), "input", "MobilenetV1/Predictions/Reshape_1", 224, 224};
+    Model_Table["mobilenet_v1_0.5_192_quant.tflite"] = {"tflite-binary", MODEL_TYPE_UINT8, base_more_models_path_tensorflow_lite + "/Mobile_Net_V1_Model/mobilenet_v1_0.5_192_quant.tflite", armnn::TensorShape({ 1, 192, 192, 3}), "input", "MobilenetV1/Predictions/Reshape_1", 192, 192};
+    Model_Table["mobilenet_v1_0.5_160_quant.tflite"] = {"tflite-binary", MODEL_TYPE_UINT8, base_more_models_path_tensorflow_lite + "/Mobile_Net_V1_Model/mobilenet_v1_0.5_160_quant.tflite", armnn::TensorShape({ 1, 160, 160, 3}), "input", "MobilenetV1/Predictions/Reshape_1", 160, 160};
+    Model_Table["mobilenet_v1_0.5_128_quant.tflite"] = {"tflite-binary", MODEL_TYPE_UINT8, base_more_models_path_tensorflow_lite + "/Mobile_Net_V1_Model/mobilenet_v1_0.5_128_quant.tflite", armnn::TensorShape({ 1, 128, 128, 3}), "input", "MobilenetV1/Predictions/Reshape_1", 128, 128};
+    Model_Table["mobilenet_v1_0.25_224_quant.tflite"] = {"tflite-binary", MODEL_TYPE_UINT8, base_more_models_path_tensorflow_lite + "/Mobile_Net_V1_Model/mobilenet_v1_0.25_224_quant.tflite", armnn::TensorShape({ 1, 224, 224, 3}), "input", "MobilenetV1/Predictions/Reshape_1", 224, 224};
+    Model_Table["mobilenet_v1_0.25_192_quant.tflite"] = {"tflite-binary", MODEL_TYPE_UINT8, base_more_models_path_tensorflow_lite + "/Mobile_Net_V1_Model/mobilenet_v1_0.25_192_quant.tflite", armnn::TensorShape({ 1, 192, 192, 3}), "input", "MobilenetV1/Predictions/Reshape_1", 192, 192};
+    Model_Table["mobilenet_v1_0.25_160_quant.tflite"] = {"tflite-binary", MODEL_TYPE_UINT8, base_more_models_path_tensorflow_lite + "/Mobile_Net_V1_Model/mobilenet_v1_0.25_160_quant.tflite", armnn::TensorShape({ 1, 160, 160, 3}), "input", "MobilenetV1/Predictions/Reshape_1", 160, 160};
+    Model_Table["mobilenet_v1_0.25_128_quant.tflite"] = {"tflite-binary", MODEL_TYPE_UINT8, base_more_models_path_tensorflow_lite + "/Mobile_Net_V1_Model/mobilenet_v1_0.25_128_quant.tflite", armnn::TensorShape({ 1, 128, 128, 3}), "input", "MobilenetV1/Predictions/Reshape_1", 128, 128};
+    Model_Table["mobilenet_v1_1.0_224.tflite"] = {"tflite-binary", MODEL_TYPE_FLOAT32, base_more_models_path_tensorflow_lite + "/Mobile_Net_V1_Model/mobilenet_v1_1.0_224.tflite", armnn::TensorShape({ 1, 224, 224, 3}), "input","MobilenetV1/Predictions/Reshape_1", 224, 224};
+    Model_Table["mobilenet_v1_1.0_192.tflite"] = {"tflite-binary", MODEL_TYPE_FLOAT32, base_more_models_path_tensorflow_lite + "/Mobile_Net_V1_Model/mobilenet_v1_1.0_192.tflite", armnn::TensorShape({ 1, 192, 192, 3}), "input", "MobilenetV1/Predictions/Reshape_1", 192, 192};
+    Model_Table["mobilenet_v1_1.0_160.tflite"] = {"tflite-binary", MODEL_TYPE_FLOAT32, base_more_models_path_tensorflow_lite + "/Mobile_Net_V1_Model/mobilenet_v1_1.0_160.tflite", armnn::TensorShape({ 1, 160, 160, 3}), "input", "MobilenetV1/Predictions/Reshape_1", 160, 160};
+    Model_Table["mobilenet_v1_1.0_128.tflite"] = {"tflite-binary", MODEL_TYPE_FLOAT32, base_more_models_path_tensorflow_lite + "/Mobile_Net_V1_Model/mobilenet_v1_1.0_128.tflite", armnn::TensorShape({ 1, 128, 128, 3}), "input", "MobilenetV1/Predictions/Reshape_1", 128, 128};
+    Model_Table["mobilenet_v1_0.75_224.tflite"] = {"tflite-binary", MODEL_TYPE_FLOAT32, base_more_models_path_tensorflow_lite + "/Mobile_Net_V1_Model/mobilenet_v1_0.75_224.tflite", armnn::TensorShape({ 1, 224, 224, 3}), "input", "MobilenetV1/Predictions/Reshape_1", 224, 224};
+    Model_Table["mobilenet_v1_0.75_192.tflite"] = {"tflite-binary", MODEL_TYPE_FLOAT32, base_more_models_path_tensorflow_lite + "/Mobile_Net_V1_Model/mobilenet_v1_0.75_192.tflite", armnn::TensorShape({ 1, 192, 192, 3}), "input", "MobilenetV1/Predictions/Reshape_1", 192, 192};
+    Model_Table["mobilenet_v1_0.75_160.tflite"] = {"tflite-binary", MODEL_TYPE_FLOAT32, base_more_models_path_tensorflow_lite + "/Mobile_Net_V1_Model/mobilenet_v1_0.75_160.tflite", armnn::TensorShape({ 1, 160, 160, 3}), "input", "MobilenetV1/Predictions/Reshape_1", 160, 160};
+    Model_Table["mobilenet_v1_0.75_128.tflite"] = {"tflite-binary", MODEL_TYPE_FLOAT32, base_more_models_path_tensorflow_lite + "/Mobile_Net_V1_Model/mobilenet_v1_0.75_128.tflite", armnn::TensorShape({ 1, 128, 128, 3}), "input", "MobilenetV1/Predictions/Reshape_1", 128, 128};
+    Model_Table["mobilenet_v1_0.5_224.tflite"] = {"tflite-binary", MODEL_TYPE_FLOAT32, base_more_models_path_tensorflow_lite + "/Mobile_Net_V1_Model/mobilenet_v1_0.5_224.tflite", armnn::TensorShape({ 1, 224, 224, 3}), "input", "MobilenetV1/Predictions/Reshape_1", 224, 224};
+    Model_Table["mobilenet_v1_0.5_192.tflite"] = {"tflite-binary", MODEL_TYPE_FLOAT32, base_more_models_path_tensorflow_lite + "/Mobile_Net_V1_Model/mobilenet_v1_0.5_192.tflite", armnn::TensorShape({ 1, 192, 192, 3}), "input", "MobilenetV1/Predictions/Reshape_1", 192, 192};
+    Model_Table["mobilenet_v1_0.5_160.tflite"] = {"tflite-binary", MODEL_TYPE_FLOAT32, base_more_models_path_tensorflow_lite + "/Mobile_Net_V1_Model/mobilenet_v1_0.5_160.tflite", armnn::TensorShape({ 1, 160, 160, 3}), "input", "MobilenetV1/Predictions/Reshape_1", 160, 160};
+    Model_Table["mobilenet_v1_0.5_128.tflite"] = {"tflite-binary", MODEL_TYPE_FLOAT32, base_more_models_path_tensorflow_lite + "/Mobile_Net_V1_Model/mobilenet_v1_0.5_128.tflite", armnn::TensorShape({ 1, 128, 128, 3}), "input", "MobilenetV1/Predictions/Reshape_1", 128, 128};
+    Model_Table["mobilenet_v1_0.25_224.tflite"] = {"tflite-binary", MODEL_TYPE_FLOAT32, base_more_models_path_tensorflow_lite + "/Mobile_Net_V1_Model/mobilenet_v1_0.25_224.tflite", armnn::TensorShape({ 1, 224, 224, 3}), "input", "MobilenetV1/Predictions/Reshape_1", 224, 224};
+    Model_Table["mobilenet_v1_0.25_192.tflite"] = {"tflite-binary", MODEL_TYPE_FLOAT32, base_more_models_path_tensorflow_lite + "/Mobile_Net_V1_Model/mobilenet_v1_0.25_192.tflite", armnn::TensorShape({ 1, 192, 192, 3}), "input", "MobilenetV1/Predictions/Reshape_1", 192, 192};
+    Model_Table["mobilenet_v1_0.25_160.tflite"] = {"tflite-binary", MODEL_TYPE_FLOAT32, base_more_models_path_tensorflow_lite + "/Mobile_Net_V1_Model/mobilenet_v1_0.25_160.tflite", armnn::TensorShape({ 1, 160, 160, 3}), "input", "MobilenetV1/Predictions/Reshape_1", 160, 160};
+    Model_Table["mobilenet_v1_0.25_128.tflite"] = {"tflite-binary", MODEL_TYPE_FLOAT32, base_more_models_path_tensorflow_lite + "/Mobile_Net_V1_Model/mobilenet_v1_0.25_128.tflite", armnn::TensorShape({ 1, 128, 128, 3}), "input", "MobilenetV1/Predictions/Reshape_1", 128, 128};
 
-    Model_Table["mobilenet_v2_1.0_224_quant.tflite"] = {"tflite-binary", false, base_more_models_path_tensorflow_lite + "/Mobile_Net_V2_Model/mobilenet_v2_1.0_224_quant.tflite", armnn::TensorShape({ 1, 224, 224, 3}),"input", "output", 224, 224};
-    Model_Table["mobilenet_v2_1.4_224.tflite"] = {"tflite-binary", true, base_more_models_path_tensorflow_lite + "/Mobile_Net_V2_Model/mobilenet_v2_1.4_224.tflite", armnn::TensorShape({ 1, 224, 224, 3}), "input", "MobilenetV2/Predictions/Reshape_1", 224, 224};
-    Model_Table["mobilenet_v2_1.3_224.tflite"] = {"tflite-binary", true, base_more_models_path_tensorflow_lite + "/Mobile_Net_V2_Model/mobilenet_v2_1.3_224.tflite", armnn::TensorShape({ 1, 224, 224, 3}), "input", "MobilenetV2/Predictions/Reshape_1", 224, 224};
-    Model_Table["mobilenet_v2_1.0_224.tflite"] = {"tflite-binary", true, base_more_models_path_tensorflow_lite + "/Mobile_Net_V2_Model/mobilenet_v2_1.0_224.tflite", armnn::TensorShape({ 1, 224, 224, 3}), "input", "MobilenetV2/Predictions/Reshape_1", 224, 224};
-    Model_Table["mobilenet_v2_1.0_192.tflite"] = {"tflite-binary", true, base_more_models_path_tensorflow_lite + "/Mobile_Net_V2_Model/mobilenet_v2_1.0_192.tflite", armnn::TensorShape({ 1, 192, 192, 3}), "input", "MobilenetV2/Predictions/Reshape_1", 192, 192};
-    Model_Table["mobilenet_v2_1.0_160.tflite"] = {"tflite-binary", true, base_more_models_path_tensorflow_lite + "/Mobile_Net_V2_Model/mobilenet_v2_1.0_160.tflite", armnn::TensorShape({ 1, 160, 160, 3}), "input", "MobilenetV2/Predictions/Reshape_1", 160, 160};
-    Model_Table["mobilenet_v2_1.0_128.tflite"] = {"tflite-binary", true, base_more_models_path_tensorflow_lite + "/Mobile_Net_V2_Model/mobilenet_v2_1.0_128.tflite", armnn::TensorShape({ 1, 128, 128, 3}), "input", "MobilenetV2/Predictions/Reshape_1", 128, 128};
-    Model_Table["mobilenet_v2_1.0_96.tflite"] = {"tflite-binary", true, base_more_models_path_tensorflow_lite + "/Mobile_Net_V2_Model/mobilenet_v2_1.0_96.tflite", armnn::TensorShape({ 1, 96, 96, 3}), "input", "MobilenetV2/Predictions/Reshape_1", 96, 96};
-    Model_Table["mobilenet_v2_0.75_224.tflite"] = {"tflite-binary", true, base_more_models_path_tensorflow_lite + "/Mobile_Net_V2_Model/mobilenet_v2_0.75_224.tflite", armnn::TensorShape({ 1, 224, 224, 3}), "input","MobilenetV2/Predictions/Reshape_1", 224, 224};
-    Model_Table["mobilenet_v2_0.75_192.tflite"] = {"tflite-binary", true, base_more_models_path_tensorflow_lite + "/Mobile_Net_V2_Model/mobilenet_v2_0.75_192.tflite", armnn::TensorShape({ 1, 192, 192, 3}), "input", "MobilenetV2/Predictions/Reshape_1", 192, 192};
-    Model_Table["mobilenet_v2_0.75_160.tflite"] = {"tflite-binary", true, base_more_models_path_tensorflow_lite + "/Mobile_Net_V2_Model/mobilenet_v2_0.75_160.tflite", armnn::TensorShape({ 1, 160, 160, 3}), "input", "MobilenetV2/Predictions/Reshape_1", 160, 160};
-    Model_Table["mobilenet_v2_0.75_128.tflite"] = {"tflite-binary", true, base_more_models_path_tensorflow_lite + "/Mobile_Net_V2_Model/mobilenet_v2_0.75_128.tflite", armnn::TensorShape({ 1, 128, 128, 3}), "input", "MobilenetV2/Predictions/Reshape_1", 128, 128};
-    Model_Table["mobilenet_v2_0.75_96.tflite"] = {"tflite-binary", true, base_more_models_path_tensorflow_lite + "/Mobile_Net_V2_Model/mobilenet_v2_0.75_96.tflite", armnn::TensorShape({ 1, 96, 96, 3}), "input", "MobilenetV2/Predictions/Reshape_1", 96, 96};
-    Model_Table["mobilenet_v2_0.5_224.tflite"] = {"tflite-binary", true, base_more_models_path_tensorflow_lite + "/Mobile_Net_V2_Model/mobilenet_v2_0.5_224.tflite", armnn::TensorShape({ 1, 224, 224, 3}), "input","MobilenetV2/Predictions/Reshape_1", 224, 224};
-    Model_Table["mobilenet_v2_0.5_192.tflite"] = {"tflite-binary", true, base_more_models_path_tensorflow_lite + "/Mobile_Net_V2_Model/mobilenet_v2_0.5_192.tflite", armnn::TensorShape({ 1, 192, 192, 3}), "input","MobilenetV2/Predictions/Reshape_1", 192, 192};
-    Model_Table["mobilenet_v2_0.5_160.tflite"] = {"tflite-binary", true, base_more_models_path_tensorflow_lite + "/Mobile_Net_V2_Model/mobilenet_v2_0.5_160.tflite", armnn::TensorShape({ 1, 160, 160, 3}), "input", "MobilenetV2/Predictions/Reshape_1", 160, 160};
-    Model_Table["mobilenet_v2_0.5_128.tflite"] = {"tflite-binary", true, base_more_models_path_tensorflow_lite + "/Mobile_Net_V2_Model/mobilenet_v2_0.5_128.tflite", armnn::TensorShape({ 1, 128, 128, 3}), "input", "MobilenetV2/Predictions/Reshape_1", 128, 128};
-    Model_Table["mobilenet_v2_0.5_96.tflite"] = {"tflite-binary", true, base_more_models_path_tensorflow_lite + "/Mobile_Net_V2_Model/mobilenet_v2_0.5_96.tflite", armnn::TensorShape({ 1, 96, 96, 3}), "input", "MobilenetV2/Predictions/Reshape_1", 96, 96};
-    Model_Table["mobilenet_v2_0.35_224.tflite"] = {"tflite-binary", true, base_more_models_path_tensorflow_lite + "/Mobile_Net_V2_Model/mobilenet_v2_0.35_224.tflite", armnn::TensorShape({ 1, 224, 224, 3}), "input", "MobilenetV2/Predictions/Reshape_1", 224, 224};
-    Model_Table["mobilenet_v2_0.35_192.tflite"] = {"tflite-binary", true, base_more_models_path_tensorflow_lite + "/Mobile_Net_V2_Model/mobilenet_v2_0.35_192.tflite", armnn::TensorShape({ 1, 192, 192, 3}), "input", "MobilenetV2/Predictions/Reshape_1", 192, 192};
-    Model_Table["mobilenet_v2_0.35_160.tflite"] = {"tflite-binary", true, base_more_models_path_tensorflow_lite + "/Mobile_Net_V2_Model/mobilenet_v2_0.35_160.tflite", armnn::TensorShape({ 1, 160, 160, 3}), "input", "MobilenetV2/Predictions/Reshape_1", 160, 160};
-    Model_Table["mobilenet_v2_0.35_128.tflite"] = {"tflite-binary", true, base_more_models_path_tensorflow_lite + "/Mobile_Net_V2_Model/mobilenet_v2_0.35_128.tflite", armnn::TensorShape({ 1, 128, 128, 3}), "input", "MobilenetV2/Predictions/Reshape_1", 128, 128};
-    Model_Table["mobilenet_v2_0.35_96.tflite"] = {"tflite-binary", true, base_more_models_path_tensorflow_lite + "/Mobile_Net_V2_Model/mobilenet_v2_0.35_96.tflite", armnn::TensorShape({ 1, 96, 96, 3}), "input", "MobilenetV2/Predictions/Reshape_1", 96, 96};
+    Model_Table["mobilenet_v2_1.0_224_quant.tflite"] = {"tflite-binary", MODEL_TYPE_UINT8, base_more_models_path_tensorflow_lite + "/Mobile_Net_V2_Model/mobilenet_v2_1.0_224_quant.tflite", armnn::TensorShape({ 1, 224, 224, 3}),"input", "output", 224, 224};
+    Model_Table["mobilenet_v2_1.4_224.tflite"] = {"tflite-binary", MODEL_TYPE_FLOAT32, base_more_models_path_tensorflow_lite + "/Mobile_Net_V2_Model/mobilenet_v2_1.4_224.tflite", armnn::TensorShape({ 1, 224, 224, 3}), "input", "MobilenetV2/Predictions/Reshape_1", 224, 224};
+    Model_Table["mobilenet_v2_1.3_224.tflite"] = {"tflite-binary", MODEL_TYPE_FLOAT32, base_more_models_path_tensorflow_lite + "/Mobile_Net_V2_Model/mobilenet_v2_1.3_224.tflite", armnn::TensorShape({ 1, 224, 224, 3}), "input", "MobilenetV2/Predictions/Reshape_1", 224, 224};
+    Model_Table["mobilenet_v2_1.0_224.tflite"] = {"tflite-binary", MODEL_TYPE_FLOAT32, base_more_models_path_tensorflow_lite + "/Mobile_Net_V2_Model/mobilenet_v2_1.0_224.tflite", armnn::TensorShape({ 1, 224, 224, 3}), "input", "MobilenetV2/Predictions/Reshape_1", 224, 224};
+    Model_Table["mobilenet_v2_1.0_192.tflite"] = {"tflite-binary", MODEL_TYPE_FLOAT32, base_more_models_path_tensorflow_lite + "/Mobile_Net_V2_Model/mobilenet_v2_1.0_192.tflite", armnn::TensorShape({ 1, 192, 192, 3}), "input", "MobilenetV2/Predictions/Reshape_1", 192, 192};
+    Model_Table["mobilenet_v2_1.0_160.tflite"] = {"tflite-binary", MODEL_TYPE_FLOAT32, base_more_models_path_tensorflow_lite + "/Mobile_Net_V2_Model/mobilenet_v2_1.0_160.tflite", armnn::TensorShape({ 1, 160, 160, 3}), "input", "MobilenetV2/Predictions/Reshape_1", 160, 160};
+    Model_Table["mobilenet_v2_1.0_128.tflite"] = {"tflite-binary", MODEL_TYPE_FLOAT32, base_more_models_path_tensorflow_lite + "/Mobile_Net_V2_Model/mobilenet_v2_1.0_128.tflite", armnn::TensorShape({ 1, 128, 128, 3}), "input", "MobilenetV2/Predictions/Reshape_1", 128, 128};
+    Model_Table["mobilenet_v2_1.0_96.tflite"] = {"tflite-binary", MODEL_TYPE_FLOAT32, base_more_models_path_tensorflow_lite + "/Mobile_Net_V2_Model/mobilenet_v2_1.0_96.tflite", armnn::TensorShape({ 1, 96, 96, 3}), "input", "MobilenetV2/Predictions/Reshape_1", 96, 96};
+    Model_Table["mobilenet_v2_0.75_224.tflite"] = {"tflite-binary", MODEL_TYPE_FLOAT32, base_more_models_path_tensorflow_lite + "/Mobile_Net_V2_Model/mobilenet_v2_0.75_224.tflite", armnn::TensorShape({ 1, 224, 224, 3}), "input","MobilenetV2/Predictions/Reshape_1", 224, 224};
+    Model_Table["mobilenet_v2_0.75_192.tflite"] = {"tflite-binary", MODEL_TYPE_FLOAT32, base_more_models_path_tensorflow_lite + "/Mobile_Net_V2_Model/mobilenet_v2_0.75_192.tflite", armnn::TensorShape({ 1, 192, 192, 3}), "input", "MobilenetV2/Predictions/Reshape_1", 192, 192};
+    Model_Table["mobilenet_v2_0.75_160.tflite"] = {"tflite-binary", MODEL_TYPE_FLOAT32, base_more_models_path_tensorflow_lite + "/Mobile_Net_V2_Model/mobilenet_v2_0.75_160.tflite", armnn::TensorShape({ 1, 160, 160, 3}), "input", "MobilenetV2/Predictions/Reshape_1", 160, 160};
+    Model_Table["mobilenet_v2_0.75_128.tflite"] = {"tflite-binary", MODEL_TYPE_FLOAT32, base_more_models_path_tensorflow_lite + "/Mobile_Net_V2_Model/mobilenet_v2_0.75_128.tflite", armnn::TensorShape({ 1, 128, 128, 3}), "input", "MobilenetV2/Predictions/Reshape_1", 128, 128};
+    Model_Table["mobilenet_v2_0.75_96.tflite"] = {"tflite-binary", MODEL_TYPE_FLOAT32, base_more_models_path_tensorflow_lite + "/Mobile_Net_V2_Model/mobilenet_v2_0.75_96.tflite", armnn::TensorShape({ 1, 96, 96, 3}), "input", "MobilenetV2/Predictions/Reshape_1", 96, 96};
+    Model_Table["mobilenet_v2_0.5_224.tflite"] = {"tflite-binary", MODEL_TYPE_FLOAT32, base_more_models_path_tensorflow_lite + "/Mobile_Net_V2_Model/mobilenet_v2_0.5_224.tflite", armnn::TensorShape({ 1, 224, 224, 3}), "input","MobilenetV2/Predictions/Reshape_1", 224, 224};
+    Model_Table["mobilenet_v2_0.5_192.tflite"] = {"tflite-binary", MODEL_TYPE_FLOAT32, base_more_models_path_tensorflow_lite + "/Mobile_Net_V2_Model/mobilenet_v2_0.5_192.tflite", armnn::TensorShape({ 1, 192, 192, 3}), "input","MobilenetV2/Predictions/Reshape_1", 192, 192};
+    Model_Table["mobilenet_v2_0.5_160.tflite"] = {"tflite-binary", MODEL_TYPE_FLOAT32, base_more_models_path_tensorflow_lite + "/Mobile_Net_V2_Model/mobilenet_v2_0.5_160.tflite", armnn::TensorShape({ 1, 160, 160, 3}), "input", "MobilenetV2/Predictions/Reshape_1", 160, 160};
+    Model_Table["mobilenet_v2_0.5_128.tflite"] = {"tflite-binary", MODEL_TYPE_FLOAT32, base_more_models_path_tensorflow_lite + "/Mobile_Net_V2_Model/mobilenet_v2_0.5_128.tflite", armnn::TensorShape({ 1, 128, 128, 3}), "input", "MobilenetV2/Predictions/Reshape_1", 128, 128};
+    Model_Table["mobilenet_v2_0.5_96.tflite"] = {"tflite-binary", MODEL_TYPE_FLOAT32, base_more_models_path_tensorflow_lite + "/Mobile_Net_V2_Model/mobilenet_v2_0.5_96.tflite", armnn::TensorShape({ 1, 96, 96, 3}), "input", "MobilenetV2/Predictions/Reshape_1", 96, 96};
+    Model_Table["mobilenet_v2_0.35_224.tflite"] = {"tflite-binary", MODEL_TYPE_FLOAT32, base_more_models_path_tensorflow_lite + "/Mobile_Net_V2_Model/mobilenet_v2_0.35_224.tflite", armnn::TensorShape({ 1, 224, 224, 3}), "input", "MobilenetV2/Predictions/Reshape_1", 224, 224};
+    Model_Table["mobilenet_v2_0.35_192.tflite"] = {"tflite-binary", MODEL_TYPE_FLOAT32, base_more_models_path_tensorflow_lite + "/Mobile_Net_V2_Model/mobilenet_v2_0.35_192.tflite", armnn::TensorShape({ 1, 192, 192, 3}), "input", "MobilenetV2/Predictions/Reshape_1", 192, 192};
+    Model_Table["mobilenet_v2_0.35_160.tflite"] = {"tflite-binary", MODEL_TYPE_FLOAT32, base_more_models_path_tensorflow_lite + "/Mobile_Net_V2_Model/mobilenet_v2_0.35_160.tflite", armnn::TensorShape({ 1, 160, 160, 3}), "input", "MobilenetV2/Predictions/Reshape_1", 160, 160};
+    Model_Table["mobilenet_v2_0.35_128.tflite"] = {"tflite-binary", MODEL_TYPE_FLOAT32, base_more_models_path_tensorflow_lite + "/Mobile_Net_V2_Model/mobilenet_v2_0.35_128.tflite", armnn::TensorShape({ 1, 128, 128, 3}), "input", "MobilenetV2/Predictions/Reshape_1", 128, 128};
+    Model_Table["mobilenet_v2_0.35_96.tflite"] = {"tflite-binary", MODEL_TYPE_FLOAT32, base_more_models_path_tensorflow_lite + "/Mobile_Net_V2_Model/mobilenet_v2_0.35_96.tflite", armnn::TensorShape({ 1, 96, 96, 3}), "input", "MobilenetV2/Predictions/Reshape_1", 96, 96};
 
     //ONNX model
-    Model_Table["mobilenet_v2-1.0.onnx"] = {"onnx-binary", true, base_more_models_path_onnx + "/mobilenetv2-1.0.onnx", armnn::TensorShape({ 1, 224, 224, 3}), "data", "mobilenetv20_output_flatten0_reshape0", 224, 224};
+    Model_Table["mobilenet_v2-1.0.onnx"] = {"onnx-binary", MODEL_TYPE_FLOAT32, base_more_models_path_onnx + "/mobilenetv2-1.0.onnx", armnn::TensorShape({ 1, 224, 224, 3}), "data", "mobilenetv20_output_flatten0_reshape0", 224, 224};
 }
 
 // This will run a test
 template<typename TDataType>
 int RunTest(const std::string& modelFormat,
-            const bool isFloatModel,
+            const ModelType ModelDtype,
             const armnn::TensorShape& inputTensorShape,
             const std::string& modelPath,
             const std::string& inputName,
@@ -505,7 +521,7 @@ int RunTest(const std::string& modelFormat,
     {
 #if defined(ARMNN_CAFFE_PARSER)
         test_parser = caffe;
-        return MainImpl<armnnCaffeParser::ICaffeParser, TDataType>(modelPath.c_str(), isFloatModel,"caffe",
+        return MainImpl<armnnCaffeParser::ICaffeParser, TDataType>(modelPath.c_str(), ModelDtype,"caffe",
                                                                inputName.c_str(), &inputTensorShape,
                                                                inputTensorDataFilePath.c_str(), inputImageName,
                                                                inputImageWidth, inputImageHeight, outputName.c_str(),
@@ -520,7 +536,8 @@ int RunTest(const std::string& modelFormat,
     {
 #if defined(ARMNN_ONNX_PARSER)
         test_parser = onnx;
-        return MainImpl<armnnOnnxParser::IOnnxParser, float>(modelPath.c_str(), isFloatModel, "onnx",
+        return MainImpl<armnnOnnxParser::IOnnxParser, float>(modelPath.c_str(),
+                                                         ModelDtype, "onnx",
                                                          inputName.c_str(), &inputTensorShape,
                                                          inputTensorDataFilePath.c_str(), inputImageName,
                                                          inputImageWidth, inputImageHeight, outputName.c_str(),
@@ -535,7 +552,8 @@ int RunTest(const std::string& modelFormat,
     {
 #if defined(ARMNN_TF_PARSER)
         test_parser = tensorflow;
-        return MainImpl<armnnTfParser::ITfParser, TDataType>(modelPath.c_str(), isFloatModel, "tensorflow",
+        return MainImpl<armnnTfParser::ITfParser, TDataType>(modelPath.c_str(),
+                                                         ModelDtype, "tensorflow",
                                                          inputName.c_str(), &inputTensorShape,
                                                          inputTensorDataFilePath.c_str(), inputImageName,
                                                          inputImageWidth, inputImageHeight, outputName.c_str(),
@@ -557,7 +575,8 @@ int RunTest(const std::string& modelFormat,
         }
 
         test_parser = tfLite;
-        return MainImpl<armnnTfLiteParser::ITfLiteParser, TDataType>(modelPath.c_str(), isFloatModel, "tflite",
+        return MainImpl<armnnTfLiteParser::ITfLiteParser, TDataType>(modelPath.c_str(),
+                                                                 ModelDtype, "tflite",
                                                                  inputName.c_str(), &inputTensorShape,
                                                                  inputTensorDataFilePath.c_str(), inputImageName,
                                                                  inputImageWidth, inputImageHeight, outputName.c_str(),
@@ -631,6 +650,7 @@ int main(int argc, char** argv)
     size_t subgraphId = 0;
     string inputImageName = "grace_hopper.jpg";
     string inputImagePath = "/usr/bin/armnn/examples/images/";
+    int ret = 0;
 
     while (1) {
         int arguement;
@@ -697,21 +717,26 @@ int main(int argc, char** argv)
 
         benched_model = *it + ",";
 
-        if(params.isFloatModel)
-        {
-            benched_type = "Float,";
-            RunTest<float>(params.modelFormat, params.isFloatModel, params.inputTensorShape, params.modelPath,
+        switch (params.ModelDtype) {
+        case MODEL_TYPE_FLOAT32:
+            benched_type = "float32,";
+            RunTest<float>(params.modelFormat, params.ModelDtype, params.inputTensorShape, params.modelPath,
             params.inputName, inputImagePath, inputImageName, params.inputImageWidth, params.inputImageHeight,
             params.outputName, enableProfiling, subgraphId, enableFastMath, enableFp16TurboMode, &backend);
-        }
-        else
-        {
-            benched_type = "Quant,";
-            RunTest<uint8_t>(params.modelFormat, params.isFloatModel, params.inputTensorShape, params.modelPath,
+            break;
+        case MODEL_TYPE_UINT8:
+            benched_type = "uint8,";
+            RunTest<uint8_t>(params.modelFormat, params.ModelDtype, params.inputTensorShape, params.modelPath,
             params.inputName, inputImagePath, inputImageName, params.inputImageWidth, params.inputImageHeight,
             params.outputName, enableProfiling, subgraphId, enableFastMath, enableFp16TurboMode, &backend);
+            break;
+        default:
+            std::cout << "un-supported model type " << params.ModelDtype << " for model " << *it << std::endl;
+            ret = -1;
+            continue;
         }
-            bench.push_back("\n");
+
+        bench.push_back("\n");
     }
 
     /* Output benchmarks */
@@ -722,5 +747,5 @@ int main(int argc, char** argv)
 
     bench.clear();
 
-    return 0;
+    return ret;
 }
