@@ -2,7 +2,7 @@ SUMMARY = "Protocol Buffers - structured data serialisation mechanism"
 DESCRIPTION = "Protocol Buffers are a way of encoding structured data in an \
 efficient yet extensible format. Google uses Protocol Buffers for almost \
 all of its internal RPC protocols and file formats."
-HOMEPAGE = "https://github.com/google/protobuf"
+HOMEPAGE = "https://github.com/protocolbuffers/protobuf"
 SECTION = "console/tools"
 LICENSE = "BSD-3-Clause"
 
@@ -17,7 +17,7 @@ SRCREV = "48cb18e5c419ddd23d9badcfe4e9df7bde1979b2"
 PV_append = "+git${SRCPV}"
 
 SRC_URI = " \
-	git://github.com/google/protobuf.git;branch=3.6.x \
+	gitsm://github.com/protocolbuffers/protobuf.git;nobranch=1 \
 	file://0001-Remove-googletest-to-reslove-configure.ac-error.patch \
 "
 
