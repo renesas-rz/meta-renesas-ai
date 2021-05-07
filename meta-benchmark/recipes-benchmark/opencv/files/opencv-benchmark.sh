@@ -9,7 +9,7 @@ echo "Running ... Squeezenet Onnx Model"
 echo "Running ... Mobilenet v2 1.0 Onnx Model"
 
 /usr/bin/opencvBenchmark/opencv-dnn-benchmark --model=/home/root/models/opencv/mobilenetv2-1.0.onnx --modeltype=float32 --width=224 --height=224 \
---classes=/home/root/models/onnx/classification_classes_ILSVRC2012.txt --input=/usr/bin/opencvBenchmark/grace_hopper.jpg \
+--classes=/home/root/models/opencv/classification_classes_ILSVRC2012.txt --input=/usr/bin/opencvBenchmark/grace_hopper.jpg \
 --scale="0.004" --mean="104 117 123" --rgb
 
 echo "Running ... Squeezenet v1.1 Caffe Model"
