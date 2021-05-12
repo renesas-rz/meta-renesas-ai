@@ -155,7 +155,7 @@ while i < test_loop_count:
 
     print "Caffe2 Prediction time(msecs) this round: ", (t7 - t6).total_seconds() * 1000
 
-#Caculate Means and STD
+#Calculate Means and STD
 print "Caffe2 Prediction Average time(msecs): ",np.mean(timingResult)
 print "Caffe2 Prediction STD: ",np.std(timingResult)
 
