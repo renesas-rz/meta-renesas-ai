@@ -29,6 +29,10 @@ MODEL_NAME = sys.argv[1]
 
 MODEL = MODEL_MAP.get(MODEL_NAME)
 
+TEST_LOOP_COUNT = int(sys.argv[3])
+if TEST_LOOP_COUNT == 0:
+    TEST_LOOP_COUNT = 30
+
 if MODEL == None:
     raise ValueError('Unsupported model ' + MODEL_NAME)
 
@@ -136,11 +140,10 @@ with open(PREDICT_NET, 'rb') as f:
 
 p = workspace.Predictor(init_net, predict_net)
 
-test_loop_count = 30
 i = 0
 timingResult = np.array([],dtype = float)
 
-while i < test_loop_count:
+while i < TEST_LOOP_COUNT:
 
     i = i + 1
 
