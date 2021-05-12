@@ -30,6 +30,7 @@
 
 #include <getopt.h>
 #include <fcntl.h>
+#include <stdlib.h>
 
 #include <iostream>
 #include <fstream>
@@ -41,7 +42,7 @@
 
 enum ModelType { MODEL_TYPE_FLOAT32, MODEL_TYPE_UINT8 };
 
-#define NUMBER_RUN_TESTS 30
+static long int iterations = 30;
 
 /*
  * Mark benchmarking output with the format:
@@ -246,7 +247,7 @@ int MainImpl(const char* modelPath,
 
         std::vector<double> time_vector;
 
-        for(unsigned int i = 0; i < NUMBER_RUN_TESTS; i++)
+        for(unsigned int i = 0; i < iterations; i++)
         {
             predictStart = high_resolution_clock::now();
 
@@ -617,10 +618,11 @@ void loadLabelFile(string label_file_name)
 }
 
 void display_usage() {
-  std::cout << "./armnnBenchmark [-m] [-f] [-c <backend>] [-h]\n"
+  std::cout << "./armnnBenchmark [-m] [-f] [-c <backend>] [-i <iterations>] [-h]\n"
             << "--enable-fast-math, -m: use fast maths armnn option\n"
             << "--fp16-turbo-mode, -f: use fp16-turbo-mode armnn option\n"
             << "--compute, -c: [CpuAcc|CpuRef|GpuAcc] (Default: CpuAcc)\n"
+            << "--iterations, -i: Loop inference run count\n"
             << "--help, -h: display this message \n"
             << "\n";
 }
@@ -660,11 +662,12 @@ int main(int argc, char** argv)
                 {"enable-fast-math", no_argument, nullptr, 'm'},
                 {"fp16-turbo-mode", no_argument, nullptr, 'f'},
                 {"compute", required_argument, nullptr, 'c'},
+                {"iterations", required_argument, nullptr, 'i'},
                 {"help", no_argument, nullptr, 'h'},
                 {nullptr, 0, nullptr, 0}
         };
 
-        arguement = getopt_long(argc, argv, "mfhc:",
+        arguement = getopt_long(argc, argv, "mfhc:i:",
                                 long_options, &option_index);
 
         /* Detect the end of the options. */
@@ -688,6 +691,9 @@ int main(int argc, char** argv)
                   benched_backend = " (CpuAcc)";
                   backend = {armnn::Compute::CpuAcc};
               }
+          break;
+          case 'i':
+              iterations = strtol(optarg, nullptr, 10);
           break;
           case 'h':
           case '?':
