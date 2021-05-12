@@ -82,7 +82,6 @@ using tensorflow::string;
 using tensorflow::tstring;
 using tensorflow::int32;
 
-#define TEST_NUMBER 30
 std::vector<double> run_time;
 
 static double timedifference_msec(struct timeval t0, struct timeval t1)
@@ -343,6 +342,7 @@ int main(int argc, char* argv[]) {
       "tensorflow/examples/label_image/data/imagenet_slim_labels.txt";
   int32 input_width = 299;
   int32 input_height = 299;
+  int32 inference_count = 30;
   float input_mean = 0;
   float input_std = 255;
   string input_layer = "input";
@@ -357,6 +357,8 @@ int main(int argc, char* argv[]) {
       Flag("input_width", &input_width, "resize image to this width in pixels"),
       Flag("input_height", &input_height,
            "resize image to this height in pixels"),
+      Flag("inference_count", &inference_count,
+           "Inference run counter"),
       Flag("input_mean", &input_mean, "scale pixel values to this mean"),
       Flag("input_std", &input_std, "scale pixel values to this std deviation"),
       Flag("input_layer", &input_layer, "name of input layer"),
@@ -380,6 +382,10 @@ int main(int argc, char* argv[]) {
   if (argc > 1) {
     LOG(ERROR) << "Unknown argument " << argv[1] << "\n" << usage;
     return -1;
+  }
+
+  if (inference_count <= 0) {
+    inference_count = 30;
   }
 
   /* tensorflow::string can still be printed in an iostream */
@@ -421,7 +427,7 @@ int main(int argc, char* argv[]) {
     return -1;
   }
 
-  for (int i = 0; i < TEST_NUMBER; i++)
+  for (int i = 0; i < inference_count; i++)
   {
       struct timeval tstart;
       struct timeval tend;
