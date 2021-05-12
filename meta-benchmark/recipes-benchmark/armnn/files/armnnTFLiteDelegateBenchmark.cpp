@@ -238,14 +238,6 @@ void RunInference(Settings* settings, armnn::LogSeverity armnnLogLevel, Delegate
 	/* Setup the delegate */
 	if(selectedDelegate == ArmnnTfLite) {
 		std::vector<armnn::BackendId> backends = {armnn::Compute::CpuAcc};
-		std::vector<armnn::BackendOptions> backendOptions;
-		backendOptions.emplace_back(
-			armnn::BackendOptions{ "BackendName",
-			{
-				{ "Option1", 42 },
-				{ "Option2", true }
-			}}
-		);
 		armnnDelegate::DelegateOptions delegateOptions(backends);
 		std::unique_ptr<TfLiteDelegate, decltype(&armnnDelegate::TfLiteArmnnDelegateDelete)>
 			armnnTfLiteDelegate(armnnDelegate::TfLiteArmnnDelegateCreate(delegateOptions),
