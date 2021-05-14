@@ -12,7 +12,7 @@ DEPENDS = "zlib"
 
 LIC_FILES_CHKSUM = "file://LICENSE;md5=37b5762e07f0af8c74ce80a8bda4266b"
 
-SRCREV = "48cb18e5c419ddd23d9badcfe4e9df7bde1979b2"
+SRCREV = "498de9f761bef56a032815ee44b6e6dbe0892cc4"
 
 PV_append = "+git${SRCPV}"
 

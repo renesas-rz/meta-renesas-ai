@@ -87,7 +87,7 @@ int main(int argc, char* argv[])
     size_t num_dims = 4;
     printf("Input %zu : num_dims=%zu\n", i, num_dims);
     input_node_dims.resize(num_dims);
-    g_ort->GetDimensions(tensor_info, (int64_t*)input_node_dims.data(), num_dims);
+    CheckStatus(g_ort->GetDimensions(tensor_info, (int64_t*)input_node_dims.data(), num_dims));
     for (size_t j = 0; j < num_dims; j++)
       printf("Input %zu : dim %zu=%jd\n", i, j, input_node_dims[j]);
 

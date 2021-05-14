@@ -14,7 +14,7 @@ PACKAGES += "${PN}-examples ${PN}-examples-dbg"
 
 SRCREV_FORMAT = "onnxruntime"
 
-SRCREV_onnxruntime ="a8efa42d6885212627f0e4e3bd251caedc6a8d7c"
+SRCREV_onnxruntime ="530117cfdb230228c3429ab39d1b7cf1f68c0567"
 
 S = "${WORKDIR}/git/cmake"
 
@@ -24,7 +24,7 @@ inherit cmake
 #grace_hopper_224_224.jpg is inspired from https://github.com/tensorflow/tensorflow/blob/master/tensorflow/examples/label_image/data/grace_hopper.jpg
 
 SRC_URI = " \
-	gitsm://github.com/microsoft/onnxruntime.git;protocol=git;branch=rel-1.1.2;name=onnxruntime \
+	gitsm://github.com/microsoft/onnxruntime.git;protocol=git;branch=rel-1.3.1;name=onnxruntime \
 	file://patches/0001-Fix-no-test-cases-are-loaded-in-onnxruntime-test-cod.patch;patchdir=${WORKDIR}/git \
 	file://files/onnxruntime_inference_example.cpp \
 	file://files/grace_hopper_224_224.jpg \
@@ -44,32 +44,48 @@ SRC_URI[mobilenetv2.sha256sum] = "c1c513582d56afceff8516c73804e484c81c6a830712ab
 
 DEPENDS = " \
 	cmake-native \
-	protobuf3.6.1-native \
+	protobuf3.11.3-native \
 	stb \
 	zlib \
 "
 
 EXTRA_OECMAKE=" \
-	-Donnxruntime_USE_OPENMP=ON \
-	-DONNX_CUSTOM_PROTOC_EXECUTABLE=${STAGING_DIR_NATIVE}${prefix}/bin/protoc \
-	-DCMAKE_FIND_ROOT_PATH_MODE_PACKAGE=ONLY \
+	-DCMAKE_SYSTEM_NAME=Linux \
+	-DCMAKE_SYSTEM_PROCESSOR=arm \
 	-DCMAKE_FIND_ROOT_PATH_MODE_PROGRAM=NEVER \
 	-DCMAKE_FIND_ROOT_PATH_MODE_LIBRARY=ONLY \
 	-DCMAKE_FIND_ROOT_PATH_MODE_INCLUDE=ONLY \
-	-DCMAKE_SYSTEM_PROCESSOR=arm \
+	-DCMAKE_FIND_ROOT_PATH_MODE_PACKAGE=ONLY \
+	-DONNX_CUSTOM_PROTOC_EXECUTABLE=${STAGING_DIR_NATIVE}${prefix}/bin/protoc \
+	-Donnxruntime_USE_OPENMP=ON \
+	-Donnxruntime_USE_FEATURIZERS=ON \
 "
 
 do_compile_append() {
 	${CXX} -std=c++14 ${S}/../../files/onnxruntime_inference_example.cpp -DONNX_ML \
+		${S}/external/FeaturizersLibrary/src/3rdParty/MurmurHash3.cpp \
+		-I ${S}/../onnxruntime \
+		-I ${S}/../include/onnxruntime  \
 		-I ${S}/../include/onnxruntime/core/session/ \
-		-I ${S}/../cmake/external/onnx/ ${S}/../../build/libonnxruntime_session.a \
-		${S}/../../build/libonnxruntime_providers.a ${S}/../../build/libonnxruntime_framework.a \
-		${S}/../../build/libonnxruntime_optimizer.a ${S}/../../build/libonnxruntime_graph.a \
-		${S}/../../build/libonnxruntime_common.a  ${S}/../../build/onnx/libonnx_proto.a \
-		${S}/../../build/libautoml_featurizers.a \
-		${S}/../../build/external/protobuf/cmake/libprotobuf.a ${S}/../../build//external/re2/libre2.a \
-		${S}/../../build/libonnxruntime_util.a ${S}/../../build/libonnxruntime_mlas.a \
-		${S}/../../build/onnx/libonnx.a  -lpthread -fopenmp -ldl ${LDFLAGS} -o onnxruntime_inference_example
+		-I ${S}/../cmake/external/onnx \
+		-I ${S}/../../build \
+		${S}/../../build/libonnxruntime_session.a \
+		${S}/../../build/libonnxruntime_optimizer.a \
+		${S}/../../build/libonnxruntime_providers.a \
+		${S}/../../build/libonnxruntime_util.a \
+		${S}/../../build/libonnxruntime_framework.a \
+		${S}/../../build/libonnxruntime_graph.a \
+		${S}/../../build/libonnxruntime_common.a \
+		${S}/../../build/libonnxruntime_mlas.a \
+		${S}/../../build/onnx/libonnx.a \
+		${S}/../../build/onnx/libonnx_proto.a \
+		${S}/../../build/external/protobuf/cmake/libprotobuf-lite.a \
+		${S}/../../build/external/nsync/libnsync_cpp.a \
+		${S}/../../build/external/FeaturizersLibrary/libFeaturizersCode.a \
+		${S}/../../build/external/FeaturizersLibrary/libFeaturizersComponentsCode.a \
+		${S}/../../build/external/FeaturizersLibrary/libFeaturizer3rdParty.a \
+		${S}/../../build/external/FeaturizersLibrary/3rdParty/re2/libre2.a \
+		-lpthread -fopenmp -ldl ${LDFLAGS} -o onnxruntime_inference_example
 }
 
 do_install() {

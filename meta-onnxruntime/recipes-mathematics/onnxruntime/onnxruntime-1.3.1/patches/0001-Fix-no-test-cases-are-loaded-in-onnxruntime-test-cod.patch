@@ -7,13 +7,13 @@ Properly Handle DT_UNKNOWN when using readdir
 
 Signed-off-by: Jianming Qiao <jianming.qiao@bp.renesas.com>
 ---
- onnxruntime/core/framework/path_lib.h | 48 ++++++++++++++++++++++++++++++++---
+ onnxruntime/core/platform/path_lib.h | 48 ++++++++++++++++++++++++++++++++---
  1 file changed, 45 insertions(+), 3 deletions(-)
 
-diff --git a/onnxruntime/core/framework/path_lib.h b/onnxruntime/core/framework/path_lib.h
+diff --git a/onnxruntime/core/platform/path_lib.h b/onnxruntime/core/platform/path_lib.h
 index 7845bbf..1781897 100644
---- a/onnxruntime/core/framework/path_lib.h
-+++ b/onnxruntime/core/framework/path_lib.h
+--- a/onnxruntime/core/platform/path_lib.h
++++ b/onnxruntime/core/platform/path_lib.h
 @@ -15,6 +15,8 @@
  #include <dirent.h>
  #include <time.h>    //strftime
