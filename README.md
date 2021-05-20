@@ -18,6 +18,11 @@ on the CIP Kernel:
 URI: **https://github.com/renesas-rz/meta-rzg2.git**  
 tag: BSP-1.0.7 (5ddd7aac729dac64d362e6ee5aa291d9f44dea0f)
 
+#### For RZ/G2L ####
+The layers should be used with the official Renesas RZ/G2L Yocto Poky BSP:
+URI: **https://github.com/renesas-rz/meta-rzg2/tree/dunfell/rzg2l**
+commit: 2313d60eb75e5c86ce3e42ad378c8473f8e95c88
+
 For each AI tool, please refer to **meta-${AI\_TOOL\_NAME}/README.md**. For
 example:  
 *meta-tensorflow/README.md*
@@ -93,6 +98,19 @@ If needed, the size of the swap file can be set (in MB) in local.conf:
 ```
 SWAP_SIZE = "512"
 ```
+
+**meta-rzg2 patch for RZ/G2L BSP**  
+There is a bug in the RZ/G2L BSP where a BBMASK for the recipes-debian directory
+isn't formatted correctly.
+
+This is fixed by applying *patches/meta-rzg2/dunfell-rzg2l/0001-cip-core.inc-Fix-recipes-debian-BBMASK.patch*.
+
+```
+cd meta-rzg2
+git am ../meta-renesas-ai/patches/meta-rzg2/dunfell-rzg2l/0001-cip-core.inc-Fix-recipes-debian-BBMASK.patch
+```
+
+This only needs to be done when building for the *smarc-rzg2l* platform.
 
 ---
 

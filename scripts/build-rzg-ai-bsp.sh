@@ -61,7 +61,7 @@ print_help () {
 	                    By default ${OUTPUT_DIR} will be used.
 	 -p <platform>      Platform to build for. Choose from:
 	                    iwg21m, iwg20m-g1m, iwg22m, hihope-rzg2h,
-	                    hihope-rzg2m, hihope-rzg2n, ek874.
+	                    hihope-rzg2m, hihope-rzg2n, ek874, smarc-rzg2l.
 
 	EOF
 }
@@ -129,6 +129,10 @@ while getopts ":cdf:l:o:p:h" opt; do
 			FAMILY="rzg2"
         	        ;;
 
+		"smarc-rzg2l")
+			PLATFORM="${OPTARG}"
+			FAMILY="rzg2l"
+			;;
 		*)
 			echo " ERROR: -p \"${OPTARG}\" Not supported"
 			print_help
@@ -273,6 +277,26 @@ download_source () {
 			meta-renesas-ai \
 			https://github.com/renesas-rz/meta-renesas-ai.git \
 			${RZG_AI_BSP_VER}
+	elif [ ${FAMILY} == "rzg2l" ]; then
+		update_git_repo \
+			poky \
+			git://git.yoctoproject.org/poky \
+			e32d854e33bc86c2a616df8708e021a098afcf73
+
+		update_git_repo \
+			meta-openembedded \
+			git://git.openembedded.org/meta-openembedded \
+			cc6fc6b1641ab23089c1e3bba11e0c6394f0867c
+
+		update_git_repo \
+			meta-rzg2 \
+			https://github.com/renesas-rz/meta-rzg2.git \
+			${RZG_BSP_VER}
+
+		update_git_repo \
+			meta-renesas-ai \
+			https://github.com/renesas-rz/meta-renesas-ai.git \
+			${RZG_AI_BSP_VER}
 	fi
 }
 
@@ -332,6 +356,8 @@ do_build () {
 		bitbake core-image-weston
 	elif [ ${FAMILY} == "rzg2" ]; then
 		bitbake core-image-qt
+	elif [ ${FAMILY} == "rzg2l" ]; then
+		bitbake core-image-minimal
 	fi
 }
 
@@ -363,6 +389,8 @@ case ${RZG_AI_BSP_VER} in
 		RZG_BSP_VER="certified-linux-v2.1.8"
 	elif [ ${FAMILY} == "rzg2" ]; then
 		RZG_BSP_VER="BSP-1.0.7"
+	elif [ ${FAMILY} == "rzg2l" ]; then
+		RZG_BSP_VER="2313d60eb75e5c86ce3e42ad378c8473f8e95c88"
 	fi
 	;;
 esac
