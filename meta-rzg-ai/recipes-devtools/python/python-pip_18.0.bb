@@ -11,7 +11,7 @@ SRC_URI[sha256sum] = "a0e11645ee37c90b40c46d607070c4fd583e2cd46231b1c06e389c5e81
 
 S = "${WORKDIR}/pip-${PV}"
 
-inherit setuptools
+inherit setuptools3
 
 # Since PIP is like CPAN for PERL we need to drag in all python modules to ensure everything works
 RDEPENDS_${PN} = "python-modules python-distribute"
