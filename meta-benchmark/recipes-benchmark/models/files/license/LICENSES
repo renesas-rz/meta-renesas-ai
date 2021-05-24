@@ -522,17 +522,17 @@ md5sum:dadc7531f3a3902e31b4fca2b2b78b6b
 FileName:mobilenet_v1_1.0_224_quant_edgetpu.tflite
 Source:https://github.com/google-coral/test_data/raw/master/mobilenet_v1_1.0_224_quant_edgetpu.tflite
 License:https://coral.ai/models/
-md5sum:69290271b2c3ec8be9006836a66d2248
+md5sum:27298f96d32c0ec68194b8cb9e125e51
 
 FileName:mobilenet_v2_1.0_224_quant_edgetpu.tflite
 Source:https://github.com/google-coral/test_data/raw/master/mobilenet_v2_1.0_224_quant_edgetpu.tflite
 License:https://coral.ai/models/
-md5sum:15d70bb6904ecc9c509faeb2ec867f9f
+md5sum:57ba2a496f1c9ba2620e5f42491717af
 
 FileName:mobilenet_v2_1.0_224_inat_insect_quant_edgetpu.tflite
 Source:https://github.com/google-coral/test_data/raw/master/mobilenet_v2_1.0_224_inat_insect_quant_edgetpu.tflite
 License:https://coral.ai/models/
-md5sum:388d6f79aaa34965f8ae6b776c884079
+md5sum:0a76479617d3ef08ca20a1832017e608
 
 FileName:inat_insect_labels.txt
 Source:https://github.com/google-coral/test_data/raw/master/inat_insect_labels.txt
@@ -542,7 +542,7 @@ md5sum:0f348cbce21cccb44f14716d6fcd5376
 FileName:mobilenet_v2_1.0_224_inat_plant_quant_edgetpu.tflite
 Source:https://github.com/google-coral/test_data/raw/master/mobilenet_v2_1.0_224_inat_plant_quant_edgetpu.tflite
 License:https://coral.ai/models/
-md5sum:f7887574dc1d9829e1995e7ae5ec4e18
+md5sum:63a83dd30dede473826502a1c8ae84be
 
 FileName:inat_plant_labels.txt
 Source:https://github.com/google-coral/test_data/raw/master/inat_plant_labels.txt
@@ -552,7 +552,7 @@ md5sum:d992885b9d4ee31649a9fcbf514518a4
 FileName:mobilenet_v2_1.0_224_inat_bird_quant_edgetpu.tflite
 Source:https://github.com/google-coral/test_data/raw/master/mobilenet_v2_1.0_224_inat_bird_quant_edgetpu.tflite
 License:https://coral.ai/models/
-md5sum:975bd188c72acd0b6dfa2570c25a78f0
+md5sum:3286aeff45bbfad202801385d2560e9e
 
 FileName:inat_bird_labels.txt
 Source:https://github.com/google-coral/test_data/raw/master/inat_bird_labels.txt
@@ -562,19 +562,19 @@ md5sum:5432df2f330e7ac478ef1940349831aa
 FileName:inception_v1_224_quant_edgetpu.tflite
 Source:https://github.com/google-coral/test_data/raw/master/inception_v1_224_quant_edgetpu.tflite
 License:https://coral.ai/models/
-md5sum:4ab4a45b6dbd4fa92397c341b1ee58a9
+md5sum:64e65792b164e59f3b875d4e83a77289
 
 FileName:inception_v2_224_quant_edgetpu.tflite
 Source:https://github.com/google-coral/test_data/raw/master/inception_v2_224_quant_edgetpu.tflite
 License:https://coral.ai/models/
-md5sum:35a77705f23f24f19147d1d818b4827d
+md5sum:0e2a691bfb0644c7c9fb098a9591ea25
 
 FileName:inception_v3_224_quant_edgetpu.tflite
 Source:https://github.com/google-coral/test_data/raw/master/inception_v3_299_quant_edgetpu.tflite
 License:https://coral.ai/models/
-md5sum:bfd1a10275dcfdadc857e5891d5af38b
+md5sum:0474951e74400bda2bdc39be1c313d2f
 
 FileName:inception_v4_299_quant_edgetpu.tflite
 Source:https://github.com/google-coral/test_data/raw/master/inception_v4_299_quant_edgetpu.tflite
 License:https://coral.ai/models/
-md5sum:e3317f8aec7cc60deb37fa61ee7360c0
+md5sum:14bad888f29645701ab500f2e36c3b07
