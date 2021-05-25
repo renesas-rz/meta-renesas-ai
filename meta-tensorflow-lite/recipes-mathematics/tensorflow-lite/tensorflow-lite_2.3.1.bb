@@ -14,7 +14,7 @@ SRC_URI = " \
 "
 PR = "r0"
 
-COMPATIBLE_MACHINE = "(iwg20m-g1m|iwg21m|iwg22m|hihope-rzg2h|hihope-rzg2m|hihope-rzg2n|ek874)"
+COMPATIBLE_MACHINE = "(iwg20m-g1m|iwg21m|iwg22m|hihope-rzg2h|hihope-rzg2m|hihope-rzg2n|ek874|smarc-rzg2l)"
 
 S = "${WORKDIR}/git"
 
@@ -38,7 +38,8 @@ do_configure(){
 	${S}/tensorflow/lite/tools/make/download_dependencies.sh
 }
 
-CXXFLAGS += "--std=c++11"
+CXX_append_smarc-rzg2l += "-flax-vector-conversions"
+
 FULL_OPTIMIZATION += "-O3 -DNDEBUG"
 
 do_install(){

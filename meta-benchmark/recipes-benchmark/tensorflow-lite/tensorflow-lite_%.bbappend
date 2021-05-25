@@ -8,6 +8,15 @@ RDEPENDS_${PN} += " \
 	python-numpy \
 "
 
+# The smarc-rzg2l uses Yocto Dunfell which only provides Python3
+RDEPENDS_${PN}_smarc-rzg2l += " \
+	models-tensorflow-lite \
+	python3 \
+	python3-pip \
+	python3-setuptools \
+	python3-numpy \
+"
+
 SRC_URI += " \
 	file://tensorflow-lite-benchmark.cc \
 	file://patch/0001-Fix-image-resize-crash-in-certain-caess.patch \
