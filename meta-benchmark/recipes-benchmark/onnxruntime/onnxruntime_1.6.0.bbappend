@@ -20,6 +20,7 @@ do_compile_append() {
 		${S}/../../build/libonnxruntime_optimizer.a \
 		${S}/../../build/libonnxruntime_providers.a \
 		${S}/../../build/libonnxruntime_util.a \
+		${S}/../../build/libonnxruntime_flatbuffers.a \
 		${S}/../../build/libonnxruntime_framework.a \
 		${S}/../../build/libonnxruntime_graph.a \
 		${S}/../../build/libonnxruntime_common.a \

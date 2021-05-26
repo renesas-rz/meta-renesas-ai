@@ -41,7 +41,7 @@ project requirements.
 | :-------------- | :-------- | :------------------------------------- | :------------------------------- |
 | ArmNN           | v21.02    | ONNX<br>TensorFlow<br>TensorFlow Lite  | CPU                              |
 | Caffe2          | v0.8.1    | Caffe2                                 | CPU                              |
-| ONNX Runtime    | v1.5.3    | ONNX                                   | CPU                              |
+| ONNX Runtime    | v1.6.0    | ONNX                                   | CPU                              |
 | OpenCV          | v4.1.1    | Caffe<br>DarkNet<br>ONNX<br>TensorFlow | CPU                              |
 | PyTorch         | v1.5.1    | PyTorch                                | CPU                              |
 | TensorFlow      | v2.3.1    | TensorFlow                             | CPU                              |

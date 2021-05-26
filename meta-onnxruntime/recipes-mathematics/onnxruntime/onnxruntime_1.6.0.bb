@@ -14,7 +14,7 @@ PACKAGES += "${PN}-examples ${PN}-examples-dbg"
 
 SRCREV_FORMAT = "onnxruntime"
 
-SRCREV_onnxruntime ="7bcf796a0d3208b0c193d1758708495b09281e0a"
+SRCREV_onnxruntime ="718ca7f92085bef4b19b1acc71c1e1f3daccde94"
 
 S = "${WORKDIR}/git/cmake"
 
@@ -24,8 +24,9 @@ inherit cmake
 #grace_hopper_224_224.jpg is inspired from https://github.com/tensorflow/tensorflow/blob/master/tensorflow/examples/label_image/data/grace_hopper.jpg
 
 SRC_URI = " \
-	gitsm://github.com/microsoft/onnxruntime.git;protocol=git;branch=rel-1.5.3;name=onnxruntime \
+	gitsm://github.com/microsoft/onnxruntime.git;protocol=git;branch=rel-1.6.0;name=onnxruntime \
 	file://patches/0001-Fix-no-test-cases-are-loaded-in-onnxruntime-test-cod.patch;patchdir=${WORKDIR}/git \
+	file://patches/0001-Work-around-featurizers_ops-test-build-failure.patch;patchdir=${WORKDIR}/git \
 	file://files/onnxruntime_inference_example.cpp \
 	file://files/grace_hopper_224_224.jpg \
 	file://files/synset_words.txt \
@@ -76,6 +77,7 @@ do_compile_append() {
 		${S}/../../build/libonnxruntime_optimizer.a \
 		${S}/../../build/libonnxruntime_providers.a \
 		${S}/../../build/libonnxruntime_util.a \
+		${S}/../../build/libonnxruntime_flatbuffers.a \
 		${S}/../../build/libonnxruntime_framework.a \
 		${S}/../../build/libonnxruntime_graph.a \
 		${S}/../../build/libonnxruntime_common.a \
