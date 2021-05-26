@@ -24,8 +24,8 @@ do_compile_append() {
 		${S}/../../build/libonnxruntime_graph.a \
 		${S}/../../build/libonnxruntime_common.a \
 		${S}/../../build/libonnxruntime_mlas.a \
-		${S}/../../build/onnx/libonnx.a \
-		${S}/../../build/onnx/libonnx_proto.a \
+		${S}/../../build/external/onnx/libonnx.a \
+		${S}/../../build/external/onnx/libonnx_proto.a \
 		${S}/../../build/external/protobuf/cmake/libprotobuf-lite.a \
 		${S}/../../build/external/nsync/libnsync_cpp.a \
 		${S}/../../build/external/FeaturizersLibrary/libFeaturizersCode.a \

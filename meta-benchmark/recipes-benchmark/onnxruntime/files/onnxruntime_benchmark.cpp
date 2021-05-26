@@ -18,7 +18,7 @@
 #include <list>
 #include <iostream>
 
-#define ONNX_VERSION "ONNX Runtime v1.3.1,"
+#define ONNX_VERSION "ONNX Runtime v1.5.3,"
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
 

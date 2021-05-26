@@ -14,7 +14,7 @@ PACKAGES += "${PN}-examples ${PN}-examples-dbg"
 
 SRCREV_FORMAT = "onnxruntime"
 
-SRCREV_onnxruntime ="530117cfdb230228c3429ab39d1b7cf1f68c0567"
+SRCREV_onnxruntime ="7bcf796a0d3208b0c193d1758708495b09281e0a"
 
 S = "${WORKDIR}/git/cmake"
 
@@ -24,7 +24,7 @@ inherit cmake
 #grace_hopper_224_224.jpg is inspired from https://github.com/tensorflow/tensorflow/blob/master/tensorflow/examples/label_image/data/grace_hopper.jpg
 
 SRC_URI = " \
-	gitsm://github.com/microsoft/onnxruntime.git;protocol=git;branch=rel-1.3.1;name=onnxruntime \
+	gitsm://github.com/microsoft/onnxruntime.git;protocol=git;branch=rel-1.5.3;name=onnxruntime \
 	file://patches/0001-Fix-no-test-cases-are-loaded-in-onnxruntime-test-cod.patch;patchdir=${WORKDIR}/git \
 	file://files/onnxruntime_inference_example.cpp \
 	file://files/grace_hopper_224_224.jpg \
@@ -61,6 +61,9 @@ EXTRA_OECMAKE=" \
 	-Donnxruntime_USE_FEATURIZERS=ON \
 "
 
+# Allow cmake to find binaries on the host
+OECMAKE_FIND_ROOT_PATH_MODE_PROGRAM = "BOTH"
+
 do_compile_append() {
 	${CXX} -std=c++14 ${S}/../../files/onnxruntime_inference_example.cpp -DONNX_ML \
 		${S}/external/FeaturizersLibrary/src/3rdParty/MurmurHash3.cpp \
@@ -77,8 +80,8 @@ do_compile_append() {
 		${S}/../../build/libonnxruntime_graph.a \
 		${S}/../../build/libonnxruntime_common.a \
 		${S}/../../build/libonnxruntime_mlas.a \
-		${S}/../../build/onnx/libonnx.a \
-		${S}/../../build/onnx/libonnx_proto.a \
+		${S}/../../build/external/onnx/libonnx.a \
+		${S}/../../build/external/onnx/libonnx_proto.a \
 		${S}/../../build/external/protobuf/cmake/libprotobuf-lite.a \
 		${S}/../../build/external/nsync/libnsync_cpp.a \
 		${S}/../../build/external/FeaturizersLibrary/libFeaturizersCode.a \
