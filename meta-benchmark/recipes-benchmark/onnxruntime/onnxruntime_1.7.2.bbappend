@@ -9,41 +9,41 @@ SRC_URI += " \
 "
 
 do_compile_append() {
-	${CXX} -std=c++14 ${S}/../../onnxruntime_benchmark.cpp -DONNX_ML \
+	${CXX} -std=c++14 ${WORKDIR}/onnxruntime_benchmark.cpp -DONNX_ML \
 		${S}/external/FeaturizersLibrary/src/3rdParty/MurmurHash3.cpp \
 		-I ${S}/../onnxruntime \
 		-I ${S}/../include/onnxruntime  \
 		-I ${S}/../include/onnxruntime/core/session/ \
 		-I ${S}/../cmake/external/onnx \
-		-I ${S}/../../build \
-		${S}/../../build/libonnxruntime_session.a \
-		${S}/../../build/libonnxruntime_optimizer.a \
-		${S}/../../build/libonnxruntime_providers.a \
-		${S}/../../build/libonnxruntime_util.a \
-		${S}/../../build/libonnxruntime_flatbuffers.a \
-		${S}/../../build/libonnxruntime_framework.a \
-		${S}/../../build/libonnxruntime_graph.a \
-		${S}/../../build/libonnxruntime_common.a \
-		${S}/../../build/libonnxruntime_mlas.a \
-		${S}/../../build/external/onnx/libonnx.a \
-		${S}/../../build/external/onnx/libonnx_proto.a \
-		${S}/../../build/external/protobuf/cmake/libprotobuf-lite.a \
-		${S}/../../build/external/nsync/libnsync_cpp.a \
-		${S}/../../build/external/FeaturizersLibrary/libFeaturizersCode.a \
-		${S}/../../build/external/FeaturizersLibrary/libFeaturizersComponentsCode.a \
-		${S}/../../build/external/FeaturizersLibrary/libFeaturizer3rdParty.a \
-		${S}/../../build/external/FeaturizersLibrary/3rdParty/re2/libre2.a \
+		-I ${B} \
+		${B}/libonnxruntime_session.a \
+		${B}/libonnxruntime_optimizer.a \
+		${B}/libonnxruntime_providers.a \
+		${B}/libonnxruntime_util.a \
+		${B}/libonnxruntime_flatbuffers.a \
+		${B}/libonnxruntime_framework.a \
+		${B}/libonnxruntime_graph.a \
+		${B}/libonnxruntime_common.a \
+		${B}/libonnxruntime_mlas.a \
+		${B}/external/onnx/libonnx.a \
+		${B}/external/onnx/libonnx_proto.a \
+		${B}/external/protobuf/cmake/libprotobuf-lite.a \
+		${B}/external/nsync/libnsync_cpp.a \
+		${B}/external/FeaturizersLibrary/libFeaturizersCode.a \
+		${B}/external/FeaturizersLibrary/libFeaturizersComponentsCode.a \
+		${B}/external/FeaturizersLibrary/libFeaturizer3rdParty.a \
+		${B}/external/FeaturizersLibrary/3rdParty/re2/libre2.a \
 		-lpthread -fopenmp -ldl ${LDFLAGS} -L . -o onnxruntime_benchmark
 }
 
 do_install_append() {
 	install -d ${D}${bindir}/onnxruntime_benchmark
 
-	install -m 0644 ${S}/../../test_file_list_models.txt ${D}${bindir}/onnxruntime_benchmark/
+	install -m 0644 ${WORKDIR}/test_file_list_models.txt ${D}${bindir}/onnxruntime_benchmark/
 
-	install -m 0555 ${S}/../../onnxruntime_benchmark.sh ${D}${bindir}/onnxruntime_benchmark/
+	install -m 0555 ${WORKDIR}/onnxruntime_benchmark.sh ${D}${bindir}/onnxruntime_benchmark/
 
-	install -m 0555 ${WORKDIR}/build/onnxruntime_benchmark ${D}${bindir}/onnxruntime_benchmark/
+	install -m 0555 ${B}/onnxruntime_benchmark ${D}${bindir}/onnxruntime_benchmark/
 }
 
 FILES_${PN} += "\

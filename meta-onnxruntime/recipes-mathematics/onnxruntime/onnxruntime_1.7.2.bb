@@ -66,30 +66,30 @@ EXTRA_OECMAKE=" \
 OECMAKE_FIND_ROOT_PATH_MODE_PROGRAM = "BOTH"
 
 do_compile_append() {
-	${CXX} -std=c++14 ${S}/../../files/onnxruntime_inference_example.cpp -DONNX_ML \
+	${CXX} -std=c++14 ${WORKDIR}/files/onnxruntime_inference_example.cpp -DONNX_ML \
 		${S}/external/FeaturizersLibrary/src/3rdParty/MurmurHash3.cpp \
 		-I ${S}/../onnxruntime \
 		-I ${S}/../include/onnxruntime  \
 		-I ${S}/../include/onnxruntime/core/session/ \
 		-I ${S}/../cmake/external/onnx \
-		-I ${S}/../../build \
-		${S}/../../build/libonnxruntime_session.a \
-		${S}/../../build/libonnxruntime_optimizer.a \
-		${S}/../../build/libonnxruntime_providers.a \
-		${S}/../../build/libonnxruntime_util.a \
-		${S}/../../build/libonnxruntime_flatbuffers.a \
-		${S}/../../build/libonnxruntime_framework.a \
-		${S}/../../build/libonnxruntime_graph.a \
-		${S}/../../build/libonnxruntime_common.a \
-		${S}/../../build/libonnxruntime_mlas.a \
-		${S}/../../build/external/onnx/libonnx.a \
-		${S}/../../build/external/onnx/libonnx_proto.a \
-		${S}/../../build/external/protobuf/cmake/libprotobuf-lite.a \
-		${S}/../../build/external/nsync/libnsync_cpp.a \
-		${S}/../../build/external/FeaturizersLibrary/libFeaturizersCode.a \
-		${S}/../../build/external/FeaturizersLibrary/libFeaturizersComponentsCode.a \
-		${S}/../../build/external/FeaturizersLibrary/libFeaturizer3rdParty.a \
-		${S}/../../build/external/FeaturizersLibrary/3rdParty/re2/libre2.a \
+		-I ${B} \
+		${B}/libonnxruntime_session.a \
+		${B}/libonnxruntime_optimizer.a \
+		${B}/libonnxruntime_providers.a \
+		${B}/libonnxruntime_util.a \
+		${B}/libonnxruntime_flatbuffers.a \
+		${B}/libonnxruntime_framework.a \
+		${B}/libonnxruntime_graph.a \
+		${B}/libonnxruntime_common.a \
+		${B}/libonnxruntime_mlas.a \
+		${B}/external/onnx/libonnx.a \
+		${B}/external/onnx/libonnx_proto.a \
+		${B}/external/protobuf/cmake/libprotobuf-lite.a \
+		${B}/external/nsync/libnsync_cpp.a \
+		${B}/external/FeaturizersLibrary/libFeaturizersCode.a \
+		${B}/external/FeaturizersLibrary/libFeaturizersComponentsCode.a \
+		${B}/external/FeaturizersLibrary/libFeaturizer3rdParty.a \
+		${B}/external/FeaturizersLibrary/3rdParty/re2/libre2.a \
 		-lpthread -fopenmp -ldl ${LDFLAGS} -o onnxruntime_inference_example
 }
 
@@ -115,7 +115,7 @@ do_install() {
 		${D}${bindir}/${PN}-${PV}/examples/unitest
 
 	install -m 0555 \
-		${WORKDIR}/build/onnx_test_runner \
+		${B}/onnx_test_runner \
 		${D}${bindir}/${PN}-${PV}/examples/unitest
 
 	install -m 0644 \
@@ -127,7 +127,7 @@ do_install() {
 		${D}${bindir}/${PN}-${PV}/examples/inference
 
 	install -m 0555 \
-		${WORKDIR}/build/onnxruntime_inference_example \
+		${B}/onnxruntime_inference_example \
 		${D}${bindir}/${PN}-${PV}/examples/inference
 
 	install -m 0644 \
