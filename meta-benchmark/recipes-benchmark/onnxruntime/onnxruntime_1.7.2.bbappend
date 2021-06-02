@@ -29,11 +29,7 @@ do_compile_append() {
 		${B}/external/onnx/libonnx_proto.a \
 		${B}/external/protobuf/cmake/libprotobuf-lite.a \
 		${B}/external/nsync/libnsync_cpp.a \
-		${B}/external/FeaturizersLibrary/libFeaturizersCode.a \
-		${B}/external/FeaturizersLibrary/libFeaturizersComponentsCode.a \
-		${B}/external/FeaturizersLibrary/libFeaturizer3rdParty.a \
-		${B}/external/FeaturizersLibrary/3rdParty/re2/libre2.a \
-		-lpthread -fopenmp -ldl ${LDFLAGS} -L . -o onnxruntime_benchmark
+		-lre2 -lpthread -fopenmp -ldl ${LDFLAGS} -L . -o onnxruntime_benchmark
 }
 
 do_install_append() {

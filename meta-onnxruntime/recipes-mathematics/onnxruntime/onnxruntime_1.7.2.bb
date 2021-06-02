@@ -26,7 +26,6 @@ inherit cmake
 SRC_URI = " \
 	gitsm://github.com/microsoft/onnxruntime.git;protocol=git;branch=rel-1.7.2;name=onnxruntime \
 	file://patches/0001-Fix-no-test-cases-are-loaded-in-onnxruntime-test-cod.patch;patchdir=${WORKDIR}/git \
-	file://patches/0001-Work-around-featurizers_ops-test-build-failure.patch;patchdir=${WORKDIR}/git \
 	file://files/onnxruntime_inference_example.cpp \
 	file://files/grace_hopper_224_224.jpg \
 	file://files/synset_words.txt \
@@ -48,6 +47,7 @@ DEPENDS = " \
 	protobuf3.11.3-native \
 	stb \
 	zlib \
+	re2 \
 "
 
 EXTRA_OECMAKE=" \
@@ -59,7 +59,6 @@ EXTRA_OECMAKE=" \
 	-DCMAKE_FIND_ROOT_PATH_MODE_PACKAGE=ONLY \
 	-DONNX_CUSTOM_PROTOC_EXECUTABLE=${STAGING_DIR_NATIVE}${prefix}/bin/protoc \
 	-Donnxruntime_USE_OPENMP=ON \
-	-Donnxruntime_USE_FEATURIZERS=ON \
 "
 
 # Allow cmake to find binaries on the host
@@ -86,11 +85,7 @@ do_compile_append() {
 		${B}/external/onnx/libonnx_proto.a \
 		${B}/external/protobuf/cmake/libprotobuf-lite.a \
 		${B}/external/nsync/libnsync_cpp.a \
-		${B}/external/FeaturizersLibrary/libFeaturizersCode.a \
-		${B}/external/FeaturizersLibrary/libFeaturizersComponentsCode.a \
-		${B}/external/FeaturizersLibrary/libFeaturizer3rdParty.a \
-		${B}/external/FeaturizersLibrary/3rdParty/re2/libre2.a \
-		-lpthread -fopenmp -ldl ${LDFLAGS} -o onnxruntime_inference_example
+		-lre2 -lpthread -fopenmp -ldl ${LDFLAGS} -o onnxruntime_inference_example
 }
 
 do_install() {
