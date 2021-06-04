@@ -14,7 +14,7 @@ PACKAGES += "${PN}-examples ${PN}-examples-dbg"
 
 SRCREV_FORMAT = "onnxruntime"
 
-SRCREV_onnxruntime ="5bc92dff16b0ddd5063b717fb8522ca2ad023cb0"
+SRCREV_onnxruntime ="d4106deeb65c21eed3ed40df149efefeb72fe9a4"
 
 S = "${WORKDIR}/git/cmake"
 
@@ -24,7 +24,7 @@ inherit cmake
 #grace_hopper_224_224.jpg is inspired from https://github.com/tensorflow/tensorflow/blob/master/tensorflow/examples/label_image/data/grace_hopper.jpg
 
 SRC_URI = " \
-	gitsm://github.com/microsoft/onnxruntime.git;protocol=git;branch=rel-1.7.2;name=onnxruntime \
+	gitsm://github.com/microsoft/onnxruntime.git;protocol=git;branch=rel-1.8.0;name=onnxruntime \
 	file://patches/0001-Fix-no-test-cases-are-loaded-in-onnxruntime-test-cod.patch;patchdir=${WORKDIR}/git \
 	file://files/onnxruntime_inference_example.cpp \
 	file://files/grace_hopper_224_224.jpg \
@@ -44,7 +44,7 @@ SRC_URI[mobilenetv2.sha256sum] = "c1c513582d56afceff8516c73804e484c81c6a830712ab
 
 DEPENDS = " \
 	cmake-native \
-	protobuf3.11.3-native \
+	protobuf3.16.0-native \
 	stb \
 	zlib \
 	re2 \
