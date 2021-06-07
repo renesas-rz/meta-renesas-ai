@@ -23,6 +23,11 @@ SRC_URI += " \
 	file://test_file_list_Squeezenet.txt \
 "
 
+do_configure_append_smarc-rzg2l() {
+	sed -i 's/python2/python3/g' ${WORKDIR}/run_TF_measurement.py
+	sed -i 's/stderr=subprocess.STDOUT)/stderr=subprocess.STDOUT, text=True)/g' ${WORKDIR}/run_TF_measurement.py
+}
+
 do_compile_append() {
 	cp ../tensorflow-lite-benchmark.cc .
 	${CC} tensorflow-lite-benchmark.cc tensorflow/lite/examples/label_image/bitmap_helpers.cc \
