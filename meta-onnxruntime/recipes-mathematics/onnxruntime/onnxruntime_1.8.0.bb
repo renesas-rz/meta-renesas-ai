@@ -66,7 +66,6 @@ OECMAKE_FIND_ROOT_PATH_MODE_PROGRAM = "BOTH"
 
 do_compile_append() {
 	${CXX} -std=c++14 ${WORKDIR}/files/onnxruntime_inference_example.cpp -DONNX_ML \
-		${S}/external/FeaturizersLibrary/src/3rdParty/MurmurHash3.cpp \
 		-I ${S}/../onnxruntime \
 		-I ${S}/../include/onnxruntime  \
 		-I ${S}/../include/onnxruntime/core/session/ \

@@ -10,7 +10,6 @@ SRC_URI += " \
 
 do_compile_append() {
 	${CXX} -std=c++14 ${WORKDIR}/onnxruntime_benchmark.cpp -DONNX_ML \
-		${S}/external/FeaturizersLibrary/src/3rdParty/MurmurHash3.cpp \
 		-I ${S}/../onnxruntime \
 		-I ${S}/../include/onnxruntime  \
 		-I ${S}/../include/onnxruntime/core/session/ \
