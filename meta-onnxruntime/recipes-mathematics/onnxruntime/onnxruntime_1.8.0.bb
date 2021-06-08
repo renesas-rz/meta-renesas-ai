@@ -91,7 +91,7 @@ do_install() {
 
 	install -d ${D}${bindir}/${PN}-${PV}/examples
 
-	install -d ${D}${bindir}/${PN}-${PV}/examples/unitest
+	install -d ${D}${bindir}/${PN}-${PV}/examples/unittest
 
 	install -d ${D}${bindir}/${PN}-${PV}/examples/inference
 
@@ -99,11 +99,11 @@ do_install() {
 
 	cp -r \
 		${WORKDIR}/onnx-squeezenet/squeezenet \
-		${D}${bindir}/${PN}-${PV}/examples/unitest
+		${D}${bindir}/${PN}-${PV}/examples/unittest
 
 	install -m 0555 \
 		${B}/onnx_test_runner \
-		${D}${bindir}/${PN}-${PV}/examples/unitest
+		${D}${bindir}/${PN}-${PV}/examples/unittest
 
 	install -m 0644 \
 		${WORKDIR}/onnxmodel/mobilenetv2-1.0.onnx \
@@ -140,11 +140,11 @@ FILES_${PN}-staticdev = " \
 FILES_${PN}-examples = " \
 	${bindir}/${PN} \
 	${bindir}/${PN}-${PV}/examples/inference \
-	${bindir}/${PN}-${PV}/examples/unitest \
+	${bindir}/${PN}-${PV}/examples/unittest \
 	${bindir}/${PN}-${PV}/examples/images \
 "
 
 FILES_${PN}-examples-dbg = " \
-	${bindir}/${PN}-${PV}/examples/unitest/.debug \
+	${bindir}/${PN}-${PV}/examples/unittest/.debug \
 	${bindir}/${PN}-${PV}/examples/inference/.debug \
 "

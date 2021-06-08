@@ -124,7 +124,7 @@ int main(int argc, char* argv[])
 
   std::map<std::string, std::string> onnx_models_path_map =
   {
-      {"Squeezenet_v1.1", "/usr/bin/onnxruntime/examples/unitest/squeezenet/model.onnx"},
+      {"Squeezenet_v1.1", "/usr/bin/onnxruntime/examples/unittest/squeezenet/model.onnx"},
       {"MobileNet_v2_1.0_224", "/usr/bin/onnxruntime/examples/inference/mobilenetv2-1.0.onnx"}
   };
 

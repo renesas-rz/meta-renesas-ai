@@ -33,13 +33,13 @@ that loads a set of test cases and runs the self tests.
 For more information, please refer to
 https://github.com/microsoft/onnxruntime/tree/master/onnxruntime/test/onnx.
 
-This program is istalled under */usr/bin/onnxruntime/examples/unitest* when
+This program is istalled under */usr/bin/onnxruntime/examples/unittest* when
 package *onnxruntime-examples* is included.
 
 To use *onnx_test_runner*:  
 1. Execute *onnx_test_runner* by running the following commands:
 ```
-cd /usr/bin/onnxruntime/examples/unitest/
+cd /usr/bin/onnxruntime/examples/unittest/
 ./onnx_test_runner ./squeezenet
 ```
 The output of a healthy execution should look like the following:
