@@ -31,12 +31,8 @@ SRC_URI = " \
 	file://files/onnxruntime_inference_example.cpp \
 	file://files/grace_hopper_224_224.jpg \
 	file://files/synset_words.txt \
-	https://s3.amazonaws.com/download.onnx/models/opset_9/squeezenet.tar.gz;name=onnx-squeezenet;subdir=${WORKDIR}/onnx-squeezenet \
 	https://s3.amazonaws.com/onnx-model-zoo/mobilenet/mobilenetv2-1.0/mobilenetv2-1.0.onnx;name=mobilenetv2;subdir=${WORKDIR}/onnxmodel;destsuffix=onnxmodel \
 "
-
-SRC_URI[onnx-squeezenet.md5sum] = "92e240a948f9bbc92534d752eb465317"
-SRC_URI[onnx-squeezenet.sha256sum] = "f4c9a2906a949f089bee5ef1bf9ea1c0dc1b49d5abeb1874fff3d206751d0f3b"
 
 SRC_URI[grace_hopper.md5sum] = "314296a0a5dd3c394e57f4efac733c20"
 SRC_URI[grace_hopper.sha256sum] = "a8ca6d734765703b09728ab47fe59f473d93ae3967fc24c7c0288c3c7adb7130"
@@ -96,10 +92,6 @@ do_install() {
 	install -d ${D}${bindir}/${PN}-${PV}/examples/inference
 
 	install -d ${D}${bindir}/${PN}-${PV}/examples/images
-
-	cp -r \
-		${WORKDIR}/onnx-squeezenet/squeezenet \
-		${D}${bindir}/${PN}-${PV}/examples/unittest
 
 	install -m 0555 \
 		${B}/onnx_test_runner \
