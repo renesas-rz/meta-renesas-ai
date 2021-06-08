@@ -6,7 +6,7 @@ SUMMARY = "ONNX Runtime"
 HOMEPAGE = "https://github.com/microsoft/onnxruntime"
 LICENSE = "MIT"
 
-LIC_FILES_CHKSUM = "file://${S}/../LICENSE;md5=0f7e3b1308cb5c00b372a6e78835732d"
+LIC_FILES_CHKSUM = "file://${S}/LICENSE;md5=0f7e3b1308cb5c00b372a6e78835732d"
 
 COMPATIBLE_MACHINE = "(iwg20m-g1m|iwg21m|iwg22m|hihope-rzg2h|hihope-rzg2m|hihope-rzg2n|ek874)"
 
@@ -16,9 +16,11 @@ SRCREV_FORMAT = "onnxruntime"
 
 SRCREV_onnxruntime ="d4106deeb65c21eed3ed40df149efefeb72fe9a4"
 
-S = "${WORKDIR}/git/cmake"
+S = "${WORKDIR}/git"
 
-inherit cmake
+inherit cmake python3native
+
+OECMAKE_SOURCEPATH = "${S}/cmake"
 
 #synset_words.txt is inspired from https://github.com/HoldenCaulfieldRye/caffe/blob/master/data/ilsvrc12/synset_words.txt
 #grace_hopper_224_224.jpg is inspired from https://github.com/tensorflow/tensorflow/blob/master/tensorflow/examples/label_image/data/grace_hopper.jpg
@@ -51,23 +53,16 @@ DEPENDS = " \
 "
 
 EXTRA_OECMAKE=" \
-	-DCMAKE_FIND_ROOT_PATH_MODE_PROGRAM=NEVER \
-	-DCMAKE_FIND_ROOT_PATH_MODE_LIBRARY=ONLY \
-	-DCMAKE_FIND_ROOT_PATH_MODE_INCLUDE=ONLY \
-	-DCMAKE_FIND_ROOT_PATH_MODE_PACKAGE=ONLY \
 	-DONNX_CUSTOM_PROTOC_EXECUTABLE=${STAGING_DIR_NATIVE}${prefix}/bin/protoc \
 	-Donnxruntime_USE_OPENMP=ON \
 "
 
-# Allow cmake to find binaries on the host
-OECMAKE_FIND_ROOT_PATH_MODE_PROGRAM = "BOTH"
-
 do_compile_append() {
 	${CXX} -std=c++14 ${WORKDIR}/files/onnxruntime_inference_example.cpp -DONNX_ML \
-		-I ${S}/../onnxruntime \
-		-I ${S}/../include/onnxruntime  \
-		-I ${S}/../include/onnxruntime/core/session/ \
-		-I ${S}/../cmake/external/onnx \
+		-I ${S}/onnxruntime \
+		-I ${S}/include/onnxruntime  \
+		-I ${S}/include/onnxruntime/core/session/ \
+		-I ${S}/cmake/external/onnx \
 		-I ${B} \
 		${B}/libonnxruntime_session.a \
 		${B}/libonnxruntime_optimizer.a \

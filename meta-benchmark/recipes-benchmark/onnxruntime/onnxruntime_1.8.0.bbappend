@@ -10,10 +10,10 @@ SRC_URI += " \
 
 do_compile_append() {
 	${CXX} -std=c++14 ${WORKDIR}/onnxruntime_benchmark.cpp -DONNX_ML \
-		-I ${S}/../onnxruntime \
-		-I ${S}/../include/onnxruntime  \
-		-I ${S}/../include/onnxruntime/core/session/ \
-		-I ${S}/../cmake/external/onnx \
+		-I ${S}/onnxruntime \
+		-I ${S}/include/onnxruntime  \
+		-I ${S}/include/onnxruntime/core/session/ \
+		-I ${S}/cmake/external/onnx \
 		-I ${B} \
 		${B}/libonnxruntime_session.a \
 		${B}/libonnxruntime_optimizer.a \
