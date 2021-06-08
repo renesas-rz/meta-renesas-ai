@@ -253,9 +253,9 @@ do_install () {
 	install -m 0644 ${S}/tflite/labels.txt ${D}/home/root/models/tensorflowlite/NasNet/
 	install -m 0644 ${S}/tflite/labels.txt ${D}/home/root/models/tensorflowlite/Squeezenet/
 	install -m 0644 ${S}/tflite/labels.txt ${D}/home/root/models/tensorflowlite/Resnet/
-	install -m 0644 ${S}/tflite/imagenet_slim_labels.txt ${D}/home/root/models/tensorflowlite/Mobile_InceptionV3/
+	install -m 0644 ${S}/tflite/imagenet_slim_labels.txt ${D}/home/root/models/tensorflowlite/Mobile_InceptionV3/labels.txt
 	install -m 0644 ${S}/tflite/inception_v3*.tflite ${D}/home/root/models/tensorflowlite/Mobile_InceptionV3/
-	install -m 0644 ${S}/tflite/imagenet_slim_labels.txt ${D}/home/root/models/tensorflowlite/Mobile_InceptionV4/
+	install -m 0644 ${S}/tflite/imagenet_slim_labels.txt ${D}/home/root/models/tensorflowlite/Mobile_InceptionV4/labels.txt
 	install -m 0644 ${S}/tflite/inception_v4*.tflite ${D}/home/root/models/tensorflowlite/Mobile_InceptionV4/
 	cp -r ${S}/models/tensorflowlite/* ${D}/home/root/models/tensorflowlite/
 }

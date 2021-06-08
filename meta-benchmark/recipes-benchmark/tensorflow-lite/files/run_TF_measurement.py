@@ -65,7 +65,7 @@ def Average(lst):
     return sum(lst) / len(lst)
 
 def run_tflite_benchmark(model_file_name,base_directory,label_file_name,number_of_threads,times_to_run,list,list_dev):
-    command = "/usr/bin/tensorflow-lite-benchmark/tensorflow-lite-benchmark -i /usr/bin/tensorflow-lite/examples/grace_hopper.bmp -c %s -l %s -t %d -m %s" % (times_to_run, label_file_name, number_of_threads, base_directory+model_file_name)
+    command = "/usr/bin/tensorflow-lite-benchmark/tensorflow-lite-benchmark -i /usr/bin/tensorflow-lite/examples/grace_hopper.bmp -c %s -l %s -t %d -m %s" % (times_to_run, base_directory+label_file_name, number_of_threads, base_directory+model_file_name)
 
     for line in run_command(command):
         count = 0
