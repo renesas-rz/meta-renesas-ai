@@ -125,8 +125,6 @@ do_install() {
 	ln -sf ${PN}-${PV} ${PN}
 }
 
-CXXFLAGS += "-fopenmp"
-
 ALLOW_EMPTY_${PN} = "1"
 
 FILES_${PN} = ""
