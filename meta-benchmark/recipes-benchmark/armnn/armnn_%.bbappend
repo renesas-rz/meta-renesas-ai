@@ -9,6 +9,11 @@ SRC_URI += " \
 	file://test_model_list_armnnDelegate.txt \
 "
 
+do_configure_append_smarc-rzg2l() {
+	sed -i 's/python2/python3/g' ${WORKDIR}/run_Delegate_measurement.py
+	sed -i 's/stderr=subprocess.STDOUT)/stderr=subprocess.STDOUT, text=True)/g' ${WORKDIR}/run_Delegate_measurement.py
+}
+
 do_compile_append() {
 	${CC} ../armnnBenchmark.cpp \
 		${WORKDIR}/build/tests/CMakeFiles/TfInceptionV3-Armnn.dir/ImagePreprocessor.cpp.o \

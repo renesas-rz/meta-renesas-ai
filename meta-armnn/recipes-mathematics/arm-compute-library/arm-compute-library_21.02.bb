@@ -17,9 +17,10 @@ SRCREV = "7dcb9fadb98cad05fca72de3273311d570d98b4e"
 SRC_URI = " \
 	git://github.com/ARM-software/ComputeLibrary.git \
 	file://0001-Add-support-for-building-arm-and-aarch64-CL-with-Sco.patch \
+	file://0001-Allow-compilation-with-GCC-9.3.0.patch \
 "
 
-COMPATIBLE_MACHINE = "(iwg20m-g1m|iwg21m|iwg22m|hihope-rzg2h|hihope-rzg2m|hihope-rzg2n|ek874)"
+COMPATIBLE_MACHINE = "(iwg20m-g1m|iwg21m|iwg22m|hihope-rzg2h|hihope-rzg2m|hihope-rzg2n|ek874|smarc-rzg2l)"
 
 S = "${WORKDIR}/git"
 
@@ -60,7 +61,7 @@ FILES_${PN} = "${libdir}/libarm_compute_core.so.22.0.0 \
 "
 
 #Symlink .so files should go into the -dev package
-FILES_${PN}-dev = "${datadir}/arm-compute-library \
+FILES_${PN}-dev += "${datadir}/arm-compute-library \
                    ${libdir}/libarm_compute_graph.so.22 \
                    ${libdir}/libarm_compute.so.22 \
                    ${libdir}/libarm_compute.so \

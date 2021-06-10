@@ -12,7 +12,6 @@ You may obtain a copy of the License at
 
 import sys
 import os
-import commands
 import subprocess
 from subprocess import call
 import numpy as np
@@ -62,20 +61,20 @@ def main():
 
    with open(filepath) as fp:
        for line in fp:
-	   if not len(line.strip()) == 0:
-	       model_details = line.split()
-	       list = []
-	       list_tmp = []
+           if not len(line.strip()) == 0:
+               model_details = line.split()
+               list = []
+               list_tmp = []
 
                if len(model_details) != 2:
-		   print("Invalid line: " + line)
+                   print("Invalid line: " + line)
                    sys.exit(1)
 
-	       run_delegate_benchmark(model_details[0], base_directory_path, './usr/bin/armnn/examples/tensorflow-lite/models/labels.txt', number_of_cores, number_of_iteration, list_tmp, list, armnnDelegate, armnnLogLevel)
+               run_delegate_benchmark(model_details[0], base_directory_path, './usr/bin/armnn/examples/tensorflow-lite/models/labels.txt', number_of_cores, number_of_iteration, list_tmp, list, armnnDelegate, armnnLogLevel)
 
-	       print("Average Time" + " at Model " + model_details[0] + str(Average(list_tmp)) + " ms ")
-	       print("Standard Deviation" + " at Model " + model_details[0] + str(Average(list)))
-	       print("\n")
+               print("Average Time" + " at Model " + model_details[0] + str(Average(list_tmp)) + " ms ")
+               print("Standard Deviation" + " at Model " + model_details[0] + str(Average(list)))
+               print("\n")
 
                if benchmark == True:
                    print("AI_BENCHMARK_MARKER,Arm NN SDK v21.02 Delegate (" + armnnDelegate + ")," + model_details[0].rstrip().rsplit('/', 1)[1] +  "," +  model_details[1] + "," + str(Average(list_tmp)) + "," + str(Average(list)) + ",")
@@ -95,6 +94,7 @@ def run_delegate_benchmark(model_file_name, base_directory, label_file_name, num
         elif line.find("Standard Deviation") != -1:
             line = line.split(" ")
             list_dev.insert(count, float(line[2]))
+            break;
 
 
 def run_command(command):

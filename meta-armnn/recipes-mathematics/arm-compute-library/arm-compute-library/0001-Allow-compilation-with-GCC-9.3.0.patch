@@ -1,0 +1,47 @@
+From b96e49c5dcd9e8518f37cd73635a4101566aad80 Mon Sep 17 00:00:00 2001
+From: Gareth Williams <gareth.williams.jx@renesas.com>
+Date: Thu, 10 Jun 2021 10:50:16 +0100
+Subject: [PATCH] Allow compilation with GCC 9.3.0
+
+Later versions of GCC require the noexcept keyword to be used when
+a method has inconsistent use of exceptions, such as with different
+data types. We should add this to areas that would otherwise return
+errors.
+
+Signed-off-by: Gareth Williams <gareth.williams.jx@renesas.com>
+---
+ arm_compute/core/PixelValue.h | 4 ++--
+ arm_compute/core/Types.h      | 2 +-
+ 2 files changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/arm_compute/core/PixelValue.h b/arm_compute/core/PixelValue.h
+index f744d64..f9dd2a0 100644
+--- a/arm_compute/core/PixelValue.h
++++ b/arm_compute/core/PixelValue.h
+@@ -35,8 +35,8 @@ class PixelValue
+ {
+ public:
+     /** Default constructor: value initialized to 0 */
+-    PixelValue()
+-        : value{ int64_t(0) }
++    PixelValue() noexcept
++        : value{ int64_t(0) } 
+     {
+     }
+     /** Initialize the union with a pixel value of chosen datatype
+diff --git a/arm_compute/core/Types.h b/arm_compute/core/Types.h
+index 59ba5aa..d6a46bb 100644
+--- a/arm_compute/core/Types.h
++++ b/arm_compute/core/Types.h
+@@ -279,7 +279,7 @@ struct BorderSize
+     }
+ 
+     /** Border with equal size around the 2D plane */
+-    explicit constexpr BorderSize(unsigned int size)
++    explicit constexpr BorderSize(unsigned int size) noexcept
+         : top{ size }, right{ size }, bottom{ size }, left{ size }
+     {
+     }
+-- 
+2.7.4
+

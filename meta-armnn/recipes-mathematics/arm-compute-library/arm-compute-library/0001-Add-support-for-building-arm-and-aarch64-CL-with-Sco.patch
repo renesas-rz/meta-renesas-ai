@@ -1,21 +1,22 @@
-From 1f8cb31b07b4a3a0b1db7414d4e959c2812041ce Mon Sep 17 00:00:00 2001
+From 3e2da8706a30b5bdfd09d7314de2c445342b97a6 Mon Sep 17 00:00:00 2001
 From: Gareth Williams <gareth.williams.jx@renesas.com>
-Date: Wed, 24 Feb 2021 16:27:03 +0000
+Date: Wed, 9 Jun 2021 16:17:17 +0100
 Subject: [PATCH] Add support for building arm and aarch64 CL with Scons
 
-Recreated for arm_compute v20.11
+Recreated for arm_compute v20.11, with support for Arm V8.2
+cores.
 
 Signed-off-by: Jianming Qiao <jianming.qiao@bp.renesas.com>
 Signed-off-by: Gareth Williams <gareth.williams.jx@renesas.com>
 ---
- SConstruct | 10 ++++------
- 1 file changed, 4 insertions(+), 6 deletions(-)
+ SConstruct | 12 ++++--------
+ 1 file changed, 4 insertions(+), 8 deletions(-)
 
 diff --git a/SConstruct b/SConstruct
-index 3b2be1176..0da030d19 100644
+index 274326f..5dad742 100644
 --- a/SConstruct
 +++ b/SConstruct
-@@ -194,11 +194,11 @@ if 'v7a' in env['estate'] and env['estate'] == '64':
+@@ -206,11 +206,11 @@ if 'v7a' in env['estate'] and env['estate'] == '64':
  # Add architecture specific flags
  prefix = ""
  if 'v7a' in env['arch']:
@@ -27,9 +28,18 @@ index 3b2be1176..0da030d19 100644
 -        env.Append(CXXFLAGS = ['-mfloat-abi=hard'])
 +        env.Append(CXXFLAGS = ['-mfloat-abi=hard','-fPIC'])
  elif 'v8' in env['arch']:
-     if 'sve' in env['arch']:
-         env.Append(CXXFLAGS = ['-march=armv8.2-a+sve+fp16+dotprod'])
-@@ -225,9 +225,7 @@ elif 'x86' in env['arch']:
+     if 'sve2' in env['arch']:
+         env.Append(CXXFLAGS = ['-march=armv8.2-a+sve2+fp16+dotprod'])
+@@ -221,8 +221,6 @@ elif 'v8' in env['arch']:
+         env.Append(CXXFLAGS = ['-march=armv8.4-a'])
+     elif 'v8.' in env['arch']:
+         env.Append(CXXFLAGS = ['-march=armv8.2-a+fp16']) # explicitly enable fp16 extension otherwise __ARM_FEATURE_FP16_VECTOR_ARITHMETIC is undefined
+-    else:
+-        env.Append(CXXFLAGS = ['-march=armv8-a'])
+ 
+     if 'v8.6-a' in env['arch']:
+         env.Append(CPPDEFINES = ['MMLA_INT8', 'V8P6', 'V8P6_BF', 'ARM_COMPUTE_FORCE_BF16'])
+@@ -241,9 +239,7 @@ elif 'x86' in env['arch']:
  prefix = ""
  if 'x86' not in env['arch']:
      if env['estate'] == '32':
@@ -40,7 +50,7 @@ index 3b2be1176..0da030d19 100644
              prefix = "arm-eabi-"
          elif env['os'] == 'android':
              prefix = "arm-linux-androideabi-"
-@@ -235,7 +233,7 @@ if 'x86' not in env['arch']:
+@@ -251,7 +247,7 @@ if 'x86' not in env['arch']:
              prefix = "armv7l-tizen-linux-gnueabi-"
      elif env['estate'] == '64' and 'v8' in env['arch']:
          if env['os'] == 'linux':
@@ -50,5 +60,5 @@ index 3b2be1176..0da030d19 100644
              prefix = "aarch64-elf-"
          elif env['os'] == 'android':
 -- 
-2.25.1
+2.7.4
 
