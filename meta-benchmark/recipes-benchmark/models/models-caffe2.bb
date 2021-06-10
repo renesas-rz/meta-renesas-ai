@@ -1,6 +1,5 @@
 DESCRIPTION = "Models for Caffe2 benchmarking"
 LICENSE = "Apache-2.0"
-LICENSE_FLAGS = "commercial"
 LIC_FILES_CHKSUM = " \
         file://license/COPYING;md5=c4e89413e9e0e6a372520647a3fae1ae \
         file://license/LICENSES;md5=a9b73dae4a0b3a752f7eccb813bc2820 \
