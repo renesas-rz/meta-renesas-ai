@@ -19,8 +19,8 @@ URI: **https://github.com/renesas-rz/meta-rzg2.git**
 tag: BSP-1.0.7 (5ddd7aac729dac64d362e6ee5aa291d9f44dea0f)
 
 #### For RZ/G2L ####
-The layers should be used with the official Renesas RZ/G2L Yocto Poky BSP:
-URI: **https://github.com/renesas-rz/meta-rzg2/tree/dunfell/rzg2l**
+The layers should be used with the official Renesas RZ/G2L Yocto Poky BSP:  
+URI: **https://github.com/renesas-rz/meta-rzg2/tree/dunfell/rzg2l**  
 commit: 2313d60eb75e5c86ce3e42ad378c8473f8e95c88
 
 For each AI tool, please refer to **meta-${AI\_TOOL\_NAME}/README.md**. For
