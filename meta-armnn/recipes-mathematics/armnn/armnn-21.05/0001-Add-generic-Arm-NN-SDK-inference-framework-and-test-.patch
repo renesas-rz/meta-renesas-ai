@@ -1,6 +1,6 @@
-From 2a352997410ca6aa4db6a0f104df551d28b296c3 Mon Sep 17 00:00:00 2001
+From 235e7e2bd72e7e8f02621dab2d6e08be08f819b4 Mon Sep 17 00:00:00 2001
 From: Gareth Williams <gareth.williams.jx@renesas.com>
-Date: Tue, 9 Mar 2021 14:32:02 +0000
+Date: Thu, 24 Jun 2021 15:07:17 +0100
 Subject: [PATCH] Add generic Arm NN SDK inference framework and test code
 
 A C++ framework and test that is able to seperate the original
@@ -13,17 +13,17 @@ Armnn test framework class into following four independent steps:
 Signed-off-by: Jianming Qiao <jianming.qiao@bp.renesas.com>
 Signed-off-by: Gareth Williams <gareth.williams.jx@renesas.com>
 ---
- tests/CMakeLists.txt                          |  28 ++
- tests/InferenceTest.hpp                       |  47 ++
- .../RenesasSample-Armnn.cpp                   | 418 ++++++++++++++++++
- 3 files changed, 493 insertions(+)
+ tests/CMakeLists.txt                              |  25 ++
+ tests/InferenceTest.hpp                           |  47 +++
+ tests/RenesasSample-Armnn/RenesasSample-Armnn.cpp | 384 ++++++++++++++++++++++
+ 3 files changed, 456 insertions(+)
  create mode 100644 tests/RenesasSample-Armnn/RenesasSample-Armnn.cpp
 
 diff --git a/tests/CMakeLists.txt b/tests/CMakeLists.txt
-index edea34dfe..b51c2b0f9 100644
+index 1531fd5..901c09c 100644
 --- a/tests/CMakeLists.txt
 +++ b/tests/CMakeLists.txt
-@@ -250,21 +250,38 @@ if (BUILD_ARMNN_SERIALIZER OR BUILD_CAFFE_PARSER OR BUILD_TF_PARSER OR BUILD_TF_
+@@ -149,15 +149,30 @@ if (BUILD_ARMNN_SERIALIZER OR BUILD_TF_PARSER OR BUILD_TF_LITE_PARSER OR BUILD_O
      target_include_directories(ExecuteNetwork PRIVATE ../src/backends)
      target_include_directories(ExecuteNetwork PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
  
@@ -41,28 +41,20 @@ index edea34dfe..b51c2b0f9 100644
 +
      if (BUILD_ARMNN_SERIALIZER)
          target_link_libraries(ExecuteNetwork armnnSerializer)
-+	target_link_libraries(RenesasSample-Armnn armnnSerializer)
-     endif()
-     if (BUILD_CAFFE_PARSER)
-         target_link_libraries(ExecuteNetwork armnnCaffeParser)
-+	target_link_libraries(RenesasSample-Armnn armnnCaffeParser)
-     endif()
-     if (BUILD_TF_PARSER)
-         target_link_libraries(ExecuteNetwork armnnTfParser)
-+	target_link_libraries(RenesasSample-Armnn armnnTfParser)
++        target_link_libraries(RenesasSample-Armnn armnnSerializer)
      endif()
  
      if (BUILD_TF_LITE_PARSER)
          target_link_libraries(ExecuteNetwork armnnTfLiteParser)
-+	target_link_libraries(RenesasSample-Armnn armnnTfLiteParser)
++        target_link_libraries(RenesasSample-Armnn armnnTfLiteParser)
      endif()
      if (BUILD_ONNX_PARSER)
          target_link_libraries(ExecuteNetwork armnnOnnxParser)
-+	target_link_libraries(RenesasSample-Armnn armnnOnnxParser)
++        target_link_libraries(RenesasSample-Armnn armnnOnnxParser)
      endif()
      if (BUILD_ARMNN_TFLITE_DELEGATE)
          target_link_libraries(ExecuteNetwork ArmnnDelegate::ArmnnDelegate)
-@@ -272,6 +289,17 @@ if (BUILD_ARMNN_SERIALIZER OR BUILD_CAFFE_PARSER OR BUILD_TF_PARSER OR BUILD_TF_
+@@ -165,6 +180,16 @@ if (BUILD_ARMNN_SERIALIZER OR BUILD_TF_PARSER OR BUILD_TF_LITE_PARSER OR BUILD_O
      target_link_libraries(ExecuteNetwork armnn)
  
     target_link_libraries(ExecuteNetwork ${CMAKE_THREAD_LIBS_INIT})
@@ -74,14 +66,13 @@ index edea34dfe..b51c2b0f9 100644
 +        ${Boost_SYSTEM_LIBRARY}
 +        ${Boost_FILESYSTEM_LIBRARY}
 +        ${Boost_PROGRAM_OPTIONS_LIBRARY})
-+    addDllCopyCommands(RenesasSample-Armnn)
-+
++   addDllCopyCommands(RenesasSample-Armnn)
 +
     addDllCopyCommands(ExecuteNetwork)
  endif()
  
 diff --git a/tests/InferenceTest.hpp b/tests/InferenceTest.hpp
-index 5ec744ca7..3f8b99dde 100644
+index 0cc6c3b..92d00bb 100644
 --- a/tests/InferenceTest.hpp
 +++ b/tests/InferenceTest.hpp
 @@ -106,6 +106,53 @@ public:
@@ -140,10 +131,10 @@ index 5ec744ca7..3f8b99dde 100644
  {
 diff --git a/tests/RenesasSample-Armnn/RenesasSample-Armnn.cpp b/tests/RenesasSample-Armnn/RenesasSample-Armnn.cpp
 new file mode 100644
-index 000000000..46eb1c9ba
+index 0000000..7f958de
 --- /dev/null
 +++ b/tests/RenesasSample-Armnn/RenesasSample-Armnn.cpp
-@@ -0,0 +1,418 @@
+@@ -0,0 +1,384 @@
 +/*
 + * Copyright (C) 2021 Renesas Electronics Corp.
 + * This file is licensed under the terms of the MIT License
@@ -154,12 +145,6 @@ index 000000000..46eb1c9ba
 +#include <armnn/ArmNN.hpp>
 +#include <armnn/TypesUtils.hpp>
 +
-+#if defined(ARMNN_CAFFE_PARSER)
-+#include "armnnCaffeParser/ICaffeParser.hpp"
-+#endif
-+#if defined(ARMNN_TF_PARSER)
-+#include "armnnTfParser/ITfParser.hpp"
-+#endif
 +#if defined(ARMNN_TF_LITE_PARSER)
 +#include "armnnTfLiteParser/ITfLiteParser.hpp"
 +#endif
@@ -197,9 +182,9 @@ index 000000000..46eb1c9ba
 +    std::string outputName;
 +    unsigned int inputImageWidth;
 +    unsigned int inputImageHeight;
-+}model_params;
++} model_params;
 +
-+std::map<std::string,model_params> Model_Table;
++std::map<std::string, model_params> Model_Table;
 +
 +template <typename TDataType>
 +int ProcessResult(std::vector<TDataType>& output, InferenceModelInternal::QuantizationParams quantParams, const string mode_type)
@@ -280,10 +265,10 @@ index 000000000..46eb1c9ba
 +        return EXIT_FAILURE;
 +    }
 +
-+    using TContainer = mapbox::util::variant<std::vector<float>, std::vector<int>, std::vector<unsigned char>>;
++    using TContainer = 
++        mapbox::util::variant<std::vector<float>, std::vector<int>, std::vector<unsigned char>, std::vector<int8_t>>;
 +
 +    std::vector<TContainer> inputDataContainers;
-+
 +    std::vector<TContainer> outputDataContainers;
 +
 +    std::vector<ImageSet> imageSet =
@@ -329,8 +314,8 @@ index 000000000..46eb1c9ba
 +        {
 +            std::cout << "Quant Model is loaded" << std::endl;
 +            auto inputBinding = model.GetInputBindingInfo();
-+            printf("Scale %f\n",inputBinding.second.GetQuantizationScale());
-+            printf("Offset %d\n",inputBinding.second.GetQuantizationOffset());
++            printf("Scale %f\n", inputBinding.second.GetQuantizationScale());
++            printf("Offset %d\n", inputBinding.second.GetQuantizationOffset());
 +
 +            ImagePreprocessor<TDataType> Image(inputTensorDataFilePath, inputImageWidth, inputImageHeight, imageSet,
 +                                               1, {{0, 0, 0}}, {{1, 1, 1}});
@@ -343,7 +328,8 @@ index 000000000..46eb1c9ba
 +        inputDataContainers.push_back(TestCaseData->m_InputImage);
 +
 +        //warm up
-+        model.Run(inputDataContainers, outputDataContainers);
++	const std::vector<TContainer>& inputRef = inputDataContainers;
++        model.Run(inputRef, outputDataContainers);
 +
 +        time_point<high_resolution_clock> predictStart;
 +        time_point<high_resolution_clock> predictEnd;
@@ -354,7 +340,7 @@ index 000000000..46eb1c9ba
 +        {
 +            predictStart = high_resolution_clock::now();
 +
-+            model.Run(inputDataContainers, outputDataContainers);
++            model.Run(inputRef, outputDataContainers);
 +
 +            predictEnd = high_resolution_clock::now();
 +
@@ -369,13 +355,13 @@ index 000000000..46eb1c9ba
 +        {
 +            std::vector<float> output;
 +            output = mapbox::util::get<std::vector<float>>(outputDataContainers[0]);
-+            ProcessResult<float>(output,model.GetQuantizationParams(),mode_type);
++            ProcessResult<float>(output, model.GetQuantizationParams(), mode_type);
 +        }
 +        else
 +        {
 +            std::vector<unsigned char> output;
 +            output = mapbox::util::get<std::vector<unsigned char>>(outputDataContainers[0]);
-+            ProcessResult<unsigned char>(output,model.GetQuantizationParams(),mode_type);
++            ProcessResult<unsigned char>(output, model.GetQuantizationParams(), mode_type);
 +        }
 +    }
 +    catch (armnn::Exception const& e)
@@ -390,9 +376,7 @@ index 000000000..46eb1c9ba
 +void initModelTable()
 +{
 +   //Basic Model Verification
-+    Model_Table["mobilenet_v1_1.0_224_frozen.pb"] = {"tensorflow-binary", true , base_path + "/tensorflow/models/mobilenet_v1_1.0_224_frozen.pb",armnn::TensorShape({ 1, 224, 224, 3}),"input","MobilenetV1/Predictions/Reshape_1", 224, 224};
-+
-+    Model_Table["mobilenet_v1_1.0_224_quant.tflite"] = {"tflite-binary", false , base_path + "/tensorflow-lite/models/mobilenet_v1_1.0_224_quant.tflite",armnn::TensorShape({ 1, 224, 224, 3}),"input","MobilenetV1/Predictions/Reshape_1", 224, 224};
++    Model_Table["mobilenet_v1_1.0_224_quant.tflite"] = {"tflite-binary", false, base_path + "/tensorflow-lite/models/mobilenet_v1_1.0_224_quant.tflite", armnn::TensorShape({ 1, 224, 224, 3}), "input", "MobilenetV1/Predictions/Reshape_1", 224, 224};
 +}
 +
 +// This will run a test
@@ -428,20 +412,7 @@ index 000000000..46eb1c9ba
 +    }
 +
 +    // Forward to implementation based on the parser type
-+    if (modelFormat.find("caffe") != std::string::npos)
-+    {
-+#if defined(ARMNN_CAFFE_PARSER)
-+        return MainImpl<armnnCaffeParser::ICaffeParser, TDataType>(modelPath.c_str(), isFloatModel, "caffe",
-+                                                               inputName.c_str(), &inputTensorShape,
-+                                                               inputTensorDataFilePath.c_str(), inputImageName,
-+                                                               inputImageWidth, inputImageHeight, outputName.c_str(),
-+                                                               enableProfiling, subgraphId, runtime);
-+#else
-+        std::cout << "Not built with Caffe parser support.";
-+        return EXIT_FAILURE;
-+#endif
-+    }
-+    else if (modelFormat.find("onnx") != std::string::npos)
++    if (modelFormat.find("onnx") != std::string::npos)
 +    {
 +#if defined(ARMNN_ONNX_PARSER)
 +        return MainImpl<armnnOnnxParser::IOnnxParser, float>(modelPath.c_str(), isFloatModel, "onnx",
@@ -451,19 +422,6 @@ index 000000000..46eb1c9ba
 +                                                         enableProfiling, subgraphId, runtime);
 +#else
 +        std::cout << "Not built with Onnx parser support.";
-+        return EXIT_FAILURE;
-+#endif
-+    }
-+    else if (modelFormat.find("tensorflow") != std::string::npos)
-+    {
-+#if defined(ARMNN_TF_PARSER)
-+        return MainImpl<armnnTfParser::ITfParser, TDataType>(modelPath.c_str(), isFloatModel, "tensorflow",
-+                                                         inputName.c_str(), &inputTensorShape,
-+                                                         inputTensorDataFilePath.c_str(), inputImageName,
-+                                                         inputImageWidth, inputImageHeight, outputName.c_str(),
-+                                                         enableProfiling, subgraphId, runtime);
-+#else
-+        std::cout << "Not built with Tensorflow parser support.";
 +        return EXIT_FAILURE;
 +#endif
 +    }
@@ -482,15 +440,15 @@ index 000000000..46eb1c9ba
 +                                                                 inputImageWidth, inputImageHeight, outputName.c_str(),
 +                                                                 enableProfiling, subgraphId, runtime);
 +#else
-+        std::cout << "Unknown model format: '" << modelFormat <<
-+            "'. Please include 'caffe', 'tensorflow', 'tflite' or 'onnx'";
++        std::cout << "Not built with TfLite parser support.";
 +        return EXIT_FAILURE;
++
 +#endif
 +    }
 +    else
 +    {
 +        std::cout << "Unknown model format: '" << modelFormat <<
-+                                 "'. Please include 'caffe', 'tensorflow', 'tflite' or 'onnx'";
++                                 "'. Please include 'tflite' or 'onnx'";
 +        return EXIT_FAILURE;
 +    }
 +}
@@ -500,14 +458,13 @@ index 000000000..46eb1c9ba
 +    std::ifstream infile(label_file_name);
 +
 +    string line;
-+    while(std::getline(infile,line))
++    while(std::getline(infile, line))
 +    {
 +        stringstream line_stream(line);
 +        string item;
 +        std::vector<string> item_vector;
-+        while(std::getline(line_stream,item,':'))
++        while(std::getline(line_stream, item, ':'))
 +        {
-+            //std::cout << item << std::endl;
 +            item_vector.push_back(item);
 +        }
 +
@@ -563,5 +520,5 @@ index 000000000..46eb1c9ba
 +    return 0;
 +}
 -- 
-2.25.1
+2.7.4
 

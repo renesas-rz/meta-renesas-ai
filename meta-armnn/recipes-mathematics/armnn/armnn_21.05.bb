@@ -12,10 +12,6 @@ PACKAGES += "${PN}-tensorflow-lite-examples \
              ${PN}-tensorflow-lite-examples-dbg \
              ${PN}-tensorflow-lite \
              ${PN}-tensorflow-lite-dev \
-             ${PN}-tensorflow-examples \
-             ${PN}-tensorflow-examples-dbg \
-             ${PN}-tensorflow \
-             ${PN}-tensorflow-dev \
              ${PN}-onnx-examples \
              ${PN}-onnx-examples-dbg \
              ${PN}-onnx \
@@ -37,7 +33,6 @@ inherit cmake
 
 SRC_URI = " \
 	git://github.com/ARM-software/armnn.git;name=armnn;branch="branches/armnn_${ARM_NN_GIT_BRANCH_VERSION}" \
-	http://download.tensorflow.org/models/mobilenet_v1_2018_02_22/mobilenet_v1_1.0_224.tgz;name=mobilenet;subdir=${WORKDIR}/tfmodel;destsuffix=tfmodel \
 	http://download.tensorflow.org/models/mobilenet_v1_2018_08_02/mobilenet_v1_1.0_224_quant.tgz;name=mobilenetQuant;subdir=${WORKDIR}/tflitemodel;destsuffix=tflitemodel \
 	https://s3.amazonaws.com/onnx-model-zoo/mobilenet/mobilenetv2-1.0/mobilenetv2-1.0.onnx;name=mobilenetv2;subdir=${WORKDIR}/onnxmodel;destsuffix=onnxmodel \
 	https://github.com/tensorflow/tensorflow/raw/master/tensorflow/examples/label_image/data/grace_hopper.jpg;name=grace_hopper;subdir=${WORKDIR}/images;destsuffix=images \
@@ -50,17 +45,14 @@ SRC_URI = " \
 	gitsm://github.com/onnx/onnx.git;protocol=https;name=onnx;branch=rel-1.6.0;subdir=${WORKDIR}/onnx;destsuffix=onnx \
 "
 
-# v21.02
-SRCREV_armnn = "bc9b09801fcb9489c3742cf4691c39c050cbfbc4"
+# v21.05
+SRCREV_armnn = "8a4bd6671d0106dfb788b8c9019f2f9646770f8d"
 
 # v2.3.1
 SRCREV_tensorflow = "fcc4b966f1265f466e82617020af93670141b009"
 
 # v1.6.0
 SRCREV_onnx = "553df22c67bee5f0fe6599cff60f1afc6748c635"
-
-SRC_URI[mobilenet.md5sum] = "d5f69cef81ad8afb335d9727a17c462a"
-SRC_URI[mobilenet.sha256sum] = "1ccb74dbd9c5f7aea879120614e91617db9534bdfaa53dfea54b7c14162e126b"
 
 SRC_URI[mobilenetQuant.md5sum] = "36af340c00e60291931cb30ce32d4e86"
 SRC_URI[mobilenetQuant.sha256sum] = "d32432d28673a936b2d6281ab0600c71cf7226dfe4cdcef3012555f691744166"
@@ -87,13 +79,6 @@ RDEPENDS_${PN} += "arm-compute-library protobuf boost"
 
 EXTRANATIVEPATH += "chrpath-native"
 
-# Tensorflow RDEPENDS
-RDEPENDS_${PN}-tensorflow += "${PN}"
-RDEPENDS_${PN}-tensorflow-examples += "${PN}-tensorflow"
-RDEPENDS_${PN}-tensorflow-examples-dbg += "${PN}-tensorflow"
-RDEPENDS_${PN}-tensorflow-dbg += "${PN}-tensorflow"
-RDEPENDS_${PN}-tensorflow-dev += "${PN}-tensorflow"
-
 # Tensorflow-lite RDEPENDS
 RDEPENDS_${PN}-tensorflow-lite += "${PN}"
 RDEPENDS_${PN}-tensorflow-lite-examples += "${PN}-tensorflow-lite"
@@ -115,13 +100,11 @@ RDEPENDS_${PN}-examples-dbg += "${PN}"
 
 EXTRA_OECMAKE=" \
 	-DARMCOMPUTE_ROOT=${STAGING_DIR_TARGET}/usr/share/arm-compute-library/ \
-	-DTF_GENERATED_SOURCES=${WORKDIR}/tensorflow/ \
 	-DONNX_GENERATED_SOURCES=${WORKDIR}/onnx \
-	-DTF_LITE_GENERATED_PATH=${WORKDIR}/tensorflow/tensorflow/lite/schema \
+	-DTF_LITE_GENERATED_PATH=${WORKDIR}/tensorflow/tensorflow/lite/schema/ \
 	-DFLATBUFFERS_ROOT=${STAGING_DIR_TARGET}/usr/ \
 	-DBOOST_ROOT=${STAGING_DIR_TARGET}/usr/ \
 	-DFLATC_DIR=${STAGING_DIR_NATIVE}${prefix}/bin/ \
-	-DBUILD_TF_PARSER=1 \
 	-DBUILD_TF_LITE_PARSER=1 \
 	-DBUILD_ONNX_PARSER=1 \
 	-DARMCOMPUTENEON=1 \
@@ -138,6 +121,8 @@ EXTRA_OECMAKE=" \
 "
 
 EXTRA_OECMAKE_append_arm=" \
+	-DCMAKE_CXX_FLAGS="-I ${WORKDIR}/tensorflow/ -fopenmp -march=armv7ve -mfloat-abi=hard" \
+	-DCMAKE_SYSROOT=${STAGING_DIR_TARGET} \
 	-DARMCOMPUTE_BUILD_DIR=${STAGING_DIR_TARGET}/usr/lib/ \
 	-DTfLite_LIB=${STAGING_DIR_TARGET}/usr/lib/libtensorflow-lite.a \
 	-DFLATBUFFERS_LIBRARY=${STAGING_DIR_TARGET}/usr/lib/libflatbuffers.a \
@@ -146,6 +131,8 @@ EXTRA_OECMAKE_append_arm=" \
 "
 
 EXTRA_OECMAKE_append_aarch64=" \
+	-DCMAKE_CXX_FLAGS="-I ${WORKDIR}/tensorflow/ -fopenmp" \
+	-DCMAKE_SYSROOT=${STAGING_DIR_TARGET} \
 	-DARMCOMPUTE_BUILD_DIR=${STAGING_DIR_TARGET}/usr/lib64/ \
 	-DTfLite_LIB=${STAGING_DIR_TARGET}/usr/lib64/libtensorflow-lite.a \
 	-DFLATBUFFERS_LIBRARY=${STAGING_DIR_TARGET}/usr/lib64/libflatbuffers.a \
@@ -174,7 +161,6 @@ do_install_append() {
 	install -d ${D}${bindir}/${PN}-${PV}/examples/onnx
 	install -d ${D}${bindir}/${PN}-${PV}/examples/RenesasSample-Armnn
 	install -d ${D}${bindir}/${PN}-${PV}/examples/SampleApp
-	install -d ${D}${bindir}/${PN}-${PV}/examples/tensorflow
 	install -d ${D}${bindir}/${PN}-${PV}/examples/tensorflow-lite
 	install -d ${D}${bindir}/${PN}-${PV}/examples/UnitTests
 
@@ -183,12 +169,6 @@ do_install_append() {
 		${D}${bindir}/${PN}-${PV}/examples/SampleApp/
 
 	chrpath -d ${D}${bindir}/${PN}-${PV}/examples/SampleApp/*
-
-	install -m 0555 \
-		${WORKDIR}/build/tests/TfMobileNet-Armnn \
-		${D}${bindir}/${PN}-${PV}/examples/tensorflow/
-
-	chrpath -d ${D}${bindir}/${PN}-${PV}/examples/tensorflow/TfMobileNet-Armnn
 
 	install -m 0555 \
 		${WORKDIR}/build/tests/TfLiteMobilenetQuantized-Armnn \
@@ -237,7 +217,6 @@ do_install_append() {
 
 	# Install sample models and images
 
-	install -d ${D}${bindir}/${PN}-${PV}/examples/tensorflow/models
 	install -d ${D}${bindir}/${PN}-${PV}/examples/tensorflow-lite/models
 	install -d ${D}${bindir}/${PN}-${PV}/examples/onnx/models
 	install -d ${D}${bindir}/${PN}-${PV}/examples/images
@@ -251,14 +230,6 @@ do_install_append() {
 		${D}${bindir}/${PN}-${PV}/examples/images/
 
 	install -m 0644 \
-		${WORKDIR}/tfmodel/mobilenet_v1_1.0_224_frozen.pb \
-		${D}${bindir}/${PN}-${PV}/examples/tensorflow/models
-
-	install -m 0644 \
-		${WORKDIR}/git/tests/TfMobileNet-Armnn/labels.txt \
-		${D}${bindir}/${PN}-${PV}/examples/tensorflow/models
-
-	install -m 0644 \
 		${WORKDIR}/onnxmodel/mobilenetv2-1.0.onnx \
 		${D}${bindir}/${PN}-${PV}/examples/onnx/models
 
@@ -267,11 +238,8 @@ do_install_append() {
 		${D}${bindir}/${PN}-${PV}/examples/tensorflow-lite/models
 
 	install -m 0644 \
-		${WORKDIR}/git/tests/TfMobileNet-Armnn/labels.txt \
+		${WORKDIR}/git/tests/TfLiteMobilenetQuantized-Armnn/labels.txt \
 		${D}${bindir}/${PN}-${PV}/examples/tensorflow-lite/models
-
-	#Remove Unsupported Caffe Parser files
-	rm -rf ${D}/${includedir}/armnnCaffeParser
 
 	#Install backend unit test utilities
 	install -d ${D}${bindir}/${PN}-${PV}/examples/UnitTests/src/backends/backendsCommon/test
@@ -337,7 +305,6 @@ FILES_${PN} = " \
 FILES_${PN}-dev = " \
 	${includedir}/armnn \
 	${includedir}/armnnDeserializer \
-	${includedir}/armnnQuantizer \
 	${includedir}/armnnSerializer \
 	${includedir}/armnnUtils \
 "
@@ -366,13 +333,6 @@ FILES_${PN}-examples-dbg = " \
 	${bindir}/${PN}-${PV}/examples/UnitTests/src/backends/backendsCommon/test/testSharedObject/.debug \
 	${bindir}/${PN}-${PV}/examples/UnitTests/src/backends/backendsCommon/test/testDynamicBackend/.debug \
 "
-
-# Tensorflow FILES
-FILES_${PN}-tensorflow-examples = "${bindir}/${PN}-${PV}/examples/tensorflow"
-FILES_${PN}-tensorflow-examples-dbg = "${bindir}/${PN}-${PV}/examples/tensorflow/.debug"
-FILES_${PN}-tensorflow = "${libdir}/libarmnnTfParser.so*"
-FILES_${PN}-tensorflow-dbg = "${libdir}/.debug/libarmnnTfParser.so"
-FILES_${PN}-tensorflow-dev = "${includedir}/armnnTfParser"
 
 # Tensorflow-lite FILES
 FILES_${PN}-tensorflow-lite = " \
@@ -403,5 +363,4 @@ INSANE_SKIP_${PN}-dev = "dev-elf"
 INSANE_SKIP_${PN}-examples = "dev-so libdir"
 INSANE_SKIP_${PN}-examples-dbg = "libdir"
 INSANE_SKIP_${PN}-onnx = "dev-so"
-INSANE_SKIP_${PN}-tensorflow = "dev-so"
 INSANE_SKIP_${PN}-tensorflow-lite = "dev-so"

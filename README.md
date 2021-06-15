@@ -48,7 +48,7 @@ in the [Licensing](#licensing) section.
 
 | Framework       | Version   | Parser(s)                              | Inference Hardware               |
 | :-------------- | :-------- | :------------------------------------- | :------------------------------- |
-| ArmNN           | v21.02    | ONNX<br>TensorFlow<br>TensorFlow Lite  | CPU                              |
+| ArmNN           | v21.05    | ONNX<br>TensorFlow Lite                | CPU                              |
 | Caffe2          | v0.8.1    | Caffe2                                 | CPU                              |
 | ONNX Runtime    | v1.8.0    | ONNX                                   | CPU                              |
 | OpenCV          | v4.1.1    | Caffe<br>DarkNet<br>ONNX<br>TensorFlow | CPU                              |

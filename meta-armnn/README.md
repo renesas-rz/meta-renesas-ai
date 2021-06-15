@@ -14,13 +14,6 @@ This Yocto/OpenEmbedded meta-layer provides Arm NN support for the RZ/G1 and
 RZ/G2 families of System on Chips.
 
 ## Build Configuration
-**armnn-tensorflow**: Add as a dependency to your recipe/package to add Arm NN
-TensorFlow support.  
-**armnn-tensorflow-examples**: Add to *IMAGE_INSTALL* to populate Arm NN's
-TensorFlow parser example code in your build.  
-**armnn-dev**, **armnn-tensorflow-dev**:  Useful to add to *IMAGE_INSTALL* when
-creating an SDK for TensorFlow application development.
-
 **armnn-tensorflow-lite**: Add as a dependency to your recipe/package to add Arm
 NN TensorFlow Lite support.  
 **armnn-tensorflow-lite-examples**: Add to *IMAGE_INSTALL* to populate Arm NN's
@@ -42,7 +35,6 @@ use of Arm NN.
 Once the build is complete the following libraries are generated and added to
 */usr/lib*:  
 Arm NN: libarmnn.so  
-TensorFlow Arm NN parser: libarmnnTfParser.so  
 TensorFlow Lite Arm NN parser: libarmnnTfLiteParser.so  
 ONNX Arm NN parser: libarmnnOnnxParser.so
 
@@ -51,7 +43,6 @@ if the relevant *-examples* was included in the build (see Build Configuration
 above).
 
 **armnn-examples**: *UnitTests*, *SimpleSample*, *RenesasSample-Armnn*  
-**armnn-tensorflow-examples**:  *TfMobileNet-Armnn*  
 **armnn-tensorflow-lite-examples**: *TfLiteMobilenetQuantized-Armnn*  
 **armnn-onnx-examples**: *OnnxMobileNet-Armnn*
 
@@ -71,7 +62,7 @@ $ ./UnitTests -- --dynamic-backend-build-dir "/usr/bin/armnn/examples/UnitTests/
 ```
 3. The output of a healthy execution should look like the following:
 ```
-Running 3432 test cases...
+Running 3360 test cases...
 
 *** No errors detected
 ```
@@ -126,51 +117,6 @@ $ 1
 Your number was 1
 ```
 
-### TfMobileNet-Armnn
-1. Execute *TfMobileNet-Armnn* by running the following commands:
-```
-$ cd /usr/bin/armnn/examples/tensorflow
-$ ./TfMobileNet-Armnn -d /usr/bin/armnn/examples/images/ \
-  --model-dir /usr/bin/armnn/examples/tensorflow/models/ \
-  --compute CpuAcc
-```
-
-2. The output of a healthy execution should look like the following:
-```
-Info: ArmNN v24.0.0
-
-Info: Initialization time: 0.58 ms
-
-Info: Network parsing time: 1161.79 ms
-
-Info: Optimization time: 444.44 ms
-
-Info: Network loading time: 262.00 ms
-
-Info: = Prediction values for test #0
-Info: Top(1) prediction is 653 with value: 0.779505
-Info: Top(2) prediction is 466 with value: 0.0485094
-Info: Top(3) prediction is 458 with value: 0.0130863
-Info: Top(4) prediction is 452 with value: 0.00530631
-Info: Top(5) prediction is 440 with value: 0.00338388
-Info: = Prediction values for test #1
-Info: Top(1) prediction is 653 with value: 0.779505
-Info: Top(2) prediction is 466 with value: 0.0485094
-Info: Top(3) prediction is 458 with value: 0.0130863
-Info: Top(4) prediction is 452 with value: 0.00530631
-Info: Top(5) prediction is 440 with value: 0.00338388
-Info: = Prediction values for test #2
-Info: Top(1) prediction is 653 with value: 0.779505
-Info: Top(2) prediction is 466 with value: 0.0485094
-Info: Top(3) prediction is 458 with value: 0.0130863
-Info: Top(4) prediction is 452 with value: 0.00530631
-Info: Top(5) prediction is 440 with value: 0.00338388
-Info: Total time for 3 test cases: 0.323 seconds
-Info: Average time per test case: 107.704 ms
-Info: Overall accuracy: 1.000
-Info: Shutdown time: 4.44 ms
-```
-
 ### TfLiteMobilenetQuantized-Armnn
 1. Execute *TfLiteMobilenetQuantized-Armnn* by running the following commands:
 
@@ -183,7 +129,7 @@ $ ./TfLiteMobilenetQuantized-Armnn -d /usr/bin/armnn/examples/images/ \
 
 2. The output of a healthy execution should look like the following:
 ```
-Info: ArmNN v24.0.0
+Info: ArmNN v25.0.0
 
 Info: Initialization time: 0.24 ms
 
@@ -216,7 +162,7 @@ $ ./OnnxMobileNet-Armnn -d /usr/bin/armnn/examples/images/ \
 
 2. The output of a healthy execution should look like the following:
 ```
-Info: ArmNN v24.0.0
+Info: ArmNN v25.0.0
 
 Info: Initialization time: 0.30 ms
 
@@ -261,7 +207,6 @@ $ ./RenesasSample-Armnn
 ```
 
 2. The following models will be run automatically:
-* TensorFlow: mobilenet v1.0.224
 * TensorFlow Lite: mobilenet quant v1.0.224
 
 ### ExecuteNetwork
@@ -278,15 +223,15 @@ For example, for mobilenet_v1_1.0_224:
 1. Execute *ExecuteNetwork* by running the following commands:
 ```
 $ cd /usr/bin/armnn/examples/ExecuteNetwork/
-$ ./ExecuteNetwork -f tensorflow-binary -i input \
+$ ./ExecuteNetwork -f tflite-binary -i input \
   -o MobilenetV1/Predictions/Reshape_1 \
   -d /usr/bin/armnn/examples/images/rsz_grace_hopper.csv -s 1,224,224,3 \
-  -m /usr/bin/armnn/examples/tensorflow/models/mobilenet_v1_1.0_224_frozen.pb \
-  --compute CpuAcc
+  -m /usr/bin/armnn/examples/tensorflow-lite/models/mobilenet_v1_1.0_224_quant.tflite \
+  --c CpuAcc
 ```
 2. It prints out the ouput tensor, for example,
 ```
-Info: ArmNN v24.0.0
+Info: ArmNN v25.0.0
 
 Info: Initialization time: 0.32 ms
 
@@ -306,11 +251,8 @@ Info: Shutdown time: 5.53 ms
 ## Supported Frameworks and Operators
 The Arm NN SDK supports the following operators:
 
-TensorFlow:  
-**https://arm-software.github.io/armnn/21.02/parsers.xhtml#S7_tf_parser**
-
 TensorFlow Lite:
-**https://arm-software.github.io/armnn/21.02/parsers.xhtml#S6_tf_lite_parser**
+**https://arm-software.github.io/armnn/21.05/parsers.xhtml#S6_tf_lite_parser**
 
 ONNX:  
-**https://arm-software.github.io/armnn/21.02/parsers.xhtml#S5_onnx_parser**
+**https://arm-software.github.io/armnn/21.05/parsers.xhtml#S5_onnx_parser**

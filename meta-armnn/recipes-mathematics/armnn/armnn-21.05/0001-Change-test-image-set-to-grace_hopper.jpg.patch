@@ -1,0 +1,71 @@
+From ccf2dcbd71b0674554c8149105dd57b1cf90ce3b Mon Sep 17 00:00:00 2001
+From: Gareth Williams <gareth.williams.jx@renesas.com>
+Date: Wed, 23 Jun 2021 16:35:22 +0100
+Subject: [PATCH] Change test image set to grace_hopper.jpg
+
+The name of the image in the Arm NN SDK Test Example is
+hard coded. ARM does not provide any link for these test
+images. Instead, we use standard grace_hopper image to
+replace them.
+
+Signed-off-by: Jianming Qiao <jianming.qiao@bp.renesas.com>
+---
+ tests/OnnxMobileNet-Armnn/OnnxMobileNet-Armnn.cpp  |  4 +---
+ .../TfLiteMobilenetQuantized-Armnn.cpp             | 26 +---------------------
+ 2 files changed, 2 insertions(+), 28 deletions(-)
+
+diff --git a/tests/OnnxMobileNet-Armnn/OnnxMobileNet-Armnn.cpp b/tests/OnnxMobileNet-Armnn/OnnxMobileNet-Armnn.cpp
+index 8786fea..321cc63 100644
+--- a/tests/OnnxMobileNet-Armnn/OnnxMobileNet-Armnn.cpp
++++ b/tests/OnnxMobileNet-Armnn/OnnxMobileNet-Armnn.cpp
+@@ -14,9 +14,7 @@ int main(int argc, char* argv[])
+         // Coverity fix: The following code may throw an exception of type std::length_error.
+         std::vector<ImageSet> imageSet =
+         {
+-            {"Dog.jpg", 208},
+-            {"Cat.jpg", 281},
+-            {"shark.jpg", 2},
++            {"grace_hopper.jpg", 652},
+         };
+ 
+         armnn::TensorShape inputTensorShape({ 1, 3, 224, 224 });
+diff --git a/tests/TfLiteMobilenetQuantized-Armnn/TfLiteMobilenetQuantized-Armnn.cpp b/tests/TfLiteMobilenetQuantized-Armnn/TfLiteMobilenetQuantized-Armnn.cpp
+index 56b145d..4a39843 100644
+--- a/tests/TfLiteMobilenetQuantized-Armnn/TfLiteMobilenetQuantized-Armnn.cpp
++++ b/tests/TfLiteMobilenetQuantized-Armnn/TfLiteMobilenetQuantized-Armnn.cpp
+@@ -30,31 +30,7 @@ std::vector<ImageSet> ParseDataset(const std::string& filename)
+     }
+     else
+     {
+-        // Use the default images
+-        imageSet.push_back(ImageSet("Dog.jpg", 209));
+-        // top five predictions in tensorflow:
+-        // -----------------------------------
+-        // 209:Labrador retriever 0.949995
+-        // 160:Rhodesian ridgeback 0.0270182
+-        // 208:golden retriever 0.0192866
+-        // 853:tennis ball 0.000470382
+-        // 239:Greater Swiss Mountain dog 0.000464451
+-        imageSet.push_back(ImageSet("Cat.jpg", 283));
+-        // top five predictions in tensorflow:
+-        // -----------------------------------
+-        // 283:tiger cat 0.579016
+-        // 286:Egyptian cat 0.319676
+-        // 282:tabby, tabby cat 0.0873346
+-        // 288:lynx, catamount 0.011163
+-        // 289:leopard, Panthera pardus 0.000856755
+-        imageSet.push_back(ImageSet("shark.jpg", 3));
+-        // top five predictions in tensorflow:
+-        // -----------------------------------
+-        // 3:great white shark, white shark, ... 0.996926
+-        // 4:tiger shark, Galeocerdo cuvieri 0.00270528
+-        // 149:killer whale, killer, orca, ... 0.000121848
+-        // 395:sturgeon 7.78977e-05
+-        // 5:hammerhead, hammerhead shark 6.44127e-055
++	imageSet.push_back(ImageSet("grace_hopper.jpg", 653));
+     };
+     return imageSet;
+ }
+-- 
+2.7.4
+

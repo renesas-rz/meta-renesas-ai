@@ -24,7 +24,7 @@ do_compile_append() {
 		-I ${S}/third-party/ \
 		-I ${S}/include/armnn/ \
 		-L ${WORKDIR}/build/ \
-		-larmnn -larmnnTfLiteParser -larmnnOnnxParser -larmnnTfParser \
+		-larmnn -larmnnTfLiteParser -larmnnOnnxParser \
 		-lstdc++ -lm -lpthread ${LDFLAGS}
 }
 
