@@ -283,6 +283,8 @@ download_source () {
 			git://git.yoctoproject.org/poky \
 			e32d854e33bc86c2a616df8708e021a098afcf73
 
+		cd poky; git cherry-pick 9e444; cd -
+
 		update_git_repo \
 			meta-openembedded \
 			git://git.openembedded.org/meta-openembedded \
