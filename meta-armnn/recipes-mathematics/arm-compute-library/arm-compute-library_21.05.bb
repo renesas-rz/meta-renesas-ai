@@ -11,13 +11,12 @@ LICENSE = "MIT"
 
 LIC_FILES_CHKSUM = "file://LICENSE;md5=9598101cf48c5f479cfda9f3fc6fc566"
 
-# Tag v21.02
-SRCREV = "7dcb9fadb98cad05fca72de3273311d570d98b4e"
+# Tag v21.05
+SRCREV = "f7399fd616cc8ccedfae668da3023e589a7ef558"
 
 SRC_URI = " \
 	git://github.com/ARM-software/ComputeLibrary.git \
 	file://0001-Add-support-for-building-arm-and-aarch64-CL-with-Sco.patch \
-	file://0001-Allow-compilation-with-GCC-9.3.0.patch \
 "
 
 COMPATIBLE_MACHINE = "(iwg20m-g1m|iwg21m|iwg22m|hihope-rzg2h|hihope-rzg2m|hihope-rzg2n|ek874|smarc-rzg2l)"
@@ -55,17 +54,17 @@ do_install() {
 	cp $CP_ARGS ${S}/support ${D}${datadir}/${BPN}/.
 }
 
-FILES_${PN} = "${libdir}/libarm_compute_core.so.22.0.0 \
-               ${libdir}/libarm_compute_graph.so.22.0.0 \
-               ${libdir}/libarm_compute.so.22.0.0 \
+FILES_${PN} = "${libdir}/libarm_compute_core.so.23.0.0 \
+               ${libdir}/libarm_compute_graph.so.23.0.0 \
+               ${libdir}/libarm_compute.so.23.0.0 \
 "
 
 #Symlink .so files should go into the -dev package
-FILES_${PN}-dev += "${datadir}/arm-compute-library \
-                   ${libdir}/libarm_compute_graph.so.22 \
-                   ${libdir}/libarm_compute.so.22 \
+FILES_${PN}-dev = "${datadir}/arm-compute-library \
+                   ${libdir}/libarm_compute_graph.so.23 \
+                   ${libdir}/libarm_compute.so.23 \
                    ${libdir}/libarm_compute.so \
-                   ${libdir}/libarm_compute_core.so.22 \
+                   ${libdir}/libarm_compute_core.so.23 \
                    ${libdir}/libarm_compute_core.so \
                    ${libdir}/libarm_compute_graph.so \
 "
