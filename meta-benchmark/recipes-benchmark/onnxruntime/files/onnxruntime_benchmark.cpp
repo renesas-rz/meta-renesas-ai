@@ -118,14 +118,14 @@ int main(int argc, char* argv[])
 
   std::map<std::string, std::string> onnx_models_map =
   {
-      {"Squeezenet_v1.1", "softmaxout_1"},
+      {"Squeezenet_v1.1", "squeezenet0_flatten0_reshape0"},
       {"MobileNet_v2_1.0_224", "mobilenetv20_output_flatten0_reshape0"}
   };
 
   std::map<std::string, std::string> onnx_models_path_map =
   {
-      {"Squeezenet_v1.1", "/usr/bin/onnxruntime/examples/unittest/squeezenet/model.onnx"},
-      {"MobileNet_v2_1.0_224", "/usr/bin/onnxruntime/examples/inference/mobilenetv2-1.0.onnx"}
+      {"Squeezenet_v1.1", "/home/root/models/onnx/squeezenet1.1.onnx"},
+      {"MobileNet_v2_1.0_224", "/home/root/models/onnx/mobilenetv2-1.0.onnx"}
   };
 
   auto it = onnx_models_map.find(model_name);
