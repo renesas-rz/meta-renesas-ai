@@ -22,7 +22,6 @@ OECMAKE_SOURCEPATH = "${S}/cmake"
 
 SRC_URI = " \
 	gitsm://github.com/microsoft/onnxruntime.git;protocol=git;branch=rel-1.8.0;name=onnxruntime \
-	file://patches/0001-Fix-no-test-cases-are-loaded-in-onnxruntime-test-cod.patch;patchdir=${WORKDIR}/git \
 "
 
 DEPENDS = " \
