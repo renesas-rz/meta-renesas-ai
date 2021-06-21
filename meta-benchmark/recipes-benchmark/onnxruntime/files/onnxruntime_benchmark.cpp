@@ -1,9 +1,8 @@
-/*
- * Copyright (C) 2020 Renesas Electronics Corp.
- * This file is licensed under the terms of the MIT License
- * This program is licensed "as is" without any warranty of any
- * kind, whether express or implied.
- */
+// Copyright(c) Microsoft Corporation.All rights reserved.
+// Licensed under the MIT License.
+//
+// Additional changes:
+// Copyright (C) 2020-2021 Renesas Electronics Corp.
 
 #include <assert.h>
 #include <onnxruntime_c_api.h>
@@ -33,107 +32,97 @@ std::list<std::string> bench;
 // helper function to check for status
 void CheckStatus(OrtStatus* status)
 {
-    if (status != NULL) {
-        const char* msg = g_ort->GetErrorMessage(status);
-        fprintf(stderr, "%s\n", msg);
-        g_ort->ReleaseStatus(status);
-        exit(1);
-    }
+  if (status != NULL) {
+    const char* msg = g_ort->GetErrorMessage(status);
+    fprintf(stderr, "%s\n", msg);
+    g_ort->ReleaseStatus(status);
+    exit(1);
+  }
 }
 
 std::map<int,std::string> label_file_map;
 
 int loadLabelFile(std::string label_file_name)
 {
-    int counter = 0;
-    std::ifstream infile(label_file_name);
+  int counter = 0;
+  std::ifstream infile(label_file_name);
 
-    if (!infile.is_open())
-    {
-        perror("error while opening file");
-        return -1;
-    }
+  if (!infile.is_open()) {
+    perror("error while opening file");
+    return -1;
+  }
 
-    std::string line;
-    while(std::getline(infile,line))
-    {
-        label_file_map[counter++] = line;
-    }
+  std::string line;
+  while(std::getline(infile,line)) {
+    label_file_map[counter++] = line;
+  }
 
-    if (infile.bad())
-    {
-        perror("error while reading file");
-        return -1;
-    }
+  if (infile.bad()) {
+    perror("error while reading file");
+    return -1;
+  }
 
-    return 0;
+  return 0;
 }
 
 static double timedifference_msec(struct timeval t0, struct timeval t1)
 {
-    return (t1.tv_sec - t0.tv_sec) * 1000.0 + (t1.tv_usec - t0.tv_usec) / 1000.0;
+  return (t1.tv_sec - t0.tv_sec) * 1000.0 + (t1.tv_usec - t0.tv_usec) / 1000.0;
 }
 
 void CaculateAvergeDeviation(std::vector<double>& time_vec)
 {
-    double sum = std::accumulate(time_vec.begin(), time_vec.end(), 0.0);
-    double mean = sum / time_vec.size();
+  double sum = std::accumulate(time_vec.begin(), time_vec.end(), 0.0);
+  double mean = sum / time_vec.size();
 
-    std::vector<double> diff(time_vec.size());
-    std::transform(time_vec.begin(), time_vec.end(), diff.begin(),
-                   std::bind2nd(std::minus<double>(), mean));
-    double sq_sum = std::inner_product(diff.begin(), diff.end(), diff.begin(), 0.0);
-    double stdev = std::sqrt(sq_sum / time_vec.size());
+  std::vector<double> diff(time_vec.size());
+  std::transform(time_vec.begin(), time_vec.end(), diff.begin(),
+		 std::bind2nd(std::minus<double>(), mean));
+  double sq_sum = std::inner_product(diff.begin(), diff.end(), diff.begin(), 0.0);
+  double stdev = std::sqrt(sq_sum / time_vec.size());
 
-    printf("Total Time Takes %f ms\n", sum);
-    printf("Average Time Takes  %f ms\n", mean);
-    printf("Standard Deviation  %f\n", stdev);
+  printf("Total Time Takes %f ms\n", sum);
+  printf("Average Time Takes  %f ms\n", mean);
+  printf("Standard Deviation  %f\n", stdev);
 
-    /* Add the metrics for parsing */
-    bench.push_back(std::to_string(mean) + "," + std::to_string(stdev) + ",");
+  /* Add the metrics for parsing */
+  bench.push_back(std::to_string(mean) + "," + std::to_string(stdev) + ",");
 }
 
 
 int main(int argc, char* argv[])
 {
-
-  if (argc != 3)
-  {
-      fprintf(stderr,"Incorrect number of parameters. 2 parameters expected.\n");
-      return -1;
+  if (argc != 3) {
+    fprintf(stderr,"Incorrect number of parameters. 2 parameters expected.\n");
+    return -1;
   }
 
   int inference_count = 0;
 
   try {
-
-      inference_count = std::stoi(std::string(argv[1]));
+    inference_count = std::stoi(std::string(argv[1]));
   }
-  catch(std::exception const & e)
-  {
+  catch(std::exception const & e) {
       printf("read input parameter error:  %s\n", e.what());
   }
 
   std::string model_name(argv[2]);
 
-  std::map<std::string, std::string> onnx_models_map =
-  {
-      {"Squeezenet_v1.1", "squeezenet0_flatten0_reshape0"},
-      {"MobileNet_v2_1.0_224", "mobilenetv20_output_flatten0_reshape0"}
+  std::map<std::string, std::string> onnx_models_map = {
+    {"Squeezenet_v1.1", "squeezenet0_flatten0_reshape0"},
+    {"MobileNet_v2_1.0_224", "mobilenetv20_output_flatten0_reshape0"}
   };
 
-  std::map<std::string, std::string> onnx_models_path_map =
-  {
-      {"Squeezenet_v1.1", "/home/root/models/onnx/squeezenet1.1.onnx"},
-      {"MobileNet_v2_1.0_224", "/home/root/models/onnx/mobilenetv2-1.0.onnx"}
+  std::map<std::string, std::string> onnx_models_path_map = {
+    {"Squeezenet_v1.1", "/home/root/models/onnx/squeezenet1.1.onnx"},
+    {"MobileNet_v2_1.0_224", "/home/root/models/onnx/mobilenetv2-1.0.onnx"}
   };
 
   auto it = onnx_models_map.find(model_name);
 
-  if (it == onnx_models_map.end())
-  {
-      fprintf(stderr,"Fail to find model %s\n",model_name);
-      return -1;
+  if (it == onnx_models_map.end()) {
+    fprintf(stderr,"Fail to find model %s\n",model_name);
+    return -1;
   }
 
   OrtEnv* env;
@@ -194,56 +183,56 @@ int main(int argc, char* argv[])
 
   switch (type) {
     case ONNX_TENSOR_ELEMENT_DATA_TYPE_BFLOAT16:
-            bench.push_back("bfloat16,");
-            break;
+      bench.push_back("bfloat16,");
+      break;
     case ONNX_TENSOR_ELEMENT_DATA_TYPE_BOOL:
-            bench.push_back("bool,");
-            break;
+      bench.push_back("bool,");
+      break;
     case ONNX_TENSOR_ELEMENT_DATA_TYPE_COMPLEX128:
-            bench.push_back("complex128,");
-            break;
+      bench.push_back("complex128,");
+      break;
     case ONNX_TENSOR_ELEMENT_DATA_TYPE_COMPLEX64:
-            bench.push_back("complex64,");
-            break;
+      bench.push_back("complex64,");
+      break;
     case ONNX_TENSOR_ELEMENT_DATA_TYPE_DOUBLE:
-            bench.push_back("double,");
-            break;
+      bench.push_back("double,");
+      break;
     case ONNX_TENSOR_ELEMENT_DATA_TYPE_FLOAT:
-            bench.push_back("float32,");
-            break;
+      bench.push_back("float32,");
+      break;
     case ONNX_TENSOR_ELEMENT_DATA_TYPE_FLOAT16:
-            bench.push_back("float16,");
-            break;
+      bench.push_back("float16,");
+      break;
     case ONNX_TENSOR_ELEMENT_DATA_TYPE_INT16:
-            bench.push_back("int16,");
-            break;
+      bench.push_back("int16,");
+      break;
     case ONNX_TENSOR_ELEMENT_DATA_TYPE_INT32:
-            bench.push_back("int32,");
-            break;
+      bench.push_back("int32,");
+      break;
     case ONNX_TENSOR_ELEMENT_DATA_TYPE_INT64:
-            bench.push_back("int64,");
-            break;
+      bench.push_back("int64,");
+      break;
     case ONNX_TENSOR_ELEMENT_DATA_TYPE_INT8:
-            bench.push_back("int8,");
-            break;
+      bench.push_back("int8,");
+      break;
     case ONNX_TENSOR_ELEMENT_DATA_TYPE_STRING:
-            bench.push_back("string,");
-            break;
+      bench.push_back("string,");
+      break;
     case ONNX_TENSOR_ELEMENT_DATA_TYPE_UINT16:
-            bench.push_back("uint16,");
-            break;
+      bench.push_back("uint16,");
+      break;
     case ONNX_TENSOR_ELEMENT_DATA_TYPE_UINT32:
-            bench.push_back("uint32,");
-            break;
+      bench.push_back("uint32,");
+      break;
     case ONNX_TENSOR_ELEMENT_DATA_TYPE_UINT64:
-            bench.push_back("uint64,");
-            break;
+      bench.push_back("uint64,");
+      break;
     case ONNX_TENSOR_ELEMENT_DATA_TYPE_UINT8:
-            bench.push_back("uint8,");
-            break;
+      bench.push_back("uint8,");
+      break;
     case ONNX_TENSOR_ELEMENT_DATA_TYPE_UNDEFINED:
     default:
-            bench.push_back("Unknown,");
+      bench.push_back("Unknown,");
   }
 
   size_t input_tensor_size = 224 * 224 * 3;
@@ -257,31 +246,27 @@ int main(int argc, char* argv[])
 
   int img_sizex, img_sizey, img_channels;
 
-  stbi_uc * img_data = stbi_load("/usr/bin/onnxruntime/examples/images/grace_hopper_224_224.jpg", &img_sizex, &img_sizey, &img_channels, STBI_default);
+  stbi_uc* img_data = stbi_load("/usr/bin/onnxruntime/examples/images/grace_hopper_224_224.jpg", &img_sizex, &img_sizey, &img_channels, STBI_default);
 
-  struct S_Pixel
-  {
-      unsigned char RGBA[3];
+  struct S_Pixel {
+    unsigned char RGBA[3];
   };
 
-  const S_Pixel * imgPixels(reinterpret_cast<const S_Pixel *>(img_data));
+  const S_Pixel* imgPixels(reinterpret_cast<const S_Pixel *>(img_data));
 
-  const float mean[3]	= { 0.485f, 0.456f, 0.406f };
-  const float stddev[3]	= { 0.229f, 0.224f, 0.225f };
+  const float mean[3]   = { 0.485f, 0.456f, 0.406f };
+  const float stddev[3] = { 0.229f, 0.224f, 0.225f };
 
   size_t offs = 0;
 
-  for (size_t c = 0; c < 3; c++)
-  {
-	  for (size_t y = 0; y < 224; y++)
-	  {
-		  for (size_t x = 0; x < 224; x++, offs++)
-		  {
-			  const float val((float)imgPixels[y * 224 + x].RGBA[c]/255);
+  for (size_t c = 0; c < 3; c++) {
+    for (size_t y = 0; y < 224; y++) {
+      for (size_t x = 0; x < 224; x++, offs++) {
+        const float val((float)imgPixels[y * 224 + x].RGBA[c]/255);
 
-			  input_tensor_values[offs] = (val- mean[c])/stddev[c];
-		  }
-	  }
+        input_tensor_values[offs] = (val- mean[c])/stddev[c];
+      }
+    }
   }
 
   // create input tensor object from data values
@@ -298,16 +283,15 @@ int main(int argc, char* argv[])
   struct timeval start_time, stop_time;
   // score model & input tensor, get back output tensor
   OrtValue* output_tensor = NULL;
-  for (int i = 0; i < inference_count; i++)
-  {
-      gettimeofday(&start_time, nullptr);
-      CheckStatus(g_ort->Run(session, NULL, input_node_names.data(), (const OrtValue* const*)&input_tensor, 1, output_node_names.data(), 1, &output_tensor));
-      gettimeofday(&stop_time, nullptr);
-      CheckStatus(g_ort->IsTensor(output_tensor, &is_tensor));
-      assert(is_tensor);
+  for (int i = 0; i < inference_count; i++) {
+    gettimeofday(&start_time, nullptr);
+    CheckStatus(g_ort->Run(session, NULL, input_node_names.data(), (const OrtValue* const*)&input_tensor, 1, output_node_names.data(), 1, &output_tensor));
+    gettimeofday(&stop_time, nullptr);
+    CheckStatus(g_ort->IsTensor(output_tensor, &is_tensor));
+    assert(is_tensor);
 
-      double diff = timedifference_msec(start_time,stop_time);
-      time_vector.push_back(diff);
+    double diff = timedifference_msec(start_time,stop_time);
+    time_vector.push_back(diff);
   }
 
   CaculateAvergeDeviation(time_vector);
@@ -319,28 +303,25 @@ int main(int argc, char* argv[])
   std::map<float,int> result;
 
   // score the model, and print scores for first 5 classes
-  for (int i = 0; i < 1000; i++)
-  {
-      result[floatarr[i]] = i;
+  for (int i = 0; i < 1000; i++) {
+    result[floatarr[i]] = i;
   }
 
   std::string filename("/usr/bin/onnxruntime/examples/inference/synset_words.txt");
 
-  if (loadLabelFile(filename) != 0)
-  {
-      fprintf(stderr,"Fail to open or process file %s\n",filename.c_str());
-      return -1;
+  if (loadLabelFile(filename) != 0) {
+    fprintf(stderr,"Fail to open or process file %s\n",filename.c_str());
+    return -1;
   }
 
   int counter = 0;
-  for (auto it = result.rbegin(); it != result.rend(); it++)
-  {
-      counter++;
+  for (auto it = result.rbegin(); it != result.rend(); it++) {
+    counter++;
 
-      if (counter > 6)
-          break;
+    if (counter > 6)
+      break;
 
-      printf("index [%d]: %s :prob [%f]\n",(*it).second,label_file_map[(*it).second].c_str(),(*it).first);
+    printf("index [%d]: %s :prob [%f]\n",(*it).second,label_file_map[(*it).second].c_str(),(*it).first);
   }
 
   g_ort->ReleaseValue(output_tensor);
@@ -352,7 +333,7 @@ int main(int argc, char* argv[])
 
   /* Output benchmarks */
   for (std::string ben : bench) {
-      std::cout << ben;
+    std::cout << ben;
   }
   std::cout << std::endl;
 
