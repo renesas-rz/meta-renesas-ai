@@ -94,13 +94,13 @@ int main(int argc, char* argv[])
 {
   if (argc != 5) {
     fprintf(stderr,"Incorrect number of parameters. 4 parameters expected.\n");
-    fprintf(stderr,"%s <nr inferences to run> <model name> <output node name> <model>\n", argv[0]);
+    fprintf(stderr,"%s <nr inferences to run> <model name> <model> <input image file>\n", argv[0]);
     return -1;
   }
 
   const char *model_name = argv[2];
-  const char *model_output = argv[3];
-  const char *model_path = argv[4];
+  const char *model_path = argv[3];
+  const char *image_path = argv[4];
 
   int inference_count = 0;
 
@@ -121,16 +121,20 @@ int main(int argc, char* argv[])
   CheckStatus(g_ort->CreateSession(env, model_path, session_options, &session));
 
   size_t num_input_nodes;
+  size_t num_output_nodes;
   OrtStatus* status;
   OrtAllocator* allocator;
   CheckStatus(g_ort->GetAllocatorWithDefaultOptions(&allocator));
 
   status = g_ort->SessionGetInputCount(session, &num_input_nodes);
+  status = g_ort->SessionGetOutputCount(session, &num_output_nodes);
+
   std::vector<const char*> input_node_names(num_input_nodes);
+  std::vector<const char*> output_node_names(num_output_nodes);
   std::vector<int64_t> input_node_dims;
+  std::vector<int64_t> output_node_dims;
 
   printf("Current Model is %s\n", model_name);
-  printf("Number of inputs = %zu\n", num_input_nodes);
 
   bench.push_back("AI_BENCHMARK_MARKER,");
   bench.push_back(ONNX_VERSION);
@@ -139,6 +143,7 @@ int main(int argc, char* argv[])
 
   ONNXTensorElementDataType type;
 
+  printf("Number of inputs = %zu\n", num_input_nodes);
   // iterate over all input nodes
   for (size_t i = 0; i < num_input_nodes; i++) {
     // print input node names
@@ -160,7 +165,7 @@ int main(int argc, char* argv[])
     CheckStatus(g_ort->GetDimensionsCount(tensor_info, &num_dims));
     printf("Input %zu : num_dims=%zu\n", i, num_dims);
     input_node_dims.resize(num_dims);
-    g_ort->GetDimensions(tensor_info, (int64_t*)input_node_dims.data(), num_dims);
+    CheckStatus(g_ort->GetDimensions(tensor_info, (int64_t*)input_node_dims.data(), num_dims));
     for (size_t j = 0; j < num_dims; j++)
       printf("Input %zu : dim %zu=%jd\n", i, j, input_node_dims[j]);
 
@@ -221,16 +226,45 @@ int main(int argc, char* argv[])
       bench.push_back("Unknown,");
   }
 
-  size_t input_tensor_size = 224 * 224 * 3;
+  printf("Number of outputs = %zu\n", num_output_nodes);
+  // iterate over all output nodes
+  for (size_t i = 0; i < num_output_nodes; i++) {
+    // print output node names
+    char* output_name;
+    status = g_ort->SessionGetOutputName(session, i, allocator, &output_name);
+    printf("output %zu : name=%s\n", i, output_name);
+    output_node_names[i] = output_name;
 
-  std::vector<float> input_tensor_values(input_tensor_size);
-  std::vector<const char*> output_node_names = {model_output};
+    // print output node types
+    OrtTypeInfo* typeinfo;
+    status = g_ort->SessionGetOutputTypeInfo(session, i, &typeinfo);
+    const OrtTensorTypeAndShapeInfo* tensor_info;
+    CheckStatus(g_ort->CastTypeInfoToTensorInfo(typeinfo,&tensor_info));
+    ONNXTensorElementDataType type;
+    CheckStatus(g_ort->GetTensorElementType(tensor_info,&type));
+    printf("Output %zu : type=%d\n", i, type);
 
-  // initialize input data with values in [0.0, 1.0]
+    // print output shapes/dims
+    size_t num_dims;
+    CheckStatus(g_ort->GetDimensionsCount(tensor_info, &num_dims));
+    printf("Output %zu : num_dims=%zu\n", i, num_dims);
+    output_node_dims.resize(num_dims);
+    CheckStatus(g_ort->GetDimensions(tensor_info, (int64_t*)output_node_dims.data(), num_dims));
 
+    for (size_t j = 0; j < num_dims; j++) {
+      printf("Output %zu : dim %zu=%jd\n", i, j, output_node_dims[j]);
+    }
+
+    g_ort->ReleaseTypeInfo(typeinfo);
+  }
+
+  // initialize input data
   int img_sizex, img_sizey, img_channels;
 
-  stbi_uc* img_data = stbi_load("/usr/bin/onnxruntime/examples/images/grace_hopper_224_224.jpg", &img_sizex, &img_sizey, &img_channels, STBI_default);
+  stbi_uc* img_data = stbi_load(image_path, &img_sizex, &img_sizey, &img_channels, STBI_default);
+
+  size_t input_tensor_size = img_sizex * img_sizey  * 3;
+  std::vector<float> input_tensor_values(input_tensor_size);
 
   struct S_Pixel {
     unsigned char RGBA[3];
@@ -244,9 +278,9 @@ int main(int argc, char* argv[])
   size_t offs = 0;
 
   for (size_t c = 0; c < 3; c++) {
-    for (size_t y = 0; y < 224; y++) {
-      for (size_t x = 0; x < 224; x++, offs++) {
-        const float val((float)imgPixels[y * 224 + x].RGBA[c]/255);
+    for (size_t y = 0; y < img_sizey; y++) {
+      for (size_t x = 0; x < img_sizex; x++, offs++) {
+        const float val((float)imgPixels[y * img_sizex + x].RGBA[c]/255);
 
         input_tensor_values[offs] = (val- mean[c])/stddev[c];
       }
