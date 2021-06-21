@@ -92,10 +92,15 @@ void CaculateAvergeDeviation(std::vector<double>& time_vec)
 
 int main(int argc, char* argv[])
 {
-  if (argc != 3) {
-    fprintf(stderr,"Incorrect number of parameters. 2 parameters expected.\n");
+  if (argc != 5) {
+    fprintf(stderr,"Incorrect number of parameters. 4 parameters expected.\n");
+    fprintf(stderr,"%s <nr inferences to run> <model name> <output node name> <model>\n", argv[0]);
     return -1;
   }
+
+  const char *model_name = argv[2];
+  const char *model_output = argv[3];
+  const char *model_path = argv[4];
 
   int inference_count = 0;
 
@@ -106,35 +111,14 @@ int main(int argc, char* argv[])
       printf("read input parameter error:  %s\n", e.what());
   }
 
-  std::string model_name(argv[2]);
-
-  std::map<std::string, std::string> onnx_models_map = {
-    {"Squeezenet_v1.1", "squeezenet0_flatten0_reshape0"},
-    {"MobileNet_v2_1.0_224", "mobilenetv20_output_flatten0_reshape0"}
-  };
-
-  std::map<std::string, std::string> onnx_models_path_map = {
-    {"Squeezenet_v1.1", "/home/root/models/onnx/squeezenet1.1.onnx"},
-    {"MobileNet_v2_1.0_224", "/home/root/models/onnx/mobilenetv2-1.0.onnx"}
-  };
-
-  auto it = onnx_models_map.find(model_name);
-
-  if (it == onnx_models_map.end()) {
-    fprintf(stderr,"Fail to find model %s\n",model_name);
-    return -1;
-  }
-
   OrtEnv* env;
   CheckStatus(g_ort->CreateEnv(ORT_LOGGING_LEVEL_WARNING, "test", &env));
 
   OrtSession* session;
 
-  std::string model_path = onnx_models_path_map[it->first];
-
   OrtSessionOptions* session_options = NULL;
 
-  CheckStatus(g_ort->CreateSession(env, model_path.c_str(), session_options, &session));
+  CheckStatus(g_ort->CreateSession(env, model_path, session_options, &session));
 
   size_t num_input_nodes;
   OrtStatus* status;
@@ -145,12 +129,12 @@ int main(int argc, char* argv[])
   std::vector<const char*> input_node_names(num_input_nodes);
   std::vector<int64_t> input_node_dims;
 
-  printf("Current Model is %s\n",it->first.c_str());
+  printf("Current Model is %s\n", model_name);
   printf("Number of inputs = %zu\n", num_input_nodes);
 
   bench.push_back("AI_BENCHMARK_MARKER,");
   bench.push_back(ONNX_VERSION);
-  bench.push_back(it->first.c_str());
+  bench.push_back(model_name);
   bench.push_back(",");
 
   ONNXTensorElementDataType type;
@@ -171,7 +155,9 @@ int main(int argc, char* argv[])
     CheckStatus(g_ort->GetTensorElementType(tensor_info, &type));
     printf("Input %zu : type=%d\n", i, type);
 
-    size_t num_dims = 4;
+    // print input shapes/dims
+    size_t num_dims;
+    CheckStatus(g_ort->GetDimensionsCount(tensor_info, &num_dims));
     printf("Input %zu : num_dims=%zu\n", i, num_dims);
     input_node_dims.resize(num_dims);
     g_ort->GetDimensions(tensor_info, (int64_t*)input_node_dims.data(), num_dims);
@@ -238,9 +224,7 @@ int main(int argc, char* argv[])
   size_t input_tensor_size = 224 * 224 * 3;
 
   std::vector<float> input_tensor_values(input_tensor_size);
-  std::vector<const char*> output_node_names;
-
-  output_node_names.push_back(it->second.c_str());
+  std::vector<const char*> output_node_names = {model_output};
 
   // initialize input data with values in [0.0, 1.0]
 
