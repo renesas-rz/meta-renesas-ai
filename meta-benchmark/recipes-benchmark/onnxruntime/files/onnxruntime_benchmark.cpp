@@ -301,6 +301,8 @@ int main(int argc, char* argv[])
   struct timeval start_time, stop_time;
   // score model & input tensor, get back output tensor
   OrtValue* output_tensor = NULL;
+  // Run once without measuring the time to warm things up
+  CheckStatus(g_ort->Run(session, NULL, input_node_names.data(), (const OrtValue* const*)&input_tensor, 1, output_node_names.data(), 1, &output_tensor));
   for (int i = 0; i < inference_count; i++) {
     gettimeofday(&start_time, nullptr);
     CheckStatus(g_ort->Run(session, NULL, input_node_names.data(), (const OrtValue* const*)&input_tensor, 1, output_node_names.data(), 1, &output_tensor));
