@@ -8,12 +8,6 @@
 #include <armnn/ArmNN.hpp>
 #include <armnn/TypesUtils.hpp>
 
-#if defined(ARMNN_CAFFE_PARSER)
-#include "armnnCaffeParser/ICaffeParser.hpp"
-#endif
-#if defined(ARMNN_TF_PARSER)
-#include "armnnTfParser/ITfParser.hpp"
-#endif
 #if defined(ARMNN_TF_LITE_PARSER)
 #include "armnnTfLiteParser/ITfLiteParser.hpp"
 #endif
@@ -49,12 +43,12 @@ static long int iterations = 30;
  * Framework, model, model type, mean, stdev,
  */
 std::list<std::string> bench;
-enum Parser { caffe, tensorflow, tfLite, onnx };
+enum Parser { tfLite, onnx };
 Parser test_parser;
 std::string benched_backend;
 std::string benched_model;
 std::string benched_type;
-#define ARMNN_VER_BENCH "Arm NN SDK v21.02"
+#define ARMNN_VER_BENCH "Arm NN SDK v21.05"
 
 std::map<int,std::string> label_file_map;
 
@@ -63,8 +57,6 @@ std::string base_path = "/usr/bin/armnn/examples";
 std::string common_model_path = "/home/root/models/";
 
 std::string base_more_models_path_tensorflow_lite = common_model_path + "tensorflowlite";
-
-std::string base_more_models_path_tensorflow_quant = common_model_path + "armnn/tensorflow";
 
 std::string base_more_models_path_onnx = base_path + "/onnx/models";
 
@@ -168,10 +160,10 @@ int MainImpl(const char* modelPath,
         return EXIT_FAILURE;
     }
 
-    using TContainer = mapbox::util::variant<std::vector<float>, std::vector<int>, std::vector<unsigned char>>;
+    using TContainer = 
+           mapbox::util::variant<std::vector<float>, std::vector<int>, std::vector<unsigned char>, std::vector<int8_t>>;
 
     std::vector<TContainer> inputDataContainers;
-
     std::vector<TContainer> outputDataContainers;
 
     std::vector<ImageSet> imageSet =
@@ -240,7 +232,8 @@ int MainImpl(const char* modelPath,
         inputDataContainers.push_back(TestCaseData->m_InputImage);
 
         //warm up
-        model.Run(inputDataContainers, outputDataContainers);
+	const std::vector<TContainer>& inputRef = inputDataContainers;
+        model.Run(inputRef, outputDataContainers);
 
         time_point<high_resolution_clock> predictStart;
         time_point<high_resolution_clock> predictEnd;
@@ -251,7 +244,7 @@ int MainImpl(const char* modelPath,
         {
             predictStart = high_resolution_clock::now();
 
-            model.Run(inputDataContainers, outputDataContainers);
+            model.Run(inputRef, outputDataContainers);
 
             predictEnd = high_resolution_clock::now();
 
@@ -265,14 +258,6 @@ int MainImpl(const char* modelPath,
 	bench.push_back(benched_backend);
 
         switch (test_parser) {
-            case caffe:
-                bench.push_back(": Caffe");
-            break;
-
-            case tensorflow:
-                bench.push_back(": TensorFlow");
-            break;
-
             case tfLite:
                 bench.push_back(": TensorFlow Lite");
             break;
@@ -325,7 +310,6 @@ std::vector<std::string> excelTestModel;
 
 void CreateModelTestOrder()
 {
-    excelTestModel.push_back("inception_v3_2016_08_28_frozen.pb");
     excelTestModel.push_back("mnasnet_0.5_224.tflite");
     excelTestModel.push_back("mnasnet_0.75_224.tflite");
     excelTestModel.push_back("mnasnet_1.0_96.tflite");
@@ -399,9 +383,6 @@ void CreateModelTestOrder()
 
 void initModelTable()
 {
-    //Tensorflow model
-    Model_Table["inception_v3_2016_08_28_frozen.pb"] = {"tensorflow-binary", MODEL_TYPE_FLOAT32, common_model_path + "armnn/tensorflow/inception_v3_2016_08_28_frozen_transformed.pb", armnn::TensorShape({ 1, 299, 299, 3}), "input", "InceptionV3/Predictions/Reshape_1", 299, 299};
-
     //Mnasnet Model
     Model_Table["mnasnet_0.5_224.tflite"] = {"tflite-binary", MODEL_TYPE_FLOAT32, base_more_models_path_tensorflow_lite + "/MnasNet/mnasnet_0.5_224.tflite", armnn::TensorShape({ 1, 224, 224, 3}), "input", "output", 224, 224};
     Model_Table["mnasnet_0.75_224.tflite"] = {"tflite-binary", MODEL_TYPE_FLOAT32, base_more_models_path_tensorflow_lite + "/MnasNet/mnasnet_0.75_224.tflite", armnn::TensorShape({ 1, 224, 224, 3}), "input", "output", 224, 224};
@@ -518,22 +499,7 @@ int RunTest(const std::string& modelFormat,
     }
 
     // Forward to implementation based on the parser type
-    if (modelFormat.find("caffe") != std::string::npos)
-    {
-#if defined(ARMNN_CAFFE_PARSER)
-        test_parser = caffe;
-        return MainImpl<armnnCaffeParser::ICaffeParser, TDataType>(modelPath.c_str(), ModelDtype,"caffe",
-                                                               inputName.c_str(), &inputTensorShape,
-                                                               inputTensorDataFilePath.c_str(), inputImageName,
-                                                               inputImageWidth, inputImageHeight, outputName.c_str(),
-                                                               enableProfiling, subgraphId, runtime, enableFastMath,
-                                                               enableFp16TurboMode, backend);
-#else
-        std::cout << "Not built with Caffe parser support.";
-        return EXIT_FAILURE;
-#endif
-    }
-    else if (modelFormat.find("onnx") != std::string::npos)
+    if (modelFormat.find("onnx") != std::string::npos)
     {
 #if defined(ARMNN_ONNX_PARSER)
         test_parser = onnx;
@@ -546,22 +512,6 @@ int RunTest(const std::string& modelFormat,
                                                          enableFp16TurboMode, backend);
 #else
         std::cout << "Not built with Onnx parser support.";
-        return EXIT_FAILURE;
-#endif
-    }
-    else if (modelFormat.find("tensorflow") != std::string::npos)
-    {
-#if defined(ARMNN_TF_PARSER)
-        test_parser = tensorflow;
-        return MainImpl<armnnTfParser::ITfParser, TDataType>(modelPath.c_str(),
-                                                         ModelDtype, "tensorflow",
-                                                         inputName.c_str(), &inputTensorShape,
-                                                         inputTensorDataFilePath.c_str(), inputImageName,
-                                                         inputImageWidth, inputImageHeight, outputName.c_str(),
-                                                         enableProfiling, subgraphId, runtime, enableFastMath,
-                                                         enableFp16TurboMode, backend);
-#else
-        std::cout << "Not built with Tensorflow parser support.";
         return EXIT_FAILURE;
 #endif
     }
@@ -584,15 +534,14 @@ int RunTest(const std::string& modelFormat,
                                                                  enableProfiling, subgraphId, runtime, enableFastMath,
                                                                  enableFp16TurboMode, backend);
 #else
-        std::cout << "Unknown model format: '" << modelFormat <<
-            "'. Please include 'caffe', 'tensorflow', 'tflite' or 'onnx'";
+        std::cout << "Not built with TfLite parser support.";
         return EXIT_FAILURE;
 #endif
     }
     else
     {
         std::cout << "Unknown model format: '" << modelFormat <<
-                                 "'. Please include 'caffe', 'tensorflow', 'tflite' or 'onnx'";
+                                 "'. Please include 'tflite' or 'onnx'";
         return EXIT_FAILURE;
     }
 }

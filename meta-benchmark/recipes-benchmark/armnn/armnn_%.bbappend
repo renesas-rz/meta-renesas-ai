@@ -16,9 +16,9 @@ do_configure_append_smarc-rzg2l() {
 
 do_compile_append() {
 	${CC} ../armnnBenchmark.cpp \
-		${WORKDIR}/build/tests/CMakeFiles/TfInceptionV3-Armnn.dir/ImagePreprocessor.cpp.o \
-		${WORKDIR}/build/tests/CMakeFiles/inferenceTest.dir/InferenceTestImage.cpp.o \
-		-o armnnBenchmark -DARMNN_TF_PARSER -DARMNN_TF_LITE_PARSER -DARMNN_ONNX_PARSER \
+		${WORKDIR}/build/tests/CMakeFiles/RenesasSample-Armnn.dir/ImagePreprocessor.cpp.o \
+		${WORKDIR}/build/tests/CMakeFiles/RenesasSample-Armnn.dir/InferenceTestImage.cpp.o \
+		-o armnnBenchmark -DARMNN_TF_LITE_PARSER -DARMNN_ONNX_PARSER \
 		-I ${S}/include -I ${S}/tests -I ${S}/src/armnnUtils \
 		-I ${S}/src/armnn/ \
 		-I ${S}/third-party/ \

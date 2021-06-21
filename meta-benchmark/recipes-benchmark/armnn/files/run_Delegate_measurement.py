@@ -77,13 +77,13 @@ def main():
                print("\n")
 
                if benchmark == True:
-                   print("AI_BENCHMARK_MARKER,Arm NN SDK v21.02 Delegate (" + armnnDelegate + ")," + model_details[0].rstrip().rsplit('/', 1)[1] +  "," +  model_details[1] + "," + str(Average(list_tmp)) + "," + str(Average(list)) + ",")
+                   print("AI_BENCHMARK_MARKER,Arm NN SDK v21.05 Delegate (" + armnnDelegate + ")," + model_details[0].rstrip().rsplit('/', 1)[1] +  "," +  model_details[1] + "," + str(Average(list_tmp)) + "," + str(Average(list)) + ",")
 
 def Average(lst):
     return sum(lst) / len(lst)
 
 def run_delegate_benchmark(model_file_name, base_directory, label_file_name, number_of_threads, times_to_run, list, list_dev, armnnDelegate, armnnLogLevel):
-    command = "/usr/bin/armnnDelegateBenchmark/armnnTFLiteDelegateBenchmark -i /usr/bin/armnn-21.02/examples/grace_hopper.bmp -c %s -l %s -t %d -m %s -d %s -n %s" % (times_to_run, label_file_name, number_of_threads, base_directory+model_file_name.rstrip(), armnnDelegate, armnnLogLevel)
+    command = "/usr/bin/armnnDelegateBenchmark/armnnTFLiteDelegateBenchmark -i /usr/bin/armnn-21.05/examples/grace_hopper.bmp -c %s -l %s -t %d -m %s -d %s -n %s" % (times_to_run, label_file_name, number_of_threads, base_directory+model_file_name.rstrip(), armnnDelegate, armnnLogLevel)
 
     for line in run_command(command):
         count = 0
