@@ -17,7 +17,6 @@
 #include <list>
 #include <iostream>
 
-#define ONNX_VERSION "ONNX Runtime v1.8.0,"
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
 
@@ -137,7 +136,9 @@ int main(int argc, char* argv[])
   printf("Current Model is %s\n", model_name);
 
   bench.push_back("AI_BENCHMARK_MARKER,");
-  bench.push_back(ONNX_VERSION);
+  bench.push_back("ONNX Runtime v");
+  bench.push_back(OrtGetApiBase()->GetVersionString());
+  bench.push_back(",");
   bench.push_back(model_name);
   bench.push_back(",");
 
