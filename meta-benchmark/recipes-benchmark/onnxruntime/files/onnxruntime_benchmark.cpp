@@ -273,6 +273,8 @@ int main(int argc, char* argv[])
 
   const S_Pixel* imgPixels(reinterpret_cast<const S_Pixel *>(img_data));
 
+  // Normalize the input values using factors calculated from the Imagenet dataset
+  // If you have uncommon lighting or scenes you may want to calculate your own values.
   const float mean[3]   = { 0.485f, 0.456f, 0.406f };
   const float stddev[3] = { 0.229f, 0.224f, 0.225f };
 
