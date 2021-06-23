@@ -10,7 +10,11 @@ SRC_URI += " \
 	file://onnxruntime_benchmark.sh \
         file://grace_hopper_224_224.jpg \
         file://synset_words.txt \
+	https://s3.amazonaws.com/download.onnx/models/opset_9/squeezenet.tar.gz;name=onnx-squeezenet;subdir=${WORKDIR}/onnx-squeezenet \
 "
+
+SRC_URI[onnx-squeezenet.md5sum] = "92e240a948f9bbc92534d752eb465317"
+SRC_URI[onnx-squeezenet.sha256sum] = "f4c9a2906a949f089bee5ef1bf9ea1c0dc1b49d5abeb1874fff3d206751d0f3b"
 
 DEPENDS += " \
         stb \
@@ -51,9 +55,19 @@ do_install_append() {
 
         install -d ${D}${bindir}/${PN}-${PV}/examples
 
+        install -d ${D}${bindir}/${PN}-${PV}/examples/unittest
+
         install -d ${D}${bindir}/${PN}-${PV}/examples/inference
 
         install -d ${D}${bindir}/${PN}-${PV}/examples/images
+
+        install -m 0555 \
+                ${B}/onnx_test_runner \
+                ${D}${bindir}/${PN}-${PV}/examples/unittest
+
+        cp -r \
+                ${WORKDIR}/onnx-squeezenet/squeezenet \
+                ${D}${bindir}/${PN}-${PV}/examples/unittest
 
         install -m 0644 \
                 ${WORKDIR}/synset_words.txt \
@@ -71,5 +85,6 @@ FILES_${PN}-examples = " \
 	${bindir}/onnxruntime_benchmark/* \
         ${bindir}/${PN} \
         ${bindir}/${PN}-${PV}/examples/inference/* \
+        ${bindir}/${PN}-${PV}/examples/unittest/* \
         ${bindir}/${PN}-${PV}/examples/images/* \
 "
