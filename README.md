@@ -60,6 +60,7 @@ project requirements.
 | Renesas RZ/G2M | HopeRun hihope-rzg2m     |
 | Renesas RZ/G2N | HopeRun hihope-rzg2n     |
 | Renesas RZ/G2E | Silicon Linux ek874      |
+| Renesas RZ/G2L | Renesas rzg2l-smarc evk  |
 | Renesas RZ/G1H | iWave Systems iwg21m     |
 | Renesas RZ/G1M | iWave Systems iwg20m-g1m |
 | Renesas RZ/G1E | iWave Systems iwg22m     |
@@ -67,7 +68,8 @@ project requirements.
 ### Build Script ###
 A simple build script has been created to manage the build process.  
 Before running the script you will need to download the relevant proprietary
-libraries from the Renesas website. See the Renesas RZ/G[12] BSP readme file for details on how to do this.
+libraries from the Renesas website. See the Renesas RZ/G[12] BSP readme file for
+details on how to do this.
 
 Run `./scripts/build-rzg-ai-bsp.sh -h` to get an overview on how to use the
 script.
