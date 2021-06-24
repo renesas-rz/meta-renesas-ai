@@ -33,7 +33,7 @@ that loads a set of test cases and runs the self tests.
 For more information, please refer to
 https://github.com/microsoft/onnxruntime/tree/master/onnxruntime/test/onnx.
 
-This program is istalled under */usr/bin/onnxruntime/examples/unittest* when
+This program is installed under */usr/bin/onnxruntime/examples/unittest* when
 package *onnxruntime-examples* is included.
 
 To use *onnx_test_runner*:  
