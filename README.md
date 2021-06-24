@@ -40,6 +40,10 @@ build conf directory is usually the first thing the user wants to do, but
 the configuration must be inspected and further customized according to the
 project requirements.
 
+Before using the configuration files from the desired templates directory,
+please make sure you have read and understood the terms and conditions found
+in the [Licensing](#licensing) section.
+
 ### Supported Frameworks/Versions ###
 
 | Framework       | Version   | Parser(s)                              | Inference Hardware               |
@@ -114,12 +118,33 @@ git am ../meta-renesas-ai/patches/meta-rzg2/dunfell-rzg2l/0001-cip-core.inc-Fix-
 
 This only needs to be done when building for the *smarc-rzg2l* platform.
 
----
-
+## LICENSING ##
 
 This project is licensed under the terms of the MIT license (please see file
 *COPYING.MIT* in this directory for further details).
 
+The configuration files found under:
+```
+meta-*/templates/*/local.conf
+```
+whitelist the commercial license flag with the below statement in order to
+add full video encoding/decoding support to the BSP:
+```
+LICENSE_FLAGS_WHITELIST = "commercial"
+```
+By using the template files coming from this repository, the user agrees to
+the terms and conditions from the licenses of the packages that are installed
+into the final image and that are covered by a commercial license.
+
+The user also acknowledges that it's their responsibility to make sure
+they hold the right to use code protected by commercial agreements, whether
+the commercially protected packages are selected by Renesas' BSPs or by them.
+
+Finally, the user acknowledges that it's their responsibility to make sure
+they hold the right to copy, use, modify, and re-distribute the intellectual
+property offered by this collection of meta-layers.
+
+---
 
 Send pull requests, patches, comments or questions to:  
 [chris.paterson2@renesas.com](mailto:chris.paterson2@renesas.com).
