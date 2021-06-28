@@ -334,7 +334,7 @@ FILES_${PN}-examples-dbg = " \
 	${bindir}/${PN}-${PV}/examples/UnitTests/src/backends/backendsCommon/test/testDynamicBackend/.debug \
 "
 
-# Tensorflow-lite FILES
+# Tensorflow-lite files
 FILES_${PN}-tensorflow-lite = " \
 	${libdir}/libarmnnTfLiteParser.so* \
 	${includedir}/armnn-tensorflow-lite/schema \
@@ -344,7 +344,7 @@ FILES_${PN}-tensorflow-lite-dev = "${includedir}/armnnTfLiteParser"
 FILES_${PN}-tensorflow-lite-examples = "${bindir}/${PN}-${PV}/examples/tensorflow-lite"
 FILES_${PN}-tensorflow-lite-examples-dbg = "${bindir}/${PN}-${PV}/examples/tensorflow-lite/.debug"
 
-# ONNX FILES
+# ONNX files
 FILES_${PN}-onnx = "${libdir}/libarmnnOnnxParser.so*"
 FILES_${PN}-onnx-dbg = "${libdir}/.debug/libarmnnOnnxParser.so"
 FILES_${PN}-onnx-dev = " \
@@ -354,7 +354,7 @@ FILES_${PN}-onnx-dev = " \
 FILES_${PN}-onnx-examples = "${bindir}/${PN}-${PV}/examples/onnx"
 FILES_${PN}-onnx-examples-dbg = "${bindir}/${PN}-${PV}/examples/onnx/.debug"
 
-# ArmNN Files
+# ArmNN files
 FILES_${PN}-dev += "${libdir}/cmake/*"
 
 
