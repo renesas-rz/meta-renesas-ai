@@ -1,12 +1,11 @@
 # meta-benchmark
 
-This meta-layer provides benchmark tools for Arm NN SDK, Caffe2, TensorFlow,
+This meta-layer provides benchmark tools for Arm NN SDK, TensorFlow,
 TensorFlow Lite, ONNX Runtime and OpenCV.
 
 Each framework has its own benchmark tool.
 
 * For Arm NN SDK, it is armnnBenchmark and armnnTFLiteDelegateBenchmark
-* For Caffe2, it is caffe2_Benchmark.sh
 * For Google Coral TPU, it is google-coral-tpu-benchmark
 * For TensorFlow, it is tensorflowBenchmark
 * For TensorFlow-lite, it is tensorflow-lite-benchmark
@@ -32,14 +31,6 @@ cd /usr/bin/armnnDelegateBenchmark
 # Run inference 30 times on each TfLite model using the ArmNN TfLite Delegate
 ./run_Delegate_measurement.py test_model_list_armnnDelegate.txt \
 /home/root/models/tensorflowlite/ 30 2 tflite warning
-```
-
-## Caffe2
-```bash
-cd /usr/bin/caffe2Benchmark
-
-# Run inference 30 times
-./caffe2_Benchmark.sh
 ```
 
 ## Google Coral TPU
@@ -259,9 +250,8 @@ This incorporates:
 * TensorFlow Lite (including Google Coral TPU support)
 * Various pre-built models that can be used for testing/benchmarking
 
-### caffe2+onnx+opencv+pytorch
+### onnx+opencv+pytorch
 This incorporates:
-* Caffe2
 * ONNX Runtime
 * OpenCV
 * PyTorch

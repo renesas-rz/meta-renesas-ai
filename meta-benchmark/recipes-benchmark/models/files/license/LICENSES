@@ -23,16 +23,6 @@ Source:inspired from https://github.com/avoroshilov/tf-squeezenet/blob/master/sq
 License:Unknown
 md5sum:b5e36a1bf3a0593035343ec50dde66c1
 
-FileName:predict_net.pb
-Source:https://s3.amazonaws.com/download.caffe2.ai/models/squeezenet/predict_net.pb
-License:Apache License 2.0
-md5sum:694bfdd02e9ccb57bfc4acb451fbfb2d
-
-FileName:init_net.pb
-Source:https://s3.amazonaws.com/download.caffe2.ai/models/squeezenet/init_net.pb
-License:Apache License 2.0
-md5sum:a589d31d93c44d353ae2cd92af4d5a3f
-
 FileName:ilsvrc_2012_mean.npy
 Source:https://github.com/BVLC/caffe/raw/master/python/caffe/imagenet/ilsvrc_2012_mean.npy
 License:Unknown
