@@ -47,13 +47,13 @@ print_help () {
 	 -f <framework>     Select which AI framework to include in the
 	                    filesystem.
 	                    Choose from:
-	                    armnn, benchmark-a, benchmark-b, caffe2,
+	                    armnn, benchmark-a, benchmark-b,
 	                    google-coral, onnxruntime, opencv, pytorch,
 	                    tensorflow, or tensorflow-lite.
 	                    The benchmark-a option will automatically include
 	                    armnn, google-coral tensorflow, and tensorflow-lite.
 	                    The benchmark-b option will automatically include
-	                    caffe2, onnxruntime, opencv and pytorch.
+	                    onnxruntime, opencv and pytorch.
 	                    By default ${FRAMEWORK} will be used.
 	 -l <prop lib dir>  Location when proprietary libraries have been
 	                    downloaded to.
@@ -78,7 +78,7 @@ while getopts ":cdf:l:o:p:h" opt; do
                 ;;
         f)
 		case "${OPTARG}" in
-		"armnn" | "caffe2" | "google-coral" | "onnxruntime" | \
+		"armnn" | "google-coral" | "onnxruntime" | \
 		"opencv" | "pytorch" | "tensorflow" | "tensorflow-lite")
 			FRAMEWORK="${OPTARG}"
 			BENCHMARK=false
@@ -90,7 +90,7 @@ while getopts ":cdf:l:o:p:h" opt; do
 			;;
 
 		"benchmark-b")
-			FRAMEWORK="caffe2+onnx+opencv+pytorch"
+			FRAMEWORK="onnx+opencv+pytorch"
 			BENCHMARK=true
 			;;
 
