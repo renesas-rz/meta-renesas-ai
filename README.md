@@ -50,7 +50,6 @@ in the [Licensing](#licensing) section.
 | :-------------- | :-------- | :------------------------------------- | :------------------------------- |
 | ArmNN           | v21.05    | ONNX<br>TensorFlow Lite                | CPU                              |
 | ONNX Runtime    | v1.8.0    | ONNX                                   | CPU                              |
-| OpenCV          | v4.1.1    | DarkNet<br>ONNX<br>TensorFlow          | CPU                              |
 | TensorFlow      | v2.3.1    | TensorFlow                             | CPU                              |
 | TensorFlow Lite | v2.3.1    | TensorFlow Lite                        | CPU<br>Coral USB TPU (frogfish) |
 
