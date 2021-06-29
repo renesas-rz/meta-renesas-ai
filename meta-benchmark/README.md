@@ -1,12 +1,11 @@
 # meta-benchmark
 
-This meta-layer provides benchmark tools for Arm NN SDK, TensorFlow,
+This meta-layer provides benchmark tools for Arm NN SDK,
 TensorFlow Lite and ONNX Runtime.
 
 Each framework has its own benchmark tool.
 
 * For Arm NN SDK, it is armnnBenchmark and armnnTFLiteDelegateBenchmark
-* For TensorFlow, it is tensorflowBenchmark
 * For TensorFlow-lite, it is tensorflow-lite-benchmark
 * For ONNX Runtime, it is onnxruntime_benchmark
 
@@ -28,37 +27,6 @@ cd /usr/bin/armnnDelegateBenchmark
 # Run inference 30 times on each TfLite model using the ArmNN TfLite Delegate
 ./run_Delegate_measurement.py test_model_list_armnnDelegate.txt \
 /home/root/models/tensorflowlite/ 30 2 tflite warning
-```
-
-## TensorFlow
-```bash
-cd /usr/bin/tensorflowBenchmark
-
-# Inception v3 (inference run 30 times)
-./tensorflowBenchmark --image="/usr/bin/tensorflow/examples/grace_hopper.jpg" \
---graph="/home/root/models/tensorflow/InceptionV3/inception_v3_2016_08_28_frozen.pb" \
---model_type="float32" \
---labels="/home/root/models/tensorflow/InceptionV3/imagenet_slim_labels.txt"
-
-# Test Inception v3 quant (inference run 30 times)
-./tensorflowBenchmark --image="/usr/bin/tensorflow/examples/grace_hopper.jpg" \
---graph="/home/root/models/tensorflow/InceptionV3_Quant/inception_v3_2016_08_28_frozen_Quant.pb" \
---model_type="uint8" \
---labels="/home/root/models/tensorflow/InceptionV3_Quant/imagenet_slim_labels.txt"
-
-# Inception v4 (inference run 30 times)
-./tensorflowBenchmark --image="/usr/bin/tensorflow/examples/grace_hopper.jpg" \
---graph="/home/root/models/tensorflow/InceptionV4/inception_v4.pb" \
---model_type="float32" \
---labels="/home/root/models/tensorflow/InceptionV4/imagenet_slim_labels.txt" \
---output_layer="InceptionV4/Logits/Predictions"
-
-# Test Inception v4 quant (inference run 30 times)
-./tensorflowBenchmark --image="/usr/bin/tensorflow/examples/grace_hopper.jpg" \
---graph="/home/root/models/tensorflow/InceptionV4/inception_v4_299_quant_frozen.pb" \
---model_type="uint8" \
---labels="/home/root/models/tensorflow/InceptionV4/imagenet_slim_labels.txt" \
---output_layer="InceptionV4/Logits/Predictions"
 ```
 
 ## TensorFlow Lite
@@ -176,10 +144,9 @@ Two sets of configuration templates are included in the *templates* directory.
 These allow different frameworks that use compatible dependencies to be easily
 built together.
 
-### armnn+tf+tfl
+### armnn+tfl
 This incorporates:
 * ArmNN SDK
-* TensorFlow
 * TensorFlow Lite
 * Various pre-built models that can be used for testing/benchmarking
 
