@@ -2,7 +2,7 @@ DESCRIPTION = "Models for TensorFlow benchmarking"
 LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = " \
         file://license/COPYING;md5=c4e89413e9e0e6a372520647a3fae1ae \
-        file://license/LICENSES;md5=e9e2202f0c8b59b3e76488106226194f \
+        file://license/LICENSES;md5=57a79099e76b818cc334a5496bdee2b4 \
 "
 
 S = "${WORKDIR}"

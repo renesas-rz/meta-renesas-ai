@@ -1,3 +1,0 @@
-inception_resnet_v2_quant_edgetpu.tflite labels.txt uint8
-resnet_quantized_edgetpu.tflite labels.txt uint8
-resnet_v2_101_299_quant_edgetpu.tflite labels.txt uint8

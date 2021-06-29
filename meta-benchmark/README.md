@@ -6,7 +6,6 @@ TensorFlow Lite and ONNX Runtime.
 Each framework has its own benchmark tool.
 
 * For Arm NN SDK, it is armnnBenchmark and armnnTFLiteDelegateBenchmark
-* For Google Coral TPU, it is google-coral-tpu-benchmark
 * For TensorFlow, it is tensorflowBenchmark
 * For TensorFlow-lite, it is tensorflow-lite-benchmark
 * For ONNX Runtime, it is onnxruntime_benchmark
@@ -29,27 +28,6 @@ cd /usr/bin/armnnDelegateBenchmark
 # Run inference 30 times on each TfLite model using the ArmNN TfLite Delegate
 ./run_Delegate_measurement.py test_model_list_armnnDelegate.txt \
 /home/root/models/tensorflowlite/ 30 2 tflite warning
-```
-
-## Google Coral TPU
-```bash
-cd /usr/bin/google-coral-benchmark
-
-# Resnet (inference run 30 times)
-./run_TPU_measurement.py test_file_list_Resnet.txt \
-/home/root/models/google-coral/Resnet/ 30
-
-# MobileNet (inference run 30 times)
-./run_TPU_measurement.py test_file_list_MobileNet.txt \
-/home/root/models/google-coral/Mobile_Net_Model/ 30
-
-# Inception (inference run 30 times)
-./run_TPU_measurement.py test_file_list_Inception.txt \
-/home/root/models/google-coral/Mobile_Inception_Model/ 30
-
-# EfficientNet (inference run 30 times)
-./run_TPU_measurement.py test_file_list_EfficientNet.txt \
-/home/root/models/google-coral/Mobile_Efficient_Net_Model/ 30
 ```
 
 ## TensorFlow
@@ -198,11 +176,11 @@ Two sets of configuration templates are included in the *templates* directory.
 These allow different frameworks that use compatible dependencies to be easily
 built together.
 
-### armnn+coral+tf+tfl
+### armnn+tf+tfl
 This incorporates:
 * ArmNN SDK
 * TensorFlow
-* TensorFlow Lite (including Google Coral TPU support)
+* TensorFlow Lite
 * Various pre-built models that can be used for testing/benchmarking
 
 ### onnx

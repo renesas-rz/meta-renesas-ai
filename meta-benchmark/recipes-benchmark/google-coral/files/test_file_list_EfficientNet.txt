@@ -1,3 +1,0 @@
-efficientnet-edgetpu-S_quant_edgetpu.tflite labels.txt uint8
-efficientnet-edgetpu-M_quant_edgetpu.tflite labels.txt uint8
-efficientnet-edgetpu-L_quant_edgetpu.tflite labels.txt uint8
