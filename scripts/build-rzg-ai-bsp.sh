@@ -48,12 +48,12 @@ print_help () {
 	                    filesystem.
 	                    Choose from:
 	                    armnn, benchmark-a, benchmark-b,
-	                    google-coral, onnxruntime, opencv, pytorch,
-	                    tensorflow, or tensorflow-lite.
+	                    google-coral, onnxruntime, opencv tensorflow,
+	                    or tensorflow-lite.
 	                    The benchmark-a option will automatically include
 	                    armnn, google-coral tensorflow, and tensorflow-lite.
 	                    The benchmark-b option will automatically include
-	                    onnxruntime, opencv and pytorch.
+	                    onnxruntime and opencv.
 	                    By default ${FRAMEWORK} will be used.
 	 -l <prop lib dir>  Location when proprietary libraries have been
 	                    downloaded to.
@@ -79,7 +79,7 @@ while getopts ":cdf:l:o:p:h" opt; do
         f)
 		case "${OPTARG}" in
 		"armnn" | "google-coral" | "onnxruntime" | \
-		"opencv" | "pytorch" | "tensorflow" | "tensorflow-lite")
+		"opencv" | "tensorflow" | "tensorflow-lite")
 			FRAMEWORK="${OPTARG}"
 			BENCHMARK=false
         	        ;;
@@ -90,7 +90,7 @@ while getopts ":cdf:l:o:p:h" opt; do
 			;;
 
 		"benchmark-b")
-			FRAMEWORK="onnx+opencv+pytorch"
+			FRAMEWORK="onnx+opencv"
 			BENCHMARK=true
 			;;
 
