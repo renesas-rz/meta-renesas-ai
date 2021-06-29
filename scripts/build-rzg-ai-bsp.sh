@@ -48,10 +48,10 @@ print_help () {
 	                    filesystem.
 	                    Choose from:
 	                    armnn, benchmark-a, benchmark-b,
-	                    google-coral, onnxruntime, tensorflow,
+	                    onnxruntime, tensorflow,
 	                    or tensorflow-lite.
 	                    The benchmark-a option will automatically include
-	                    armnn, google-coral tensorflow, and tensorflow-lite.
+	                    armnn, tensorflow, and tensorflow-lite.
 	                    The benchmark-b option will automatically include
 	                    onnxruntime.
 	                    By default ${FRAMEWORK} will be used.
@@ -78,14 +78,14 @@ while getopts ":cdf:l:o:p:h" opt; do
                 ;;
         f)
 		case "${OPTARG}" in
-		"armnn" | "google-coral" | "onnxruntime" | \
+		"armnn" | "onnxruntime" | \
 		"tensorflow" | "tensorflow-lite")
 			FRAMEWORK="${OPTARG}"
 			BENCHMARK=false
         	        ;;
 
 		"benchmark-a")
-			FRAMEWORK="armnn+coral+tf+tfl"
+			FRAMEWORK="armnn+tf+tfl"
 			BENCHMARK=true
 			;;
 
