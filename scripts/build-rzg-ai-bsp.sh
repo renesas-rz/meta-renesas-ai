@@ -19,7 +19,7 @@ WORK_DIR="${PWD}"
 COMMAND_NAME="$0"
 INSTALL_DEPENDENCIES=false
 PLATFORM=""
-FRAMEWORK="benchmark-a"
+FRAMEWORK="benchmark-armnn+tfl"
 BENCHMARK=true
 PROP_DIR=""
 BUILD=true
@@ -47,12 +47,11 @@ print_help () {
 	 -f <framework>     Select which AI framework to include in the
 	                    filesystem.
 	                    Choose from:
-	                    armnn, benchmark-a, benchmark-b,
-	                    onnxruntime, tensorflow,
-	                    or tensorflow-lite.
-	                    The benchmark-a option will automatically include
-	                    armnn, tensorflow, and tensorflow-lite.
-	                    The benchmark-b option will automatically include
+	                    benchmark-armnn, benchmark-tflite, armnn,
+	                    onnxruntime or tensorflow-lite.
+	                    The benchmark-armnn+tfl option will automatically include
+	                    armnn and tensorflow-lite.
+	                    The benchmark-onnx option will automatically include
 	                    onnxruntime.
 	                    By default ${FRAMEWORK} will be used.
 	 -l <prop lib dir>  Location when proprietary libraries have been
@@ -79,17 +78,17 @@ while getopts ":cdf:l:o:p:h" opt; do
         f)
 		case "${OPTARG}" in
 		"armnn" | "onnxruntime" | \
-		"tensorflow" | "tensorflow-lite")
+		"tensorflow-lite")
 			FRAMEWORK="${OPTARG}"
 			BENCHMARK=false
         	        ;;
 
-		"benchmark-a")
-			FRAMEWORK="armnn+tf+tfl"
+		"benchmark-armnn+tfl")
+			FRAMEWORK="armnn+tfl"
 			BENCHMARK=true
 			;;
 
-		"benchmark-b")
+		"benchmark-onnx")
 			FRAMEWORK="onnx"
 			BENCHMARK=true
 			;;

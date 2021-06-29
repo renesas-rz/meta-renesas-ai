@@ -8,7 +8,7 @@ on the CIP Kernel:
 URI: **https://github.com/renesas-rz/meta-renesas.git**  
 tag: certified-linux-v2.1.8 (3a4fae402a34c92fd231e1b8c077a6964a90186f)
 
-The meta-rzg1-gcc-linaro meta-layer should be used when including TensorFlow
+The meta-rzg1-gcc-linaro meta-layer should be used when including TensorFlow-lite
 v2.3+ as GCC v7.3 is required. Read *meta-rzg1-gcc-linaro/README.md* for more
 details.
 
@@ -25,7 +25,7 @@ commit: 2313d60eb75e5c86ce3e42ad378c8473f8e95c88
 
 For each AI tool, please refer to **meta-${AI\_TOOL\_NAME}/README.md**. For
 example:  
-*meta-tensorflow/README.md*
+*meta-tensorflow-lite/README.md*
 
 
 This project comes with template files to make it easier for the user to quickly
@@ -50,7 +50,6 @@ in the [Licensing](#licensing) section.
 | :-------------- | :-------- | :------------------------------------- | :------------------------------- |
 | ArmNN           | v21.05    | ONNX<br>TensorFlow Lite                | CPU                              |
 | ONNX Runtime    | v1.8.0    | ONNX                                   | CPU                              |
-| TensorFlow      | v2.3.1    | TensorFlow                             | CPU                              |
 | TensorFlow Lite | v2.3.1    | TensorFlow Lite                        | CPU                              |
 
 ### Supported Embedded Platforms ###
