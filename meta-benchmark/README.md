@@ -11,7 +11,6 @@ Each framework has its own benchmark tool.
 * For TensorFlow-lite, it is tensorflow-lite-benchmark
 * For ONNX Runtime, it is onnxruntime_benchmark
 * For OpenCV, it is opencv-benchmark.sh
-* For PyTorch, it is pytorch-benchmark.sh
 
 The output of each benchmark tool shows the average inference time and the
 standard deviation for each available model, which are printed in the terminal.
@@ -158,15 +157,6 @@ cd /usr/bin/opencvBenchmark
 ./opencv-benchmark.sh
 ```
 
-## PyTorch
-```bash
-cd /usr/bin/pytorch-benchmark
-
-# Run script that runs benchmarks for all models
-# AlexNet, MnasNet, MobileNet v2, ResNet, and Inception v3
-./pytorch-benchmark.sh
-```
-
 #### Run models individually
 ```bash
 # Run script with --help for information
@@ -193,32 +183,6 @@ python3 alexnet.py alexnet-owt-4df8aa71.pth float32 imagenet_classes.txt grace_h
 # Number of inference runs can be changed with --count
 python3 alexnet.py alexnet-owt-4df8aa71.pth float32 imagenet_classes.txt grace_hopper.jpg --count 50
 ```
-#### Other models
-Other models can also be tested such as MnasNet, MobileNet v2,
-ResNet and Inception v3.
-
-Please note that to run Inception v3 models, python3-scipy must be added to your image.
-
-For RZ/G1 devices:
-
- - Uncomment the following line in the `local.conf`:
-```
-require ${META_PYTORCH_DIR}/templates/python3-scipy/python3-scipy_RZ-G1.conf
-```
-
-For RZ/G2 devices:
-
- - Uncomment the following line in the `local.conf`:
-```
-#require ${META_PYTORCH_DIR}/templates/python3-scipy/python3-scipy_RZ-G2.conf
-```
- - Comment the following line in the `local.conf`:
-```
-INCOMPATIBLE_LICENSE = "GPLv3 GPLv3+"
-```
-This will enable GPLv3 licensed software, please make sure you fully understand the
-implications of enabling license GPLv3 by reading the relevant documents
-(e.g. https://www.gnu.org/licenses/gpl-3.0.en.html).
 
 #### More Examples
 The commands to run benchmarking for these models are similar to
@@ -250,9 +214,8 @@ This incorporates:
 * TensorFlow Lite (including Google Coral TPU support)
 * Various pre-built models that can be used for testing/benchmarking
 
-### onnx+opencv+pytorch
+### onnx+opencv
 This incorporates:
 * ONNX Runtime
 * OpenCV
-* PyTorch
 * Various pre-built models that can be used for testing/benchmarking
