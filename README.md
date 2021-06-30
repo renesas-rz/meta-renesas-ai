@@ -123,14 +123,16 @@ The configuration files found under:
 ```
 meta-*/templates/*/local.conf
 ```
-whitelist the commercial license flag with the below statement in order to
-add full video encoding/decoding support to the BSP:
+show how to whitelist the commercial license flag for graphics packages.
+This is needed to add full video encoding/decoding support to the BSP. 
+For example for the RZ/G1H:
 ```
-LICENSE_FLAGS_WHITELIST = "commercial"
+LICENSE_FLAGS_WHITELIST = "commercial_gstreamer1.0-libav commercial_gstreamer1.0-omx"
 ```
-By using the template files coming from this repository, the user agrees to
-the terms and conditions from the licenses of the packages that are installed
-into the final image and that are covered by a commercial license.
+
+By editing these commented lines in the template files coming from this repository,
+the user agrees to the terms and conditions from the licenses of the packages
+that are installed into the final image and that are covered by a commercial license.
 
 The user also acknowledges that it's their responsibility to make sure
 they hold the right to use code protected by commercial agreements, whether
@@ -139,6 +141,9 @@ the commercially protected packages are selected by Renesas' BSPs or by them.
 Finally, the user acknowledges that it's their responsibility to make sure
 they hold the right to copy, use, modify, and re-distribute the intellectual
 property offered by this collection of meta-layers.
+
+**Note:** Without uncommenting the `LICENSE_FLAGS_WHITELIST` lines the BSP build will fail.  
+
 
 ---
 
