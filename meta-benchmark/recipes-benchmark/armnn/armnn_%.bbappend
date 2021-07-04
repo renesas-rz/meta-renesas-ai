@@ -1,6 +1,9 @@
 FILESEXTRAPATHS_prepend := "${THISDIR}/files:"
 
-RDEPENDS_${PN} += "models-armnn"
+RDEPENDS_${PN} += " \
+	models-onnx \
+	models-tensorflow-lite \
+"
 
 SRC_URI += " \
 	file://armnnBenchmark.cpp \
