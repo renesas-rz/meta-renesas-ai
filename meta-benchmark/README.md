@@ -154,3 +154,8 @@ This incorporates:
 This incorporates:
 * ONNX Runtime
 * Various pre-built models that can be used for testing/benchmarking
+
+### tflite
+This incorporates:
+* TensorFlow Lite
+* Various pre-built models that can be used for testing/benchmarking

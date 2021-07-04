@@ -47,12 +47,9 @@ print_help () {
 	 -f <framework>     Select which AI framework to include in the
 	                    filesystem.
 	                    Choose from:
-	                    benchmark-armnn, benchmark-tflite, armnn,
-	                    onnxruntime or tensorflow-lite.
-	                    The benchmark-armnn+tfl option will automatically include
-	                    armnn and tensorflow-lite.
-	                    The benchmark-onnx option will automatically include
-	                    onnxruntime.
+	                    benchmark-armnn+tfl, benchmark-onnx,
+	                    benchmark-tflite, armnn, onnxruntime or
+	                    tensorflow-lite.
 	                    By default ${FRAMEWORK} will be used.
 	 -l <prop lib dir>  Location when proprietary libraries have been
 	                    downloaded to.
@@ -77,8 +74,7 @@ while getopts ":cdf:l:o:p:h" opt; do
                 ;;
         f)
 		case "${OPTARG}" in
-		"armnn" | "onnxruntime" | \
-		"tensorflow-lite")
+		"armnn" | "onnxruntime" | "tensorflow-lite")
 			FRAMEWORK="${OPTARG}"
 			BENCHMARK=false
         	        ;;
@@ -90,6 +86,11 @@ while getopts ":cdf:l:o:p:h" opt; do
 
 		"benchmark-onnx")
 			FRAMEWORK="onnx"
+			BENCHMARK=true
+			;;
+
+		"benchmark-tflite")
+			FRAMEWORK="tflite"
 			BENCHMARK=true
 			;;
 
