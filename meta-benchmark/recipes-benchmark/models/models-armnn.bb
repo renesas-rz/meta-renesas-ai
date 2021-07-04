@@ -9,7 +9,6 @@ S = "${WORKDIR}"
 
 RDEPENDS_${PN} = " \
 	models-onnx \
-	models-tensorflow \
 	models-tensorflow-lite \
 "
 
