@@ -19,10 +19,9 @@ This Yocto/OpenEmbedded meta-layer provides ONNX Runtime support for the Renesas
 RZ/G2 and RZ/G2L families of System on Chips.
 
 In order to add ONNX Runtime support to your project, make sure *onnxruntime*
-is listed as a dependency to your recipe/package. Listing
-*onnxruntime-staticdev* and *onnxruntime-dev* in *IMAGE\_INSTALL* could be
-beneficial when you want to populate an SDK for developing an application
-based on ONNX Runtime.
+is listed as a dependency to your recipe/package. Listing *onnxruntime-dev*
+in *IMAGE\_INSTALL* could be beneficial when you want to populate an SDK for
+developing an application based on ONNX Runtime.
 
 After the build is complete a set of C ONNX Runtime libraries
 (*libonnxruntime*) will be generated.

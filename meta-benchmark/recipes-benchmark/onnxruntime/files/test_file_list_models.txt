@@ -1,2 +1,2 @@
-Squeezenet_v1.1      /home/root/models/onnx/squeezenet1.1.onnx   /usr/bin/onnxruntime/examples/images/grace_hopper_224_224.jpg
-MobileNet_v2_1.0_224 /home/root/models/onnx/mobilenetv2-1.0.onnx /usr/bin/onnxruntime/examples/images/grace_hopper_224_224.jpg
+Squeezenet_v1.1      /home/root/models/onnx/squeezenet1.1.onnx   /usr/bin/onnxruntime_benchmark/grace_hopper_224_224.jpg
+MobileNet_v2_1.0_224 /home/root/models/onnx/mobilenetv2-1.0.onnx /usr/bin/onnxruntime_benchmark/grace_hopper_224_224.jpg

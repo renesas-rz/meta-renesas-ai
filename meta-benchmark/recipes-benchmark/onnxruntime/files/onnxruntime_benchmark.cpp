@@ -5,7 +5,7 @@
 // Copyright (C) 2020-2022 Renesas Electronics Corp.
 
 #include <assert.h>
-#include <onnxruntime_c_api.h>
+#include <onnxruntime/core/session/onnxruntime_cxx_api.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <vector>
@@ -330,7 +330,7 @@ int main(int argc, char* argv[])
     result[floatarr[i]] = i;
   }
 
-  std::string filename("/usr/bin/onnxruntime/examples/inference/synset_words.txt");
+  std::string filename("/usr/bin/onnxruntime_benchmark/synset_words.txt");
 
   if (loadLabelFile(filename) != 0) {
     fprintf(stderr,"Fail to open or process file %s\n",filename.c_str());
