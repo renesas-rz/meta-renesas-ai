@@ -417,9 +417,15 @@ fi
 download_source
 install_prop_libs
 configure_build
+
 if $BUILD; then
-	do_build
-	copy_output
+	read -p "Have licensing options been updated in the local.conf file?\n" -n 1 -r
+	if [[ $REPLY =~ ^[Yy]$ ]]
+	then
+		do_build
+		copy_output
+	else
+		echo "Please uncomment the LICENSE_FLAGS_WHITELIST to build the BSP\n"
 fi
 
 echo "#################################################################"
