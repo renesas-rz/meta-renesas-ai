@@ -392,9 +392,9 @@ clear
 case ${RZG_AI_BSP_VER} in
 *)
 	if [ ${FAMILY} == "rzg1" ]; then
-		RZG_BSP_VER="certified-linux-v2.1.8"
+		RZG_BSP_VER="certified-linux-v2.1.9"
 	elif [ ${FAMILY} == "rzg2" ]; then
-		RZG_BSP_VER="BSP-1.0.7"
+		RZG_BSP_VER="BSP-1.0.8"
 	elif [ ${FAMILY} == "rzg2l" ]; then
 		RZG_BSP_VER="2313d60eb75e5c86ce3e42ad378c8473f8e95c88"
 	fi
