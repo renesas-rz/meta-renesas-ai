@@ -4,8 +4,9 @@
 # The script supports building for the following devices:
 #   RZ/G1: iwg21m, iwg20m-g1m, iwg22m
 #   RZ/G2: hihope-rzg2h, hihope-rzg2m, hihope-rzg2n, ek874
+#   RZ/G2L: smarc-rzg2l
 #
-# This script has been tested on Ubuntu 16.04.
+# This script has been tested on Ubuntu 18.04.
 #
 # SPDX-License-Identifier: MIT
 # Copyright (C) 2020 Renesas Electronics Corp.
