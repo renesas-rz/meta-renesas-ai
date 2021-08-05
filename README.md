@@ -8,10 +8,6 @@ on the CIP Kernel:
 URI: **https://github.com/renesas-rz/meta-renesas.git**  
 tag: certified-linux-v2.1.9 (79bd2782cfb9ddc1760f3fea3d4fc258c20dc552)
 
-The meta-rzg1-gcc-linaro meta-layer should be used when including TensorFlow-lite
-v2.3+ as GCC v7.3 is required. Read *meta-rzg1-gcc-linaro/README.md* for more
-details.
-
 #### For RZ/G2 ####
 The layers should be used with the official Renesas RZ/G2 Yocto Poky BSP based
 on the CIP Kernel:  

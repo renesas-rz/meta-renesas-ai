@@ -75,24 +75,9 @@ while getopts ":cdf:l:o:p:h" opt; do
                 ;;
         f)
 		case "${OPTARG}" in
-		"armnn" | "onnxruntime" | "tensorflow-lite")
+		"armnn" | "onnxruntime" | "tensorflow-lite" | \
+		"benchmark-armnn+tfl" | "benchmark-onnx" | "benchmark-tflite")
 			FRAMEWORK="${OPTARG}"
-			BENCHMARK=false
-        	        ;;
-
-		"benchmark-armnn+tfl")
-			FRAMEWORK="armnn+tfl"
-			BENCHMARK=true
-			;;
-
-		"benchmark-onnx")
-			FRAMEWORK="onnx"
-			BENCHMARK=true
-			;;
-
-		"benchmark-tflite")
-			FRAMEWORK="tflite"
-			BENCHMARK=true
 			;;
 
 		*)
@@ -344,6 +329,28 @@ configure_build () {
 	# This will create and take us to the $WORK_DIR/build directory
 	source poky/oe-init-build-env
 
+	# Remove benchmark from framework name
+	case "${FRAMEWORK}" in
+		"armnn" | "onnxruntime" | "tensorflow-lite")
+			BENCHMARK=false
+			;;
+
+		"benchmark-armnn+tfl")
+			FRAMEWORK="armnn+tfl"
+			BENCHMARK=true
+			;;
+
+		"benchmark-onnx")
+			FRAMEWORK="onnx"
+			BENCHMARK=true
+			;;
+
+		"benchmark-tflite")
+			FRAMEWORK="tflite"
+			BENCHMARK=true
+			;;
+	esac
+
 	if ${BENCHMARK}; then
 		cp $WORK_DIR/meta-renesas-ai/meta-benchmark/templates/${FRAMEWORK}/${PLATFORM}/*.conf ./conf/
 	else
@@ -420,13 +427,14 @@ install_prop_libs
 configure_build
 
 if $BUILD; then
-	read -p "Have licensing options been updated in the local.conf file?\n" -n 1 -r
+	echo -ne "\nHave licensing options been updated in the local.conf file? "; read
 	if [[ $REPLY =~ ^[Yy]$ ]]
 	then
 		do_build
 		copy_output
 	else
-		echo "Please uncomment the LICENSE_FLAGS_WHITELIST to build the BSP\n"
+		echo "Please uncomment the LICENSE_FLAGS_WHITELIST to build the BSP"
+	fi
 fi
 
 echo "#################################################################"
