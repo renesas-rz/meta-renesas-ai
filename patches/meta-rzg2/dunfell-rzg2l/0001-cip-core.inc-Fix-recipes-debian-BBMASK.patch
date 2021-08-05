@@ -1,6 +1,6 @@
-From f58975b7f3ec131b35f52b551a145807dcf02310 Mon Sep 17 00:00:00 2001
+From 849ecebe7f0fdce277a55cc028b0a0eee228716f Mon Sep 17 00:00:00 2001
 From: Chris Paterson <chris.paterson2@renesas.com>
-Date: Thu, 3 Jun 2021 15:16:09 +0100
+Date: Thu, 5 Aug 2021 22:51:04 +0100
 Subject: [PATCH] cip-core.inc: Fix recipes-debian BBMASK
 
 We need to include the trailing slash if denoting an entire directory is
@@ -16,12 +16,11 @@ Signed-off-by: Chris Paterson <chris.paterson2@renesas.com>
  1 file changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/conf/machine/include/cip-core.inc b/conf/machine/include/cip-core.inc
-index 0b0eb460935d..eade26776443 100644
+index 9469806af42c..025fcb5cf72e 100644
 --- a/conf/machine/include/cip-core.inc
 +++ b/conf/machine/include/cip-core.inc
-@@ -1,9 +1,9 @@
- DEBIAN_BASED = "${@'debian' if '${CIP_CORE}'=='1' else 'non_debian'}"
- #DEBIAN_BASED="${@base_conditional('CIP_CORE', '1', 'debian', 'non_debian', d)}"
+@@ -1,8 +1,8 @@
+ DEBIAN_BASED = "${@bb.utils.contains('CIP_CORE', '1', 'debian', 'non_debian', d)}"
 -#DEBIAN_BASED = "non_debian" 
 +#DEBIAN_BASED = "non_debian"
  OVERRIDES .= ":${DEBIAN_BASED}"
@@ -29,9 +28,9 @@ index 0b0eb460935d..eade26776443 100644
 -BBMASK_non_debian += " recipes-debian"
 +BBMASK_non_debian += "recipes-debian/"
  
- # Select gcc,gdb, python3 debian version
- GCCVERSION_debian = "8.3.0"
-@@ -12,7 +12,7 @@ SDKGCCVERSION_debian = "${GCCVERSION}"
+ BBMASK_debian += " perl_debian"
+ 
+@@ -13,7 +13,7 @@ SDKGCCVERSION_debian = "${GCCVERSION}"
  GLIBCVERSION_debian = "2.28%"
  PREFERRED_VERSION_glibc_debian = "${GLIBCVERSION}"
  PREFERRED_VERSION_nativesdk-glibc_debian = "${GLIBCVERSION}"
@@ -41,5 +40,5 @@ index 0b0eb460935d..eade26776443 100644
  BINUVERSION_debian = "2.31.%"
  PREFERRED_VERSION_nativesdk-binutils_debian = "${BINUVERSION}"
 -- 
-2.31.0
+2.32.0
 

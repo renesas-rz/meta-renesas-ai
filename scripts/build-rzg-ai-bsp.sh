@@ -277,6 +277,16 @@ download_source () {
 			cc6fc6b1641ab23089c1e3bba11e0c6394f0867c
 
 		update_git_repo \
+			meta-gplv2 \
+			http://git.yoctoproject.org/cgit.cgi/meta-gplv2 \
+			60b251c25ba87e946a0ca4cdc8d17b1cb09292ac
+
+		update_git_repo \
+			meta-qt5 \
+			https://github.com/meta-qt5/meta-qt5.git \
+			c1b0c9f546289b1592d7a895640de103723a0305
+
+		update_git_repo \
 			meta-rzg2 \
 			https://github.com/renesas-rz/meta-rzg2.git \
 			${RZG_BSP_VER}
@@ -285,6 +295,8 @@ download_source () {
 			meta-renesas-ai \
 			https://github.com/renesas-rz/meta-renesas-ai.git \
 			${RZG_AI_BSP_VER}
+
+		cd meta-rzg2; git am ../meta-renesas-ai/patches/meta-rzg2/dunfell-rzg2l/0001-cip-core.inc-Fix-recipes-debian-BBMASK.patch; cd -
 	fi
 }
 
@@ -318,6 +330,13 @@ install_prop_libs () {
 		pushd ${WORK_DIR}/meta-rzg2
 		sh docs/sample/copyscript/copy_proprietary_softwares.sh \
 			-f ${PROP_DIR}
+		popd
+	elif [ ${FAMILY} == "rzg2l" ]; then
+		pushd ${PROP_DIR}
+		unzip RTK0EF0045Z13001ZJ-*.zip
+		pushd RTK0EF0045Z13001ZJ-*/proprietary
+		./copy_gfx_mmp.sh ${WORK_DIR}/meta-rzg2
+		popd
 		popd
 	fi
 }
@@ -367,7 +386,7 @@ do_build () {
 	elif [ ${FAMILY} == "rzg2" ]; then
 		bitbake core-image-qt
 	elif [ ${FAMILY} == "rzg2l" ]; then
-		bitbake core-image-minimal
+		bitbake core-image-qt
 	fi
 }
 
@@ -404,7 +423,7 @@ case ${RZG_AI_BSP_VER} in
 	elif [ ${FAMILY} == "rzg2" ]; then
 		RZG_BSP_VER="BSP-1.0.8"
 	elif [ ${FAMILY} == "rzg2l" ]; then
-		RZG_BSP_VER="2313d60eb75e5c86ce3e42ad378c8473f8e95c88"
+		RZG_BSP_VER="rzg2l_bsp_v1.1-update1"
 	fi
 	;;
 esac

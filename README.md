@@ -17,7 +17,7 @@ tag: BSP-1.0.8 (b11b9471c31d8231a43c7eeeed8702e9873841ae)
 #### For RZ/G2L ####
 The layers should be used with the official Renesas RZ/G2L Yocto Poky BSP:  
 URI: **https://github.com/renesas-rz/meta-rzg2/tree/dunfell/rzg2l**  
-commit: 2313d60eb75e5c86ce3e42ad378c8473f8e95c88
+tag: rzg2l_bsp_v1.1-update1 (61f6dcb61ac89b92c93a9d8627b837f59cf307d6)
 
 For each AI tool, please refer to **meta-${AI\_TOOL\_NAME}/README.md**. For
 example:  
