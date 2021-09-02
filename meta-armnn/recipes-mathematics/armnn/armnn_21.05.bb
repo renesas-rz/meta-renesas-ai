@@ -194,6 +194,11 @@ do_install_append() {
 
 	chrpath -d ${D}${bindir}/${PN}-${PV}/examples/DelegateUnitTests/*
 
+	install -d ${D}${includedir}/delegate/
+	install -m 0555 \
+		${S}/delegate/include/* \
+		${D}${includedir}/delegate/
+
 	install -m 0555 \
 		${WORKDIR}/build/tests/RenesasSample-Armnn \
 		${D}${bindir}/${PN}-${PV}/examples/RenesasSample-Armnn/
@@ -307,6 +312,7 @@ FILES_${PN}-dev = " \
 	${includedir}/armnnDeserializer \
 	${includedir}/armnnSerializer \
 	${includedir}/armnnUtils \
+	${includedir}/delegate \
 "
 
 FILES_${PN}-dbg = " \
