@@ -297,6 +297,8 @@ download_source () {
 			${RZG_AI_BSP_VER}
 
 		cd meta-rzg2; git am ../meta-renesas-ai/patches/meta-rzg2/dunfell-rzg2l/0001-cip-core.inc-Fix-recipes-debian-BBMASK.patch; cd -
+		cd meta-rzg2; git am ../meta-renesas-ai/patches/meta-rzg2/dunfell-rzg2l/0001-Enable-RZ-G2L-Qt-SDK-builds.patch; cd -
+		cd meta-rzg2; git am ../meta-renesas-ai/patches/meta-rzg2/dunfell-rzg2l/0001-firmware-pack-fix-tf-a-binary-file-not-found.patch; cd -
 	fi
 }
 
@@ -333,10 +335,10 @@ install_prop_libs () {
 		popd
 	elif [ ${FAMILY} == "rzg2l" ]; then
 		pushd ${PROP_DIR}
-		unzip RTK0EF0045Z13001ZJ-*.zip
-		pushd RTK0EF0045Z13001ZJ-*/proprietary
-		./copy_gfx_mmp.sh ${WORK_DIR}/meta-rzg2
-		popd
+		unzip RTK0EF0045Z13001ZJ-v0.8_EN.zip
+		tar -xf RTK0EF0045Z13001ZJ-v0.8_EN/meta-rz-features.tar.gz -C ${WORK_DIR}
+		unzip RTK0EF0045Z15001ZJ-v0.51_EN.zip
+		tar -xf RTK0EF0045Z15001ZJ-v0.51_EN/meta-rz-features.tar.gz -C ${WORK_DIR}
 		popd
 	fi
 }
@@ -423,7 +425,7 @@ case ${RZG_AI_BSP_VER} in
 	elif [ ${FAMILY} == "rzg2" ]; then
 		RZG_BSP_VER="BSP-1.0.8"
 	elif [ ${FAMILY} == "rzg2l" ]; then
-		RZG_BSP_VER="rzg2l_bsp_v1.1-update1"
+		RZG_BSP_VER="rzg2l_bsp_v1.3"
 	fi
 	;;
 esac

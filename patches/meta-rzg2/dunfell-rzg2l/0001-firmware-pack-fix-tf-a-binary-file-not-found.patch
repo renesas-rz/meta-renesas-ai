@@ -1,0 +1,77 @@
+From 8c70fb75b8225ea5ee9ecdf99914d4864abde6fe Mon Sep 17 00:00:00 2001
+From: Nhan Nguyen <nhan.nguyen.yb@renesas.com>
+Date: Tue, 12 Oct 2021 16:17:49 +0700
+Subject: [PATCH] firmware-pack: fix tf-a binary file not found
+
+Signed-off-by: Nhan Nguyen <nhan.nguyen.yb@renesas.com>
+---
+ recipes-bsp/firmware-pack/firmware-pack.bb         | 12 ++++++------
+ .../trusted-firmware-a/trusted-firmware-a.inc      | 14 ++++++++++++++
+ 2 files changed, 20 insertions(+), 6 deletions(-)
+
+diff --git a/recipes-bsp/firmware-pack/firmware-pack.bb b/recipes-bsp/firmware-pack/firmware-pack.bb
+index 6a8848ac..86666fbb 100644
+--- a/recipes-bsp/firmware-pack/firmware-pack.bb
++++ b/recipes-bsp/firmware-pack/firmware-pack.bb
+@@ -15,20 +15,20 @@ do_configure[noexec] = "1"
+ do_compile () {
+ 
+ 	# Create bl2_bp.bin
+-	bootparameter ${DEPLOY_DIR_IMAGE}/bl2-${MACHINE}.bin bl2_bp.bin
+-	cat ${DEPLOY_DIR_IMAGE}/bl2-${MACHINE}.bin >> bl2_bp.bin
++	bootparameter ${WORKDIR}/recipe-sysroot/boot/bl2-${MACHINE}.bin bl2_bp.bin
++	cat ${WORKDIR}/recipe-sysroot/boot/bl2-${MACHINE}.bin >> bl2_bp.bin
+ 
+ 	# Create fip.bin
+-	fiptool create --align 16 --soc-fw ${DEPLOY_DIR_IMAGE}/bl31-${MACHINE}.bin --nt-fw ${DEPLOY_DIR_IMAGE}/u-boot-${MACHINE}.bin fip.bin
++	fiptool create --align 16 --soc-fw ${WORKDIR}/recipe-sysroot/boot/bl31-${MACHINE}.bin --nt-fw ${WORKDIR}/recipe-sysroot/boot/u-boot.bin fip.bin
+ 
+ 	# Convert to srec
+ 	objcopy -O srec --adjust-vma=0x00011E00 --srec-forceS3 -I binary bl2_bp.bin bl2_bp.srec
+ 	objcopy -I binary -O srec --adjust-vma=0x0000 --srec-forceS3 fip.bin fip.srec
+ 
+         if [ "${PMIC_SUPPORT}" = "1" ]; then
+-		bootparameter ${DEPLOY_DIR_IMAGE}/bl2-${MACHINE}_pmic.bin bl2_bp_pmic.bin
+-		cat ${DEPLOY_DIR_IMAGE}/bl2-${MACHINE}_pmic.bin >> bl2_bp_pmic.bin
+-		fiptool create --align 16 --soc-fw ${DEPLOY_DIR_IMAGE}/bl31-${MACHINE}_pmic.bin --nt-fw ${DEPLOY_DIR_IMAGE}/u-boot-${MACHINE}.bin fip_pmic.bin
++		bootparameter ${WORKDIR}/recipe-sysroot/boot/bl2-${MACHINE}_pmic.bin bl2_bp_pmic.bin
++		cat ${WORKDIR}/recipe-sysroot/boot/bl2-${MACHINE}_pmic.bin >> bl2_bp_pmic.bin
++		fiptool create --align 16 --soc-fw ${WORKDIR}/recipe-sysroot/boot/bl31-${MACHINE}_pmic.bin --nt-fw ${WORKDIR}/recipe-sysroot/boot/u-boot.bin fip_pmic.bin
+ 		objcopy -O srec --adjust-vma=0x00011E00 --srec-forceS3 -I binary bl2_bp_pmic.bin bl2_bp_pmic.srec
+ 		objcopy -I binary -O srec --adjust-vma=0x0000 --srec-forceS3 fip_pmic.bin fip_pmic.srec
+ 	fi
+diff --git a/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc b/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc
+index b7a4f35a..afcc6c33 100644
+--- a/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc
++++ b/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc
+@@ -48,6 +48,9 @@ LD[unexport] = "1"
+ # No configure
+ do_configure[noexec] = "1"
+ 
++FILES_${PN} = "/boot "
++SYSROOT_DIRS += "/boot"
++
+ do_compile () {
+ 	# Build TF-A
+ 	oe_runmake PLAT=${PLATFORM} ${EXTRA_FLAGS} bl2 bl31
+@@ -57,6 +60,17 @@ do_compile () {
+ 	fi
+ }
+ 
++do_install () { 
++	install -d ${D}/boot 
++	install -m 644 ${S}/build/${PLATFORM}/release/bl2.bin ${D}/boot/bl2-${MACHINE}.bin
++	install -m 644 ${S}/build/${PLATFORM}/release/bl31.bin ${D}/boot/bl31-${MACHINE}.bin
++
++	if [ "${PMIC_SUPPORT}" = "1" ]; then
++		install -m 0644 ${PMIC_BUILD_DIR}/bl2.bin ${D}/boot/bl2-${MACHINE}_pmic.bin
++		install -m 0644 ${PMIC_BUILD_DIR}/bl31.bin ${D}/boot/bl31-${MACHINE}_pmic.bin
++	fi
++}
++
+ do_deploy () {
+ 	# Create deploy folder
+ 	install -d ${DEPLOYDIR}
+-- 
+2.25.1
+
