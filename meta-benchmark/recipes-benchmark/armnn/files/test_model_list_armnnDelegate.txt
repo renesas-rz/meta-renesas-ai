@@ -75,8 +75,8 @@ Mobile_Net_V2_Model/mobilenet_v2_0.35_160.tflite float32
 Mobile_Net_V2_Model/mobilenet_v2_0.35_128.tflite float32
 Mobile_Net_V2_Model/mobilenet_v2_0.35_96.tflite float32
 Mobile_Net_V3_Model/v3-large_224_1.0_float.tflite float32
-Mobile_Net_V3_Model/v3-large_224_1.0_uint8.tflite float32
+Mobile_Net_V3_Model/v3-large_224_1.0_uint8.tflite uint8
 Mobile_Net_V3_Model/v3-large_224_0.75_float.tflite float32
 Mobile_Net_V3_Model/v3-small_224_1.0_float.tflite float32
-Mobile_Net_V3_Model/v3-small_224_1.0_uint8.tflite float32
+Mobile_Net_V3_Model/v3-small_224_1.0_uint8.tflite uint8
 Mobile_Net_V3_Model/v3-small_224_0.75_float.tflite float32
