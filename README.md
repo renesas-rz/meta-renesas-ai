@@ -2,19 +2,19 @@
 This OpenEmbedded/Yocto layer collector adds AI tools support to Renesas RZ/G1
 and RZ/G2 platforms.
 
-#### For RZ/G1 ####
+#### For RZ/G1 family ####
 The layers should be used with the official Renesas RZ/G1 Yocto Poky BSP based
 on the CIP Kernel:  
 URI: **https://github.com/renesas-rz/meta-renesas.git**  
 tag: certified-linux-v2.1.9 (79bd2782cfb9ddc1760f3fea3d4fc258c20dc552)
 
-#### For RZ/G2 ####
+#### For RZ/G2 family ####
 The layers should be used with the official Renesas RZ/G2 Yocto Poky BSP based
 on the CIP Kernel:  
 URI: **https://github.com/renesas-rz/meta-rzg2.git**  
 tag: BSP-1.0.8 (b11b9471c31d8231a43c7eeeed8702e9873841ae)
 
-#### For RZ/G2L ####
+#### For RZ/G2L family ####
 The layers should be used with the official Renesas RZ/G2L Yocto Poky BSP:  
 URI: **https://github.com/renesas-rz/meta-rzg2/tree/dunfell/rzg2l**  
 tag: rzg2l_bsp_v1.3-update1 (de2774adf5a0852b03e8842aec794f2825ffc11b)
@@ -50,16 +50,17 @@ in the [Licensing](#licensing) section.
 
 ### Supported Embedded Platforms ###
 
-| SoC            | Platform                 |
-| :------------- | :----------------------- |
-| Renesas RZ/G2H | HopeRun hihope-rzg2h     |
-| Renesas RZ/G2M | HopeRun hihope-rzg2m     |
-| Renesas RZ/G2N | HopeRun hihope-rzg2n     |
-| Renesas RZ/G2E | Silicon Linux ek874      |
-| Renesas RZ/G2L | Renesas rzg2l-smarc evk  |
-| Renesas RZ/G1H | iWave Systems iwg21m     |
-| Renesas RZ/G1M | iWave Systems iwg20m-g1m |
-| Renesas RZ/G1E | iWave Systems iwg22m     |
+| SoC             | Platform                 |
+| :-------------- | :----------------------- |
+| Renesas RZ/G2H  | HopeRun hihope-rzg2h     |
+| Renesas RZ/G2M  | HopeRun hihope-rzg2m     |
+| Renesas RZ/G2N  | HopeRun hihope-rzg2n     |
+| Renesas RZ/G2E  | Silicon Linux ek874      |
+| Renesas RZ/G2L  | Renesas smarc-rzg2l evk  |
+| Renesas RZ/G2LC | Renesas smarc-rzg2lc evk |
+| Renesas RZ/G1H  | iWave Systems iwg21m     |
+| Renesas RZ/G1M  | iWave Systems iwg20m-g1m |
+| Renesas RZ/G1E  | iWave Systems iwg22m     |
 
 ### Build Script ###
 A simple build script has been created to manage the build process.  
@@ -108,7 +109,8 @@ cd meta-rzg2
 git am ../meta-renesas-ai/patches/meta-rzg2/dunfell-rzg2l/0001-Enable-RZ-G2L-Qt-SDK-builds.patch
 ```
 
-This only needs to be done when building for the *smarc-rzg2l* platform.
+This only needs to be done when building for the *smarc-rzg2l* and
+*smarc-rzg2lc* platforms.
 
 ## LICENSING ##
 
@@ -120,7 +122,7 @@ The configuration files found under:
 meta-*/templates/*/local.conf
 ```
 show how to whitelist the commercial license flag for graphics packages.
-This is needed to add full video encoding/decoding support to the BSP. 
+This is needed to add full video encoding/decoding support to the BSP.  
 For example for the RZ/G1H:
 ```
 LICENSE_FLAGS_WHITELIST = "commercial_gstreamer1.0-libav commercial_gstreamer1.0-omx"

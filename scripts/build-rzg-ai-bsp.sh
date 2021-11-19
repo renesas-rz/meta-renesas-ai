@@ -4,7 +4,7 @@
 # The script supports building for the following devices:
 #   RZ/G1: iwg21m, iwg20m-g1m, iwg22m
 #   RZ/G2: hihope-rzg2h, hihope-rzg2m, hihope-rzg2n, ek874
-#   RZ/G2L: smarc-rzg2l
+#   RZ/G2L: smarc-rzg2l, smarc-rzg2lc
 #
 # This script has been tested on Ubuntu 18.04.
 #
@@ -58,7 +58,8 @@ print_help () {
 	                    By default ${OUTPUT_DIR} will be used.
 	 -p <platform>      Platform to build for. Choose from:
 	                    iwg21m, iwg20m-g1m, iwg22m, hihope-rzg2h,
-	                    hihope-rzg2m, hihope-rzg2n, ek874, smarc-rzg2l.
+	                    hihope-rzg2m, hihope-rzg2n, ek874, smarc-rzg2l,
+	                    smarc-rzg2lc.
 
 	EOF
 }
@@ -115,7 +116,7 @@ while getopts ":cdf:l:o:p:h" opt; do
 			FAMILY="rzg2"
         	        ;;
 
-		"smarc-rzg2l")
+		"smarc-rzg2l" | "smarc-rzg2lc")
 			PLATFORM="${OPTARG}"
 			FAMILY="rzg2l"
 			;;
