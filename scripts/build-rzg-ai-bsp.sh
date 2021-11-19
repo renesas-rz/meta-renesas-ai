@@ -296,9 +296,7 @@ download_source () {
 			https://github.com/renesas-rz/meta-renesas-ai.git \
 			${RZG_AI_BSP_VER}
 
-		cd meta-rzg2; git am ../meta-renesas-ai/patches/meta-rzg2/dunfell-rzg2l/0001-cip-core.inc-Fix-recipes-debian-BBMASK.patch; cd -
 		cd meta-rzg2; git am ../meta-renesas-ai/patches/meta-rzg2/dunfell-rzg2l/0001-Enable-RZ-G2L-Qt-SDK-builds.patch; cd -
-		cd meta-rzg2; git am ../meta-renesas-ai/patches/meta-rzg2/dunfell-rzg2l/0001-firmware-pack-fix-tf-a-binary-file-not-found.patch; cd -
 	fi
 }
 
@@ -425,7 +423,7 @@ case ${RZG_AI_BSP_VER} in
 	elif [ ${FAMILY} == "rzg2" ]; then
 		RZG_BSP_VER="BSP-1.0.8"
 	elif [ ${FAMILY} == "rzg2l" ]; then
-		RZG_BSP_VER="rzg2l_bsp_v1.3"
+		RZG_BSP_VER="rzg2l_bsp_v1.3-update1"
 	fi
 	;;
 esac

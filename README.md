@@ -17,7 +17,7 @@ tag: BSP-1.0.8 (b11b9471c31d8231a43c7eeeed8702e9873841ae)
 #### For RZ/G2L ####
 The layers should be used with the official Renesas RZ/G2L Yocto Poky BSP:  
 URI: **https://github.com/renesas-rz/meta-rzg2/tree/dunfell/rzg2l**  
-tag: rzg2l_bsp_v1.3 (f3cc7301380d320f18b9113ec75f960d5007eb43)
+tag: rzg2l_bsp_v1.3-update1 (de2774adf5a0852b03e8842aec794f2825ffc11b)
 
 For each AI tool, please refer to **meta-${AI\_TOOL\_NAME}/README.md**. For
 example:  
@@ -97,15 +97,15 @@ If needed, the size of the swap file can be set (in MB) in local.conf:
 SWAP_SIZE = "512"
 ```
 
-**meta-rzg2 patch for RZ/G2L BSP**  
-There is a bug in the RZ/G2L BSP where a BBMASK for the recipes-debian directory
-isn't formatted correctly.
+**meta-rzg2 patches for RZ/G2L BSP**  
+There is a bug when trying to build the SDK for core-image-qt images.
 
-This is fixed by applying *patches/meta-rzg2/dunfell-rzg2l/0001-cip-core.inc-Fix-recipes-debian-BBMASK.patch*.
+This is fixed by applying *patches/meta-rzg2/dunfell-rzg2l/0001-Enable-RZ-G2L-Qt-SDK-builds.patch*.
+
 
 ```
 cd meta-rzg2
-git am ../meta-renesas-ai/patches/meta-rzg2/dunfell-rzg2l/0001-cip-core.inc-Fix-recipes-debian-BBMASK.patch
+git am ../meta-renesas-ai/patches/meta-rzg2/dunfell-rzg2l/0001-Enable-RZ-G2L-Qt-SDK-builds.patch
 ```
 
 This only needs to be done when building for the *smarc-rzg2l* platform.
