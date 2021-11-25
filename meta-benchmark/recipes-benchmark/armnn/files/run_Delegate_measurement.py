@@ -25,7 +25,7 @@ import numpy as np
 def main():
    print("ArmNN TfLite Delegate Test App")
 
-   if len(sys.argv) != 7 and len(sys.argv) != 8:
+   if len(sys.argv) != 8 and len(sys.argv) != 9:
        print("Invalid parameters...")
        print("Expected parameters are:")
        print("1) Model List File    - A .txt file listing each model to be tested")
@@ -34,8 +34,9 @@ def main():
        print("4) Number of Threads  - The number of threads to use")
        print("5) Delegate selection - The ArmNN delegate to use [none|tflite]")
        print("6) ArmNN Log Level    - The level to set ArmNN to use [trace|debug|info|warning|error]")
-       print("7) Benchmark          - Optionally add \"benchmark\" to output benchmark results in a parsable format")
-       print("Example: python run_Delegate_measurement.py test_model_list_armnnDelegate.txt /home/root/models/tensorflowlite/ 30 2 tflite warning benchmark")
+       print("7) Compute            - The ArmNN backend to use [CpuRef|CpuAcc|GpuAcc]")
+       print("8) Benchmark          - Optionally add \"benchmark\" to output benchmark results in a parsable format")
+       print("Example: python run_Delegate_measurement.py test_model_list_armnnDelegate.txt /home/root/models/tensorflowlite/ 30 2 tflite warning GpuAcc benchmark")
        sys.exit(1)
 
    filepath = sys.argv[1]
@@ -53,9 +54,10 @@ def main():
    number_of_cores = int(sys.argv[4])
    armnnDelegate = sys.argv[5]
    armnnLogLevel = sys.argv[6]
+   armnnCompute = sys.argv[7]
 
-   if len(sys.argv) == 8:
-     benchmark = sys.argv[7].lower() == 'benchmark'
+   if len(sys.argv) == 9:
+     benchmark = sys.argv[8].lower() == 'benchmark'
    else:
      benchmark = False
 
@@ -70,20 +72,19 @@ def main():
                    print("Invalid line: " + line)
                    sys.exit(1)
 
-               run_delegate_benchmark(model_details[0], base_directory_path, './usr/bin/armnn/examples/tensorflow-lite/models/labels.txt', number_of_cores, number_of_iteration, list_tmp, list, armnnDelegate, armnnLogLevel)
+               run_delegate_benchmark(model_details[0], base_directory_path, './usr/bin/armnn/examples/tensorflow-lite/models/labels.txt', number_of_cores, number_of_iteration, list_tmp, list, armnnDelegate, armnnLogLevel, armnnCompute)
 
                print("Average Time" + " at Model " + model_details[0] + str(Average(list_tmp)) + " ms ")
                print("Standard Deviation" + " at Model " + model_details[0] + str(Average(list)))
-               print("\n")
 
                if benchmark == True:
-                   print("AI_BENCHMARK_MARKER,Arm NN SDK v21.05 Delegate (" + armnnDelegate + ")," + model_details[0].rstrip().rsplit('/', 1)[1] +  "," +  model_details[1] + "," + str(Average(list_tmp)) + "," + str(Average(list)) + ",")
+                   print("AI_BENCHMARK_MARKER,Arm NN SDK v21.05(" + armnnCompute + ") Delegate(" + armnnDelegate + ")," + model_details[0].rstrip().rsplit('/', 1)[1] +  "," +  model_details[1] + "," + str(Average(list_tmp)) + "," + str(Average(list)) + ",")
 
 def Average(lst):
     return sum(lst) / len(lst)
 
-def run_delegate_benchmark(model_file_name, base_directory, label_file_name, number_of_threads, times_to_run, list, list_dev, armnnDelegate, armnnLogLevel):
-    command = "/usr/bin/armnnDelegateBenchmark/armnnTFLiteDelegateBenchmark -i /usr/bin/armnn-21.05/examples/grace_hopper.bmp -c %s -l %s -t %d -m %s -d %s -n %s" % (times_to_run, label_file_name, number_of_threads, base_directory+model_file_name.rstrip(), armnnDelegate, armnnLogLevel)
+def run_delegate_benchmark(model_file_name, base_directory, label_file_name, number_of_threads, times_to_run, list, list_dev, armnnDelegate, armnnLogLevel, armnnCompute):
+    command = "/usr/bin/armnnDelegateBenchmark/armnnTFLiteDelegateBenchmark -i /usr/bin/armnn-21.05/examples/grace_hopper.bmp -c %s -l %s -t %d -m %s -d %s -n %s -r %s" % (times_to_run, label_file_name, number_of_threads, base_directory+model_file_name.rstrip(), armnnDelegate, armnnLogLevel, armnnCompute)
 
     for line in run_command(command):
         count = 0

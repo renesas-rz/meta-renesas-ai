@@ -204,7 +204,8 @@ void printInterpretatorData(std::unique_ptr<Interpreter> & interpreter, Settings
 	}
 }
 
-void RunInference(Settings* settings, armnn::LogSeverity armnnLogLevel, DelegateType selectedDelegate)
+void RunInference(Settings* settings, armnn::LogSeverity armnnLogLevel,
+		  DelegateType selectedDelegate, std::vector<armnn::BackendId> backend)
 {
 	ops::builtin::BuiltinOpResolver resolver;
 	std::unique_ptr<FlatBufferModel> model;
@@ -237,8 +238,7 @@ void RunInference(Settings* settings, armnn::LogSeverity armnnLogLevel, Delegate
 
 	/* Setup the delegate */
 	if(selectedDelegate == ArmnnTfLite) {
-		std::vector<armnn::BackendId> backends = {armnn::Compute::CpuAcc};
-		armnnDelegate::DelegateOptions delegateOptions(backends);
+		armnnDelegate::DelegateOptions delegateOptions(backend);
 		std::unique_ptr<TfLiteDelegate, decltype(&armnnDelegate::TfLiteArmnnDelegateDelete)>
 			armnnTfLiteDelegate(armnnDelegate::TfLiteArmnnDelegateCreate(delegateOptions),
 			armnnDelegate::TfLiteArmnnDelegateDelete);
@@ -314,6 +314,7 @@ void display_usage()
 	LOG(INFO) << "armnnDelegateBenchmark\n"
 	<< "--accelerated, -a: [0|1], use Android NNAPI or not\n"
 	<< "--count, -c: loop interpreter->Invoke() for certain times\n"
+	<< "--compute, -r: [CpuAcc|CpuRef|GpuAcc]\n"
 	<< "--delegate, -d:[none|tflite] delegate selection\n"
 	<< "--input_mean, -b: input mean\n"
 	<< "--input_std, -s: input standard deviation\n"
@@ -332,6 +333,7 @@ int Main(int argc, char** argv)
 	Settings settings;
 	armnn::LogSeverity armnnLogLevel = armnn::LogSeverity::Warning;
 	DelegateType selectedDelegate = ArmnnTfLite;
+	std::vector<armnn::BackendId> backend = {armnn::Compute::CpuAcc};
 
 	while (1) {
 		int arguement;
@@ -340,6 +342,7 @@ int Main(int argc, char** argv)
 		static struct option long_options[] = {
 			{"accelerated", required_argument, nullptr, 'a'},
 			{"count", required_argument, nullptr, 'c'},
+			{"compute", required_argument, nullptr, 'r'},
 			{"verbose", required_argument, nullptr, 'v'},
 			{"image", required_argument, nullptr, 'i'},
 			{"labels", required_argument, nullptr, 'l'},
@@ -353,7 +356,7 @@ int Main(int argc, char** argv)
 			{nullptr, 0, nullptr, 0}
 		};
 
-		arguement = getopt_long(argc, argv, "a:b:c:d:f:i:l:m:n:p:s:t:v:",
+		arguement = getopt_long(argc, argv, "a:b:c:d:f:i:l:m:n:p:r:s:t:v:",
 					long_options, &option_index);
 
 		/* Detect the end of the options. */
@@ -397,6 +400,12 @@ int Main(int argc, char** argv)
 		case 'p':
 			settings.profiling = strtol(optarg, nullptr, 10);
 		break;
+		case 'r':
+			if(strstr(optarg, "CpuRef"))
+				backend = {armnn::Compute::CpuRef};
+			else if (strstr(optarg, "GpuAcc"))
+				backend = {armnn::Compute::GpuAcc};
+		break;
 		case 's':
 			settings.input_std = strtod(optarg, nullptr);
 		break;
@@ -424,7 +433,7 @@ int Main(int argc, char** argv)
 	/* Print to standard output, including debug, up to specified level */
 	armnn::ConfigureLogging(true, true, armnnLogLevel);
 
-	RunInference(&settings, armnnLogLevel, selectedDelegate);
+	RunInference(&settings, armnnLogLevel, selectedDelegate, backend);
 	return 0;
 }
 
