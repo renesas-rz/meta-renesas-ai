@@ -140,6 +140,9 @@ EXTRA_OECMAKE_append_aarch64=" \
 	-DPROTOBUF_LIBRARY_RELEASE=${STAGING_DIR_TARGET}/usr/lib64/libprotobuf.so.23.0.4 \
 "
 
+EXTRA_OECMAKE_append_smarc-rzg2l  = "-DARMCOMPUTECL=1"
+EXTRA_OECMAKE_append_smarc-rzg2lc = "-DARMCOMPUTECL=1"
+
 do_configure_prepend() {
 	cd ${WORKDIR}/tensorflow/
 
