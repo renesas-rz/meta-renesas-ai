@@ -17,6 +17,7 @@ SRCREV = "f7399fd616cc8ccedfae668da3023e589a7ef558"
 SRC_URI = " \
 	git://github.com/ARM-software/ComputeLibrary.git \
 	file://0001-Add-support-for-building-arm-and-aarch64-CL-with-Sco.patch \
+	file://0001-Add-code-to-detect-Mali-TM-G31.patch \
 "
 
 COMPATIBLE_MACHINE = "(iwg20m-g1m|iwg21m|iwg22m|hihope-rzg2h|hihope-rzg2m|hihope-rzg2n|ek874|smarc-rzg2l|smarc-rzg2lc)"
@@ -32,6 +33,10 @@ OESCONS_COMMON_FLAG = " extra_cxx_flags="${TOOLCHAIN_OPTIONS}" benchmark_tests=1
 
 EXTRA_OESCONS_arm = "arch=armv7a${OESCONS_COMMON_FLAG}"
 EXTRA_OESCONS_aarch64 = "arch=arm64-v8a${OESCONS_COMMON_FLAG}"
+
+# Override the platform generic opencl flag for the RZ/G2L
+OESCONS_COMMON_FLAG_append_smarc-rzg2l  = " opencl=1 embed_kernels=1"
+OESCONS_COMMON_FLAG_append_smarc-rzg2lc = " opencl=1 embed_kernels=1"
 
 do_install() {
 	CP_ARGS="-Prf --preserve=mode,timestamps --no-preserve=ownership"
