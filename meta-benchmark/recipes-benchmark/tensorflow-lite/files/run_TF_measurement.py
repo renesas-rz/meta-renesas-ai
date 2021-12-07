@@ -59,7 +59,7 @@ def main():
               print("\n")
 
               if benchmark == True:
-                  print("AI_BENCHMARK_MARKER,TensorFlow Lite v2.3.1," + model_details[0].rstrip() + "," +  model_details[1].strip() + "," + str(Average(list_tmp)) + "," + str(Average(list)) + ",")
+                  print("AI_BENCHMARK_MARKER,TensorFlow Lite v2.5.0," + model_details[0].rstrip() + "," +  model_details[1].strip() + "," + str(Average(list_tmp)) + "," + str(Average(list)) + ",")
 
 def Average(lst):
     return sum(lst) / len(lst)
