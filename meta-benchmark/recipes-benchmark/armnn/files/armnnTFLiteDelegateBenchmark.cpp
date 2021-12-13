@@ -204,8 +204,8 @@ void printInterpretatorData(std::unique_ptr<Interpreter> & interpreter, Settings
 	}
 }
 
-void RunInference(Settings* settings, armnn::LogSeverity armnnLogLevel,
-		  DelegateType selectedDelegate, std::vector<armnn::BackendId> backend)
+void RunInference(Settings* settings, DelegateType selectedDelegate,
+		  std::vector<armnn::BackendId> backend)
 {
 	ops::builtin::BuiltinOpResolver resolver;
 	std::unique_ptr<FlatBufferModel> model;
@@ -433,7 +433,7 @@ int Main(int argc, char** argv)
 	/* Print to standard output, including debug, up to specified level */
 	armnn::ConfigureLogging(true, true, armnnLogLevel);
 
-	RunInference(&settings, armnnLogLevel, selectedDelegate, backend);
+	RunInference(&settings, selectedDelegate, backend);
 	return 0;
 }
 
