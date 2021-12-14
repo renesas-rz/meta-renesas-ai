@@ -39,15 +39,11 @@ SRC_URI = " \
 	file://0001-Add-generic-Arm-NN-SDK-inference-framework-and-test-.patch \
 	file://0001-Do-not-use-the-CMAKE_FIND_ROOT_PATH-variable-when-lo.patch \
 	file://rsz_grace_hopper.csv \
-	git://github.com/tensorflow/tensorflow.git;name=tensorflow;branch=r2.3;subdir=${WORKDIR}/tensorflow;destsuffix=tensorflow \
 	gitsm://github.com/onnx/onnx.git;protocol=https;name=onnx;branch=rel-1.6.0;subdir=${WORKDIR}/onnx;destsuffix=onnx \
 "
 
-# v21.05
-SRCREV_armnn = "8a4bd6671d0106dfb788b8c9019f2f9646770f8d"
-
-# v2.3.1
-SRCREV_tensorflow = "fcc4b966f1265f466e82617020af93670141b009"
+# v21.11
+SRCREV_armnn = "5e9965cae1cc6162649910f423ebd86001fc1931"
 
 # v1.6.0
 SRCREV_onnx = "553df22c67bee5f0fe6599cff60f1afc6748c635"
@@ -64,16 +60,14 @@ SRC_URI[grace_hopper.sha256sum] = "a8ca6d734765703b09728ab47fe59f473d93ae3967fc2
 DEPENDS = " \
 	chrpath-replacement-native \
 	protobuf-native \
-	boost \
 	protobuf \
 	stb \
-	flatbuffers \
 	arm-compute-library \
 	vim-native \
 	tensorflow-lite \
 "
 
-RDEPENDS_${PN} += "arm-compute-library protobuf boost"
+RDEPENDS_${PN} += "arm-compute-library protobuf tensorflow-lite-staticdev python3-numpy"
 
 EXTRANATIVEPATH += "chrpath-native"
 
@@ -94,12 +88,11 @@ RDEPENDS_${PN}-onnx-dev += "${PN}-onnx"
 RDEPENDS_${PN}-examples += "${PN}"
 RDEPENDS_${PN}-examples-dbg += "${PN}"
 
-EXTRA_OECMAKE=" \
+EXTRA_OECMAKE= " \
 	-DARMCOMPUTE_ROOT=${STAGING_DIR_TARGET}/usr/share/arm-compute-library/ \
 	-DONNX_GENERATED_SOURCES=${WORKDIR}/onnx \
-	-DTF_LITE_GENERATED_PATH=${WORKDIR}/tensorflow/tensorflow/lite/schema/ \
+	-DTF_LITE_GENERATED_PATH=${STAGING_DIR_TARGET}/usr/include/tensorflow/lite/schema/ \
 	-DFLATBUFFERS_ROOT=${STAGING_DIR_TARGET}/usr/ \
-	-DBOOST_ROOT=${STAGING_DIR_TARGET}/usr/ \
 	-DFLATC_DIR=${STAGING_DIR_NATIVE}${prefix}/bin/ \
 	-DBUILD_TF_LITE_PARSER=1 \
 	-DBUILD_ONNX_PARSER=1 \
@@ -112,12 +105,17 @@ EXTRA_OECMAKE=" \
 	-DCMAKE_CXX_IMPLICIT_INCLUDE_DIRECTORIES=${STAGING_INCDIR} \
 	-DBUILD_ARMNN_TFLITE_DELEGATE=1 \
 	-DTfLite_INCLUDE_DIR=${STAGING_DIR_TARGET}/usr/include/tensorflow_lite/ \
-	-DTfLite_Schema_INCLUDE_PATH=${WORKDIR}/tensorflow/tensorflow/lite/schema/ \
-	-DCMAKE_CXX_STANDARD_LIBRARIES="-ldl" \
+	-DTfLite_Schema_INCLUDE_PATH=${STAGING_DIR_TARGET}/usr/include/tensorflow/lite/schema/ \
+	-DCMAKE_CXX_STANDARD_LIBRARIES="-ldl -fopenmp \
+	${STAGING_DIR_TARGET}/usr/lib64/libtensorflow-lite.a \
+	${STAGING_DIR_TARGET}/usr/lib64/libXNNPACK.a \
+	${STAGING_DIR_TARGET}/usr/lib64/libcpuinfo.a \
+	${STAGING_DIR_TARGET}/usr/lib64/libclog.a \
+	${STAGING_DIR_TARGET}/usr/lib64/libpthreadpool.a" \
 "
 
-EXTRA_OECMAKE_append_aarch64=" \
-	-DCMAKE_CXX_FLAGS="-I ${WORKDIR}/tensorflow/ -fopenmp" \
+EXTRA_OECMAKE_append_aarch64= " \
+	-DTFLITE_LIB_ROOT=${STAGING_DIR_TARGET}/usr/include/tensorflow/lite/ \
 	-DCMAKE_SYSROOT=${STAGING_DIR_TARGET} \
 	-DARMCOMPUTE_BUILD_DIR=${STAGING_DIR_TARGET}/usr/lib64/ \
 	-DTfLite_LIB=${STAGING_DIR_TARGET}/usr/lib64/libtensorflow-lite.a \
@@ -130,18 +128,12 @@ EXTRA_OECMAKE_append_smarc-rzg2l  = "-DARMCOMPUTECL=1"
 EXTRA_OECMAKE_append_smarc-rzg2lc = "-DARMCOMPUTECL=1"
 
 do_configure_prepend() {
-	cd ${WORKDIR}/tensorflow/
-
-	# Convert protobuf sources to C sources and install
-	${WORKDIR}/git/scripts/generate_tensorflow_protobuf.sh ${WORKDIR}/tensorflow/ ${STAGING_DIR_NATIVE}${prefix}
-
 	# Install sources + build artifacts as required by Arm NN
 	cd ${WORKDIR}/onnx/
 	${STAGING_DIR_NATIVE}${prefix}/bin/protoc ${WORKDIR}/onnx/onnx/onnx.proto \
                                                   --proto_path=${WORKDIR}/onnx \
                                                   --proto_path=${STAGING_DIR_NATIVE}${prefix}/include \
                                                   --cpp_out ${WORKDIR}/onnx
-	cd ${WORKDIR}/tensorflow/
 }
 
 do_install_append() {
@@ -199,12 +191,6 @@ do_install_append() {
 		${D}${bindir}/${PN}-${PV}/examples/ExecuteNetwork/
 
 	chrpath -d ${D}${bindir}/${PN}-${PV}/examples/ExecuteNetwork/*
-
-	install -d ${D}${includedir}/armnn-tensorflow-lite/schema
-
-	install -m 0644 \
-                ${WORKDIR}/tensorflow/tensorflow/lite/schema/schema.fbs \
-                ${D}${includedir}/armnn-tensorflow-lite/schema/
 
 	cd ${D}${bindir}
 	ln -sf ${PN}-${PV} ${PN}
