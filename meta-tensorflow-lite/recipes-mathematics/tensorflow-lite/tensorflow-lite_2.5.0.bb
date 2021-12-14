@@ -50,9 +50,8 @@ do_compile_prepend() {
 
 do_install() {
 	install -d ${D}${libdir}
-	cp -r \
-		${S}/tensorflow/lite/tools/make/gen/linux_${TARGET_ARCH}/lib/* \
-		${D}${libdir}
+	cp -r ${S}/tensorflow/lite/tools/make/gen/linux_${TARGET_ARCH}/lib/* \
+	      ${D}${libdir}
 
 	cd ${S}
 	find tensorflow/lite -name "*.h" | cpio -pdm ${D}${includedir}/
@@ -60,8 +59,7 @@ do_install() {
 
 	install -d ${D}${includedir}/tensorflow_lite
 	cd ${S}/tensorflow/lite
-	cp --parents \
-		$(find . -name "*.h*") \
+	cp --parents $(find . -name "*.h*") \
 		${D}${includedir}/tensorflow_lite
 
 	install -d ${D}${bindir}/${PN}-${PV}/examples
@@ -77,26 +75,18 @@ do_install() {
         install -m 0555 \
                 ${S}/tensorflow/lite/tools/make/gen/linux_${TARGET_ARCH}/bin/benchmark_model \
                 ${D}${bindir}/${PN}-${PV}/examples
+
 	cd ${D}${bindir}
 	ln -sf ${PN}-${PV} ${PN}
 }
 
 ALLOW_EMPTY_${PN} = "1"
+INSANE_SKIP_${PN}-examples = "ldflags"
 
 FILES_${PN} = ""
-
-FILES_${PN}-dev = " \
-	${includedir} \
-"
-
-FILES_${PN}-staticdev = " \
-	${libdir} \
-"
-
-FILES_${PN}-dbg = " \
-	/usr/src/debug/tensorflow-lite \
-"
-
+FILES_${PN}-dev = "${includedir}"
+FILES_${PN}-staticdev = "${libdir}"
+FILES_${PN}-dbg = "/usr/src/debug/tensorflow-lite"
 FILES_${PN}-examples = " \
 	${bindir}/${PN} \
 	${bindir}/${PN}-${PV}/examples/label_image \
@@ -104,9 +94,5 @@ FILES_${PN}-examples = " \
 	${bindir}/${PN}-${PV}/examples/minimal \
 	${bindir}/${PN}-${PV}/examples/benchmark_model \
 "
+FILES_${PN}-examples-dbg = "${bindir}/${PN}-${PV}/examples/.debug"
 
-FILES_${PN}-examples-dbg = " \
-	${bindir}/${PN}-${PV}/examples/.debug \
-"
-
-INSANE_SKIP_${PN}-examples = "ldflags"
