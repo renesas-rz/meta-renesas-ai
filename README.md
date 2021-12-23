@@ -12,7 +12,7 @@ tag: certified-linux-v2.1.9 (79bd2782cfb9ddc1760f3fea3d4fc258c20dc552)
 The layers should be used with the official Renesas RZ/G2 Yocto Poky BSP based
 on the CIP Kernel:  
 URI: **https://github.com/renesas-rz/meta-rzg2.git**  
-tag: BSP-1.0.8 (b11b9471c31d8231a43c7eeeed8702e9873841ae)
+tag: BSP-1.0.10-update1 (85d5f8cc554413fc19e4fff43cb0c027f55d0778)
 
 #### For RZ/G2L family ####
 The layers should be used with the official Renesas RZ/G2L Yocto Poky BSP:  
