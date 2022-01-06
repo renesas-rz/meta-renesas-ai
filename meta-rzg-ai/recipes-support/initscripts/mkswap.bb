@@ -6,8 +6,6 @@ DEPENDS = "util-linux-native"
 
 RDEPENDS_${PN} += " base-files"
 
-COMPATIBLE_MACHINE = "(iwg20m-g1m|iwg21m|iwg22m)"
-
 # Default swap size
 SWAP_SIZE ?= "2048"
 
