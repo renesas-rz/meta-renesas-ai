@@ -1,4 +1,4 @@
-# This recipe was insired from:
+# This recipe was inspired from:
 # http://cgit.openembedded.org/meta-openembedded/commit/?id=0ec21b6a50058d703f40f77e1845bf8df637e7bd
 SUMMARY = "PIP is a tool for installing and managing Python packages"
 LICENSE = "MIT & LGPL-2.1"
