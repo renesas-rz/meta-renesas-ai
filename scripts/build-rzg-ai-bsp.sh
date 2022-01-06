@@ -423,6 +423,7 @@ case ${RZG_AI_BSP_VER} in
 		RZG_BSP_VER="certified-linux-v2.1.9"
 	elif [ ${FAMILY} == "rzg2" ]; then
 		RZG_BSP_VER="BSP-1.0.8"
+		RZG_BSP_VER="BSP-1.0.10-update1"
 	elif [ ${FAMILY} == "rzg2l" ]; then
 		RZG_BSP_VER="rzg2l_bsp_v1.3-update1"
 	fi
