@@ -12,7 +12,7 @@ The official website is:
 
 
 This Yocto/OpenEmbedded meta-layer provides TensorFlow Lite support for the
-RZ/G1 family of System on Chips.
+RZ/G2 and RZ/G2L families of System on Chips.
 
 
 In order to add TensorFlow Lite support to your project, make sure

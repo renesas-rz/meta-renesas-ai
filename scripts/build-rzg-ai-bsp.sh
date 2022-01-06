@@ -2,7 +2,6 @@
 #
 # Simple script to build the RZ/G AI BSP: https://github.com/renesas-rz/meta-renesas-ai
 # The script supports building for the following devices:
-#   RZ/G1: iwg21m, iwg20m-g1m, iwg22m
 #   RZ/G2: hihope-rzg2h, hihope-rzg2m, hihope-rzg2n, ek874
 #   RZ/G2L: smarc-rzg2l, smarc-rzg2lc
 #
@@ -57,9 +56,8 @@ print_help () {
 	 -o <output dir>    Location to copy binaries to when build is complete.
 	                    By default ${OUTPUT_DIR} will be used.
 	 -p <platform>      Platform to build for. Choose from:
-	                    iwg21m, iwg20m-g1m, iwg22m, hihope-rzg2h,
-	                    hihope-rzg2m, hihope-rzg2n, ek874, smarc-rzg2l,
-	                    smarc-rzg2lc.
+	                    hihope-rzg2h, hihope-rzg2m, hihope-rzg2n, ek874,
+	                    smarc-rzg2l, smarc-rzg2lc.
 
 	EOF
 }
@@ -106,11 +104,6 @@ while getopts ":cdf:l:o:p:h" opt; do
                 ;;
         p)
 		case "${OPTARG}" in
-		"iwg21m" | "iwg20m-g1m" | "iwg22m")
-			PLATFORM="${OPTARG}"
-			FAMILY="rzg1"
-        	        ;;
-
 		"hihope-rzg2h" | "hihope-rzg2m" | "hihope-rzg2n" | "ek874")
 			PLATFORM="${OPTARG}"
 			FAMILY="rzg2"
@@ -199,37 +192,7 @@ download_source () {
 	echo "#################################################################"
 	echo "Downloading source..."
 
-	if [ ${FAMILY} == "rzg1" ]; then
-		update_git_repo \
-			poky \
-			git://git.yoctoproject.org/poky \
-			342fbd6a3e57021c8e28b124b3adb241936f3d9d
-
-		update_git_repo \
-			meta-linaro \
-			git://git.linaro.org/openembedded/meta-linaro.git \
-			75dfb67bbb14a70cd47afda9726e2e1c76731885
-
-		update_git_repo \
-			meta-openembedded \
-			git://git.openembedded.org/meta-openembedded \
-			dacfa2b1920e285531bec55cd2f08743390aaf57
-
-		update_git_repo \
-			meta-qt5 \
-			https://github.com/meta-qt5/meta-qt5.git \
-			c1b0c9f546289b1592d7a895640de103723a0305
-
-		update_git_repo \
-			meta-renesas \
-			https://github.com/renesas-rz/meta-renesas.git \
-			${RZG_BSP_VER}
-
-		update_git_repo \
-			meta-renesas-ai \
-			https://github.com/renesas-rz/meta-renesas-ai.git \
-			${RZG_AI_BSP_VER}
-	elif [ ${FAMILY} == "rzg2" ]; then
+	if [ ${FAMILY} == "rzg2" ]; then
 		update_git_repo \
 			poky \
 			git://git.yoctoproject.org/poky \
@@ -305,23 +268,7 @@ install_prop_libs () {
 	echo "#################################################################"
 	echo "Installing proprietary libraries..."
 
-	if [ ${FAMILY} == "rzg1" ]; then
-		pushd ${WORK_DIR}/meta-renesas/meta-rzg1
-		./copy_mm_software_lcb.sh ${PROP_DIR}
-
-		case ${PLATFORM} in
-		iwg21m)
-			./copy_gfx_software_rzg1h.sh ${PROP_DIR}
-			;;
-		iwg20m-g1m)
-			./copy_gfx_software_rzg1m.sh ${PROP_DIR}
-			;;
-		iwg22m)
-			./copy_gfx_software_rzg1e.sh ${PROP_DIR}
-			;;
-		esac
-		popd
-	elif [ ${FAMILY} == "rzg2" ]; then
+	if [ ${FAMILY} == "rzg2" ]; then
 		pushd ${PROP_DIR}
 		tar -zxf RZG2_Group_*_Software_Package_for_Linux_*.tar.gz
 		popd
@@ -382,9 +329,7 @@ do_build () {
 	echo "#################################################################"
 	echo "Starting build..."
 
-	if [ ${FAMILY} == "rzg1" ]; then
-		bitbake core-image-weston
-	elif [ ${FAMILY} == "rzg2" ]; then
+	if [ ${FAMILY} == "rzg2" ]; then
 		bitbake core-image-qt
 	elif [ ${FAMILY} == "rzg2l" ]; then
 		bitbake core-image-qt
@@ -398,10 +343,7 @@ copy_output () {
 	local bin_dir=$WORK_DIR/build/tmp/deploy/images/${PLATFORM}
 	mkdir -p ${OUTPUT_DIR}/${PLATFORM}
 
-	if [ ${FAMILY} == "rzg1" ]; then
-		cp ${bin_dir}/core-image-*-${PLATFORM}.tar.gz ${OUTPUT_DIR}/${PLATFORM}
-		cp ${bin_dir}/uImage-${PLATFORM}.bin ${OUTPUT_DIR}/${PLATFORM}
-	elif [ ${FAMILY} == "rzg2" ]; then
+	if [ ${FAMILY} == "rzg2" ]; then
 		cp ${bin_dir}/core-image-*-${PLATFORM}.tar.gz ${OUTPUT_DIR}/${PLATFORM}
 		cp ${bin_dir}/Image-${PLATFORM}.bin ${OUTPUT_DIR}/${PLATFORM}
 		cp ${bin_dir}/Image-*-${PLATFORM}*.dtb ${OUTPUT_DIR}/${PLATFORM}
@@ -419,10 +361,7 @@ clear
 
 case ${RZG_AI_BSP_VER} in
 *)
-	if [ ${FAMILY} == "rzg1" ]; then
-		RZG_BSP_VER="certified-linux-v2.1.9"
-	elif [ ${FAMILY} == "rzg2" ]; then
-		RZG_BSP_VER="BSP-1.0.8"
+	if [ ${FAMILY} == "rzg2" ]; then
 		RZG_BSP_VER="BSP-1.0.10-update1"
 	elif [ ${FAMILY} == "rzg2l" ]; then
 		RZG_BSP_VER="rzg2l_bsp_v1.3-update1"

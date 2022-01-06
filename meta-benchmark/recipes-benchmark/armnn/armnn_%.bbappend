@@ -51,21 +51,6 @@ do_compile_append_aarch64() {
 		-lstdc++ -lm -ldl -lpthread ${LDFLAGS} ${WORKDIR}/recipe-sysroot/usr/lib64/libtensorflow-lite.a
 }
 
-do_compile_append_arm() {
-	${CC} ../armnnTFLiteDelegateBenchmark.cpp \
-		${WORKDIR}/tensorflow/tensorflow/lite/examples/label_image/bitmap_helpers.cc \
-		-o armnnTFLiteDelegateBenchmark \
-		-I ${S}/include/armnn/ \
-		-I ${S}/include -I ${S}/src/armnnUtils \
-		-I ${S}/src/backends/ \
-		-I ${STAGING_DIR_TARGET}/usr/include \
-		-L ${WORKDIR}/build/ \
-		-L ${WORKDIR}/build/delegate \
-		-L ${STAGING_DIR_TARGET}/usr/lib/ \
-		-larmnn -larmnnDelegate -larmnnUtils \
-		-lstdc++ -lm -ldl -lpthread ${LDFLAGS} ${WORKDIR}/recipe-sysroot/usr/lib/libtensorflow-lite.a
-}
-
 do_install_append() {
 	install -d ${D}${bindir}/armnnBenchmark
 	install -m 0555 \

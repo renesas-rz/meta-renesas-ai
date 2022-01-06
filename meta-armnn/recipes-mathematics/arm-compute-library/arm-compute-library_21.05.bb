@@ -20,7 +20,7 @@ SRC_URI = " \
 	file://0001-Add-code-to-detect-Mali-TM-G31.patch \
 "
 
-COMPATIBLE_MACHINE = "(iwg20m-g1m|iwg21m|iwg22m|hihope-rzg2h|hihope-rzg2m|hihope-rzg2n|ek874|smarc-rzg2l|smarc-rzg2lc)"
+COMPATIBLE_MACHINE = "(hihope-rzg2h|hihope-rzg2m|hihope-rzg2n|ek874|smarc-rzg2l|smarc-rzg2lc)"
 
 S = "${WORKDIR}/git"
 
@@ -31,7 +31,6 @@ inherit scons
 OESCONS_COMMON_FLAG = " extra_cxx_flags="${TOOLCHAIN_OPTIONS}" benchmark_tests=1 \
 			validation_tests=0 neon=1 openmp=1 opencl=0 set_soname=1"
 
-EXTRA_OESCONS_arm = "arch=armv7a${OESCONS_COMMON_FLAG}"
 EXTRA_OESCONS_aarch64 = "arch=arm64-v8a${OESCONS_COMMON_FLAG}"
 
 # Override the platform generic opencl flag for the RZ/G2L

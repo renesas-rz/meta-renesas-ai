@@ -10,8 +10,8 @@ Cortex-A CPUs and Mali GPUs, as efficiently as possible.
 The official website is:  
 **https://developer.arm.com/products/processors/machine-learning/arm-nn**
 
-This Yocto/OpenEmbedded meta-layer provides Arm NN support for the RZ/G1 and
-RZ/G2 families of System on Chips.
+This Yocto/OpenEmbedded meta-layer provides Arm NN support for the RZ/G2 and
+RZ/G2L families of System on Chips.
 
 ## Build Configuration
 **armnn-tensorflow-lite**: Add as a dependency to your recipe/package to add Arm

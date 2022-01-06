@@ -1,12 +1,6 @@
 # meta-renesas-ai #
-This OpenEmbedded/Yocto layer collector adds AI tools support to Renesas RZ/G1
-and RZ/G2 platforms.
-
-#### For RZ/G1 family ####
-The layers should be used with the official Renesas RZ/G1 Yocto Poky BSP based
-on the CIP Kernel:  
-URI: **https://github.com/renesas-rz/meta-renesas.git**  
-tag: certified-linux-v2.1.9 (79bd2782cfb9ddc1760f3fea3d4fc258c20dc552)
+This OpenEmbedded/Yocto layer collector adds AI tools support to Renesas RZ/G2
+platforms.
 
 #### For RZ/G2 family ####
 The layers should be used with the official Renesas RZ/G2 Yocto Poky BSP based
@@ -58,14 +52,11 @@ in the [Licensing](#licensing) section.
 | Renesas RZ/G2E  | Silicon Linux ek874      |
 | Renesas RZ/G2L  | Renesas smarc-rzg2l evk  |
 | Renesas RZ/G2LC | Renesas smarc-rzg2lc evk |
-| Renesas RZ/G1H  | iWave Systems iwg21m     |
-| Renesas RZ/G1M  | iWave Systems iwg20m-g1m |
-| Renesas RZ/G1E  | iWave Systems iwg22m     |
 
 ### Build Script ###
 A simple build script has been created to manage the build process.  
 Before running the script you will need to download the relevant proprietary
-libraries from the Renesas website. See the Renesas RZ/G[12] BSP readme file for
+libraries from the Renesas website. See the Renesas RZ/G2 BSP readme file for
 details on how to do this.
 
 Run `./scripts/build-rzg-ai-bsp.sh -h` to get an overview on how to use the
@@ -121,16 +112,16 @@ The configuration files found under:
 ```
 meta-*/templates/*/local.conf
 ```
-show how to whitelist the commercial license flag for graphics packages.
 This is needed to add full video encoding/decoding support to the BSP.  
-For example for the RZ/G1H:
+For example for the RZ/G2L:
 ```
-LICENSE_FLAGS_WHITELIST = "commercial_gstreamer1.0-libav commercial_gstreamer1.0-omx"
+LICENSE_FLAGS_WHITELIST = "commercial_gstreamer1.0-libav commercial_gstreamer1.0-plugins-ugly commercial_ffmpeg commercial_mpeg2dec commercial_faac commercial_faad2 commercial_x264"
 ```
 
-By editing these commented lines in the template files coming from this repository,
-the user agrees to the terms and conditions from the licenses of the packages
-that are installed into the final image and that are covered by a commercial license.
+By editing these commented lines in the template files coming from this
+repository, the user agrees to the terms and conditions from the licenses of the
+packages that are installed into the final image and that are covered by a
+commercial license.
 
 The user also acknowledges that it's their responsibility to make sure
 they hold the right to use code protected by commercial agreements, whether
@@ -140,8 +131,8 @@ Finally, the user acknowledges that it's their responsibility to make sure
 they hold the right to copy, use, modify, and re-distribute the intellectual
 property offered by this collection of meta-layers.
 
-**Note:** Without uncommenting the `LICENSE_FLAGS_WHITELIST` lines the BSP build will fail.  
-
+**Note:** Without uncommenting the `LICENSE_FLAGS_WHITELIST` lines the BSP build
+will fail.
 
 ---
 

@@ -19,7 +19,7 @@ PACKAGES += "${PN}-tensorflow-lite-examples \
              ${PN}-examples ${PN}-examples-dbg \
 "
 
-COMPATIBLE_MACHINE = "(iwg20m-g1m|iwg21m|iwg22m|hihope-rzg2h|hihope-rzg2m|hihope-rzg2n|ek874|smarc-rzg2l|smarc-rzg2lc)"
+COMPATIBLE_MACHINE = "(hihope-rzg2h|hihope-rzg2m|hihope-rzg2n|ek874|smarc-rzg2l|smarc-rzg2lc)"
 
 inherit PyHelper
 
@@ -118,16 +118,6 @@ EXTRA_OECMAKE=" \
 	-DTfLite_INCLUDE_DIR=${STAGING_DIR_TARGET}/usr/include/tensorflow_lite/ \
 	-DTfLite_Schema_INCLUDE_PATH=${WORKDIR}/tensorflow/tensorflow/lite/schema/ \
 	-DCMAKE_CXX_STANDARD_LIBRARIES="-ldl" \
-"
-
-EXTRA_OECMAKE_append_arm=" \
-	-DCMAKE_CXX_FLAGS="-I ${WORKDIR}/tensorflow/ -fopenmp -march=armv7ve -mfloat-abi=hard" \
-	-DCMAKE_SYSROOT=${STAGING_DIR_TARGET} \
-	-DARMCOMPUTE_BUILD_DIR=${STAGING_DIR_TARGET}/usr/lib/ \
-	-DTfLite_LIB=${STAGING_DIR_TARGET}/usr/lib/libtensorflow-lite.a \
-	-DFLATBUFFERS_LIBRARY=${STAGING_DIR_TARGET}/usr/lib/libflatbuffers.a \
-	-DPROTOBUF_LIBRARY_DEBUG=${STAGING_DIR_TARGET}/usr/lib/libprotobuf.so.23.0.4 \
-	-DPROTOBUF_LIBRARY_RELEASE=${STAGING_DIR_TARGET}/usr/lib/libprotobuf.so.23.0.4 \
 "
 
 EXTRA_OECMAKE_append_aarch64=" \
@@ -251,7 +241,7 @@ do_install_append() {
 
 	#Install backend unit test utilities
 	install -d ${D}${bindir}/${PN}-${PV}/examples/UnitTests/src/backends/backendsCommon/test
-        
+
 	install -d ${D}${bindir}/${PN}-${PV}/examples/UnitTests/src/backends/dynamic/reference/
 
 	cp -Pr ${WORKDIR}/build/src/backends/backendsCommon/test/testSharedObject \

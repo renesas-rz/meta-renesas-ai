@@ -16,7 +16,7 @@ The official website is:
 **https://github.com/microsoft/onnxruntime**
 
 This Yocto/OpenEmbedded meta-layer provides ONNX Runtime support for the Renesas
-RZ/G1 and RZ/G2 families of System on Chips.
+RZ/G2 and RZ/G2L families of System on Chips.
 
 In order to add ONNX Runtime support to your project, make sure *onnxruntime*
 is listed as a dependency to your recipe/package. Listing
