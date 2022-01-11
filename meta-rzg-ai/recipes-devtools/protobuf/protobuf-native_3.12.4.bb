@@ -17,7 +17,7 @@ SRCREV = "c9d2bd2fc781fe67ebf306807b9b6edb4a0d2764"
 PV_append = "+git${SRCPV}"
 
 SRC_URI = " \
-	gitsm://github.com/protocolbuffers/protobuf.git;nobranch=1 \
+	git://github.com/protocolbuffers/protobuf.git;protocol=https;nobranch=1 \
 	file://0001-Remove-googletest-to-reslove-configure.ac-error.patch \
 "
 
