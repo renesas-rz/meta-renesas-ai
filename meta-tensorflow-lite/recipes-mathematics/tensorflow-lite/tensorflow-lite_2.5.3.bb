@@ -10,24 +10,20 @@ SRC_URI = " \
 	git://github.com/tensorflow/tensorflow.git;branch=r2.5 \
 	file://0001-Remove-GPU-and-NNAPI.patch \
 	file://0001-Use-wget-instead-of-curl-to-fetch-https-source.patch \
-	file://0001-Add-poky-cross-compiler-to-build_aarch64_lib.sh.patch \
 "
-PR = "r0"
 
 COMPATIBLE_MACHINE = "(hihope-rzg2h|hihope-rzg2m|hihope-rzg2n|ek874|smarc-rzg2l|smarc-rzg2lc)"
 
 S = "${WORKDIR}/git"
 
-PACKAGES += "${PN}-examples ${PN}-examples-dbg"
-RDEPENDS_${PN}-examples += "${PN}"
-RDEPENDS_${PN}-examples-dbg += "${PN}"
+inherit cmake
 
-# TensorFlow Lite Makefile based build system does not generate a .so file,
+# TensorFlow Lite CMake based build system does not generate a .so file,
 # this statement makes sure package -staticdev goes where package -dev goes,
 # as package -staticdev contains the .a file.
 RDEPENDS_${PN}-dev += "${PN}-staticdev"
 
-DEPENDS = "gzip-native unzip-native zlib"
+DEPENDS = "unzip-native cmake-native"
 
 do_configure() {
 	export HTTP_PROXY=${HTTP_PROXY}
@@ -38,61 +34,67 @@ do_configure() {
 	${S}/tensorflow/lite/tools/make/download_dependencies.sh
 }
 
-CXX_append_smarc-rzg2l    += "-flax-vector-conversions"
-CFLAGS_append_smarc-rzg2l += "-flax-vector-conversions"
-CXX_append_smarc-rzg2lc    += "-flax-vector-conversions"
-CFLAGS_append_smarc-rzg2lc += "-flax-vector-conversions"
+EXTRA_OECMAKE_aarch64 = " \
+	-DTFLITE_ENABLE_RUY=ON \
+	-DCMAKE_SYSTEM_NAME=Linux \
+	-DCMAKE_SYSTEM_PROCESSOR=aarch64 \
+	-DCMAKE_SYSROOT=${STAGING_DIR_TARGET} \
+	-DCMAKE_C_COMPILER=${STAGING_DIR_NATIVE}/usr/bin/aarch64-poky-linux/aarch64-poky-linux-gcc \
+	-DCMAKE_CXX_COMPILER=${STAGING_DIR_NATIVE}/usr/bin/aarch64-poky-linux/aarch64-poky-linux-g++ \
+"
 
-do_compile_prepend() {
-	${S}/tensorflow/lite/tools/make/build_${TARGET_ARCH}_lib.sh
-	${S}/tensorflow/lite/tools/make/build_${TARGET_ARCH}_lib.sh label_image
+EXTRA_OECMAKE_append_smarc-rzg2l = " \
+	-DCMAKE_CXX_FLAGS="-flax-vector-conversions" \
+	-DCMAKE_C_FLAGS="-flax-vector-conversions" \
+"
+EXTRA_OECMAKE_append_smarc-rzg2lc = " \
+	-DCMAKE_CXX_FLAGS="-flax-vector-conversions" \
+	-DCMAKE_C_FLAGS="-flax-vector-conversions" \
+"
+
+do_compile() {
+	# Tensorflow-lite does not compile unless built out of tree
+	mkdir -p ${WORKDIR}/build
+	cd ${WORKDIR}/build
+
+	# Run CMake with the configuration for the minimal example
+	# which includes the Tensorflow-lite library configuration
+	# before running the needed build steps.
+	cmake ${S}/tensorflow/lite/examples/minimal ${EXTRA_OECMAKE}
+	cmake --build . -j
+	cmake --build . -t label_image -j
+	cmake --build . -t benchmark_model -j
 }
 
-do_install() {
+do_install_append() {
 	install -d ${D}${libdir}
-	cp -r ${S}/tensorflow/lite/tools/make/gen/linux_${TARGET_ARCH}/lib/* \
-	      ${D}${libdir}
+	install -m 0644 ${WORKDIR}/build/tensorflow-lite/libtensorflow-lite.a ${D}${libdir}
 
 	cd ${S}
 	find tensorflow/lite -name "*.h" | cpio -pdm ${D}${includedir}/
 	find tensorflow/lite -name "*.inc" | cpio -pdm ${D}${includedir}/
-
-	install -d ${D}${includedir}/tensorflow_lite
-	cd ${S}/tensorflow/lite
-	cp --parents $(find . -name "*.h*") \
-		${D}${includedir}/tensorflow_lite
+	install -m 0555 ${S}/tensorflow/lite/examples/label_image/bitmap_helpers.cc ${D}${includedir}
 
 	install -d ${D}${bindir}/${PN}-${PV}/examples
-	install -m 0555 \
-		${S}/tensorflow/lite/tools/make/gen/linux_${TARGET_ARCH}/bin/label_image \
+	install -m 0555 ${WORKDIR}/build/tensorflow-lite/examples/label_image/label_image \
 		${D}${bindir}/${PN}-${PV}/examples
 	install -m 0555 \
 		${S}/tensorflow/lite/examples/label_image/testdata/grace_hopper.bmp \
 		${D}${bindir}/${PN}-${PV}/examples
 	install -m 0555 \
-                ${S}/tensorflow/lite/tools/make/gen/linux_${TARGET_ARCH}/bin/minimal \
+                ${WORKDIR}/build/minimal \
                 ${D}${bindir}/${PN}-${PV}/examples
         install -m 0555 \
-                ${S}/tensorflow/lite/tools/make/gen/linux_${TARGET_ARCH}/bin/benchmark_model \
-                ${D}${bindir}/${PN}-${PV}/examples
+		${WORKDIR}/build/tensorflow-lite/tools/benchmark/benchmark_model \
+		${D}${bindir}/${PN}-${PV}/examples
 
 	cd ${D}${bindir}
 	ln -sf ${PN}-${PV} ${PN}
 }
 
-ALLOW_EMPTY_${PN} = "1"
-INSANE_SKIP_${PN}-examples = "ldflags"
-
-FILES_${PN} = ""
-FILES_${PN}-dev = "${includedir}"
-FILES_${PN}-staticdev = "${libdir}"
-FILES_${PN}-dbg = "/usr/src/debug/tensorflow-lite"
-FILES_${PN}-examples = " \
-	${bindir}/${PN} \
+FILES_${PN} += " \
 	${bindir}/${PN}-${PV}/examples/label_image \
 	${bindir}/${PN}-${PV}/examples/grace_hopper.bmp \
 	${bindir}/${PN}-${PV}/examples/minimal \
 	${bindir}/${PN}-${PV}/examples/benchmark_model \
 "
-FILES_${PN}-examples-dbg = "${bindir}/${PN}-${PV}/examples/.debug"
-

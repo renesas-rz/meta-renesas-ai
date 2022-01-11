@@ -28,7 +28,7 @@ After the build is complete the static C++ TensorFlow Lite library
 
 The library can be verified with the TensorFlow Lite image classification sample
 application named *label_image* which is included in the build (included by
-package *tensorflow-lite-examples*). The sample application is installed under
+package *tensorflow-lite*). The sample application is installed under
 */usr/bin/tensorflow-lite/examples/*.
 
 
