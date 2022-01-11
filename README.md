@@ -89,17 +89,6 @@ If needed, the size of the swap file can be set (in MB) in local.conf:
 SWAP_SIZE = "512"
 ```
 
-**meta-rzg2 patches for RZ/G2 BSP**  
-The unauthenticated git protocol is no longer supported by Github.  
-Applying *patches/meta-rzg2/rocko-rzg2/0001-multimedia-gstreamer-Use-https.patch*
-will change the protocol used during cloning to https, allowing compilation.
-
-```
-cd meta-rzg2
-git am ../meta-renesas-ai/patches/meta-rzg2/rocko-rzg2/0001-multimedia-gstreamer-Use-https.patch
-```
-
-
 **meta-rzg2 patches for RZ/G2L BSP**  
 There is a bug when trying to build the SDK for core-image-qt images.
 
@@ -113,16 +102,6 @@ git am ../meta-renesas-ai/patches/meta-rzg2/dunfell-rzg2l/0001-Enable-RZ-G2L-Qt-
 
 This only needs to be done when building for the *smarc-rzg2l* and
 *smarc-rzg2lc* platforms.
-
-The unauthenticated git protocol is no longer supported by Github.  
-Applying *patches/meta-rzg2/rocko-rzg2/0001-multimedia-gstreamer-Use-https.patch*
-will change the protocol used during cloning to https, allowing compilation.
-
-```
-cd meta-rzg2
-git am ../meta-renesas-ai/patches/meta-rzg2/dunfell-rzg2l/0001-multimedia-gstreamer-Use-https.patch
-```
-
 
 ## LICENSING ##
 
