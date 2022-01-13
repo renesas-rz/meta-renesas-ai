@@ -26,7 +26,6 @@ RDEPENDS_${PN}_smarc-rzg2lc += " \
 
 SRC_URI += " \
 	file://tensorflow-lite-benchmark.cc \
-	file://patch/0001-Fix-image-resize-crash-in-certain-caess.patch \
 	file://run_TF_measurement.py \
 	file://test_file_list_Inception_Net_V3.txt \
 	file://test_file_list_Inception_Net_V4.txt \
