@@ -1,4 +1,7 @@
-FILESEXTRAPATHS_prepend := "${THISDIR}/files:"
+DESCRIPTION = "TensorFlow Lite C++ Benchmarking tools"
+LICENSE = "Apache-2.0"
+
+LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/Apache-2.0;md5=89aea4e17d99a7cacdbeed46a0096b10"
 
 RDEPENDS_${PN} += " \
 	models-tensorflow-lite \
@@ -24,6 +27,8 @@ RDEPENDS_${PN}_smarc-rzg2lc += " \
 	python3-numpy \
 "
 
+DEPENDS = "tensorflow-lite"
+
 SRC_URI += " \
 	file://tensorflow-lite-benchmark.cc \
 	file://run_TF_measurement.py \
@@ -48,16 +53,24 @@ do_configure_append_smarc-rzg2lc() {
 	sed -i 's/stderr=subprocess.STDOUT)/stderr=subprocess.STDOUT, text=True)/g' ${WORKDIR}/run_TF_measurement.py
 }
 
-do_compile_append() {
+do_compile() {
 	cp ../tensorflow-lite-benchmark.cc .
-	${CC} tensorflow-lite-benchmark.cc tensorflow/lite/examples/label_image/bitmap_helpers.cc \
+	${CC} tensorflow-lite-benchmark.cc ${STAGING_DIR_TARGET}/usr/include/bitmap_helpers.cc \
 		-o tensorflow-lite-benchmark \
-		-I . -I tensorflow/lite/tools/make/downloads/flatbuffers/include \
-		-I tensorflow/lite/tools/make/downloads/gemmlowp \
-		-lstdc++ -lpthread -latomic -lm -ldl ${LDFLAGS} tensorflow/lite/tools/make/gen/linux_${TARGET_ARCH}/lib/libtensorflow-lite.a
+		-lstdc++ -lpthread -lm -ldl ${LDFLAGS} \
+		${STAGING_DIR_TARGET}/usr/lib64/libtensorflow-lite.a \
+		${STAGING_DIR_TARGET}/usr/lib64/libflatbuffers.a \
+		${STAGING_DIR_TARGET}/usr/lib64/libfft2d_fftsg2d.a \
+		${STAGING_DIR_TARGET}/usr/lib64/libruy.a \
+		${STAGING_DIR_TARGET}/usr/lib64/libXNNPACK.a \
+		${STAGING_DIR_TARGET}/usr/lib64/libpthreadpool.a \
+		${STAGING_DIR_TARGET}/usr/lib64/libcpuinfo.a \
+		${STAGING_DIR_TARGET}/usr/lib64/libclog.a \
+		${STAGING_DIR_TARGET}/usr/lib64/libfft2d_fftsg.a \
+		${STAGING_DIR_TARGET}/usr/lib64/libfarmhash.a
 }
 
-do_install_append() {
+do_install() {
 	install -d ${D}${bindir}/tensorflow-lite-benchmark
 	install -m 0555 ${S}/tensorflow-lite-benchmark ${D}${bindir}/tensorflow-lite-benchmark/
 	install -m 0555 ${WORKDIR}/run_TF_measurement.py ${D}${bindir}/tensorflow-lite-benchmark/
@@ -72,6 +85,5 @@ do_install_append() {
 	install -m 0644 ${WORKDIR}/test_file_list_Squeezenet.txt ${D}${bindir}/tensorflow-lite-benchmark/
 }
 
-FILES_${PN} += "\
-	${bindir}/tensorflow-lite-benchmark/* \
-"
+FILES_${PN} += "${bindir}/tensorflow-lite-benchmark/*"
+
