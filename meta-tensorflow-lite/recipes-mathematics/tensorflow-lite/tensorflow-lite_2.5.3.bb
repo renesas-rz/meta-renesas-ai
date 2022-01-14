@@ -12,8 +12,6 @@ SRC_URI = " \
 	file://0001-Use-wget-instead-of-curl-to-fetch-https-source.patch \
 "
 
-COMPATIBLE_MACHINE = "(hihope-rzg2h|hihope-rzg2m|hihope-rzg2n|ek874|smarc-rzg2l|smarc-rzg2lc)"
-
 S = "${WORKDIR}/git"
 
 inherit cmake
