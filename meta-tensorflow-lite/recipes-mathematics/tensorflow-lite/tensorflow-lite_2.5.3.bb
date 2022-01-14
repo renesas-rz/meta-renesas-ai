@@ -70,6 +70,16 @@ do_install_append() {
 	install -d ${D}${libdir}
 	install -m 0644 ${WORKDIR}/build/tensorflow-lite/libtensorflow-lite.a ${D}${libdir}
 
+	install -m 0644 ${WORKDIR}/build/_deps/ruy-build/libruy.a ${D}${libdir}
+	install -m 0644 ${WORKDIR}/build/_deps/xnnpack-build/libXNNPACK.a ${D}${libdir}
+	install -m 0644 ${WORKDIR}/build/_deps/fft2d-build/libfft2d_fftsg2d.a ${D}${libdir}
+	install -m 0644 ${WORKDIR}/build/_deps/fft2d-build/libfft2d_fftsg.a ${D}${libdir}
+	install -m 0644 ${WORKDIR}/build/_deps/farmhash-build/libfarmhash.a ${D}${libdir}
+	install -m 0644 ${WORKDIR}/build/_deps/abseil-cpp-build/absl/strings/libabsl_strings.a ${D}${libdir}
+	install -m 0644 ${WORKDIR}/build/pthreadpool/libpthreadpool.a ${D}${libdir}
+	install -m 0644 ${WORKDIR}/build/cpuinfo/libcpuinfo.a ${D}${libdir}
+	install -m 0644 ${WORKDIR}/build/clog/libclog.a ${D}${libdir}
+
 	cd ${S}
 	find tensorflow/lite -name "*.h" | cpio -pdm ${D}${includedir}/
 	find tensorflow/lite -name "*.inc" | cpio -pdm ${D}${includedir}/
