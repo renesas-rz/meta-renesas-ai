@@ -36,11 +36,11 @@ in the [Licensing](#licensing) section.
 
 ### Supported Frameworks/Versions ###
 
-| Framework       | Version   | Parser(s)                                 | Inference Hardware               |
-| :-------------- | :-------- | :---------------------------------------- | :------------------------------- |
-| ArmNN           | v21.05    | ONNX (v1.6.0)<br>TensorFlow Lite (v2.3.1) | CPU                              |
-| ONNX Runtime    | v1.8.0    | ONNX                                      | CPU                              |
-| TensorFlow Lite | v2.5.0    | TensorFlow Lite                           | CPU                              |
+| Framework       | Version   | Parser(s)                                 | Inference Hardware                     |
+| :-------------- | :-------- | :---------------------------------------- | :------------------------------------- |
+| ArmNN           | v21.05    | ONNX (v1.6.0)<br>TensorFlow Lite (v2.3.1) | CPU<br>GPU (smarc-rzg2l, smarc-rzg2lc) |
+| ONNX Runtime    | v1.8.0    | ONNX                                      | CPU                                    |
+| TensorFlow Lite | v2.5.0    | TensorFlow Lite                           | CPU                                    |
 
 ### Supported Embedded Platforms ###
 
