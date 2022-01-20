@@ -56,7 +56,7 @@ def main():
                   print("Invalid line: " + line)
                   sys.exit(1)
 
-              run_tflite_benchmark(model_details[0],base_directory_path,'labels.txt',number_of_cores,number_of_iteration,list_tmp,list)
+              run_tflite_benchmark(model_details[0], base_directory_path, 'labels.txt', number_of_cores, number_of_iteration, list_tmp, list)
 
               print("Average Time" + " at Model " + model_details[0] + str(Average(list_tmp)) + " ms ")
               print("Standard Deviation" + " at Model " + model_details[0] + str(Average(list)))
@@ -68,8 +68,8 @@ def main():
 def Average(lst):
     return sum(lst) / len(lst)
 
-def run_tflite_benchmark(model_file_name,base_directory,label_file_name,number_of_threads,times_to_run,list,list_dev):
-    command = "/usr/bin/tensorflow-lite-benchmark/tensorflow-lite-benchmark -i /usr/bin/tensorflow-lite/examples/grace_hopper.bmp -c %s -l %s -t %d -m %s" % (times_to_run, base_directory+label_file_name, number_of_threads, base_directory+model_file_name)
+def run_tflite_benchmark(model_file_name, base_directory, label_file_name, number_of_threads, times_to_run, list, list_dev):
+    command = "/usr/bin/tensorflow-lite-benchmark/tensorflow-lite-benchmark -i /usr/bin/tensorflow-lite/examples/grace_hopper.bmp -c %s -l %s -t %d -m %s" % (times_to_run, base_directory+label_file_name, number_of_threads, base_directory + model_file_name)
 
     for line in run_command(command):
         count = 0
@@ -86,7 +86,7 @@ def run_tflite_benchmark(model_file_name,base_directory,label_file_name,number_o
 def run_command(command):
     #Debug
     #print("Run Command: " + command)
-    p = subprocess.Popen(command,shell=True,
+    p = subprocess.Popen(command, shell=True,
                          stdout=subprocess.PIPE,
                          stderr=subprocess.STDOUT)
     return iter(p.stdout.readline, b'')
