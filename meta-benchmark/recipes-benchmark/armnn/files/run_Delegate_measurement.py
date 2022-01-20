@@ -1,7 +1,7 @@
 #!/usr/bin/env python2
 
 '''
-Copyright (C) 2021 Renesas Electronics Corp.
+Copyright (C) 2022 Renesas Electronics Corp.
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at

@@ -2,7 +2,7 @@
 // Licensed under the MIT License.
 //
 // Additional changes:
-// Copyright (C) 2020-2021 Renesas Electronics Corp.
+// Copyright (C) 2020-2022 Renesas Electronics Corp.
 
 #include <assert.h>
 #include <onnxruntime_c_api.h>
