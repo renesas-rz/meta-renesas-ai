@@ -7,6 +7,7 @@ This program is licensed "as is" without any warranty of any
 kind, whether express or implied.
 '''
 
+import glob
 import sys
 import os
 import subprocess
@@ -41,6 +42,9 @@ def main():
    else:
      benchmark = False
 
+   tfl_ver = glob.glob("/usr/bin/tensorflow-lite-2.*")
+   tfl_ver = tfl_ver[0][-1-4:len(tfl_ver[0])]
+
    with open(filepath) as fp:
        for line in fp:
            if not len(line.strip()) == 0:
@@ -59,7 +63,7 @@ def main():
               print("\n")
 
               if benchmark == True:
-                  print("AI_BENCHMARK_MARKER,TensorFlow Lite v2.5.0," + model_details[0].rstrip() + "," +  model_details[1].strip() + "," + str(Average(list_tmp)) + "," + str(Average(list)) + ",")
+                  print("AI_BENCHMARK_MARKER,TensorFlow Lite v" + tfl_ver  + "," + model_details[0].rstrip() + "," +  model_details[1].strip() + "," + str(Average(list_tmp)) + "," + str(Average(list)) + ",")
 
 def Average(lst):
     return sum(lst) / len(lst)
