@@ -136,7 +136,7 @@ python3 inception_v3.py inception_v3_google-1a9a5a14.pth float32 imagenet_classe
 ```
 
 ## Sample Build Configurations
-Two sets of configuration templates are included in the *templates* directory.
+Three sets of configuration templates are included in the *templates* directory.
 These allow different frameworks that use compatible dependencies to be easily
 built together.
 
