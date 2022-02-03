@@ -3,8 +3,8 @@ LICENSE = "Apache-2.0 & MIT"
 
 LIC_FILES_CHKSUM = "file://LICENSE;md5=5131e32d71a4eb06326ea1772d0de6fd"
 
-# tag v2.5.0
-SRCREV = "a4dfb8d1a71385bd6d122e4f27f86dcebb96712d"
+# tag v2.5.3
+SRCREV = "959e9b2a0c06df945f9fb66bd367af8832ca0d28"
 
 SRC_URI = " \
 	git://github.com/tensorflow/tensorflow.git;branch=r2.5 \
