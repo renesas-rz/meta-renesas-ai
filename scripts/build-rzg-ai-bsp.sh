@@ -259,8 +259,6 @@ download_source () {
 			meta-renesas-ai \
 			https://github.com/renesas-rz/meta-renesas-ai.git \
 			${RZG_AI_BSP_VER}
-
-		cd meta-rzg2; git am ../meta-renesas-ai/patches/meta-rzg2/dunfell-rzg2l/0001-Enable-RZ-G2L-Qt-SDK-builds.patch; cd -
 	fi
 }
 
@@ -283,8 +281,8 @@ install_prop_libs () {
 		pushd ${PROP_DIR}
 		unzip RTK0EF0045Z13001ZJ-v0.8_EN.zip
 		tar -xf RTK0EF0045Z13001ZJ-v0.8_EN/meta-rz-features.tar.gz -C ${WORK_DIR}
-		unzip RTK0EF0045Z15001ZJ-v0.51_EN.zip
-		tar -xf RTK0EF0045Z15001ZJ-v0.51_EN/meta-rz-features.tar.gz -C ${WORK_DIR}
+		unzip RTK0EF0045Z15001ZJ-v0.53_EN.zip
+		tar -xf RTK0EF0045Z15001ZJ-v0.53_EN/meta-rz-features.tar.gz -C ${WORK_DIR}
 		popd
 	fi
 }
@@ -364,7 +362,7 @@ case ${RZG_AI_BSP_VER} in
 	if [ ${FAMILY} == "rzg2" ]; then
 		RZG_BSP_VER="BSP-1.0.10-update1"
 	elif [ ${FAMILY} == "rzg2l" ]; then
-		RZG_BSP_VER="rzg2l_bsp_v1.3-update1"
+		RZG_BSP_VER="rzg2l_bsp_v1.3-update2"
 	fi
 	;;
 esac

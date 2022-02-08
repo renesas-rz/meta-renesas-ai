@@ -11,7 +11,7 @@ tag: BSP-1.0.10-update1 (85d5f8cc554413fc19e4fff43cb0c027f55d0778)
 #### For RZ/G2L family ####
 The layers should be used with the official Renesas RZ/G2L Yocto Poky BSP:  
 URI: **https://github.com/renesas-rz/meta-rzg2/tree/dunfell/rzg2l**  
-tag: rzg2l_bsp_v1.3-update1 (de2774adf5a0852b03e8842aec794f2825ffc11b)
+tag: rzg2l_bsp_v1.3-update2 (b3b4f61ffe8c862171e50abba58e26e7f6c1ea72)
 
 For each AI tool, please refer to **meta-${AI\_TOOL\_NAME}/README.md**. For
 example:  
@@ -56,8 +56,8 @@ in the [Licensing](#licensing) section.
 ### Build Script ###
 A simple build script has been created to manage the build process.  
 Before running the script you will need to download the relevant proprietary
-libraries from the Renesas website. See the Renesas RZ/G2 BSP readme file for
-details on how to do this.
+libraries from the Renesas website. See the Renesas RZ/G2 and RZ/G2L BSP readme
+files for details on how to do this.
 
 Run `./scripts/build-rzg-ai-bsp.sh -h` to get an overview on how to use the
 script.
@@ -88,20 +88,6 @@ If needed, the size of the swap file can be set (in MB) in local.conf:
 ```
 SWAP_SIZE = "512"
 ```
-
-**meta-rzg2 patches for RZ/G2L BSP**  
-There is a bug when trying to build the SDK for core-image-qt images.
-
-This is fixed by applying *patches/meta-rzg2/dunfell-rzg2l/0001-Enable-RZ-G2L-Qt-SDK-builds.patch*.
-
-
-```
-cd meta-rzg2
-git am ../meta-renesas-ai/patches/meta-rzg2/dunfell-rzg2l/0001-Enable-RZ-G2L-Qt-SDK-builds.patch
-```
-
-This only needs to be done when building for the *smarc-rzg2l* and
-*smarc-rzg2lc* platforms.
 
 ## LICENSING ##
 
