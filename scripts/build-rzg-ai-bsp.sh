@@ -22,6 +22,7 @@ PLATFORM=""
 FRAMEWORK="armnn"
 BENCHMARK=false
 PROP_DIR=""
+PROP_LIBS_EXTRACTED=false
 BUILD=true
 OUTPUT_DIR="${WORK_DIR}/output"
 FAMILY=""
@@ -37,7 +38,8 @@ print_help () {
 	 apart from the proprietary libraries.
 
 	 USAGE: ${COMMAND_NAME} -p <platform> -l <prop lib dir> \\
-	                    [-c] [-d] [-f <framework>] [-o <output dir>] [-h]
+	                    [-b] [-c] [-d] [-e] [-f <framework>] \\
+	                    [-o <output dir>] [-h]
 
 	 OPTIONS:
 	 -h                 Print this help and exit.
@@ -45,6 +47,10 @@ print_help () {
 	 -c                 Only perform checkout, proprietary library
 	                    extraction and configuration. Don't start the build.
 	 -d                 Install OS dependencies before starting build.
+	 -e                 Marks that proprietary libraries have already been
+	                    extracted to the directory specified by -l.
+	                    For the RZ/G2L BSP the directory should contain the
+	                    contents of the meta-rz-features layer.
 	 -f <framework>     Select which AI framework to include in the
 	                    filesystem.
 	                    Choose from:
@@ -65,7 +71,7 @@ print_help () {
 ################################################################################
 # Options parsing
 
-while getopts ":bcdf:l:o:p:h" opt; do
+while getopts ":bcdef:l:o:p:h" opt; do
         case $opt in
 	b)
 		BENCHMARK=true
@@ -75,6 +81,9 @@ while getopts ":bcdf:l:o:p:h" opt; do
         d)
 		INSTALL_DEPENDENCIES=true
                 ;;
+	e)
+		PROP_LIBS_EXTRACTED=true
+		;;
         f)
 		case "${OPTARG}" in
 			"armnn" | "onnxruntime" | "tensorflow-lite")
@@ -287,29 +296,40 @@ install_prop_libs () {
 	echo "Installing proprietary libraries..."
 
 	if [ ${FAMILY} == "rzg2" ]; then
-		pushd ${PROP_DIR}
-		tar -zxf RZG2_Group_*_Software_Package_for_Linux_*.tar.gz
-		popd
-
-		PROP_DIR=${PROP_DIR}/proprietary
+		if ! $PROP_LIBS_EXTRACTED; then
+			pushd ${PROP_DIR}
+			tar -zxf RZG2_Group_*_Software_Package_for_Linux_*.tar.gz
+			PROP_DIR=${PROP_DIR}/proprietary
+			popd
+		fi
 
 		pushd ${WORK_DIR}/meta-rzg2
 		sh docs/sample/copyscript/copy_proprietary_softwares.sh \
 			-f ${PROP_DIR}
 		popd
 	elif [ ${PLATFORM} == "smarc-rzg2l" ]; then
-		pushd ${PROP_DIR}
-		unzip RTK0EF0045Z13001ZJ-v0.81_EN.zip
-		tar -xf RTK0EF0045Z13001ZJ-v0.81_EN/meta-rz-features.tar.gz -C ${WORK_DIR}
+		if $PROP_LIBS_EXTRACTED; then
+			rm -rf ${WORK_DIR}/meta-rz-features
+			cp -r ${PROP_DIR} ${WORK_DIR}/meta-rz-features
+		else
+			pushd ${PROP_DIR}
+			unzip RTK0EF0045Z13001ZJ-v0.81_EN.zip
+			tar -xf RTK0EF0045Z13001ZJ-v0.81_EN/meta-rz-features.tar.gz -C ${WORK_DIR}
 
-		unzip RTK0EF0045Z15001ZJ-v0.55_EN.zip
-		tar -xf RTK0EF0045Z15001ZJ-v0.55_EN/meta-rz-features.tar.gz -C ${WORK_DIR}
-		popd
+			unzip RTK0EF0045Z15001ZJ-v0.55_EN.zip
+			tar -xf RTK0EF0045Z15001ZJ-v0.55_EN/meta-rz-features.tar.gz -C ${WORK_DIR}
+			popd
+		fi
 	elif [ ${PLATFORM} == "smarc-rzg2lc" ]; then
-		pushd ${PROP_DIR}
-		unzip RTK0EF0045Z13001ZJ-v0.81_EN.zip
-		tar -xf RTK0EF0045Z13001ZJ-v0.81_EN/meta-rz-features.tar.gz -C ${WORK_DIR}
-		popd
+		if $PROP_LIBS_EXTRACTED; then
+			rm -rf ${WORK_DIR}/meta-rz-features
+			cp -r ${PROP_DIR} ${WORK_DIR}/meta-rz-features
+		else
+			pushd ${PROP_DIR}
+			unzip RTK0EF0045Z13001ZJ-v0.81_EN.zip
+			tar -xf RTK0EF0045Z13001ZJ-v0.81_EN/meta-rz-features.tar.gz -C ${WORK_DIR}
+			popd
+		fi
 	fi
 }
 
