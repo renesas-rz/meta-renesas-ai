@@ -14,7 +14,8 @@ set -e
 
 ################################################################################
 # Global parameters
-RZG_AI_BSP_VER="master"
+RZG_AI_BSP_URL="${CI_REPOSITORY_URL:-https://github.com/renesas-rz/meta-renesas-ai.git}"
+RZG_AI_BSP_VER="${CI_COMMIT_REF_NAME:-master}"
 WORK_DIR="${PWD}"
 COMMAND_NAME="$0"
 INSTALL_DEPENDENCIES=false
@@ -202,14 +203,8 @@ update_git_repo () {
 	fi
 
 	pushd ${WORK_DIR}/$1
-	# Update from remote repo
 	git fetch origin
-
-	# Switch to a local branch
-	git checkout HEAD^
-	git branch -f tmp $3
-	git checkout tmp
-
+	git checkout $3
 	popd
 }
 
@@ -252,7 +247,7 @@ download_source () {
 
 		update_git_repo \
 			meta-renesas-ai \
-			https://github.com/renesas-rz/meta-renesas-ai.git \
+			${RZG_AI_BSP_URL} \
 			${RZG_AI_BSP_VER}
 	elif [ ${FAMILY} == "rzg2l" ]; then
 		update_git_repo \
@@ -292,7 +287,7 @@ download_source () {
 
 		update_git_repo \
 			meta-renesas-ai \
-			https://github.com/renesas-rz/meta-renesas-ai.git \
+			${RZG_AI_BSP_URL} \
 			${RZG_AI_BSP_VER}
 	fi
 }
