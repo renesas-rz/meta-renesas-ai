@@ -241,6 +241,11 @@ download_source () {
 			c1b0c9f546289b1592d7a895640de103723a0305
 
 		update_git_repo \
+			meta-virtualization \
+			https://git.yoctoproject.org/git/meta-virtualization \
+			b704c689b67639214b9568a3d62e82df27e9434f
+
+		update_git_repo \
 			meta-rzg2 \
 			https://github.com/renesas-rz/meta-rzg2.git \
 			${RZG_BSP_VER}
@@ -249,6 +254,7 @@ download_source () {
 			meta-renesas-ai \
 			${RZG_AI_BSP_URL} \
 			${RZG_AI_BSP_VER}
+
 	elif [ ${FAMILY} == "rzg2l" ]; then
 		update_git_repo \
 			poky \
