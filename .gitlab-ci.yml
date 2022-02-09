@@ -1,420 +1,245 @@
 stages:
-  - build
+  - build-ai-bsp
 
 variables:
-  CI_META_RENESAS_AI_REF: ${CI_COMMIT_REF_NAME}
-  CI_RZG2_BSP_TAG: v1.0.10-update1
-  CI_RZG2L_BSP_TAG: v1.4
-  YOCTO_DL_DIR: ${CI_PROJECT_DIR}/downloads
-  YOCTO_SSTATE_DIR: ${CI_PROJECT_DIR}/sstate_cache
+  BUILD_DIR: ${CI_PROJECT_DIR}/build
+  OUTPUT_DIR: ${CI_PROJECT_DIR}/output
+  PROP_LIBS_DIR: ${CI_PROJECT_DIR}/prop_libs
 
-.rzg2-test:
-  variables:
-    CI_GRAPHICS_LICENSE: prod
-    CI_META_RENESAS_AI_CONFIGURATION: templates/rzg2
-    CI_META_RENESAS_MANIFEST: meta-cip-tests__dev.xml
-    CI_BASE_MANIFEST: bsp-rzg2__${CI_RZG2_BSP_TAG}.xml
-    BUILD_SCRIPT: build-manifest__rzg2__meta-renesas-ai__gitlab-ci-test.sh
+.selective_rules: &selective_rules
+  rules:
+    - if: $CI_COMMIT_BRANCH != $CI_DEFAULT_BRANCH && $CI_COMMIT_BRANCH
+      when: manual
+      allow_failure: true
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH || $CI_COMMIT_TAG
+      when: always
 
-.rzg2l-test:
+.rzg2:
+  image: gitlab.renesas.solutions:5050/spl2/continuous-integration/dockerfiles:ubuntu-18.04-latest
   variables:
-    CI_GRAPHICS_LICENSE: prod
-    CI_META_RENESAS_AI_CONFIGURATION: templates/rzg2l
-    CI_META_RENESAS_MANIFEST: meta-cip-tests__dev.xml
-    CI_BASE_MANIFEST: bsp-rzg2l__${CI_RZG2L_BSP_TAG}.xml
-    BUILD_SCRIPT: build-manifest__rzg2l__meta-renesas-ai__gitlab-ci-test.sh
+    PROP_LIBS_BRANCH: rzg2_v1.0.10_prod
 
-.rzg2-release:
+.rzg2l:
+  image: gitlab.renesas.solutions:5050/spl2/continuous-integration/dockerfiles:ubuntu-20.04-latest
   variables:
-    CI_GRAPHICS_LICENSE: eval
-    CI_META_RENESAS_AI_CONFIGURATION: templates/rzg2
-    CI_META_RENESAS_MANIFEST: bsp-rzg2__${CI_RZG2_BSP_TAG}.xml
-    BUILD_SCRIPT: build-manifest__rzg2__meta-renesas-ai__gitlab-ci-release.sh
-
-.rzg2l-release:
-  variables:
-    CI_GRAPHICS_LICENSE: eval
-    CI_META_RENESAS_AI_CONFIGURATION: templates/rzg2l
-    CI_META_RENESAS_MANIFEST: bsp-rzg2l__${CI_RZG2L_BSP_TAG}.xml
-    BUILD_SCRIPT: build-manifest__rzg2l__meta-renesas-ai__gitlab-ci-release.sh
-
-.ek874:
-  variables:
-    CI_GRAPHICS_MACHINE: rzg2e-prod
-    CI_MACHINE: ek874
-
-.hihope-rzg2n:
-  variables:
-    CI_GRAPHICS_MACHINE: rzg2n-prod
-    CI_MACHINE: hihope-rzg2n
-
-.hihope-rzg2m:
-  variables:
-    CI_GRAPHICS_MACHINE: rzg2m-prod
-    CI_MACHINE: hihope-rzg2m
+    PROP_LIBS_BRANCH: rzg2l_v1.4_prod
 
 .hihope-rzg2h:
+  extends: [".rzg2"]
   variables:
-    CI_GRAPHICS_MACHINE: rzg2h-prod
-    CI_MACHINE: hihope-rzg2h
+    PLATFORM: hihope-rzg2h
 
-.smarc-rzg2ul:
+.hihope-rzg2m:
+  extends: [".rzg2"]
   variables:
-    CI_MACHINE: smarc-rzg2ul
+    PLATFORM: hihope-rzg2m
 
-.smarc-rzg2lc:
+.hihope-rzg2n:
+  extends: [".rzg2"]
   variables:
-    CI_MACHINE: smarc-rzg2lc
+    PLATFORM: hihope-rzg2n
+
+.ek874:
+  extends: [".rzg2"]
+  variables:
+    PLATFORM: ek874
 
 .smarc-rzg2l:
+  extends: [".rzg2l"]
   variables:
-    CI_MACHINE: smarc-rzg2l
+    PLATFORM: smarc-rzg2l
 
-.build_meta-renesas-ai:
-  stage: build
+.smarc-rzg2lc:
+  extends: [".rzg2l"]
+  variables:
+    PLATFORM: smarc-rzg2lc
+
+.smarc-rzg2ul:
+  extends: [".rzg2l"]
+  variables:
+    PLATFORM: smarc-rzg2ul
+
+.build-meta-renesas-ai:
   tags:
     - yocto
-  variables:
-    GIT_STRATEGY: none
   before_script:
-    - if [ ${CI_COMMIT_TAG} ]; then CI_META_RENESAS_AI_REF=refs/tags/${CI_COMMIT_REF_NAME}; fi
-    - rm -rf build-scripts; rm -f job_list.csv
-    - git clone git@gitlab.renesas.solutions:spl2/continuous-integration/build-scripts.git
-    - cd build-scripts
-    - PATH=$PATH:$(pwd)
-    - git checkout "${CI_BUILD_SCRIPTS_REF:-$CI_COMMIT_REF_NAME}" && export CI_BUILD_SCRIPTS_REF=$CI_COMMIT_REF_NAME || true
-  cache:
-    - key: "downloads"
-      paths:
-        - ${YOCTO_DL_DIR}
-    - key: "sstate-cache-${CI_MACHINE}"
-      paths:
-        - ${YOCTO_SSTATE_DIR}
+    - printenv
+    - rm -rf ${OUTPUT_DIR} ${PROP_LIBS_DIR} ${BUILD_DIR}
+  script:
+    - mkdir -p ${OUTPUT_DIR} ${PROP_LIBS_DIR} ${BUILD_DIR}
+    - git clone git@gitlab.renesas.solutions:spl2/continuous-integration/proprietary-libs.git ${PROP_LIBS_DIR}
+    - pushd ${PROP_LIBS_DIR} && git checkout ${PROP_LIBS_BRANCH} && popd
+    - pushd ${BUILD_DIR}
+    - ${CI_PROJECT_DIR}/scripts/build-rzg-ai-bsp.sh -p ${PLATFORM} -l ${PROP_LIBS_DIR} -f ${FRAMEWORK} -o ${OUTPUT_DIR} -e -s ${EXTRA_BUILD_ARGS}
   artifacts:
-    name: "${CI_JOB_NAME}-${CI_JOB_ID}"
+    name: "${CI_JOB_NAME}"
     when: always
     expire_in: 1 month
     paths:
-      - build-scripts/url_list.csv
-      - job_list.csv
-      - build-scripts/build/build/conf/bblayers.conf
-      - build-scripts/build/build/conf/local.conf
+      - ${BUILD_DIR}/build/conf/bblayers.conf
+      - ${BUILD_DIR}/build/conf/local.conf
+      - ${OUTPUT_DIR}/
 
-.rzg2_meta-renesas-ai_test:
-  image: gitlab.renesas.solutions:5050/spl2/continuous-integration/dockerfiles:ubuntu-18.04-latest
-  extends: [.build_meta-renesas-ai, .rzg2-test]
-  script:
-    - ci-yocto-build.sh -s ${BUILD_SCRIPT} -p $(pwd)/build-scripts -D ${YOCTO_DL_DIR}
-    - cd ..
-    - 'submit-lava-job.sh -E ${GITLAB_USER_EMAIL} -m "gitlab.pipeline-url: ${CI_PIPELINE_URL}" -m "gitlab.job-url: ${CI_JOB_URL}" -f build-scripts/url_list.csv'
-    - cat job_list.csv || true
 
-.rzg2_meta-renesas-ai_release:
-  image: gitlab.renesas.solutions:5050/spl2/continuous-integration/dockerfiles:ubuntu-18.04-latest
-  extends: [.build_meta-renesas-ai, .rzg2-release]
-  script:
-    - ci-yocto-build.sh -s ${BUILD_SCRIPT} -p $(pwd)/build-scripts -D ${YOCTO_DL_DIR}
-
-.rzg2l_meta-renesas-ai_test:
-  image: gitlab.renesas.solutions:5050/spl2/continuous-integration/dockerfiles:ubuntu-20.04-latest
-  extends: [.build_meta-renesas-ai, .rzg2l-test]
-  script:
-    - ci-yocto-build.sh -s ${BUILD_SCRIPT} -p $(pwd)/build-scripts -D ${YOCTO_DL_DIR}
-    - cd ..
-    - 'submit-lava-job.sh -E ${GITLAB_USER_EMAIL} -m "gitlab.pipeline-url: ${CI_PIPELINE_URL}" -m "gitlab.job-url: ${CI_JOB_URL}" -f build-scripts/url_list.csv'
-    - cat job_list.csv || true
-
-.rzg2l_meta-renesas-ai_release:
-  image: gitlab.renesas.solutions:5050/spl2/continuous-integration/dockerfiles:ubuntu-20.04-latest
-  extends: [.build_meta-renesas-ai, .rzg2l-release]
-  script:
-    - ci-yocto-build.sh -s ${BUILD_SCRIPT} -p $(pwd)/build-scripts -D ${YOCTO_DL_DIR}
-
-################################################################################
-# Build and test
-################################################################################
-.build-and-test_rules-manual: &build-and-test_rules-manual
-    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
-      when: always
-    - if: $CI_COMMIT_TAG
-      when: never
-    - if: $CI_MERGE_REQUEST_IID
-      when: never
-    - when: manual
-      allow_failure: true
-
-.build-and-test_rules-auto: &build-and-test_rules-auto
-    - if: $CI_COMMIT_BRANCH
-      when: always
-    - if: $CI_COMMIT_TAG
-      when: never
-    - if: $CI_MERGE_REQUEST_IID
-      when: never
-
-# armnn+tfl
-armnn_ek874_build-and-test:
-  extends: [.rzg2_meta-renesas-ai_test, .ek874]
+benchmark:armnn:hihope-rzg2h:
+  stage: build-ai-bsp
+  extends: [".build-meta-renesas-ai", ".hihope-rzg2h"]
   variables:
-    CI_CONF_NAME: armnn
-  rules: *build-and-test_rules-manual
+    FRAMEWORK: armnn
+    EXTRA_BUILD_ARGS: "-b"
+  <<: *selective_rules
 
-armnn_hihope-rzg2n_build-and-test:
-  extends: [.rzg2_meta-renesas-ai_test, .hihope-rzg2n]
+benchmark:ort:hihope-rzg2h:
+  stage: build-ai-bsp
+  extends: [".build-meta-renesas-ai", ".hihope-rzg2h"]
   variables:
-    CI_CONF_NAME: armnn
-  rules: *build-and-test_rules-manual
+    FRAMEWORK: onnxruntime
+    EXTRA_BUILD_ARGS: "-b"
+  <<: *selective_rules
 
-armnn_hihope-rzg2m_build-and-test:
-  extends: [.rzg2_meta-renesas-ai_test, .hihope-rzg2m]
+benchmark:tflite:hihope-rzg2h:
+  stage: build-ai-bsp
+  extends: [".build-meta-renesas-ai", ".hihope-rzg2h"]
   variables:
-    CI_CONF_NAME: armnn
-  rules: *build-and-test_rules-auto
+    FRAMEWORK: tensorflow-lite
+    EXTRA_BUILD_ARGS: "-b"
+  <<: *selective_rules
 
-armnn_hihope-rzg2h_build-and-test:
-  extends: [.rzg2_meta-renesas-ai_test, .hihope-rzg2h]
+benchmark:armnn:hihope-rzg2m:
+  stage: build-ai-bsp
+  extends: [".build-meta-renesas-ai", ".hihope-rzg2m"]
   variables:
-    CI_CONF_NAME: armnn
-  rules: *build-and-test_rules-manual
+    FRAMEWORK: armnn
+    EXTRA_BUILD_ARGS: "-b"
 
-armnn_smarc-rzg2l_build-and-test:
-  extends: [.rzg2l_meta-renesas-ai_test, .smarc-rzg2l]
+benchmark:ort:hihope-rzg2m:
+  stage: build-ai-bsp
+  extends: [".build-meta-renesas-ai", ".hihope-rzg2m"]
   variables:
-    CI_CONF_NAME: armnn
-  rules: *build-and-test_rules-auto
+    FRAMEWORK: onnxruntime
+    EXTRA_BUILD_ARGS: "-b"
 
-armnn_smarc-rzg2lc_build-and-test:
-  extends: [.rzg2l_meta-renesas-ai_test, .smarc-rzg2lc]
+benchmark:tflite:hihope-rzg2m:
+  stage: build-ai-bsp
+  extends: [".build-meta-renesas-ai", ".hihope-rzg2m"]
   variables:
-    CI_CONF_NAME: armnn
-  rules: *build-and-test_rules-manual
+    FRAMEWORK: tensorflow-lite
+    EXTRA_BUILD_ARGS: "-b"
 
-armnn_smarc-rzg2ul_build-and-test:
-  extends: [.rzg2l_meta-renesas-ai_test, .smarc-rzg2ul]
+benchmark:armnn:hihope-rzg2n:
+  stage: build-ai-bsp
+  extends: [".build-meta-renesas-ai", ".hihope-rzg2n"]
   variables:
-    CI_CONF_NAME: armnn
-  rules: *build-and-test_rules-manual
+    FRAMEWORK: armnn
+    EXTRA_BUILD_ARGS: "-b"
+  <<: *selective_rules
 
-# onnx
-onnx_ek874_build-and-test:
-  extends: [.rzg2_meta-renesas-ai_test, .ek874]
+benchmark:ort:hihope-rzg2n:
+  stage: build-ai-bsp
+  extends: [".build-meta-renesas-ai", ".hihope-rzg2n"]
   variables:
-    CI_CONF_NAME: onnxruntime
-  rules: *build-and-test_rules-manual
+    FRAMEWORK: onnxruntime
+    EXTRA_BUILD_ARGS: "-b"
+  <<: *selective_rules
 
-onnx_hihope-rzg2n_build-and-test:
-  extends: [.rzg2_meta-renesas-ai_test, .hihope-rzg2n]
+benchmark:tflite:hihope-rzg2n:
+  stage: build-ai-bsp
+  extends: [".build-meta-renesas-ai", ".hihope-rzg2n"]
   variables:
-    CI_CONF_NAME: onnxruntime
-  rules: *build-and-test_rules-manual
+    FRAMEWORK: tensorflow-lite
+    EXTRA_BUILD_ARGS: "-b"
+  <<: *selective_rules
 
-onnx_hihope-rzg2m_build-and-test:
-  extends: [.rzg2_meta-renesas-ai_test, .hihope-rzg2m]
+benchmark:armnn:ek874:
+  stage: build-ai-bsp
+  extends: [".build-meta-renesas-ai", ".ek874"]
   variables:
-    CI_CONF_NAME: onnxruntime
-  rules: *build-and-test_rules-auto
+    FRAMEWORK: armnn
+    EXTRA_BUILD_ARGS: "-b"
+  <<: *selective_rules
 
-onnx_hihope-rzg2h_build-and-test:
-  extends: [.rzg2_meta-renesas-ai_test, .hihope-rzg2h]
+benchmark:ort:ek874:
+  stage: build-ai-bsp
+  extends: [".build-meta-renesas-ai", ".ek874"]
   variables:
-    CI_CONF_NAME: onnxruntime
-  rules: *build-and-test_rules-manual
+    FRAMEWORK: onnxruntime
+    EXTRA_BUILD_ARGS: "-b"
+  <<: *selective_rules
 
-onnx_smarc-rzg2l_build-and-test:
+benchmark:tflite:ek874:
+  stage: build-ai-bsp
+  extends: [".build-meta-renesas-ai", ".ek874"]
   variables:
-  extends: [.rzg2l_meta-renesas-ai_test, .smarc-rzg2l]
-  variables:
-    CI_CONF_NAME: onnxruntime
-  rules: *build-and-test_rules-auto
+    FRAMEWORK: tensorflow-lite
+    EXTRA_BUILD_ARGS: "-b"
+  <<: *selective_rules
 
-onnx_smarc-rzg2lc_build-and-test:
+benchmark:armnn:smarc-rzg2l:
+  stage: build-ai-bsp
+  extends: [".build-meta-renesas-ai", ".smarc-rzg2l"]
   variables:
-  extends: [.rzg2l_meta-renesas-ai_test, .smarc-rzg2lc]
-  variables:
-    CI_CONF_NAME: onnxruntime
-  rules: *build-and-test_rules-manual
+    FRAMEWORK: armnn
+    EXTRA_BUILD_ARGS: "-b"
 
-onnx_smarc-rzg2ul_build-and-test:
+benchmark:ort:smarc-rzg2l:
+  stage: build-ai-bsp
+  extends: [".build-meta-renesas-ai", ".smarc-rzg2l"]
   variables:
-  extends: [.rzg2l_meta-renesas-ai_test, .smarc-rzg2ul]
-  variables:
-    CI_CONF_NAME: onnxruntime
-  rules: *build-and-test_rules-manual
+    FRAMEWORK: onnxruntime
+    EXTRA_BUILD_ARGS: "-b"
 
-# tflite
-tfl_ek874_build-and-test:
-  extends: [.rzg2_meta-renesas-ai_test, .ek874]
+benchmark:tflite:smarc-rzg2l:
+  stage: build-ai-bsp
+  extends: [".build-meta-renesas-ai", ".smarc-rzg2l"]
   variables:
-    CI_CONF_NAME: tensorflow-lite
-  rules: *build-and-test_rules-manual
+    FRAMEWORK: tensorflow-lite
+    EXTRA_BUILD_ARGS: "-b"
 
-tfl_hihope-rzg2n_build-and-test:
-  extends: [.rzg2_meta-renesas-ai_test, .hihope-rzg2n]
+benchmark:armnn:smarc-rzg2lc:
+  stage: build-ai-bsp
+  extends: [".build-meta-renesas-ai", ".smarc-rzg2lc"]
   variables:
-    CI_CONF_NAME: tensorflow-lite
-  rules: *build-and-test_rules-manual
+    FRAMEWORK: armnn
+    EXTRA_BUILD_ARGS: "-b"
+  <<: *selective_rules
 
-tfl_hihope-rzg2m_build-and-test:
-  extends: [.rzg2_meta-renesas-ai_test, .hihope-rzg2m]
+benchmark:ort:smarc-rzg2lc:
+  stage: build-ai-bsp
+  extends: [".build-meta-renesas-ai", ".smarc-rzg2lc"]
   variables:
-    CI_CONF_NAME: tensorflow-lite
-  rules: *build-and-test_rules-auto
+    FRAMEWORK: onnxruntime
+    EXTRA_BUILD_ARGS: "-b"
+  <<: *selective_rules
 
-tfl_hihope-rzg2h_build-and-test:
-  extends: [.rzg2_meta-renesas-ai_test, .hihope-rzg2h]
+benchmark:tflite:smarc-rzg2lc:
+  stage: build-ai-bsp
+  extends: [".build-meta-renesas-ai", ".smarc-rzg2lc"]
   variables:
-    CI_CONF_NAME: tensorflow-lite
-  rules: *build-and-test_rules-manual
+    FRAMEWORK: tensorflow-lite
+    EXTRA_BUILD_ARGS: "-b"
+  <<: *selective_rules
 
-tfl_smarc-rzg2l_build-and-test:
-  extends: [.rzg2l_meta-renesas-ai_test, .smarc-rzg2l]
+benchmark:armnn:smarc-rzg2ul:
+  stage: build-ai-bsp
+  extends: [".build-meta-renesas-ai", ".smarc-rzg2ul"]
   variables:
-    CI_CONF_NAME: tensorflow-lite
-  rules: *build-and-test_rules-auto
+    FRAMEWORK: armnn
+    EXTRA_BUILD_ARGS: "-b"
+  <<: *selective_rules
 
-tfl_smarc-rzg2lc_build-and-test:
-  extends: [.rzg2l_meta-renesas-ai_test, .smarc-rzg2lc]
+benchmark:ort:smarc-rzg2ul:
+  stage: build-ai-bsp
+  extends: [".build-meta-renesas-ai", ".smarc-rzg2ul"]
   variables:
-    CI_CONF_NAME: tensorflow-lite
-  rules: *build-and-test_rules-manual
+    FRAMEWORK: onnxruntime
+    EXTRA_BUILD_ARGS: "-b"
+  <<: *selective_rules
 
-tfl_smarc-rzg2ul_build-and-test:
-  extends: [.rzg2l_meta-renesas-ai_test, .smarc-rzg2ul]
+benchmark:tflite:smarc-rzg2ul:
+  stage: build-ai-bsp
+  extends: [".build-meta-renesas-ai", ".smarc-rzg2ul"]
   variables:
-    CI_CONF_NAME: tensorflow-lite
-  rules: *build-and-test_rules-manual
+    FRAMEWORK: tensorflow-lite
+    EXTRA_BUILD_ARGS: "-b"
+  <<: *selective_rules
 
-################################################################################
-# Build only (i.e. don't include meta-cip-tests)
-################################################################################
-.build-only_rules: &build-only_rules
-    - if: $CI_COMMIT_TAG
-      when: always
-
-# armnn
-armnn_ek874_build-only:
-  extends: [.rzg2_meta-renesas-ai_release, .ek874]
-  variables:
-    CI_CONF_NAME: armnn
-  rules: *build-only_rules
-
-armnn_hihope-rzg2n_build-only:
-  extends: [.rzg2_meta-renesas-ai_release, .hihope-rzg2n]
-  variables:
-    CI_CONF_NAME: armnn
-  rules: *build-only_rules
-
-armnn_hihope-rzg2m_build-only:
-  extends: [.rzg2_meta-renesas-ai_release, .hihope-rzg2m]
-  variables:
-    CI_CONF_NAME: armnn
-  rules: *build-only_rules
-
-armnn_hihope-rzg2h_build-only:
-  extends: [.rzg2_meta-renesas-ai_release, .hihope-rzg2h]
-  variables:
-    CI_CONF_NAME: armnn
-  rules: *build-only_rules
-
-armnn_smarc-rzg2l_build-only:
-  extends: [.rzg2l_meta-renesas-ai_release, .smarc-rzg2l]
-  variables:
-    CI_CONF_NAME: armnn
-  rules: *build-only_rules
-
-armnn_smarc-rzg2lc_build-only:
-  extends: [.rzg2l_meta-renesas-ai_release, .smarc-rzg2lc]
-  variables:
-    CI_CONF_NAME: armnn
-  rules: *build-only_rules
-
-armnn_smarc-rzg2ul_build-only:
-  extends: [.rzg2l_meta-renesas-ai_release, .smarc-rzg2ul]
-  variables:
-    CI_CONF_NAME: armnn
-  rules: *build-only_rules
-
-# onnxruntime
-onnxruntime_ek874_build-only:
-  extends: [.rzg2_meta-renesas-ai_release, .ek874]
-  variables:
-    CI_CONF_NAME: onnxruntime
-  rules: *build-only_rules
-
-onnxruntime_hihope-rzg2n_build-only:
-  extends: [.rzg2_meta-renesas-ai_release, .hihope-rzg2n]
-  variables:
-    CI_CONF_NAME: onnxruntime
-  rules: *build-only_rules
-
-onnxruntime_hihope-rzg2m_build-only:
-  extends: [.rzg2_meta-renesas-ai_release, .hihope-rzg2m]
-  variables:
-    CI_CONF_NAME: onnxruntime
-  rules: *build-only_rules
-
-onnxruntime_hihope-rzg2h_build-only:
-  extends: [.rzg2_meta-renesas-ai_release, .hihope-rzg2h]
-  variables:
-    CI_CONF_NAME: onnxruntime
-  rules: *build-only_rules
-
-onnxruntime_smarc-rzg2l_build-only:
-  extends: [.rzg2l_meta-renesas-ai_release, .smarc-rzg2l]
-  variables:
-    CI_CONF_NAME: onnxruntime
-  rules: *build-only_rules
-
-onnxruntime_smarc-rzg2lc_build-only:
-  extends: [.rzg2l_meta-renesas-ai_release, .smarc-rzg2lc]
-  variables:
-    CI_CONF_NAME: onnxruntime
-  rules: *build-only_rules
-
-onnxruntime_smarc-rzg2ul_build-only:
-  extends: [.rzg2l_meta-renesas-ai_release, .smarc-rzg2ul]
-  variables:
-    CI_CONF_NAME: onnxruntime
-  rules: *build-only_rules
-
-# tensorflow-lite
-tensorflow-lite_ek874_build-only:
-  extends: [.rzg2_meta-renesas-ai_release, .ek874]
-  variables:
-    CI_CONF_NAME: tensorflow-lite
-  rules: *build-only_rules
-
-tensorflow-lite_hihope-rzg2n_build-only:
-  extends: [.rzg2_meta-renesas-ai_release, .hihope-rzg2n]
-  variables:
-    CI_CONF_NAME: tensorflow-lite
-  rules: *build-only_rules
-
-tensorflow-lite_hihope-rzg2m_build-only:
-  extends: [.rzg2_meta-renesas-ai_release, .hihope-rzg2m]
-  variables:
-    CI_CONF_NAME: tensorflow-lite
-  rules: *build-only_rules
-
-tensorflow-lite_hihope-rzg2h_build-only:
-  extends: [.rzg2_meta-renesas-ai_release, .hihope-rzg2h]
-  variables:
-    CI_CONF_NAME: tensorflow-lite
-  rules: *build-only_rules
-
-tensorflow-lite_smarc-rzg2l_build-only:
-  extends: [.rzg2l_meta-renesas-ai_release, .smarc-rzg2l]
-  variables:
-    CI_CONF_NAME: tensorflow-lite
-  rules: *build-only_rules
-
-tensorflow-lite_smarc-rzg2lc_build-only:
-  extends: [.rzg2l_meta-renesas-ai_release, .smarc-rzg2lc]
-  variables:
-    CI_CONF_NAME: tensorflow-lite
-  rules: *build-only_rules
-
-tensorflow-lite_smarc-rzg2ul_build-only:
-  extends: [.rzg2l_meta-renesas-ai_release, .smarc-rzg2ul]
-  variables:
-    CI_CONF_NAME: tensorflow-lite
-  rules: *build-only_rules
