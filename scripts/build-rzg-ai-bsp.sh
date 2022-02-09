@@ -26,6 +26,7 @@ PROP_LIBS_EXTRACTED=false
 BUILD=true
 OUTPUT_DIR="${WORK_DIR}/output"
 FAMILY=""
+SKIP_LICENSE_WARNING=false
 
 ################################################################################
 # Helpers
@@ -39,7 +40,7 @@ print_help () {
 
 	 USAGE: ${COMMAND_NAME} -p <platform> -l <prop lib dir> \\
 	                    [-b] [-c] [-d] [-e] [-f <framework>] \\
-	                    [-o <output dir>] [-h]
+	                    [-o <output dir>] [-s] [-h]
 
 	 OPTIONS:
 	 -h                 Print this help and exit.
@@ -64,6 +65,8 @@ print_help () {
 	 -p <platform>      Platform to build for. Choose from:
 	                    hihope-rzg2h, hihope-rzg2m, hihope-rzg2n, ek874,
 	                    smarc-rzg2l, smarc-rzg2lc, smarc-rzg2ul.
+	 -s                 Skip the license warning prompt and automatically
+	                    include the packages in LICENSE_FLAGS_WHITELIST.
 
 	EOF
 }
@@ -71,7 +74,7 @@ print_help () {
 ################################################################################
 # Options parsing
 
-while getopts ":bcdef:l:o:p:h" opt; do
+while getopts ":bcdef:l:o:p:sh" opt; do
         case $opt in
 	b)
 		BENCHMARK=true
@@ -136,6 +139,9 @@ while getopts ":bcdef:l:o:p:h" opt; do
 			exit 1
 			;;
 		esac
+		;;
+	s)
+		SKIP_LICENSE_WARNING=true
 		;;
 	h)
 		print_help
@@ -348,6 +354,10 @@ configure_build () {
 	else
 		$WORK_DIR/meta-renesas-ai/scripts/set-config-files.sh -d ${WORK_DIR} -f ${FRAMEWORK} -p ${PLATFORM}
 	fi
+
+	if $SKIP_LICENSE_WARNING; then
+		sed -i 's/#LICENSE_FLAGS_WHITELIST/LICENSE_FLAGS_WHITELIST/g' ./conf/local.conf
+	fi
 }
 
 do_build () {
@@ -417,13 +427,18 @@ fi
 configure_build
 
 if $BUILD; then
-	echo -ne "\nHave licensing options been updated in the local.conf file? "; read
-	if [[ $REPLY =~ ^[Yy]$ ]]
-	then
+	if $SKIP_LICENSE_WARNING; then
 		do_build
 		copy_output
 	else
-		echo "Please uncomment the LICENSE_FLAGS_WHITELIST to build the BSP"
+		echo -ne "\nHave licensing options been updated in the local.conf file? "; read
+		if [[ $REPLY =~ ^[Yy]$ ]]
+		then
+			do_build
+			copy_output
+		else
+			echo "Please uncomment the LICENSE_FLAGS_WHITELIST to build the BSP"
+		fi
 	fi
 fi
 
