@@ -28,6 +28,7 @@ BUILD=true
 OUTPUT_DIR="${WORK_DIR}/output"
 FAMILY=""
 SKIP_LICENSE_WARNING=false
+BUILD_SDK=false
 
 ################################################################################
 # Helpers
@@ -41,7 +42,7 @@ print_help () {
 
 	 USAGE: ${COMMAND_NAME} -p <platform> -l <prop lib dir> \\
 	                    [-b] [-c] [-d] [-e] [-f <framework>] \\
-	                    [-o <output dir>] [-s] [-h]
+	                    [-o <output dir>] [-s] [-t] [-h]
 
 	 OPTIONS:
 	 -h                 Print this help and exit.
@@ -68,6 +69,7 @@ print_help () {
 	                    smarc-rzg2l, smarc-rzg2lc, smarc-rzg2ul.
 	 -s                 Skip the license warning prompt and automatically
 	                    include the packages in LICENSE_FLAGS_WHITELIST.
+	 -t                 Build toolchain/SDK once main build has completed.
 
 	EOF
 }
@@ -75,7 +77,7 @@ print_help () {
 ################################################################################
 # Options parsing
 
-while getopts ":bcdef:l:o:p:sh" opt; do
+while getopts ":bcdef:l:o:p:sth" opt; do
         case $opt in
 	b)
 		BENCHMARK=true
@@ -143,6 +145,9 @@ while getopts ":bcdef:l:o:p:sh" opt; do
 		;;
 	s)
 		SKIP_LICENSE_WARNING=true
+		;;
+	t)
+		BUILD_SDK=true
 		;;
 	h)
 		print_help
@@ -364,12 +369,13 @@ configure_build () {
 do_build () {
 	echo "#################################################################"
 	echo "Starting build..."
+	bitbake core-image-qt
+}
 
-	if [ ${FAMILY} == "rzg2" ]; then
-		bitbake core-image-qt
-	elif [ ${FAMILY} == "rzg2l" ]; then
-		bitbake core-image-qt
-	fi
+do_sdk_build () {
+	echo "#################################################################"
+	echo "Starting SDK build..."
+	bitbake core-image-qt -c populate_sdk
 }
 
 copy_output () {
@@ -387,6 +393,10 @@ copy_output () {
 		cp ${bin_dir}/core-image-*-${PLATFORM}.tar.gz ${OUTPUT_DIR}/${PLATFORM}
 		cp ${bin_dir}/Image-${PLATFORM}.bin ${OUTPUT_DIR}/${PLATFORM}
 		cp ${bin_dir}/*smarc*.dtb ${OUTPUT_DIR}/${PLATFORM}
+	fi
+
+	if $BUILD_SDK; then
+		cp $WORK_DIR/build/tmp/deploy/sdk/*.sh ${OUTPUT_DIR}/${PLATFORM}
 	fi
 }
 
@@ -429,13 +439,23 @@ configure_build
 
 if $BUILD; then
 	if $SKIP_LICENSE_WARNING; then
-		do_build
+		if $BUILD_SDK; then
+			do_build && do_sdk_build
+		else
+			do_build
+		fi
+
 		copy_output
 	else
 		echo -ne "\nHave licensing options been updated in the local.conf file? "; read
 		if [[ $REPLY =~ ^[Yy]$ ]]
 		then
-			do_build
+			if $BUILD_SDK; then
+				do_build && do_sdk_build
+			else
+				do_build
+			fi
+
 			copy_output
 		else
 			echo "Please uncomment the LICENSE_FLAGS_WHITELIST to build the BSP"
