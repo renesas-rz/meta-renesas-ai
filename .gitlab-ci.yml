@@ -5,6 +5,8 @@ variables:
   BUILD_DIR: ${CI_PROJECT_DIR}/build
   OUTPUT_DIR: ${CI_PROJECT_DIR}/output
   PROP_LIBS_DIR: ${CI_PROJECT_DIR}/prop_libs
+  DL_DIR: ${CI_PROJECT_DIR}/downloads
+  SSTATE_DIR: ${CI_PROJECT_DIR}/sstate_cache
 
 .selective_rules: &selective_rules
   rules:
@@ -70,7 +72,14 @@ variables:
     - git clone git@gitlab.renesas.solutions:spl2/continuous-integration/proprietary-libs.git ${PROP_LIBS_DIR}
     - pushd ${PROP_LIBS_DIR} && git checkout ${PROP_LIBS_BRANCH} && popd
     - pushd ${BUILD_DIR}
-    - ${CI_PROJECT_DIR}/scripts/build-rzg-ai-bsp.sh -p ${PLATFORM} -l ${PROP_LIBS_DIR} -f ${FRAMEWORK} -o ${OUTPUT_DIR} -e -s ${EXTRA_BUILD_ARGS}
+    - ${CI_PROJECT_DIR}/scripts/build-rzg-ai-bsp.sh -p ${PLATFORM} -l ${PROP_LIBS_DIR} -f ${FRAMEWORK} -o ${OUTPUT_DIR} -e -s -j ${DL_DIR} -k ${SSTATE_DIR} ${EXTRA_BUILD_ARGS}
+  cache:
+      - key: "downloads"
+        paths:
+          - ${DL_DIR}
+      - key: "sstate-cache-${PLATFORM}"
+        paths:
+          - ${SSTATE_DIR}
   artifacts:
     name: "${CI_JOB_NAME}"
     when: always
