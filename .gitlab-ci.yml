@@ -72,7 +72,7 @@ variables:
     - git clone git@gitlab.renesas.solutions:spl2/continuous-integration/build-scripts.git
     - cd build-scripts
     - PATH=$PATH:$(pwd)
-    - checkout-build-scripts.sh
+    - git checkout "${CI_BUILD_SCRIPTS_REF:-$CI_COMMIT_REF_NAME}" && export CI_BUILD_SCRIPTS_REF=$CI_COMMIT_REF_NAME || true
   artifacts:
     name: "${CI_JOB_NAME}-${CI_JOB_ID}"
     when: always
