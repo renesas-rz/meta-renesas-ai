@@ -29,6 +29,8 @@ OUTPUT_DIR="${WORK_DIR}/output"
 FAMILY=""
 SKIP_LICENSE_WARNING=false
 BUILD_SDK=false
+YOCTO_DL_DIR=""
+YOCTO_SSTATE_DIR=""
 
 ################################################################################
 # Helpers
@@ -40,8 +42,8 @@ print_help () {
 	 It will install all dependencies and download all source code,
 	 apart from the proprietary libraries.
 
-	 USAGE: ${COMMAND_NAME} -p <platform> -l <prop lib dir> \\
-	                    [-b] [-c] [-d] [-e] [-f <framework>] \\
+	 USAGE: ${COMMAND_NAME} -p <platform> -l <prop lib dir> [-b] [-c] \\
+	                    [-d] [-e] [-f <framework>] [-j <dir>] [-k <dir>] \\
 	                    [-o <output dir>] [-s] [-t] [-h]
 
 	 OPTIONS:
@@ -60,6 +62,9 @@ print_help () {
                                 armnn (default)
                                 onnxruntime
                                 tensorflow-lite
+	 -j <dir>           Set directory to use for the Yocto DL_DIR variable.
+	 -k <dir>           Set directory to use for the Yocto SSTATE_DIR
+	                    variable.
 	 -l <prop lib dir>  Location when proprietary libraries have been
 	                    downloaded to. This is not needed for smarc-rzg2ul.
 	 -o <output dir>    Location to copy binaries to when build is complete.
@@ -77,7 +82,7 @@ print_help () {
 ################################################################################
 # Options parsing
 
-while getopts ":bcdef:l:o:p:sth" opt; do
+while getopts ":bcdef:j:k:l:o:p:sth" opt; do
         case $opt in
 	b)
 		BENCHMARK=true
@@ -102,6 +107,12 @@ while getopts ":bcdef:l:o:p:sth" opt; do
 			exit 1
 			;;
 		esac
+		;;
+	j)
+		YOCTO_DL_DIR="${OPTARG}"
+		;;
+	k)
+		YOCTO_SSTATE_DIR="${OPTARG}"
 		;;
         l)
 		# Ignore the prop lib directory for RZ/G2UL
@@ -359,6 +370,14 @@ configure_build () {
 		$WORK_DIR/meta-renesas-ai/scripts/set-config-files.sh -d ${WORK_DIR} -f ${FRAMEWORK} -b -p ${PLATFORM}
 	else
 		$WORK_DIR/meta-renesas-ai/scripts/set-config-files.sh -d ${WORK_DIR} -f ${FRAMEWORK} -p ${PLATFORM}
+	fi
+
+	if [ ! -z ${YOCTO_DL_DIR} ]; then
+		echo "DL_DIR = \"${YOCTO_DL_DIR}\"" >> ./conf/local.conf
+	fi
+
+	if [ ! -z ${YOCTO_SSTATE_DIR} ]; then
+		echo "SSTATE_DIR = \"${YOCTO_SSTATE_DIR}\"" >> ./conf/local.conf
 	fi
 
 	if $SKIP_LICENSE_WARNING; then
