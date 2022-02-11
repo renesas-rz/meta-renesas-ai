@@ -1,0 +1,121 @@
+From 0dc725da4df6311b577cb0ba0ac739fc5665490e Mon Sep 17 00:00:00 2001
+From: Gareth Williams <gareth.williams.jx@renesas.com>
+Date: Tue, 7 Dec 2021 16:12:06 +0000
+Subject: [PATCH] Remove GPU and NNAPI
+
+Signed-off-by: Gareth Williams <gareth.williams.jx@renesas.com>
+---
+ .../lite/examples/label_image/label_image.cc       | 90 ----------------------
+ 1 file changed, 90 deletions(-)
+
+diff --git a/tensorflow/lite/examples/label_image/label_image.cc b/tensorflow/lite/examples/label_image/label_image.cc
+index d47cbc4..ed50d18 100644
+--- a/tensorflow/lite/examples/label_image/label_image.cc
++++ b/tensorflow/lite/examples/label_image/label_image.cc
+@@ -112,85 +112,6 @@ class DelegateProviders {
+   const tflite::tools::DelegateProviderList& delegates_list_;
+ };
+ 
+-TfLiteDelegatePtr CreateGPUDelegate(Settings* s) {
+-#if defined(__ANDROID__)
+-  TfLiteGpuDelegateOptionsV2 gpu_opts = TfLiteGpuDelegateOptionsV2Default();
+-  gpu_opts.inference_preference =
+-      TFLITE_GPU_INFERENCE_PREFERENCE_SUSTAINED_SPEED;
+-  gpu_opts.inference_priority1 =
+-      s->allow_fp16 ? TFLITE_GPU_INFERENCE_PRIORITY_MIN_LATENCY
+-                    : TFLITE_GPU_INFERENCE_PRIORITY_MAX_PRECISION;
+-  return evaluation::CreateGPUDelegate(&gpu_opts);
+-#else
+-  return evaluation::CreateGPUDelegate();
+-#endif
+-}
+-
+-TfLiteDelegatePtrMap GetDelegates(Settings* s,
+-                                  const DelegateProviders& delegate_providers) {
+-  // TODO(b/169681115): deprecate delegate creation path based on "Settings" by
+-  // mapping settings to DelegateProvider's parameters.
+-  TfLiteDelegatePtrMap delegates;
+-  if (s->gl_backend) {
+-    auto delegate = CreateGPUDelegate(s);
+-    if (!delegate) {
+-      LOG(INFO) << "GPU acceleration is unsupported on this platform.";
+-    } else {
+-      LOG(INFO) << "Use GPU acceleration.";
+-      delegates.emplace("GPU", std::move(delegate));
+-    }
+-  }
+-
+-  if (s->accel) {
+-    StatefulNnApiDelegate::Options options;
+-    options.allow_fp16 = s->allow_fp16;
+-    auto delegate = evaluation::CreateNNAPIDelegate(options);
+-    if (!delegate) {
+-      LOG(INFO) << "NNAPI acceleration is unsupported on this platform.";
+-    } else {
+-      LOG(INFO) << "Use NNAPI acceleration.";
+-      delegates.emplace("NNAPI", std::move(delegate));
+-    }
+-  }
+-
+-  if (s->hexagon_delegate) {
+-    const std::string libhexagon_path("/data/local/tmp");
+-    auto delegate =
+-        evaluation::CreateHexagonDelegate(libhexagon_path, s->profiling);
+-
+-    if (!delegate) {
+-      LOG(INFO) << "Hexagon acceleration is unsupported on this platform.";
+-    } else {
+-      LOG(INFO) << "Use Hexagon acceleration.";
+-      delegates.emplace("Hexagon", std::move(delegate));
+-    }
+-  }
+-
+-  if (s->xnnpack_delegate) {
+-    auto delegate = evaluation::CreateXNNPACKDelegate(s->number_of_threads);
+-    if (!delegate) {
+-      LOG(INFO) << "XNNPACK acceleration is unsupported on this platform.";
+-    } else {
+-      LOG(INFO) << "Use XNNPACK acceleration.";
+-      delegates.emplace("XNNPACK", std::move(delegate));
+-    }
+-  }
+-
+-  // Independent of above delegate creation options that are specific to this
+-  // binary, we use delegate providers to create TFLite delegates. Delegate
+-  // providers have been used in TFLite benchmark/evaluation tools and testing
+-  // so that we have a single and more comprehensive set of command line
+-  // arguments for delegate creation.
+-  TfLiteDelegatePtrMap delegates_from_providers =
+-      delegate_providers.CreateAllDelegates();
+-  for (auto& name_and_delegate : delegates_from_providers) {
+-    delegates.emplace("Delegate_Provider_" + name_and_delegate.first,
+-                      std::move(name_and_delegate.second));
+-  }
+-
+-  return delegates;
+-}
+-
+ // Takes a file name, and loads a list of labels from it, one per line, and
+ // returns a vector of the strings. It pads with empty strings so the length
+ // of the result is a multiple of 16, because our model expects that.
+@@ -299,17 +220,6 @@ void RunInference(Settings* settings,
+     LOG(INFO) << "number of outputs: " << outputs.size();
+   }
+ 
+-  auto delegates_ = GetDelegates(settings, delegate_providers);
+-  for (const auto& delegate : delegates_) {
+-    if (interpreter->ModifyGraphWithDelegate(delegate.second.get()) !=
+-        kTfLiteOk) {
+-      LOG(ERROR) << "Failed to apply " << delegate.first << " delegate.";
+-      exit(-1);
+-    } else {
+-      LOG(INFO) << "Applied " << delegate.first << " delegate.";
+-    }
+-  }
+-
+   if (interpreter->AllocateTensors() != kTfLiteOk) {
+     LOG(ERROR) << "Failed to allocate tensors!";
+     exit(-1);
+-- 
+2.7.4
+

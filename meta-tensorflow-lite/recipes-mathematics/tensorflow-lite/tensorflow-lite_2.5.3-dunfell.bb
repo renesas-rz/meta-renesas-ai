@@ -5,6 +5,7 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=5131e32d71a4eb06326ea1772d0de6fd"
 
 # tag v2.5.3
 SRCREV = "959e9b2a0c06df945f9fb66bd367af8832ca0d28"
+TFL_VER = "2.5.3"
 
 SRC_URI = " \
 	git://github.com/tensorflow/tensorflow.git;branch=r2.5 \
@@ -68,6 +69,9 @@ do_install_append() {
 	install -d ${D}${libdir}
 	install -m 0644 ${WORKDIR}/build/tensorflow-lite/libtensorflow-lite.a ${D}${libdir}
 
+	install -d ${D}${includedir}/flatbuffers
+	install -m 0644 ${WORKDIR}/build/flatbuffers/include/flatbuffers/* ${D}${includedir}/flatbuffers
+	install -m 0644 ${WORKDIR}/build/_deps/flatbuffers-build/libflatbuffers.a ${D}${libdir}
 	install -m 0644 ${WORKDIR}/build/_deps/ruy-build/libruy.a ${D}${libdir}
 	install -m 0644 ${WORKDIR}/build/_deps/xnnpack-build/libXNNPACK.a ${D}${libdir}
 	install -m 0644 ${WORKDIR}/build/_deps/fft2d-build/libfft2d_fftsg2d.a ${D}${libdir}
@@ -83,26 +87,28 @@ do_install_append() {
 	find tensorflow/lite -name "*.inc" | cpio -pdm ${D}${includedir}/
 	install -m 0555 ${S}/tensorflow/lite/examples/label_image/bitmap_helpers.cc ${D}${includedir}
 
-	install -d ${D}${bindir}/${PN}-${PV}/examples
+	install -d ${D}${bindir}/${PN}-${TFL_VER}/examples
 	install -m 0555 ${WORKDIR}/build/tensorflow-lite/examples/label_image/label_image \
-		${D}${bindir}/${PN}-${PV}/examples
+		${D}${bindir}/${PN}-${TFL_VER}/examples
 	install -m 0555 \
 		${S}/tensorflow/lite/examples/label_image/testdata/grace_hopper.bmp \
-		${D}${bindir}/${PN}-${PV}/examples
+		${D}${bindir}/${PN}-${TFL_VER}/examples
 	install -m 0555 \
                 ${WORKDIR}/build/minimal \
-                ${D}${bindir}/${PN}-${PV}/examples
+                ${D}${bindir}/${PN}-${TFL_VER}/examples
         install -m 0555 \
 		${WORKDIR}/build/tensorflow-lite/tools/benchmark/benchmark_model \
-		${D}${bindir}/${PN}-${PV}/examples
+		${D}${bindir}/${PN}-${TFL_VER}/examples
 
 	cd ${D}${bindir}
-	ln -sf ${PN}-${PV} ${PN}
+	ln -sf ${PN}-${TFL_VER} ${PN}
 }
 
 FILES_${PN} += " \
-	${bindir}/${PN}-${PV}/examples/label_image \
-	${bindir}/${PN}-${PV}/examples/grace_hopper.bmp \
-	${bindir}/${PN}-${PV}/examples/minimal \
-	${bindir}/${PN}-${PV}/examples/benchmark_model \
+	${bindir}/${PN}-${TFL_VER}/examples/label_image \
+	${bindir}/${PN}-${TFL_VER}/examples/grace_hopper.bmp \
+	${bindir}/${PN}-${TFL_VER}/examples/minimal \
+	${bindir}/${PN}-${TFL_VER}/examples/benchmark_model \
 "
+
+FILES_${PN} += "${bindir}/${PN}-${TFL_VER}/examples/*"
