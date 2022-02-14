@@ -8,8 +8,6 @@ LICENSE = "MIT"
 
 LIC_FILES_CHKSUM = "file://${S}/LICENSE;md5=0f7e3b1308cb5c00b372a6e78835732d"
 
-COMPATIBLE_MACHINE = "(hihope-rzg2h|hihope-rzg2m|hihope-rzg2n|ek874|smarc-rzg2l|smarc-rzg2lc)"
-
 SRCREV_onnxruntime ="d4106deeb65c21eed3ed40df149efefeb72fe9a4"
 
 S = "${WORKDIR}/git"
