@@ -15,7 +15,7 @@ variables:
 
 .rzg2l-test:
   variables:
-    CI_GRAPHICS_LICENSE: eval
+    CI_GRAPHICS_LICENSE: prod
     CI_META_RENESAS_MANIFEST: meta-cip-tests__dev.xml
     CI_BASE_MANIFEST: bsp-rzg2l__${CI_RZG2L_BSP_TAG}.xml
     BUILD_SCRIPT: build-manifest__rzg2l__meta-renesas-ai__gitlab-ci-test.sh
