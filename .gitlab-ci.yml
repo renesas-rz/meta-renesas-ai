@@ -22,7 +22,7 @@ variables:
 
 .rzg2-release:
   variables:
-    CI_GRAPHICS_LICENSE: prod
+    CI_GRAPHICS_LICENSE: eval
     CI_META_RENESAS_MANIFEST: bsp-rzg2__${CI_RZG2_BSP_TAG}.xml
     BUILD_SCRIPT: build-manifest__rzg2__meta-renesas-ai__gitlab-ci-release.sh
 
