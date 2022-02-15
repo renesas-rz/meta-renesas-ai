@@ -44,7 +44,7 @@ print_help () {
 
 	 USAGE: ${COMMAND_NAME} -p <platform> -l <prop lib dir> [-b] [-c] \\
 	                    [-d] [-e] [-f <framework>] [-j <dir>] [-k <dir>] \\
-	                    [-o <output dir>] [-s] [-t] [-h]
+	                    [-o <output dir>] [-s] [-t] [-T] [-h]
 
 	 OPTIONS:
 	 -h                 Print this help and exit.
@@ -75,6 +75,7 @@ print_help () {
 	 -s                 Skip the license warning prompt and automatically
 	                    include the packages in LICENSE_FLAGS_WHITELIST.
 	 -t                 Build toolchain/SDK once main build has completed.
+	 -T                 Only build toolchain/SDK.
 
 	EOF
 }
@@ -82,7 +83,7 @@ print_help () {
 ################################################################################
 # Options parsing
 
-while getopts ":bcdef:j:k:l:o:p:sth" opt; do
+while getopts ":bcdef:j:k:l:o:p:stTh" opt; do
         case $opt in
 	b)
 		BENCHMARK=true
@@ -159,6 +160,9 @@ while getopts ":bcdef:j:k:l:o:p:sth" opt; do
 		;;
 	t)
 		BUILD_SDK=true
+		;;
+	T)
+		BUILD_SDK="only"
 		;;
 	h)
 		print_help
@@ -457,29 +461,23 @@ fi
 configure_build
 
 if $BUILD; then
-	if $SKIP_LICENSE_WARNING; then
-		if $BUILD_SDK; then
-			do_build && do_sdk_build
-		else
-			do_build
-		fi
-
-		copy_output
-	else
+	if [ $SKIP_LICENSE_WARNING != "true" ]; then
 		echo -ne "\nHave licensing options been updated in the local.conf file? "; read
-		if [[ $REPLY =~ ^[Yy]$ ]]
-		then
-			if $BUILD_SDK; then
-				do_build && do_sdk_build
-			else
-				do_build
-			fi
-
-			copy_output
-		else
-			echo "Please uncomment the LICENSE_FLAGS_WHITELIST to build the BSP"
+		if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+			echo "Please uncomment the LICENSE_FLAGS_WHITELIST to build the BSP and restart"
+			exit 1
 		fi
 	fi
+
+	if [ $BUILD_SDK == "true" ]; then
+		do_build && do_sdk_build
+	elif [ $BUILD_SDK == "only" ]; then
+		do_sdk_build
+	else
+		do_build
+	fi
+
+	copy_output
 fi
 
 echo "#################################################################"
