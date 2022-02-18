@@ -48,7 +48,7 @@ do_compile_append_aarch64() {
 		-L ${WORKDIR}/build/delegate \
 		-L ${STAGING_DIR_TARGET}/usr/lib64/ \
 		-larmnn -larmnnDelegate -larmnnUtils \
-		-lstdc++ -lm -ldl -lpthread ${LDFLAGS} ${WORKDIR}/recipe-sysroot/usr/lib64/libtensorflow-lite.a
+		-lstdc++ -lm -ldl -lpthread ${LDFLAGS} ${STAGING_DIR_TARGET}/usr/lib64/libtensorflow-lite.a
 }
 
 do_install_append() {
