@@ -15,9 +15,7 @@ RZ/G2L families of System on Chips.
 
 ## Build Configuration
 **armnn-tensorflow-lite**: Add as a dependency to your recipe/package to add Arm
-NN TensorFlow Lite support.  
-**armnn-tensorflow-lite-examples**: Add to *IMAGE_INSTALL* to populate Arm NN's
-TensorFlow Lite parser example code in your build.  
+NN TensorFlow Lite support and the related examples code.  
 **armnn-dev**, **armnn-tensorflow-lite-dev**:  Useful to add to *IMAGE_INSTALL*
 when creating an SDK for TensorFlow Lite application development.
 
@@ -43,7 +41,7 @@ if the relevant *-examples* was included in the build (see Build Configuration
 above).
 
 **armnn-examples**: *UnitTests*, *SimpleSample*, *RenesasSample-Armnn*  
-**armnn-tensorflow-lite-examples**: *TfLiteMobilenetQuantized-Armnn*  
+**armnn-tensorflow-lite**: *TfLiteMobilenetQuantized-Armnn*  
 **armnn-onnx-examples**: *OnnxMobileNet-Armnn*
 
 The sample applications are installed under */usr/bin/armnn/examples/*.

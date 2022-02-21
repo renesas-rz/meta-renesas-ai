@@ -8,9 +8,7 @@ LICENSE = "MIT & Apache-2.0"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=3e14a924c16f7d828b8335a59da64074 \
                     file://${COMMON_LICENSE_DIR}/Apache-2.0;md5=89aea4e17d99a7cacdbeed46a0096b10"
 
-PACKAGES += "${PN}-tensorflow-lite-examples \
-             ${PN}-tensorflow-lite-examples-dbg \
-             ${PN}-tensorflow-lite \
+PACKAGES += "${PN}-tensorflow-lite \
              ${PN}-tensorflow-lite-dev \
              ${PN}-onnx-examples \
              ${PN}-onnx-examples-dbg \
@@ -81,8 +79,6 @@ EXTRANATIVEPATH += "chrpath-native"
 
 # Tensorflow-lite RDEPENDS
 RDEPENDS_${PN}-tensorflow-lite += "${PN}"
-RDEPENDS_${PN}-tensorflow-lite-examples += "${PN}-tensorflow-lite"
-RDEPENDS_${PN}-tensorflow-lite-examples-dbg += "${PN}-tensorflow-lite"
 RDEPENDS_${PN}-tensorflow-lite-dbg += "${PN}-tensorflow-lite"
 RDEPENDS_${PN}-tensorflow-lite-dev += "${PN}-tensorflow-lite"
 RDEPENDS_${PN}-tensorflow-lite-staticdev += "${PN}-tensorflow-lite"
@@ -337,11 +333,13 @@ FILES_${PN}-examples-dbg = " \
 FILES_${PN}-tensorflow-lite = " \
 	${libdir}/libarmnnTfLiteParser.so* \
 	${includedir}/armnn-tensorflow-lite/schema \
+	${bindir}/${PN}-${PV}/examples/tensorflow-lite \
 "
 FILES_${PN}-tensorflow-lite-dbg = "${libdir}/.debug/libarmnnTfLiteParser.so*"
-FILES_${PN}-tensorflow-lite-dev = "${includedir}/armnnTfLiteParser"
-FILES_${PN}-tensorflow-lite-examples = "${bindir}/${PN}-${PV}/examples/tensorflow-lite"
-FILES_${PN}-tensorflow-lite-examples-dbg = "${bindir}/${PN}-${PV}/examples/tensorflow-lite/.debug"
+FILES_${PN}-tensorflow-lite-dev = " \
+	${includedir}/armnnTfLiteParser \
+	${bindir}/${PN}-${PV}/examples/tensorflow-lite/.debug \
+"
 
 # ONNX files
 FILES_${PN}-onnx = "${libdir}/libarmnnOnnxParser.so*"
