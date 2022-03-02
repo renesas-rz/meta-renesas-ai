@@ -10,6 +10,7 @@ You may obtain a copy of the License at
 
 '''
 
+import glob
 import sys
 import os
 import subprocess
@@ -61,6 +62,9 @@ def main():
    else:
      benchmark = False
 
+   armnn_ver = glob.glob("/usr/bin/armnn-2*")
+   armnn_ver = armnn_ver[0][-1-4:len(armnn_ver[0])]
+
    with open(filepath) as fp:
        for line in fp:
            if not len(line.strip()) == 0:
@@ -78,7 +82,7 @@ def main():
                print("Standard Deviation" + " at Model " + model_details[0] + str(Average(list)))
 
                if benchmark == True:
-                   print("AI_BENCHMARK_MARKER,Arm NN SDK v21.05(" + armnnCompute + ") Delegate(" + armnnDelegate + ")," + model_details[0].rstrip().rsplit('/', 1)[1] +  "," +  model_details[1] + "," + str(Average(list_tmp)) + "," + str(Average(list)) + ",")
+                   print("AI_BENCHMARK_MARKER,Arm NN SDK v" + armnn_ver  + "(" + armnnCompute + ") Delegate(" + armnnDelegate + ")," + model_details[0].rstrip().rsplit('/', 1)[1] +  "," +  model_details[1] + "," + str(Average(list_tmp)) + "," + str(Average(list)) + ",")
 
 def Average(lst):
     return sum(lst) / len(lst)
