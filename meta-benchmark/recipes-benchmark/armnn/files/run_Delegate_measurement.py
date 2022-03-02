@@ -84,7 +84,7 @@ def Average(lst):
     return sum(lst) / len(lst)
 
 def run_delegate_benchmark(model_file_name, base_directory, label_file_name, number_of_threads, times_to_run, list, list_dev, armnnDelegate, armnnLogLevel, armnnCompute):
-    command = "/usr/bin/armnnDelegateBenchmark/armnnTFLiteDelegateBenchmark -i /usr/bin/armnn-21.05/examples/grace_hopper.bmp -c %s -l %s -t %d -m %s -d %s -n %s -r %s" % (times_to_run, label_file_name, number_of_threads, base_directory+model_file_name.rstrip(), armnnDelegate, armnnLogLevel, armnnCompute)
+    command = "/usr/bin/armnnDelegateBenchmark/armnnTFLiteDelegateBenchmark -i /usr/bin/tensorflow-lite/examples/grace_hopper.bmp -c %s -l %s -t %d -m %s -d %s -n %s -r %s" % (times_to_run, label_file_name, number_of_threads, base_directory+model_file_name.rstrip(), armnnDelegate, armnnLogLevel, armnnCompute)
 
     for line in run_command(command):
         count = 0
