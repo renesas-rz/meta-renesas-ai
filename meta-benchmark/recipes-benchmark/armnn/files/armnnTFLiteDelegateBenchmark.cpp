@@ -53,11 +53,13 @@ limitations under the License.
 #include "tensorflow/lite/examples/label_image/bitmap_helpers.h"
 #include "tensorflow/lite/examples/label_image/get_top_n.h"
 #include "tensorflow/lite/kernels/internal/optimized/cpu_check.h"
-
+#ifdef DUNFELL_XNNPACK
+#include "tensorflow/lite/delegates/xnnpack/xnnpack_delegate.h"
+#endif
 
 #define LOG(x) std::cerr
 
-enum DelegateType {none, ArmnnTfLite};
+enum DelegateType {none, ArmnnTfLite, XNNPack};
 
 namespace tflite {
 namespace label_image {
@@ -215,6 +217,10 @@ void RunInference(Settings* settings, DelegateType selectedDelegate,
 	size_t label_count;
 	std::vector<string> labels;
 
+#ifdef DUNFELL_XNNPACK
+	TfLiteDelegate* xnnpack_delegate;
+#endif
+
 	/* Setup the model */
 	if (!settings->model_name.c_str()) {
 		LOG(ERROR) << "no model file name\n";
@@ -249,6 +255,17 @@ void RunInference(Settings* settings, DelegateType selectedDelegate,
 			exit(-1);
 		}
 	}
+#ifdef DUNFELL_XNNPACK
+	else if(selectedDelegate == XNNPack) {
+		TfLiteXNNPackDelegateOptions xnnpack_options = TfLiteXNNPackDelegateOptionsDefault();
+		xnnpack_options.num_threads = settings->number_of_threads;
+		xnnpack_delegate = TfLiteXNNPackDelegateCreate(&xnnpack_options);
+
+		if (interpreter->ModifyGraphWithDelegate(xnnpack_delegate) != kTfLiteOk) {
+			LOG(ERROR) << "Could not modifiy Graph with XNNPack Delegate\n";
+		}
+	}
+#endif
 
 	if (settings->verbose)
 		printInterpretatorData(interpreter, settings);
@@ -307,6 +324,13 @@ void RunInference(Settings* settings, DelegateType selectedDelegate,
 	}
 
 	readOutputs(interpreter, settings, labels);
+
+#ifdef DUNFELL_XNNPACK
+	if(selectedDelegate == XNNPack) {
+		interpreter.reset();
+		TfLiteXNNPackDelegateDelete(xnnpack_delegate);
+	}
+#endif
 }
 
 void display_usage()
@@ -315,7 +339,7 @@ void display_usage()
 	<< "--accelerated, -a: [0|1], use Android NNAPI or not\n"
 	<< "--count, -c: loop interpreter->Invoke() for certain times\n"
 	<< "--compute, -r: [CpuAcc|CpuRef|GpuAcc]\n"
-	<< "--delegate, -d:[none|tflite] delegate selection\n"
+	<< "--delegate, -d:[none|tflite|xnnpack] delegate selection\n"
 	<< "--input_mean, -b: input mean\n"
 	<< "--input_std, -s: input standard deviation\n"
 	<< "--image, -i: image_name.bmp\n"
@@ -375,6 +399,8 @@ int Main(int argc, char** argv)
 		case 'd':
 			if(strstr(optarg, "tflite") != NULL)
 				selectedDelegate = ArmnnTfLite;
+			else if(strstr(optarg, "xnnpack") != NULL)
+				selectedDelegate = XNNPack;
 			else
 				selectedDelegate = none;
 		break;
