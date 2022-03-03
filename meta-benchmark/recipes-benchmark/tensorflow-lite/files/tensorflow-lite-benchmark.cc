@@ -39,7 +39,9 @@ limitations under the License.
 #include "tensorflow/lite/profiling/profiler.h"
 #include "tensorflow/lite/examples/label_image/bitmap_helpers.h"
 #include "tensorflow/lite/examples/label_image/get_top_n.h"
-
+#ifdef DUNFELL_XNNPACK
+#include "tensorflow/lite/delegates/xnnpack/xnnpack_delegate.h"
+#endif
 #include "tensorflow/lite/kernels/internal/optimized/cpu_check.h"
 
 #define LOG(x) std::cerr
@@ -128,6 +130,18 @@ void RunInference(Settings* s)
     LOG(FATAL) << "Failed to construct interpreter\n";
     exit(-1);
   }
+
+#ifdef DUNFELL_XNNPACK
+  TfLiteXNNPackDelegateOptions xnnpack_options =
+    TfLiteXNNPackDelegateOptionsDefault();
+  xnnpack_options.num_threads = s->number_of_threads;
+
+  TfLiteDelegate* xnnpack_delegate = TfLiteXNNPackDelegateCreate(&xnnpack_options);
+
+  if (interpreter->ModifyGraphWithDelegate(xnnpack_delegate) != kTfLiteOk) {
+    LOG(ERROR) << "Could not modifiy Graph with XNNPack Delegate\n";
+  }
+#endif
 
   if (s->verbose) {
     LOG(INFO) << "tensors size: " << interpreter->tensors_size() << "\n";
@@ -253,6 +267,11 @@ void RunInference(Settings* s)
     const int index = result.second;
     LOG(INFO) << confidence << ": " << index << " " << labels[index] << "\n";
   }
+
+#ifdef DUNFELL_XNNPACK
+  interpreter.reset();
+  TfLiteXNNPackDelegateDelete(xnnpack_delegate);
+#endif
 }
 
 void display_usage()

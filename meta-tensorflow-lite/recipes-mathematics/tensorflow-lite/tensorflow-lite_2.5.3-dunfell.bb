@@ -11,6 +11,7 @@ SRC_URI = " \
 	git://github.com/tensorflow/tensorflow.git;branch=r2.5 \
 	file://0001-Remove-GPU-and-NNAPI.patch \
 	file://0001-Use-wget-instead-of-curl-to-fetch-https-source.patch \
+	file://0001-tensorflow-lite-Do-not-build-XNNPack-into-library-ou.patch \
 "
 
 S = "${WORKDIR}/git"
@@ -35,6 +36,7 @@ do_configure() {
 
 EXTRA_OECMAKE_aarch64 = " \
 	-DTFLITE_ENABLE_RUY=ON \
+	-DTFLITE_ENABLE_XNNPACK=ON \
 	-DCMAKE_SYSTEM_NAME=Linux \
 	-DCMAKE_SYSTEM_PROCESSOR=aarch64 \
 	-DCMAKE_SYSROOT=${STAGING_DIR_TARGET} \

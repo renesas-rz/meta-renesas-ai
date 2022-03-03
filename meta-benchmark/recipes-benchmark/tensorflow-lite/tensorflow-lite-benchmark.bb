@@ -69,6 +69,7 @@ LDFLAGS_smarc-rzg2l += " \
 		${STAGING_DIR_TARGET}/usr/lib64/libclog.a \
 		${STAGING_DIR_TARGET}/usr/lib64/libfft2d_fftsg.a \
 		${STAGING_DIR_TARGET}/usr/lib64/libfarmhash.a \
+		-DDUNFELL_XNNPACK \
 "
 
 LDFLAGS_smarc-rzg2lc += " \
@@ -81,6 +82,7 @@ LDFLAGS_smarc-rzg2lc += " \
 		${STAGING_DIR_TARGET}/usr/lib64/libclog.a \
 		${STAGING_DIR_TARGET}/usr/lib64/libfft2d_fftsg.a \
 		${STAGING_DIR_TARGET}/usr/lib64/libfarmhash.a \
+		-DDUNFELL_XNNPACK \
 "
 
 do_compile() {
