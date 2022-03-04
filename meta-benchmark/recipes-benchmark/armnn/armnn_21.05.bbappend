@@ -34,9 +34,7 @@ do_compile_append() {
 		-L ${WORKDIR}/build/ \
 		-larmnn -larmnnTfLiteParser -larmnnOnnxParser \
 		-lstdc++ -lm -lpthread ${LDFLAGS}
-}
 
-do_compile_append_aarch64() {
 	${CC} ../armnnTFLiteDelegateBenchmark.cpp \
 		${WORKDIR}/tensorflow/tensorflow/lite/examples/label_image/bitmap_helpers.cc \
 		-o armnnTFLiteDelegateBenchmark \

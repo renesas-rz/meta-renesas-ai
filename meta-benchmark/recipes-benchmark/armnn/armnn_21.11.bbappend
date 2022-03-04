@@ -48,9 +48,7 @@ do_compile_append() {
 		-L ${WORKDIR}/build/ \
 		-larmnn -larmnnTfLiteParser -larmnnOnnxParser \
 		-lstdc++ -lm -lpthread ${LDFLAGS}
-}
 
-do_compile_append_aarch64() {
 	${CC} ../armnnTFLiteDelegateBenchmark.cpp \
 		${STAGING_DIR_TARGET}/usr/include/bitmap_helpers.cc \
 		-o armnnTFLiteDelegateBenchmark \
