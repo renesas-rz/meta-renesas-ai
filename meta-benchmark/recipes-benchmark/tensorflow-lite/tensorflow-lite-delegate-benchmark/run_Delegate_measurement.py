@@ -65,6 +65,9 @@ def main():
    armnn_ver = glob.glob("/usr/bin/armnn-2*")
    armnn_ver = armnn_ver[0][-1-4:len(armnn_ver[0])]
 
+   tfl_ver = glob.glob("/usr/bin/tensorflow-lite-2.*")
+   tfl_ver = tfl_ver[0][-1-4:len(tfl_ver[0])]
+
    with open(filepath) as fp:
        for line in fp:
            if not len(line.strip()) == 0:
@@ -82,7 +85,12 @@ def main():
                print("Standard Deviation" + " at Model " + model_details[0] + str(Average(list)))
 
                if benchmark == True:
-                   print("AI_BENCHMARK_MARKER,Arm NN SDK v" + armnn_ver  + "(" + armnnCompute + ") Delegate(" + delegateType + ")," + model_details[0].rstrip().rsplit('/', 1)[1] +  "," +  model_details[1] + "," + str(Average(list_tmp)) + "," + str(Average(list)) + ",")
+                   if delegateType == "armnn":
+                       print("AI_BENCHMARK_MARKER,TensorFlow Lite v" + tfl_ver + " (Delegate: ArmNN v" + armnn_ver + " " + armnnCompute + ")," + model_details[0].rstrip().rsplit('/', 1)[1] +  "," +  model_details[1] + "," + str(Average(list_tmp)) + "," + str(Average(list)) + ",")
+                   elif delegateType == "xnnpack":
+                       print("AI_BENCHMARK_MARKER,TensorFlow Lite v" + tfl_ver + " (Delegate: XNNPack)," + model_details[0].rstrip().rsplit('/', 1)[1] +  "," +  model_details[1] + "," + str(Average(list_tmp)) + "," + str(Average(list)) + ",")
+                   else:
+                       print("AI_BENCHMARK_MARKER,TensorFlow Lite v" + tfl_ver + "," + model_details[0].rstrip().rsplit('/', 1)[1] +  "," +  model_details[1] + "," + str(Average(list_tmp)) + "," + str(Average(list)) + ",")
 
 def Average(lst):
     return sum(lst) / len(lst)
