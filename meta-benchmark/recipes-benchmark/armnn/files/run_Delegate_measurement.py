@@ -33,7 +33,7 @@ def main():
        print("2) Model Directory    - The path to the directory containing the models listed in (1)")
        print("3) Interference runs  - The number of times to run inference on each model")
        print("4) Number of Threads  - The number of threads to use")
-       print("5) Delegate selection - The ArmNN delegate to use [none|tflite|xnnpack]")
+       print("5) Delegate selection - The ArmNN delegate to use [none|armnn|xnnpack]")
        print("6) ArmNN Log Level    - The level to set ArmNN to use [trace|debug|info|warning|error]")
        print("7) Compute            - The ArmNN backend to use [CpuRef|CpuAcc|GpuAcc]")
        print("8) Benchmark          - Optionally add \"benchmark\" to output benchmark results in a parsable format")

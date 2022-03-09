@@ -339,7 +339,7 @@ void display_usage()
 	<< "--accelerated, -a: [0|1], use Android NNAPI or not\n"
 	<< "--count, -c: loop interpreter->Invoke() for certain times\n"
 	<< "--compute, -r: [CpuAcc|CpuRef|GpuAcc]\n"
-	<< "--delegate, -d:[none|tflite|xnnpack] delegate selection\n"
+	<< "--delegate, -d:[none|armnn|xnnpack] delegate selection\n"
 	<< "--input_mean, -b: input mean\n"
 	<< "--input_std, -s: input standard deviation\n"
 	<< "--image, -i: image_name.bmp\n"
@@ -397,7 +397,7 @@ int Main(int argc, char** argv)
 			settings.loop_count = strtol(optarg, nullptr, 10);
 		break;
 		case 'd':
-			if(strstr(optarg, "tflite") != NULL)
+			if(strstr(optarg, "armnn") != NULL)
 				selectedDelegate = ArmnnTfLite;
 			else if(strstr(optarg, "xnnpack") != NULL)
 				selectedDelegate = XNNPack;
