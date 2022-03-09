@@ -24,7 +24,7 @@ import numpy as np
 # log level
 
 def main():
-   print("ArmNN TfLite Delegate Test App")
+   print("TfLite Delegate Benchmarking App")
 
    if len(sys.argv) != 8 and len(sys.argv) != 9:
        print("Invalid parameters...")
@@ -33,11 +33,11 @@ def main():
        print("2) Model Directory    - The path to the directory containing the models listed in (1)")
        print("3) Interference runs  - The number of times to run inference on each model")
        print("4) Number of Threads  - The number of threads to use")
-       print("5) Delegate selection - The ArmNN delegate to use [none|armnn|xnnpack]")
+       print("5) Delegate selection - The TfLite delegate to use [none|armnn|xnnpack]")
        print("6) ArmNN Log Level    - The level to set ArmNN to use [trace|debug|info|warning|error]")
        print("7) Compute            - The ArmNN backend to use [CpuRef|CpuAcc|GpuAcc]")
        print("8) Benchmark          - Optionally add \"benchmark\" to output benchmark results in a parsable format")
-       print("Example: python run_Delegate_measurement.py test_model_list_armnnDelegate.txt /home/root/models/tensorflowlite/ 30 2 tflite warning GpuAcc benchmark")
+       print("Example: python run_Delegate_measurement.py test_model_list_delegate.txt /home/root/models/tensorflowlite/ 30 2 armnn warning GpuAcc benchmark")
        sys.exit(1)
 
    filepath = sys.argv[1]
@@ -88,7 +88,7 @@ def Average(lst):
     return sum(lst) / len(lst)
 
 def run_delegate_benchmark(model_file_name, base_directory, label_file_name, number_of_threads, times_to_run, list, list_dev, delegateType, armnnLogLevel, armnnCompute):
-    command = "/usr/bin/armnnDelegateBenchmark/armnnTFLiteDelegateBenchmark -i /usr/bin/tensorflow-lite/examples/grace_hopper.bmp -c %s -l %s -t %d -m %s -d %s -n %s -r %s" % (times_to_run, label_file_name, number_of_threads, base_directory+model_file_name.rstrip(), delegateType, armnnLogLevel, armnnCompute)
+    command = "/usr/bin/armnnDelegateBenchmark/tfLiteDelegateBenchmark -i /usr/bin/tensorflow-lite/examples/grace_hopper.bmp -c %s -l %s -t %d -m %s -d %s -n %s -r %s" % (times_to_run, label_file_name, number_of_threads, base_directory+model_file_name.rstrip(), delegateType, armnnLogLevel, armnnCompute)
 
     for line in run_command(command):
         count = 0

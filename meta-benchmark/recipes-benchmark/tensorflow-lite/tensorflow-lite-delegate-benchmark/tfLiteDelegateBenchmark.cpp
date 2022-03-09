@@ -41,8 +41,8 @@ limitations under the License.
 /* ArmNN */
 #include <armnn/ArmNN.hpp>
 #include <armnn/Utils.hpp>
-#include "../delegate/include/armnn_delegate.hpp"
-#include "../delegate/include/DelegateOptions.hpp"
+#include <delegate/armnn_delegate.hpp>
+#include <delegate/DelegateOptions.hpp>
 
 /* TfLite */
 #include "tensorflow/lite/kernels/register.h"
@@ -335,7 +335,7 @@ void RunInference(Settings* settings, DelegateType selectedDelegate,
 
 void display_usage()
 {
-	LOG(INFO) << "armnnDelegateBenchmark\n"
+	LOG(INFO) << "tfLiteDelegateBenchmark\n"
 	<< "--accelerated, -a: [0|1], use Android NNAPI or not\n"
 	<< "--count, -c: loop interpreter->Invoke() for certain times\n"
 	<< "--compute, -r: [CpuAcc|CpuRef|GpuAcc]\n"

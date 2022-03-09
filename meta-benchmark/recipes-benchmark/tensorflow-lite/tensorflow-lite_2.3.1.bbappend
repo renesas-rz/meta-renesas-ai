@@ -1,4 +1,4 @@
-FILESEXTRAPATHS_prepend := "${THISDIR}/files:"
+FILESEXTRAPATHS_prepend := "${THISDIR}/tensorflow-lite-benchmark:"
 
 RDEPENDS_${PN} += " \
 	models-tensorflow-lite \

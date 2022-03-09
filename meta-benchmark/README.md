@@ -5,9 +5,12 @@ TensorFlow Lite and ONNX Runtime.
 
 Each framework has its own benchmark tool.
 
-* For Arm NN SDK, it is armnnBenchmark and armnnTFLiteDelegateBenchmark
+* For Arm NN SDK, it is armnnBenchmark
 * For TensorFlow-lite, it is tensorflow-lite-benchmark
 * For ONNX Runtime, it is onnxruntime_benchmark
+
+tfLiteDelegateBenchmark is also provided as a tool for
+benchmarking the TensorFlow Lite delegates provided by various frameworks.
 
 The output of each benchmark tool shows the average inference time and the
 standard deviation for each available model, which are printed in the terminal.
@@ -20,13 +23,6 @@ cd /usr/bin/armnnBenchmark
 
 # Run inference 30 times
 ./armnnBenchmark
-```
-```bash
-cd /usr/bin/armnnDelegateBenchmark
-
-# Run inference 30 times on each TfLite model using the ArmNN TfLite Delegate
-./run_Delegate_measurement.py test_model_list_armnnDelegate.txt \
-/home/root/models/tensorflowlite/ 30 2 tflite warning
 ```
 
 ## TensorFlow Lite
@@ -80,6 +76,19 @@ Some examples can be found below (assuming 2 cores and inference 30 times):
 
 ./run_TF_measurement.py test_file_list_Squeezenet.txt \
 /home/root/models/tensorflowlite/Squeezenet/ 30 2
+```
+
+## TensorFlow Lite Delegate
+```bash
+cd /usr/bin/tfLiteDelegateBenchmark
+
+# Run inference 30 times on each TfLite model using the ArmNN Delegate
+./run_Delegate_measurement.py test_model_list_delegate.txt \
+/home/root/models/tensorflowlite/ 30 2 armnn warning
+
+# Run inference 30 times on each TfLite model using the XNNPack Delegate
+./run_Delegate_measurement.py test_model_list_delegate.txt \
+/home/root/models/tensorflowlite/ 30 2 xnnpack warning
 ```
 
 ## ONNX Runtime

@@ -52,6 +52,7 @@ do_install(){
 	cd ${S}
 	find tensorflow/lite -name "*.h" | cpio -pdm ${D}${includedir}/
 	find tensorflow/lite -name "*.inc" | cpio -pdm ${D}${includedir}/
+	install -m 0555 ${S}/tensorflow/lite/examples/label_image/bitmap_helpers.cc ${D}${includedir}
 
 	install -d ${D}${includedir}/tensorflow_lite
 	cd ${S}/tensorflow/lite
