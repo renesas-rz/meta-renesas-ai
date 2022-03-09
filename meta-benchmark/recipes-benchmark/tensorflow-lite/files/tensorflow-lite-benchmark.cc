@@ -276,7 +276,7 @@ void RunInference(Settings* s)
 
 void display_usage()
 {
-  LOG(INFO) << "label_image\n"
+  LOG(INFO) << "tensorflow-lite-benchmark\n"
             << "--accelerated, -a: [0|1], use Android NNAPI or not\n"
             << "--count, -c: loop interpreter->Invoke() for certain times\n"
             << "--input_mean, -b: input mean\n"
