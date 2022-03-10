@@ -346,7 +346,7 @@ void display_usage()
 	<< "--labels, -l: labels for the model\n"
 	<< "--tflite_model, -m: model_name.tflite\n"
 	<< "--profiling, -p: [0|1], profiling or not\n"
-	<< "--threads, -t: number of threads\n"
+	<< "--threads, -t: number of threads. Does not apply to ArmNN Delegate\n"
 	<< "--verbose, -v: [0|1] print more information\n"
 	<< "--armnn-log-level, -n: [trace|debug|info|warning|error] print more armnn specific information\n"
 	<< "\n";
