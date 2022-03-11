@@ -231,14 +231,14 @@ download_source () {
 		update_git_repo \
 			poky \
 			git://git.yoctoproject.org/poky \
-			e32d854e33bc86c2a616df8708e021a098afcf73
+			dunfell-23.0.13
 
-		cd poky; git cherry-pick 9e444; cd -
+		cd poky; git cherry-pick e256885889; cd -
 
 		update_git_repo \
 			meta-openembedded \
 			git://git.openembedded.org/meta-openembedded \
-			cc6fc6b1641ab23089c1e3bba11e0c6394f0867c
+			ab9fca485e13f6f2f9761e1d2810f87c2e4f060a
 
 		update_git_repo \
 			meta-gplv2 \
@@ -249,6 +249,11 @@ download_source () {
 			meta-qt5 \
 			https://github.com/meta-qt5/meta-qt5.git \
 			c1b0c9f546289b1592d7a895640de103723a0305
+
+		update_git_repo \
+			meta-virtualization \
+			https://git.yoctoproject.org/git/meta-virtualization \
+			9e9868ef3d6e5da7f0ecd0680fcd69324593842b
 
 		update_git_repo \
 			meta-rzg2 \
@@ -279,10 +284,10 @@ install_prop_libs () {
 		popd
 	elif [ ${FAMILY} == "rzg2l" ]; then
 		pushd ${PROP_DIR}
-		unzip RTK0EF0045Z13001ZJ-v0.8_EN.zip
-		tar -xf RTK0EF0045Z13001ZJ-v0.8_EN/meta-rz-features.tar.gz -C ${WORK_DIR}
-		unzip RTK0EF0045Z15001ZJ-v0.53_EN.zip
-		tar -xf RTK0EF0045Z15001ZJ-v0.53_EN/meta-rz-features.tar.gz -C ${WORK_DIR}
+		unzip RTK0EF0045Z13001ZJ-v0.81_EN.zip
+		tar -xf RTK0EF0045Z13001ZJ-v0.81_EN/meta-rz-features.tar.gz -C ${WORK_DIR}
+		unzip RTK0EF0045Z15001ZJ-v0.55_EN.zip
+		tar -xf RTK0EF0045Z15001ZJ-v0.55_EN/meta-rz-features.tar.gz -C ${WORK_DIR}
 		popd
 	fi
 }
@@ -362,7 +367,7 @@ case ${RZG_AI_BSP_VER} in
 	if [ ${FAMILY} == "rzg2" ]; then
 		RZG_BSP_VER="BSP-1.0.10-update1"
 	elif [ ${FAMILY} == "rzg2l" ]; then
-		RZG_BSP_VER="rzg2l_bsp_v1.3-update2"
+		RZG_BSP_VER="rzg2l_bsp_v1.4"
 	fi
 	;;
 esac

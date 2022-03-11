@@ -4,7 +4,7 @@ stages:
 variables:
   CI_META_RENESAS_AI_REF: ${CI_COMMIT_REF_NAME}
   CI_RZG2_BSP_TAG: v1.0.10-update1
-  CI_RZG2L_BSP_TAG: v1.3-update2
+  CI_RZG2L_BSP_TAG: v1.4
 
 .rzg2-test:
   variables:
