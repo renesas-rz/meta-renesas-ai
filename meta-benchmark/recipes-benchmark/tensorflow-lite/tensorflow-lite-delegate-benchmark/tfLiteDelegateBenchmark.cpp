@@ -456,8 +456,10 @@ int Main(int argc, char** argv)
 	if (settings.loop_count < 1)
 		settings.loop_count = 1;
 
-	/* Print to standard output, including debug, up to specified level */
-	armnn::ConfigureLogging(true, true, armnnLogLevel);
+	if (selectedDelegate == ArmnnTfLite) {
+		/* Print to standard output, including debug, up to specified level */
+		armnn::ConfigureLogging(true, true, armnnLogLevel);
+	}
 
 	RunInference(&settings, selectedDelegate, backend);
 	return 0;
