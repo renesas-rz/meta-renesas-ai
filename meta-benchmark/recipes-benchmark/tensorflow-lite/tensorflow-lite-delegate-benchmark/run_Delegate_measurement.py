@@ -79,7 +79,7 @@ def main():
                    print("Invalid line: " + line)
                    sys.exit(1)
 
-               run_delegate_benchmark(model_details[0], base_directory_path, '/usr/bin/armnn/examples/tensorflow-lite/models/labels.txt', number_of_cores, number_of_iteration, list_tmp, list, delegateType, armnnLogLevel, armnnCompute)
+               run_delegate_benchmark(model_details[0], base_directory_path, 'labels.txt', number_of_cores, number_of_iteration, list_tmp, list, delegateType, armnnLogLevel, armnnCompute)
 
                print("Average Time" + " at Model " + model_details[0] + str(Average(list_tmp)) + " ms ")
                print("Standard Deviation" + " at Model " + model_details[0] + str(Average(list)))
@@ -96,7 +96,7 @@ def Average(lst):
     return sum(lst) / len(lst)
 
 def run_delegate_benchmark(model_file_name, base_directory, label_file_name, number_of_threads, times_to_run, list, list_dev, delegateType, armnnLogLevel, armnnCompute):
-    command = "/usr/bin/armnnDelegateBenchmark/tfLiteDelegateBenchmark -i /usr/bin/tensorflow-lite/examples/grace_hopper.bmp -c %s -l %s -t %d -m %s -d %s -n %s -r %s" % (times_to_run, label_file_name, number_of_threads, base_directory+model_file_name.rstrip(), delegateType, armnnLogLevel, armnnCompute)
+    command = "/usr/bin/tfLiteDelegateBenchmark/tfLiteDelegateBenchmark -i /usr/bin/tensorflow-lite/examples/grace_hopper.bmp -c %s -l %s -t %d -m %s -d %s -n %s -r %s" % (times_to_run, base_directory+label_file_name, number_of_threads, base_directory+model_file_name.rstrip(), delegateType, armnnLogLevel, armnnCompute)
 
     for line in run_command(command):
         count = 0
