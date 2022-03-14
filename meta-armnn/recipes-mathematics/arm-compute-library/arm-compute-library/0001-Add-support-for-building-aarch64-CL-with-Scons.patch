@@ -1,0 +1,66 @@
+From 32fe7954806106d40dd4a82b7f55155039f25d77 Mon Sep 17 00:00:00 2001
+From: Gareth Williams <gareth.williams.jx@renesas.com>
+Date: Fri, 18 Mar 2022 15:55:38 +0000
+Subject: [PATCH] Add support for building aarch64 CL with Scons
+
+Recreated for arm_compute v22.02, with support for Arm V8.2
+cores. This requires the compiler prefix variable to be unset
+in the SConstruct so the Yocto settings are used correctly.
+The check that ensures variables are set needs disabling in
+this case as ACL does not have awareness that it is running
+in a Yocto enviroment.
+
+Signed-off-by: Jianming Qiao <jianming.qiao@bp.renesas.com>
+Signed-off-by: Gareth Williams <gareth.williams.jx@renesas.com>
+---
+ SConstruct | 16 ++--------------
+ 1 file changed, 2 insertions(+), 14 deletions(-)
+
+diff --git a/SConstruct b/SConstruct
+index cc5a382..e8eb39a 100644
+--- a/SConstruct
++++ b/SConstruct
+@@ -288,8 +288,6 @@ else: # NONE "multi_isa" builds
+             env.Append(CXXFLAGS = ['-march=armv8.4-a'])
+         elif 'v8.' in env['arch']:
+             env.Append(CXXFLAGS = ['-march=armv8.2-a+fp16']) # explicitly enable fp16 extension otherwise __ARM_FEATURE_FP16_VECTOR_ARITHMETIC is undefined
+-        else:
+-            env.Append(CXXFLAGS = ['-march=armv8-a'])
+ 
+         if 'v8.6-a' in env['arch']:
+             env.Append(CPPDEFINES = ['ARM_COMPUTE_ENABLE_I8MM', 'ARM_COMPUTE_ENABLE_BF16'])
+@@ -311,9 +309,7 @@ else: # NONE "multi_isa" builds
+ prefix = ""
+ if 'x86' not in env['arch']:
+     if env['estate'] == '32':
+-        if env['os'] == 'linux':
+-            prefix = "arm-linux-gnueabihf-" if 'v7' in env['arch'] else "armv8l-linux-gnueabihf-"
+-        elif env['os'] == 'bare_metal':
++        if env['os'] == 'bare_metal':
+             prefix = "arm-eabi-"
+         elif env['os'] == 'android':
+             prefix = "arm-linux-androideabi-"
+@@ -321,7 +317,7 @@ if 'x86' not in env['arch']:
+             prefix = "armv7l-tizen-linux-gnueabi-"
+     elif env['estate'] == '64' and 'v8' in env['arch']:
+         if env['os'] == 'linux':
+-            prefix = "aarch64-linux-gnu-"
++            env.Append(CXXFLAGS = ['-fPIC'])
+         elif env['os'] == 'bare_metal':
+             prefix = "aarch64-elf-"
+         elif env['os'] == 'android':
+@@ -486,11 +482,3 @@ if env['exceptions']:
+         print("WARNING: Building tests for bare metal and armv7a is not supported")
+         Return()
+     SConscript('./tests/SConscript', variant_dir='%s/tests' % build_path, duplicate=0)
+-
+-# Unknown variables are not allowed
+-# Note: we must delay the call of UnknownVariables until after
+-# we have applied the Variables object to the construction environment
+-unknown = vars.UnknownVariables()
+-if unknown:
+-    print("Unknown variables: %s" % " ".join(unknown.keys()))
+-    Exit(1)
+-- 
+2.7.4
+
