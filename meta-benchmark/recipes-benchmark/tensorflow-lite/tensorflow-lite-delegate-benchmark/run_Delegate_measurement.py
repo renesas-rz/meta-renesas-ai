@@ -88,8 +88,8 @@ def main():
                # Start benchmark app
                run_delegate_benchmark(model_details[0], base_directory_path, base_directory_path+subdir+"/"+label_file, number_of_cores, number_of_iteration, list_tmp, list, delegateType, armnnLogLevel, armnnCompute)
 
-               print("Average Time" + " at Model " + model_details[0] + str(Average(list_tmp)) + " ms ")
-               print("Standard Deviation" + " at Model " + model_details[0] + str(Average(list)))
+               print("Average Time" + " at Model " + model_details[0] + ": "  + str(Average(list_tmp)) + " ms ")
+               print("Standard Deviation" + " at Model " + model_details[0] + ": " + str(Average(list)))
 
                if benchmark == True:
                    if delegateType == "armnn":
