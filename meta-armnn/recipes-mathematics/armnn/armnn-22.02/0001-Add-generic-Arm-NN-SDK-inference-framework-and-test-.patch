@@ -1,6 +1,6 @@
-From 23088c9af875c53673e37930c3a65e17a1810774 Mon Sep 17 00:00:00 2001
+From b21e44e276e84e561617308636afcaa6ecd3594a Mon Sep 17 00:00:00 2001
 From: Gareth Williams <gareth.williams.jx@renesas.com>
-Date: Thu, 17 Mar 2022 14:20:36 +0000
+Date: Fri, 18 Mar 2022 12:03:32 +0000
 Subject: [PATCH] Add generic Arm NN SDK inference framework and test code
 
 A C++ framework and test that is able to seperate the original
@@ -20,10 +20,10 @@ Signed-off-by: Gareth Williams <gareth.williams.jx@renesas.com>
  create mode 100644 tests/RenesasSample-Armnn/RenesasSample-Armnn.cpp
 
 diff --git a/tests/CMakeLists.txt b/tests/CMakeLists.txt
-index cea55c5..9c03cf1 100644
+index 4cb324f..ae93d8c 100644
 --- a/tests/CMakeLists.txt
 +++ b/tests/CMakeLists.txt
-@@ -149,15 +149,30 @@ if (BUILD_ARMNN_SERIALIZER OR BUILD_TF_PARSER OR BUILD_TF_LITE_PARSER OR BUILD_O
+@@ -153,15 +153,30 @@ if (BUILD_ARMNN_SERIALIZER
      target_include_directories(ExecuteNetwork PRIVATE ../src/backends)
      target_include_directories(ExecuteNetwork PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
  
@@ -54,7 +54,7 @@ index cea55c5..9c03cf1 100644
      endif()
      if (BUILD_ARMNN_TFLITE_DELEGATE)
          target_link_libraries(ExecuteNetwork ArmnnDelegate::ArmnnDelegate)
-@@ -166,6 +181,10 @@ if (BUILD_ARMNN_SERIALIZER OR BUILD_TF_PARSER OR BUILD_TF_LITE_PARSER OR BUILD_O
+@@ -170,6 +185,10 @@ if (BUILD_ARMNN_SERIALIZER
  
     target_link_libraries(ExecuteNetwork ${CMAKE_THREAD_LIBS_INIT})
     addDllCopyCommands(ExecuteNetwork)
@@ -65,7 +65,7 @@ index cea55c5..9c03cf1 100644
  endif()
  
  if(BUILD_ACCURACY_TOOL)
-@@ -176,9 +195,11 @@ if(BUILD_ACCURACY_TOOL)
+@@ -180,9 +199,11 @@ if(BUILD_ACCURACY_TOOL)
          endif()
          if (BUILD_TF_LITE_PARSER)
              target_link_libraries(${executorName} armnnTfLiteParser)

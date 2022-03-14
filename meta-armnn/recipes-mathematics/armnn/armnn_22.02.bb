@@ -8,18 +8,20 @@ LICENSE = "MIT & Apache-2.0"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=3e14a924c16f7d828b8335a59da64074 \
                     file://${COMMON_LICENSE_DIR}/Apache-2.0;md5=89aea4e17d99a7cacdbeed46a0096b10"
 
-PACKAGES += "${PN}-tensorflow-lite \
-             ${PN}-tensorflow-lite-dev \
-             ${PN}-onnx-examples \
-             ${PN}-onnx-examples-dbg \
-             ${PN}-onnx \
-             ${PN}-onnx-dev \
-             ${PN}-examples ${PN}-examples-dbg \
+PACKAGES += " \
+	${PN}-tensorflow-lite \
+	${PN}-tensorflow-lite-dev \
+	${PN}-onnx-examples \
+	${PN}-onnx-examples-dbg \
+	${PN}-onnx \
+	${PN}-onnx-dev \
+	${PN}-examples \
+	${PN}-examples-dbg \
 "
 
 COMPATIBLE_MACHINE = "(hihope-rzg2h|hihope-rzg2m|hihope-rzg2n|ek874|smarc-rzg2l|smarc-rzg2lc)"
 
-inherit PyHelper
+inherit cmake PyHelper
 
 ARM_NN_GIT_BRANCH_VERSION = "${@replaceChar("${PV}",".","_")}"
 
@@ -27,23 +29,21 @@ SRCREV_FORMAT = "armnn"
 
 S = "${WORKDIR}/git"
 
-inherit cmake
-
 SRC_URI = " \
 	git://github.com/ARM-software/armnn.git;name=armnn;branch="branches/armnn_${ARM_NN_GIT_BRANCH_VERSION}" \
 	http://download.tensorflow.org/models/mobilenet_v1_2018_08_02/mobilenet_v1_1.0_224_quant.tgz;name=mobilenetQuant;subdir=${WORKDIR}/tflitemodel;destsuffix=tflitemodel \
 	https://s3.amazonaws.com/onnx-model-zoo/mobilenet/mobilenetv2-1.0/mobilenetv2-1.0.onnx;name=mobilenetv2;subdir=${WORKDIR}/onnxmodel;destsuffix=onnxmodel \
 	https://github.com/tensorflow/tensorflow/raw/master/tensorflow/examples/label_image/data/grace_hopper.jpg;name=grace_hopper;subdir=${WORKDIR}/images;destsuffix=images \
+	gitsm://github.com/onnx/onnx.git;protocol=https;name=onnx;branch=rel-1.6.0;subdir=${WORKDIR}/onnx;destsuffix=onnx \
 	file://0001-Remove-the-input-tensor-s-dimension-check.patch \
 	file://0001-Change-test-image-set-to-grace_hopper.jpg.patch \
 	file://0001-Add-generic-Arm-NN-SDK-inference-framework-and-test-.patch \
 	file://0001-Do-not-use-the-CMAKE_FIND_ROOT_PATH-variable-when-lo.patch \
 	file://rsz_grace_hopper.csv \
-	gitsm://github.com/onnx/onnx.git;protocol=https;name=onnx;branch=rel-1.6.0;subdir=${WORKDIR}/onnx;destsuffix=onnx \
 "
 
-# v21.11
-SRCREV_armnn = "5e9965cae1cc6162649910f423ebd86001fc1931"
+# v22.02
+SRCREV_armnn = "b254731ff27a40f382695d5753e1b537c4736bfa"
 
 # v1.6.0
 SRCREV_onnx = "553df22c67bee5f0fe6599cff60f1afc6748c635"
@@ -58,16 +58,20 @@ SRC_URI[grace_hopper.md5sum] = "314296a0a5dd3c394e57f4efac733c20"
 SRC_URI[grace_hopper.sha256sum] = "a8ca6d734765703b09728ab47fe59f473d93ae3967fc24c7c0288c3c7adb7130"
 
 DEPENDS = " \
+	arm-compute-library \
 	chrpath-replacement-native \
 	protobuf-native \
 	protobuf \
 	stb \
-	arm-compute-library \
-	vim-native \
 	tensorflow-lite \
+	vim-native \
 "
 
-RDEPENDS_${PN} += "arm-compute-library protobuf tensorflow-lite-staticdev python3-numpy"
+RDEPENDS_${PN} += " \
+	arm-compute-library \
+	protobuf \
+	python3-numpy \
+"
 
 EXTRANATIVEPATH += "chrpath-native"
 
@@ -93,6 +97,7 @@ EXTRA_OECMAKE= " \
 	-DONNX_GENERATED_SOURCES=${WORKDIR}/onnx \
 	-DTF_LITE_GENERATED_PATH=${STAGING_DIR_TARGET}/usr/include/tensorflow/lite/schema/ \
 	-DFLATBUFFERS_ROOT=${STAGING_DIR_TARGET}/usr/ \
+	-DBOOST_ROOT=${STAGING_DIR_TARGET}/usr/ \
 	-DFLATC_DIR=${STAGING_DIR_NATIVE}${prefix}/bin/ \
 	-DBUILD_TF_LITE_PARSER=1 \
 	-DBUILD_ONNX_PARSER=1 \
@@ -106,15 +111,6 @@ EXTRA_OECMAKE= " \
 	-DBUILD_ARMNN_TFLITE_DELEGATE=1 \
 	-DTfLite_INCLUDE_DIR=${STAGING_DIR_TARGET}/usr/include/tensorflow_lite/ \
 	-DTfLite_Schema_INCLUDE_PATH=${STAGING_DIR_TARGET}/usr/include/tensorflow/lite/schema/ \
-	-DCMAKE_CXX_STANDARD_LIBRARIES="-ldl -fopenmp \
-	${STAGING_DIR_TARGET}/usr/lib64/libtensorflow-lite.a \
-	${STAGING_DIR_TARGET}/usr/lib64/libXNNPACK.a \
-	${STAGING_DIR_TARGET}/usr/lib64/libcpuinfo.a \
-	${STAGING_DIR_TARGET}/usr/lib64/libclog.a \
-	${STAGING_DIR_TARGET}/usr/lib64/libpthreadpool.a" \
-"
-
-EXTRA_OECMAKE_append_aarch64= " \
 	-DTFLITE_LIB_ROOT=${STAGING_DIR_TARGET}/usr/include/tensorflow/lite/ \
 	-DCMAKE_SYSROOT=${STAGING_DIR_TARGET} \
 	-DARMCOMPUTE_BUILD_DIR=${STAGING_DIR_TARGET}/usr/lib64/ \
@@ -122,6 +118,12 @@ EXTRA_OECMAKE_append_aarch64= " \
 	-DFLATBUFFERS_LIBRARY=${STAGING_DIR_TARGET}/usr/lib64/libflatbuffers.a \
 	-DPROTOBUF_LIBRARY_DEBUG=${STAGING_DIR_TARGET}/usr/lib64/libprotobuf.so.23.0.4 \
 	-DPROTOBUF_LIBRARY_RELEASE=${STAGING_DIR_TARGET}/usr/lib64/libprotobuf.so.23.0.4 \
+	-DCMAKE_CXX_STANDARD_LIBRARIES="-ldl -fopenmp \
+	${STAGING_DIR_TARGET}/usr/lib64/libtensorflow-lite.a \
+	${STAGING_DIR_TARGET}/usr/lib64/libXNNPACK.a \
+	${STAGING_DIR_TARGET}/usr/lib64/libcpuinfo.a \
+	${STAGING_DIR_TARGET}/usr/lib64/libclog.a \
+	${STAGING_DIR_TARGET}/usr/lib64/libpthreadpool.a" \
 "
 
 EXTRA_OECMAKE_append_smarc-rzg2l  = "-DARMCOMPUTECL=1"
@@ -149,31 +151,21 @@ do_install_append() {
 		${WORKDIR}/build/samples/SimpleSample \
 		${D}${bindir}/${PN}-${PV}/examples/SampleApp/
 
-	chrpath -d ${D}${bindir}/${PN}-${PV}/examples/SampleApp/*
-
 	install -m 0555 \
 		${WORKDIR}/build/tests/TfLiteMobilenetQuantized-Armnn \
 		${D}${bindir}/${PN}-${PV}/examples/tensorflow-lite/
-
-	chrpath -d ${D}${bindir}/${PN}-${PV}/examples/tensorflow-lite/TfLiteMobilenetQuantized-Armnn
 
 	install -m 0555 \
 		${WORKDIR}/build/tests/OnnxMobileNet-Armnn \
 		${D}${bindir}/${PN}-${PV}/examples/onnx/
 
-	chrpath -d ${D}${bindir}/${PN}-${PV}/examples/onnx/OnnxMobileNet-Armnn
-
 	install -m 0555 \
 		${WORKDIR}/build/UnitTests \
 		${D}${bindir}/${PN}-${PV}/examples/UnitTests/
 
-	chrpath -d ${D}${bindir}/${PN}-${PV}/examples/UnitTests/*
-
 	install -m 0555 \
 		${WORKDIR}/build/delegate/DelegateUnitTests \
 		${D}${bindir}/${PN}-${PV}/examples/DelegateUnitTests/
-
-	chrpath -d ${D}${bindir}/${PN}-${PV}/examples/DelegateUnitTests/*
 
 	install -d ${D}${includedir}/delegate/
 	install -m 0555 \
@@ -184,19 +176,14 @@ do_install_append() {
 		${WORKDIR}/build/tests/RenesasSample-Armnn \
 		${D}${bindir}/${PN}-${PV}/examples/RenesasSample-Armnn/
 
-	chrpath -d ${D}${bindir}/${PN}-${PV}/examples/RenesasSample-Armnn/*
-
 	install -m 0555 \
 		${WORKDIR}/build/tests/ExecuteNetwork \
 		${D}${bindir}/${PN}-${PV}/examples/ExecuteNetwork/
-
-	chrpath -d ${D}${bindir}/${PN}-${PV}/examples/ExecuteNetwork/*
 
 	cd ${D}${bindir}
 	ln -sf ${PN}-${PV} ${PN}
 
 	# Install sample models and images
-
 	install -d ${D}${bindir}/${PN}-${PV}/examples/tensorflow-lite/models
 	install -d ${D}${bindir}/${PN}-${PV}/examples/onnx/models
 	install -d ${D}${bindir}/${PN}-${PV}/examples/images
@@ -221,7 +208,7 @@ do_install_append() {
 		${WORKDIR}/git/tests/TfLiteMobilenetQuantized-Armnn/labels.txt \
 		${D}${bindir}/${PN}-${PV}/examples/tensorflow-lite/models
 
-	#Install backend unit test utilities
+	# Install backend unit test utilities
 	install -d ${D}${bindir}/${PN}-${PV}/examples/UnitTests/src/backends/backendsCommon/test
 
 	install -d ${D}${bindir}/${PN}-${PV}/examples/UnitTests/src/backends/dynamic/reference/
@@ -232,39 +219,11 @@ do_install_append() {
 	cp -Pr ${WORKDIR}/build/src/backends/backendsCommon/test/testDynamicBackend \
 	       ${D}${bindir}/${PN}-${PV}/examples/UnitTests/src/backends/backendsCommon/test/
 
-	cp -Pr ${WORKDIR}/build/src/backends/backendsCommon/test/backendsTestPath1 \
+	cp -Pr ${WORKDIR}/build/src/backends/backendsCommon/test/backendsTestPath* \
 	       ${D}${bindir}/${PN}-${PV}/examples/UnitTests/src/backends/backendsCommon/test/
 
-	cp -Pr ${WORKDIR}/build/src/backends/backendsCommon/test/backendsTestPath2 \
-	       ${D}${bindir}/${PN}-${PV}/examples/UnitTests/src/backends/backendsCommon/test/
-
-	cp -Pr ${WORKDIR}/build/src/backends/backendsCommon/test/backendsTestPath3 \
-	       ${D}${bindir}/${PN}-${PV}/examples/UnitTests/src/backends/backendsCommon/test/
-
-	cp -Pr ${WORKDIR}/build/src/backends/backendsCommon/test/backendsTestPath5 \
-	       ${D}${bindir}/${PN}-${PV}/examples/UnitTests/src/backends/backendsCommon/test/
-
-	cp -Pr ${WORKDIR}/build/src/backends/backendsCommon/test/backendsTestPath6 \
-	       ${D}${bindir}/${PN}-${PV}/examples/UnitTests/src/backends/backendsCommon/test/
-
-	cp -Pr ${WORKDIR}/build/src/backends/backendsCommon/test/backendsTestPath7 \
-	       ${D}${bindir}/${PN}-${PV}/examples/UnitTests/src/backends/backendsCommon/test/
-
-	cp -Pr ${WORKDIR}/build/src/backends/backendsCommon/test/backendsTestPath9 \
-	       ${D}${bindir}/${PN}-${PV}/examples/UnitTests/src/backends/backendsCommon/test/
-
-	cp -Pr ${WORKDIR}/build/src/backends/dynamic/reference/Arm_CpuRef_backend.so \
-	       ${D}${bindir}/${PN}-${PV}/examples/UnitTests/src/backends/dynamic/reference/
-
-	chrpath -d ${D}${bindir}/${PN}-${PV}/examples/UnitTests/src/backends/backendsCommon/test/testDynamicBackend/*
-
-	chrpath -d ${D}${bindir}/${PN}-${PV}/examples/UnitTests/src/backends/backendsCommon/test/backendsTestPath5/*
-
-	chrpath -d ${D}${bindir}/${PN}-${PV}/examples/UnitTests/src/backends/backendsCommon/test/backendsTestPath9/*
-
-	chrpath -d ${D}${bindir}/${PN}-${PV}/examples/UnitTests/src/backends/backendsCommon/test/backendsTestPath6/*
-
-	chrpath -d ${D}${bindir}/${PN}-${PV}/examples/UnitTests/src/backends/dynamic/reference/*
+	install ${WORKDIR}/build/src/backends/dynamic/reference/Arm_CpuRef_backend.so \
+		${D}${bindir}/${PN}-${PV}/examples/UnitTests/src/backends/dynamic/reference/
 
 	# Remove files that are not needed
 	find ${D} -iname "*.cmake" -exec rm -f '{}' \;
@@ -277,15 +236,17 @@ LIBS += "-larmpl_lp64_mp"
 FILES_${PN} = " \
 	${libdir}/libarmnn.so* \
 	${libdir}/libarmnnBasePipeServer.so* \
+	${libdir}/libarmnnDelegate.so* \
+	${libdir}/libarmnnTestUtils.so \
 	${libdir}/libtimelineDecoder.so* \
 	${libdir}/libtimelineDecoderJson.so* \
-	${libdir}/libarmnnDelegate.so* \
 "
 
 FILES_${PN}-dev = " \
 	${includedir}/armnn \
 	${includedir}/armnnDeserializer \
 	${includedir}/armnnSerializer \
+	${includedir}/armnnTestUtils \
 	${includedir}/armnnUtils \
 	${includedir}/delegate \
 "
