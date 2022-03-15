@@ -42,6 +42,4 @@ do_install_append() {
 		${D}${bindir}/armnnBenchmark/
 }
 
-FILES_${PN} += " \
-	${bindir}/armnnBenchmark/armnnBenchmark \
-"
+FILES_${PN} += " ${bindir}/armnnBenchmark/armnnBenchmark"
