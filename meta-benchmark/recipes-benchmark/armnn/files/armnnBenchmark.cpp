@@ -22,6 +22,7 @@
 #include "ImagePreprocessor.hpp"
 #include "InferenceTestImage.hpp"
 
+#include <dirent.h>
 #include <getopt.h>
 #include <fcntl.h>
 #include <stdlib.h>
@@ -48,7 +49,6 @@ Parser test_parser;
 std::string benched_backend;
 std::string benched_model;
 std::string benched_type;
-#define ARMNN_VER_BENCH "Arm NN SDK v21.05"
 
 std::map<int,std::string> label_file_map;
 
@@ -253,8 +253,31 @@ int MainImpl(const char* modelPath,
             time_vector.push_back(timeTakenS*1000.0);
         }
 
+        /* Find the version of ArmNN in the RFS  */
+        string usrDir = "/usr/bin/";
+        string armnnPrefix = "armnn-2";
+        DIR *dir;
+        struct dirent *dirp;
+        string armnnVer = "Arm NN SDK v";
+
+        if((dir = opendir(usrDir.c_str())) != NULL)
+        {
+            while ((dirp = readdir(dir)) != NULL) {
+                string filename = dirp->d_name;
+
+                if(filename.find(armnnPrefix) != std::string::npos) {
+                    armnnVer = armnnVer.append(filename.substr(6));
+                    break;
+                }
+            }
+        } else {
+            std::cout << "Error opening" << usrDir << std::endl;
+            return EXIT_FAILURE;
+        }
+        closedir(dir);
+
 	bench.push_back("AI_BENCHMARK_MARKER,");
-	bench.push_back(ARMNN_VER_BENCH);
+	bench.push_back(armnnVer);
 	bench.push_back(benched_backend);
 
         switch (test_parser) {
