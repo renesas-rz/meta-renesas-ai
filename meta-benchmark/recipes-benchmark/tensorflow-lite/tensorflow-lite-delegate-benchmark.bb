@@ -35,6 +35,13 @@ RDEPENDS_${PN}_smarc-rzg2lc += " \
 	python3-numpy \
 "
 
+RDEPENDS_${PN}_smarc-rzg2ul += " \
+	python3 \
+	python3-pip \
+	python3-setuptools \
+	python3-numpy \
+"
+
 RDEPENDS_${PN}_hihope-rzg2m += "tensorflow-lite-examples armnn-examples"
 RDEPENDS_${PN}_hihope-rzg2n += "tensorflow-lite-examples armnn-examples"
 RDEPENDS_${PN}_hihope-rzg2h += "tensorflow-lite-examples armnn-examples"
@@ -67,12 +74,30 @@ LDFLAGS_smarc-rzg2lc += " \
 	-DDUNFELL_XNNPACK \
 "
 
+LDFLAGS_smarc-rzg2ul += " \
+	${STAGING_DIR_TARGET}/usr/lib64/libflatbuffers.a \
+	${STAGING_DIR_TARGET}/usr/lib64/libfft2d_fftsg2d.a \
+	${STAGING_DIR_TARGET}/usr/lib64/libruy.a \
+	${STAGING_DIR_TARGET}/usr/lib64/libXNNPACK.a \
+	${STAGING_DIR_TARGET}/usr/lib64/libpthreadpool.a \
+	${STAGING_DIR_TARGET}/usr/lib64/libcpuinfo.a \
+	${STAGING_DIR_TARGET}/usr/lib64/libclog.a \
+	${STAGING_DIR_TARGET}/usr/lib64/libfft2d_fftsg.a \
+	${STAGING_DIR_TARGET}/usr/lib64/libfarmhash.a \
+	-DDUNFELL_XNNPACK \
+"
+
 do_configure_smarc-rzg2l() {
 	sed -i 's/python2/python3/g' ${WORKDIR}/run_Delegate_measurement.py
 	sed -i 's/stderr=subprocess.STDOUT)/stderr=subprocess.STDOUT, text=True)/g' ${WORKDIR}/run_Delegate_measurement.py
 }
 
 do_configure_smarc-rzg2lc() {
+	sed -i 's/python2/python3/g' ${WORKDIR}/run_Delegate_measurement.py
+	sed -i 's/stderr=subprocess.STDOUT)/stderr=subprocess.STDOUT, text=True)/g' ${WORKDIR}/run_Delegate_measurement.py
+}
+
+do_configure_smarc-rzg2ul() {
 	sed -i 's/python2/python3/g' ${WORKDIR}/run_Delegate_measurement.py
 	sed -i 's/stderr=subprocess.STDOUT)/stderr=subprocess.STDOUT, text=True)/g' ${WORKDIR}/run_Delegate_measurement.py
 }

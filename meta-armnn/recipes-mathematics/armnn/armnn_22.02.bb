@@ -19,7 +19,7 @@ PACKAGES += " \
 	${PN}-examples-dbg \
 "
 
-COMPATIBLE_MACHINE = "(hihope-rzg2h|hihope-rzg2m|hihope-rzg2n|ek874|smarc-rzg2l|smarc-rzg2lc)"
+COMPATIBLE_MACHINE = "(hihope-rzg2h|hihope-rzg2m|hihope-rzg2n|ek874|smarc-rzg2l|smarc-rzg2lc|smarc-rzg2ul)"
 
 inherit cmake PyHelper
 

@@ -18,7 +18,7 @@ SRC_URI = " \
 
 PR = "r0"
 
-COMPATIBLE_MACHINE = "(hihope-rzg2h|hihope-rzg2m|hihope-rzg2n|ek874|smarc-rzg2l|smarc-rzg2lc)"
+COMPATIBLE_MACHINE = "(hihope-rzg2h|hihope-rzg2m|hihope-rzg2n|ek874|smarc-rzg2l|smarc-rzg2lc|smarc-rzg2ul)"
 
 S = "${WORKDIR}/git"
 
@@ -33,6 +33,8 @@ CXX_append_smarc-rzg2l    += "-flax-vector-conversions"
 CFLAGS_append_smarc-rzg2l += "-flax-vector-conversions"
 CXX_append_smarc-rzg2lc    += "-flax-vector-conversions"
 CFLAGS_append_smarc-rzg2lc += "-flax-vector-conversions"
+CXX_append_smarc-rzg2ul    += "-flax-vector-conversions"
+CFLAGS_append_smarc-rzg2ul += "-flax-vector-conversions"
 
 do_configure() {
 	export HTTP_PROXY=${HTTP_PROXY}

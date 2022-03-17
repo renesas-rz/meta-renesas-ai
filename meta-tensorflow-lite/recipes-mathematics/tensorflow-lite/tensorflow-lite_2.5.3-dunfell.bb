@@ -52,6 +52,10 @@ EXTRA_OECMAKE_append_smarc-rzg2lc = " \
 	-DCMAKE_CXX_FLAGS="-flax-vector-conversions" \
 	-DCMAKE_C_FLAGS="-flax-vector-conversions" \
 "
+EXTRA_OECMAKE_append_smarc-rzg2ul = " \
+	-DCMAKE_CXX_FLAGS="-flax-vector-conversions" \
+	-DCMAKE_C_FLAGS="-flax-vector-conversions" \
+"
 
 do_compile() {
 	# Tensorflow-lite does not compile unless built out of tree

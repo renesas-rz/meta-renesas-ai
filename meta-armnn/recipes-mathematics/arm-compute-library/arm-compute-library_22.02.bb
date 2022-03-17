@@ -19,7 +19,7 @@ SRC_URI = " \
 	file://0001-Add-support-for-building-aarch64-CL-with-Scons.patch \
 "
 
-COMPATIBLE_MACHINE = "(hihope-rzg2h|hihope-rzg2m|hihope-rzg2n|ek874|smarc-rzg2l|smarc-rzg2lc)"
+COMPATIBLE_MACHINE = "(hihope-rzg2h|hihope-rzg2m|hihope-rzg2n|ek874|smarc-rzg2l|smarc-rzg2lc|smarc-rzg2ul)"
 
 S = "${WORKDIR}/git"
 

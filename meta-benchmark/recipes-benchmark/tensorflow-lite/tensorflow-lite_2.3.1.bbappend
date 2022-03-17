@@ -23,6 +23,13 @@ RDEPENDS_${PN}_smarc-rzg2lc += " \
 	python3-setuptools \
 	python3-numpy \
 "
+RDEPENDS_${PN}_smarc-rzg2ul += " \
+	models-tensorflow-lite \
+	python3 \
+	python3-pip \
+	python3-setuptools \
+	python3-numpy \
+"
 
 SRC_URI += " \
 	file://tensorflow-lite-benchmark.cc \
@@ -45,6 +52,11 @@ do_configure_append_smarc-rzg2l() {
 }
 
 do_configure_append_smarc-rzg2lc() {
+	sed -i 's/python2/python3/g' ${WORKDIR}/run_TF_measurement.py
+	sed -i 's/stderr=subprocess.STDOUT)/stderr=subprocess.STDOUT, text=True)/g' ${WORKDIR}/run_TF_measurement.py
+}
+
+do_configure_append_smarc-rzg2ul() {
 	sed -i 's/python2/python3/g' ${WORKDIR}/run_TF_measurement.py
 	sed -i 's/stderr=subprocess.STDOUT)/stderr=subprocess.STDOUT, text=True)/g' ${WORKDIR}/run_TF_measurement.py
 }

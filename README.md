@@ -36,13 +36,13 @@ in the [Licensing](#licensing) section.
 
 ### Supported Frameworks/Versions ###
 
-| Framework                         | Version   | Parser(s)                                 | Inference Hardware |
-| :-------------------------------- | :-------- | :---------------------------------------- | :----------------- |
-| ArmNN                             | v21.05    | ONNX (v1.6.0)<br>TensorFlow Lite (v2.3.1) | CPU                |
-| ArmNN (smarc-rzg2l, smarc-rzg2lc) | v22.02    | ONNX (v1.6.0)<br>TensorFlow Lite (v2.5.3) | CPU<br>GPU         |
-| ONNX Runtime                      | v1.8.0    | ONNX                                      | CPU                |
-| TensorFlow Lite                   | v2.3.1    | TensorFlow Lite                           | CPU                |
-| TensorFlow Lite                   | v2.5.3    | TensorFlow Lite                           | CPU                |
+| Framework                                       | Version   | Parser(s)                                 | Inference Hardware |
+| :---------------------------------------------- | :-------- | :---------------------------------------- | :----------------- |
+| ArmNN                                           | v21.05    | ONNX (v1.6.0)<br>TensorFlow Lite (v2.3.1) | CPU                |
+| ArmNN (smarc-rzg2l, smarc-rzg2lc, smarc-rzg2ul) | v22.02    | ONNX (v1.6.0)<br>TensorFlow Lite (v2.5.3) | CPU<br>GPU         |
+| ONNX Runtime                                    | v1.8.0    | ONNX                                      | CPU                |
+| TensorFlow Lite                                 | v2.3.1    | TensorFlow Lite                           | CPU                |
+| TensorFlow Lite                                 | v2.5.3    | TensorFlow Lite                           | CPU                |
 
 ### Supported Embedded Platforms ###
 
@@ -54,6 +54,7 @@ in the [Licensing](#licensing) section.
 | Renesas RZ/G2E  | Silicon Linux ek874      |
 | Renesas RZ/G2L  | Renesas smarc-rzg2l evk  |
 | Renesas RZ/G2LC | Renesas smarc-rzg2lc evk |
+| Renesas RZ/G2UL | Renesas smarc-rzg2ul evk |
 
 ### Build Script ###
 A simple build script has been created to manage the build process.  

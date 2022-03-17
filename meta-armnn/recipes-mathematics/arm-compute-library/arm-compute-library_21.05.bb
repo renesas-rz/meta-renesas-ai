@@ -20,7 +20,7 @@ SRC_URI = " \
 	file://0001-Add-code-to-detect-Mali-TM-G31.patch \
 "
 
-COMPATIBLE_MACHINE = "(hihope-rzg2h|hihope-rzg2m|hihope-rzg2n|ek874|smarc-rzg2l|smarc-rzg2lc)"
+COMPATIBLE_MACHINE = "(hihope-rzg2h|hihope-rzg2m|hihope-rzg2n|ek874|smarc-rzg2l|smarc-rzg2lc|smarc-rzg2ul)"
 
 S = "${WORKDIR}/git"
 

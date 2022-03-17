@@ -3,7 +3,7 @@
 # Simple script to build the RZ/G AI BSP: https://github.com/renesas-rz/meta-renesas-ai
 # The script supports building for the following devices:
 #   RZ/G2: hihope-rzg2h, hihope-rzg2m, hihope-rzg2n, ek874
-#   RZ/G2L: smarc-rzg2l, smarc-rzg2lc
+#   RZ/G2L: smarc-rzg2l, smarc-rzg2lc, smarc-rzg2ul
 #
 # This script has been tested on Ubuntu 18.04.
 #
@@ -57,7 +57,7 @@ print_help () {
 	                    By default ${OUTPUT_DIR} will be used.
 	 -p <platform>      Platform to build for. Choose from:
 	                    hihope-rzg2h, hihope-rzg2m, hihope-rzg2n, ek874,
-	                    smarc-rzg2l, smarc-rzg2lc.
+	                    smarc-rzg2l, smarc-rzg2lc, smarc-rzg2ul.
 
 	EOF
 }
@@ -109,7 +109,7 @@ while getopts ":cdf:l:o:p:h" opt; do
 			FAMILY="rzg2"
         	        ;;
 
-		"smarc-rzg2l" | "smarc-rzg2lc")
+		"smarc-rzg2l" | "smarc-rzg2lc" | "smarc-rzg2ul")
 			PLATFORM="${OPTARG}"
 			FAMILY="rzg2l"
 			;;
@@ -286,8 +286,14 @@ install_prop_libs () {
 		popd
 	elif [ ${FAMILY} == "rzg2l" ]; then
 		pushd ${PROP_DIR}
-		unzip RTK0EF0045Z13001ZJ-v0.81_EN.zip
-		tar -xf RTK0EF0045Z13001ZJ-v0.81_EN/meta-rz-features.tar.gz -C ${WORK_DIR}
+
+		case "${PLATFORM}" in
+			"smarc-rzg2l" | "smarc-rzg2lc")
+				unzip RTK0EF0045Z13001ZJ-v0.81_EN.zip
+				tar -xf RTK0EF0045Z13001ZJ-v0.81_EN/meta-rz-features.tar.gz -C ${WORK_DIR}i
+				;;
+		esac
+
 		unzip RTK0EF0045Z15001ZJ-v0.55_EN.zip
 		tar -xf RTK0EF0045Z15001ZJ-v0.55_EN/meta-rz-features.tar.gz -C ${WORK_DIR}
 		popd
