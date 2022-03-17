@@ -58,8 +58,8 @@ def main():
 
               run_tflite_benchmark(model_details[0], base_directory_path, 'labels.txt', number_of_cores, number_of_iteration, list_tmp, list)
 
-              print("Average Time" + " at Model " + model_details[0] + str(Average(list_tmp)) + " ms ")
-              print("Standard Deviation" + " at Model " + model_details[0] + str(Average(list)))
+              print("Average Time" + " at Model " + model_details[0] + ": " + str(Average(list_tmp)) + " ms ")
+              print("Standard Deviation" + " at Model " + model_details[0] + ": "  + str(Average(list)))
               print("\n")
 
               if benchmark == True:
