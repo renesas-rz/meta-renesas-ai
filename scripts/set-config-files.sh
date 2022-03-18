@@ -228,6 +228,11 @@ configure_packages () {
 			echo 'IMAGE_INSTALL_append = " tensorflow-lite-benchmark"' >> ${BUILD_DIR}/conf/local.conf
 		fi
 	fi
+
+	# Add test scripts
+	if [ ${BENCHMARK} == "true" ]; then
+		echo 'IMAGE_INSTALL_append = " ai-tests"' >> ${BUILD_DIR}/conf/local.conf
+	fi
 }
 
 ################################################################################
