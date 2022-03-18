@@ -1,0 +1,32 @@
+#!/bin/bash
+
+SCRIPTS_DIRECTORY="$(cd "$(dirname "$0")"; pwd)"
+. "${SCRIPTS_DIRECTORY}"/common_utils.sh
+. "${SCRIPTS_DIRECTORY}"/identity.sh
+
+cd /usr/bin/armnnBenchmark
+
+OPTIONS=""
+
+case "${RZG_LABEL}" in
+	"rzg1e")
+		OPTIONS="${OPTIONS} -i 10"
+		;;
+	"rzg2l" | "rzg2lc")
+		# Turbo mode with GPU backend
+		./armnnBenchmark -f -c GpuAcc
+		# Set Turbo mode for CpuAcc tests
+		OPTIONS="${OPTIONS} -f"
+		;;
+	"rzg2ul")
+		# Set Turbo mode for CpuAcc tests
+		OPTIONS="${OPTIONS} -f"
+		;;
+esac
+
+./armnnBenchmark $OPTIONS
+if [ $? != 0 ]; then
+	print_failure "Arm NN benchmark exit failure"
+fi
+
+print_success "Arm NN benchmark exit success"
