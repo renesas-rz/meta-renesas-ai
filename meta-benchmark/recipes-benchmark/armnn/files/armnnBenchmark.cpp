@@ -590,10 +590,11 @@ void loadLabelFile(string label_file_name)
 }
 
 void display_usage() {
-  std::cout << "./armnnBenchmark [-m] [-f] [-c <backend>] [-i <iterations>] [-h]\n"
+  std::cout << "./armnnBenchmark [-m] [-f] [-c <backend>] [-n <log level>]  [-i <iterations>] [-h]\n"
             << "--enable-fast-math, -m: use fast maths armnn option\n"
             << "--fp16-turbo-mode, -f: use fp16-turbo-mode armnn option\n"
             << "--compute, -c: [CpuAcc|CpuRef|GpuAcc] (Default: CpuAcc)\n"
+            << "--armnn-log-level, -n: [trace|debug|info|warning|error] (Default: warning) Print level of ArmNN specific information\n"
             << "--iterations, -i: Loop inference run count\n"
             << "--help, -h: display this message \n"
             << "\n";
@@ -601,13 +602,7 @@ void display_usage() {
 
 int main(int argc, char** argv)
 {
-    // Configures logging for both the ARMNN library and this test program.
-#ifdef NDEBUG
-    armnn::LogSeverity level = armnn::LogSeverity::Info;
-#else
-    armnn::LogSeverity level = armnn::LogSeverity::Debug;
-#endif
-    armnn::ConfigureLogging(true, true, level);
+    armnn::LogSeverity armnnLogLevel = armnn::LogSeverity::Warning;
 
     // Default to the CpuAcc backend, otherwise InferenceModel.hpp
     // will use CpuRef
@@ -635,6 +630,7 @@ int main(int argc, char** argv)
                 {"fp16-turbo-mode", no_argument, nullptr, 'f'},
                 {"compute", required_argument, nullptr, 'c'},
                 {"iterations", required_argument, nullptr, 'i'},
+                {"armnn-log-level", required_argument, nullptr, 'n'},
                 {"help", no_argument, nullptr, 'h'},
                 {nullptr, 0, nullptr, 0}
         };
@@ -667,6 +663,16 @@ int main(int argc, char** argv)
           case 'i':
               iterations = strtol(optarg, nullptr, 10);
           break;
+          case 'n':
+              if(strstr(optarg, "trace"))
+                  armnnLogLevel = armnn::LogSeverity::Trace;
+              else if (strstr(optarg, "debug"))
+                  armnnLogLevel = armnn::LogSeverity::Debug;
+              else if (strstr(optarg, "info"))
+                  armnnLogLevel = armnn::LogSeverity::Info;
+              else if (strstr(optarg, "error"))
+                  armnnLogLevel = armnn::LogSeverity::Error;
+              break;
           case 'h':
           case '?':
               display_usage();
@@ -679,6 +685,7 @@ int main(int argc, char** argv)
         }
     }
 
+    armnn::ConfigureLogging(true, true, armnnLogLevel);
     CreateModelTestOrder();
 
     for ( auto it = excelTestModel.begin(); it != excelTestModel.end(); it++ )
