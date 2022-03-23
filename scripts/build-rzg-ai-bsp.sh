@@ -198,6 +198,8 @@ download_source () {
 			git://git.yoctoproject.org/poky \
 			7e7ee662f5dea4d090293045f7498093322802cc
 
+		cd poky; git cherry-pick 0810ac6b92; cd -
+
 		update_git_repo \
 			meta-linaro \
 			git://git.linaro.org/openembedded/meta-linaro.git \
