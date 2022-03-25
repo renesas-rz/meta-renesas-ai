@@ -408,17 +408,25 @@ copy_output () {
 	local bin_dir=$WORK_DIR/build/tmp/deploy/images/${PLATFORM}
 	mkdir -p ${OUTPUT_DIR}/${PLATFORM}
 
-	if [ ${FAMILY} == "rzg2" ]; then
-		cp ${bin_dir}/core-image-*-${PLATFORM}.tar.gz ${OUTPUT_DIR}/${PLATFORM}
-		cp ${bin_dir}/Image-${PLATFORM}.bin ${OUTPUT_DIR}/${PLATFORM}
-		cp ${bin_dir}/Image-*-${PLATFORM}*.dtb ${OUTPUT_DIR}/${PLATFORM}
-	elif [ ${FAMILY} == "rzg2l" ]; then
-		cp ${bin_dir}/core-image-*-${PLATFORM}.tar.gz ${OUTPUT_DIR}/${PLATFORM}
-		cp ${bin_dir}/Image-${PLATFORM}.bin ${OUTPUT_DIR}/${PLATFORM}
-		cp ${bin_dir}/*smarc*.dtb ${OUTPUT_DIR}/${PLATFORM}
+	if [ $BUILD_SDK != "only" ]; then
+		if [ ${FAMILY} == "rzg2" ]; then
+			cp ${bin_dir}/core-image-*-${PLATFORM}.tar.gz ${OUTPUT_DIR}/${PLATFORM}
+			cp ${bin_dir}/Image-${PLATFORM}.bin ${OUTPUT_DIR}/${PLATFORM}
+			cp ${bin_dir}/Image-*-${PLATFORM}*.dtb ${OUTPUT_DIR}/${PLATFORM}
+		elif [ ${FAMILY} == "rzg2l" ]; then
+			cp ${bin_dir}/core-image-*-${PLATFORM}.tar.gz ${OUTPUT_DIR}/${PLATFORM}
+			cp ${bin_dir}/Image-${PLATFORM}.bin ${OUTPUT_DIR}/${PLATFORM}
+			cp ${bin_dir}/*${PLATFORM}.dtb ${OUTPUT_DIR}/${PLATFORM}
+		fi
+
+		# Save license information
+		pushd "${bin_dir}/../../" > /dev/null
+		tar czf licenses-${PLATFORM}.tar.gz licenses
+		cp licenses-${PLATFORM}.tar.gz ${OUTPUT_DIR}/${PLATFORM}
+		popd > /dev/null
 	fi
 
-	if $BUILD_SDK; then
+	if [ $BUILD_SDK != "false" ]; then
 		cp $WORK_DIR/build/tmp/deploy/sdk/*.sh ${OUTPUT_DIR}/${PLATFORM}
 	fi
 }
