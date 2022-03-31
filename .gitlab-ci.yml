@@ -11,6 +11,7 @@ variables:
 .rzg2-test:
   variables:
     CI_GRAPHICS_LICENSE: prod
+    CI_META_RENESAS_AI_CONFIGURATION: templates/rzg2
     CI_META_RENESAS_MANIFEST: meta-cip-tests__dev.xml
     CI_BASE_MANIFEST: bsp-rzg2__${CI_RZG2_BSP_TAG}.xml
     BUILD_SCRIPT: build-manifest__rzg2__meta-renesas-ai__gitlab-ci-test.sh
@@ -18,6 +19,7 @@ variables:
 .rzg2l-test:
   variables:
     CI_GRAPHICS_LICENSE: prod
+    CI_META_RENESAS_AI_CONFIGURATION: templates/rzg2l
     CI_META_RENESAS_MANIFEST: meta-cip-tests__dev.xml
     CI_BASE_MANIFEST: bsp-rzg2l__${CI_RZG2L_BSP_TAG}.xml
     BUILD_SCRIPT: build-manifest__rzg2l__meta-renesas-ai__gitlab-ci-test.sh
@@ -25,12 +27,14 @@ variables:
 .rzg2-release:
   variables:
     CI_GRAPHICS_LICENSE: eval
+    CI_META_RENESAS_AI_CONFIGURATION: templates/rzg2
     CI_META_RENESAS_MANIFEST: bsp-rzg2__${CI_RZG2_BSP_TAG}.xml
     BUILD_SCRIPT: build-manifest__rzg2__meta-renesas-ai__gitlab-ci-release.sh
 
 .rzg2l-release:
   variables:
     CI_GRAPHICS_LICENSE: eval
+    CI_META_RENESAS_AI_CONFIGURATION: templates/rzg2l
     CI_META_RENESAS_MANIFEST: bsp-rzg2l__${CI_RZG2L_BSP_TAG}.xml
     BUILD_SCRIPT: build-manifest__rzg2l__meta-renesas-ai__gitlab-ci-release.sh
 
@@ -151,153 +155,132 @@ variables:
 armnn_ek874_build-and-test:
   extends: [.rzg2_meta-renesas-ai_test, .ek874]
   variables:
-    CI_META_RENESAS_AI_CONFIGURATION: meta-benchmark/templates/armnn+tfl/ek874
-    CI_CONF_NAME: armnn+tfl
+    CI_CONF_NAME: armnn
   rules: *build-and-test_rules-manual
 
 armnn_hihope-rzg2n_build-and-test:
   extends: [.rzg2_meta-renesas-ai_test, .hihope-rzg2n]
   variables:
-    CI_META_RENESAS_AI_CONFIGURATION: meta-benchmark/templates/armnn+tfl/hihope-rzg2n
-    CI_CONF_NAME: armnn+tfl
+    CI_CONF_NAME: armnn
   rules: *build-and-test_rules-manual
 
 armnn_hihope-rzg2m_build-and-test:
   extends: [.rzg2_meta-renesas-ai_test, .hihope-rzg2m]
   variables:
-    CI_META_RENESAS_AI_CONFIGURATION: meta-benchmark/templates/armnn+tfl/hihope-rzg2m
-    CI_CONF_NAME: armnn+tfl
+    CI_CONF_NAME: armnn
   rules: *build-and-test_rules-auto
 
 armnn_hihope-rzg2h_build-and-test:
   extends: [.rzg2_meta-renesas-ai_test, .hihope-rzg2h]
   variables:
-    CI_META_RENESAS_AI_CONFIGURATION: meta-benchmark/templates/armnn+tfl/hihope-rzg2h
-    CI_CONF_NAME: armnn+tfl
+    CI_CONF_NAME: armnn
   rules: *build-and-test_rules-manual
 
 armnn_smarc-rzg2l_build-and-test:
   extends: [.rzg2l_meta-renesas-ai_test, .smarc-rzg2l]
   variables:
-    CI_META_RENESAS_AI_CONFIGURATION: meta-benchmark/templates/armnn+tfl/smarc-rzg2l
-    CI_CONF_NAME: armnn+tfl
+    CI_CONF_NAME: armnn
   rules: *build-and-test_rules-auto
 
 armnn_smarc-rzg2lc_build-and-test:
   extends: [.rzg2l_meta-renesas-ai_test, .smarc-rzg2lc]
   variables:
-    CI_META_RENESAS_AI_CONFIGURATION: meta-benchmark/templates/armnn+tfl/smarc-rzg2lc
-    CI_CONF_NAME: armnn+tfl
+    CI_CONF_NAME: armnn
   rules: *build-and-test_rules-manual
 
 armnn_smarc-rzg2ul_build-and-test:
   extends: [.rzg2l_meta-renesas-ai_test, .smarc-rzg2ul]
   variables:
-    CI_META_RENESAS_AI_CONFIGURATION: meta-benchmark/templates/armnn+tfl/smarc-rzg2ul
-    CI_CONF_NAME: armnn+tfl
+    CI_CONF_NAME: armnn
   rules: *build-and-test_rules-manual
 
 # onnx
 onnx_ek874_build-and-test:
   extends: [.rzg2_meta-renesas-ai_test, .ek874]
   variables:
-    CI_META_RENESAS_AI_CONFIGURATION: meta-benchmark/templates/onnx/ek874
-    CI_CONF_NAME: onnx
+    CI_CONF_NAME: onnxruntime
   rules: *build-and-test_rules-manual
 
 onnx_hihope-rzg2n_build-and-test:
   extends: [.rzg2_meta-renesas-ai_test, .hihope-rzg2n]
   variables:
-    CI_META_RENESAS_AI_CONFIGURATION: meta-benchmark/templates/onnx/hihope-rzg2n
-    CI_CONF_NAME: onnx
+    CI_CONF_NAME: onnxruntime
   rules: *build-and-test_rules-manual
 
 onnx_hihope-rzg2m_build-and-test:
   extends: [.rzg2_meta-renesas-ai_test, .hihope-rzg2m]
   variables:
-    CI_META_RENESAS_AI_CONFIGURATION: meta-benchmark/templates/onnx/hihope-rzg2m
-    CI_CONF_NAME: onnx
+    CI_CONF_NAME: onnxruntime
   rules: *build-and-test_rules-auto
 
 onnx_hihope-rzg2h_build-and-test:
   extends: [.rzg2_meta-renesas-ai_test, .hihope-rzg2h]
   variables:
-    CI_META_RENESAS_AI_CONFIGURATION: meta-benchmark/templates/onnx/hihope-rzg2h
-    CI_CONF_NAME: onnx
+    CI_CONF_NAME: onnxruntime
   rules: *build-and-test_rules-manual
 
 onnx_smarc-rzg2l_build-and-test:
   variables:
   extends: [.rzg2l_meta-renesas-ai_test, .smarc-rzg2l]
   variables:
-    CI_META_RENESAS_AI_CONFIGURATION: meta-benchmark/templates/onnx/smarc-rzg2l
-    CI_CONF_NAME: onnx
+    CI_CONF_NAME: onnxruntime
   rules: *build-and-test_rules-auto
 
 onnx_smarc-rzg2lc_build-and-test:
   variables:
   extends: [.rzg2l_meta-renesas-ai_test, .smarc-rzg2lc]
   variables:
-    CI_META_RENESAS_AI_CONFIGURATION: meta-benchmark/templates/onnx/smarc-rzg2lc
-    CI_CONF_NAME: onnx
+    CI_CONF_NAME: onnxruntime
   rules: *build-and-test_rules-manual
 
 onnx_smarc-rzg2ul_build-and-test:
   variables:
   extends: [.rzg2l_meta-renesas-ai_test, .smarc-rzg2ul]
   variables:
-    CI_META_RENESAS_AI_CONFIGURATION: meta-benchmark/templates/onnx/smarc-rzg2ul
-    CI_CONF_NAME: onnx
+    CI_CONF_NAME: onnxruntime
   rules: *build-and-test_rules-manual
 
 # tflite
 tfl_ek874_build-and-test:
   extends: [.rzg2_meta-renesas-ai_test, .ek874]
   variables:
-    CI_META_RENESAS_AI_CONFIGURATION: meta-benchmark/templates/tflite/ek874
-    CI_CONF_NAME: tflite
+    CI_CONF_NAME: tensorflow-lite
   rules: *build-and-test_rules-manual
 
 tfl_hihope-rzg2n_build-and-test:
   extends: [.rzg2_meta-renesas-ai_test, .hihope-rzg2n]
   variables:
-    CI_META_RENESAS_AI_CONFIGURATION: meta-benchmark/templates/tflite/hihope-rzg2n
-    CI_CONF_NAME: tflite
+    CI_CONF_NAME: tensorflow-lite
   rules: *build-and-test_rules-manual
 
 tfl_hihope-rzg2m_build-and-test:
   extends: [.rzg2_meta-renesas-ai_test, .hihope-rzg2m]
   variables:
-    CI_META_RENESAS_AI_CONFIGURATION: meta-benchmark/templates/tflite/hihope-rzg2m
-    CI_CONF_NAME: tflite
+    CI_CONF_NAME: tensorflow-lite
   rules: *build-and-test_rules-auto
 
 tfl_hihope-rzg2h_build-and-test:
   extends: [.rzg2_meta-renesas-ai_test, .hihope-rzg2h]
   variables:
-    CI_META_RENESAS_AI_CONFIGURATION: meta-benchmark/templates/tflite/hihope-rzg2h
-    CI_CONF_NAME: tflite
+    CI_CONF_NAME: tensorflow-lite
   rules: *build-and-test_rules-manual
 
 tfl_smarc-rzg2l_build-and-test:
   extends: [.rzg2l_meta-renesas-ai_test, .smarc-rzg2l]
   variables:
-    CI_META_RENESAS_AI_CONFIGURATION: meta-benchmark/templates/tflite/smarc-rzg2l
-    CI_CONF_NAME: tflite
+    CI_CONF_NAME: tensorflow-lite
   rules: *build-and-test_rules-auto
 
 tfl_smarc-rzg2lc_build-and-test:
   extends: [.rzg2l_meta-renesas-ai_test, .smarc-rzg2lc]
   variables:
-    CI_META_RENESAS_AI_CONFIGURATION: meta-benchmark/templates/tflite/smarc-rzg2lc
-    CI_CONF_NAME: tflite
+    CI_CONF_NAME: tensorflow-lite
   rules: *build-and-test_rules-manual
 
 tfl_smarc-rzg2ul_build-and-test:
   extends: [.rzg2l_meta-renesas-ai_test, .smarc-rzg2ul]
   variables:
-    CI_META_RENESAS_AI_CONFIGURATION: meta-benchmark/templates/tflite/smarc-rzg2ul
-    CI_CONF_NAME: tflite
+    CI_CONF_NAME: tensorflow-lite
   rules: *build-and-test_rules-manual
 
 ################################################################################
@@ -311,49 +294,42 @@ tfl_smarc-rzg2ul_build-and-test:
 armnn_ek874_build-only:
   extends: [.rzg2_meta-renesas-ai_release, .ek874]
   variables:
-    CI_META_RENESAS_AI_CONFIGURATION: meta-armnn/templates/ek874
     CI_CONF_NAME: armnn
   rules: *build-only_rules
 
 armnn_hihope-rzg2n_build-only:
   extends: [.rzg2_meta-renesas-ai_release, .hihope-rzg2n]
   variables:
-    CI_META_RENESAS_AI_CONFIGURATION: meta-armnn/templates/hihope-rzg2n
     CI_CONF_NAME: armnn
   rules: *build-only_rules
 
 armnn_hihope-rzg2m_build-only:
   extends: [.rzg2_meta-renesas-ai_release, .hihope-rzg2m]
   variables:
-    CI_META_RENESAS_AI_CONFIGURATION: meta-armnn/templates/hihope-rzg2m
     CI_CONF_NAME: armnn
   rules: *build-only_rules
 
 armnn_hihope-rzg2h_build-only:
   extends: [.rzg2_meta-renesas-ai_release, .hihope-rzg2h]
   variables:
-    CI_META_RENESAS_AI_CONFIGURATION: meta-armnn/templates/hihope-rzg2h
     CI_CONF_NAME: armnn
   rules: *build-only_rules
 
 armnn_smarc-rzg2l_build-only:
   extends: [.rzg2l_meta-renesas-ai_release, .smarc-rzg2l]
   variables:
-    CI_META_RENESAS_AI_CONFIGURATION: meta-armnn/templates/smarc-rzg2l
     CI_CONF_NAME: armnn
   rules: *build-only_rules
 
 armnn_smarc-rzg2lc_build-only:
   extends: [.rzg2l_meta-renesas-ai_release, .smarc-rzg2lc]
   variables:
-    CI_META_RENESAS_AI_CONFIGURATION: meta-armnn/templates/smarc-rzg2lc
     CI_CONF_NAME: armnn
   rules: *build-only_rules
 
 armnn_smarc-rzg2ul_build-only:
   extends: [.rzg2l_meta-renesas-ai_release, .smarc-rzg2ul]
   variables:
-    CI_META_RENESAS_AI_CONFIGURATION: meta-armnn/templates/smarc-rzg2ul
     CI_CONF_NAME: armnn
   rules: *build-only_rules
 
@@ -361,49 +337,42 @@ armnn_smarc-rzg2ul_build-only:
 onnxruntime_ek874_build-only:
   extends: [.rzg2_meta-renesas-ai_release, .ek874]
   variables:
-    CI_META_RENESAS_AI_CONFIGURATION: meta-onnxruntime/templates/ek874
     CI_CONF_NAME: onnxruntime
   rules: *build-only_rules
 
 onnxruntime_hihope-rzg2n_build-only:
   extends: [.rzg2_meta-renesas-ai_release, .hihope-rzg2n]
   variables:
-    CI_META_RENESAS_AI_CONFIGURATION: meta-onnxruntime/templates/hihope-rzg2n
     CI_CONF_NAME: onnxruntime
   rules: *build-only_rules
 
 onnxruntime_hihope-rzg2m_build-only:
   extends: [.rzg2_meta-renesas-ai_release, .hihope-rzg2m]
   variables:
-    CI_META_RENESAS_AI_CONFIGURATION: meta-onnxruntime/templates/hihope-rzg2m
     CI_CONF_NAME: onnxruntime
   rules: *build-only_rules
 
 onnxruntime_hihope-rzg2h_build-only:
   extends: [.rzg2_meta-renesas-ai_release, .hihope-rzg2h]
   variables:
-    CI_META_RENESAS_AI_CONFIGURATION: meta-onnxruntime/templates/hihope-rzg2h
     CI_CONF_NAME: onnxruntime
   rules: *build-only_rules
 
 onnxruntime_smarc-rzg2l_build-only:
   extends: [.rzg2l_meta-renesas-ai_release, .smarc-rzg2l]
   variables:
-    CI_META_RENESAS_AI_CONFIGURATION: meta-onnxruntime/templates/smarc-rzg2l
     CI_CONF_NAME: onnxruntime
   rules: *build-only_rules
 
 onnxruntime_smarc-rzg2lc_build-only:
   extends: [.rzg2l_meta-renesas-ai_release, .smarc-rzg2lc]
   variables:
-    CI_META_RENESAS_AI_CONFIGURATION: meta-onnxruntime/templates/smarc-rzg2lc
     CI_CONF_NAME: onnxruntime
   rules: *build-only_rules
 
 onnxruntime_smarc-rzg2ul_build-only:
   extends: [.rzg2l_meta-renesas-ai_release, .smarc-rzg2ul]
   variables:
-    CI_META_RENESAS_AI_CONFIGURATION: meta-onnxruntime/templates/smarc-rzg2ul
     CI_CONF_NAME: onnxruntime
   rules: *build-only_rules
 
@@ -411,51 +380,41 @@ onnxruntime_smarc-rzg2ul_build-only:
 tensorflow-lite_ek874_build-only:
   extends: [.rzg2_meta-renesas-ai_release, .ek874]
   variables:
-    CI_META_RENESAS_AI_CONFIGURATION: meta-tensorflow-lite/templates/ek874
     CI_CONF_NAME: tensorflow-lite
   rules: *build-only_rules
 
 tensorflow-lite_hihope-rzg2n_build-only:
   extends: [.rzg2_meta-renesas-ai_release, .hihope-rzg2n]
   variables:
-    CI_META_RENESAS_AI_CONFIGURATION: meta-tensorflow-lite/templates/hihope-rzg2n
     CI_CONF_NAME: tensorflow-lite
   rules: *build-only_rules
 
 tensorflow-lite_hihope-rzg2m_build-only:
   extends: [.rzg2_meta-renesas-ai_release, .hihope-rzg2m]
   variables:
-    CI_META_RENESAS_AI_CONFIGURATION: meta-tensorflow-lite/templates/hihope-rzg2m
     CI_CONF_NAME: tensorflow-lite
   rules: *build-only_rules
 
 tensorflow-lite_hihope-rzg2h_build-only:
   extends: [.rzg2_meta-renesas-ai_release, .hihope-rzg2h]
   variables:
-    CI_META_RENESAS_AI_CONFIGURATION: meta-tensorflow-lite/templates/hihope-rzg2h
     CI_CONF_NAME: tensorflow-lite
   rules: *build-only_rules
 
 tensorflow-lite_smarc-rzg2l_build-only:
   extends: [.rzg2l_meta-renesas-ai_release, .smarc-rzg2l]
   variables:
-  variables:
-    CI_META_RENESAS_AI_CONFIGURATION: meta-tensorflow-lite/templates/smarc-rzg2l
     CI_CONF_NAME: tensorflow-lite
   rules: *build-only_rules
 
 tensorflow-lite_smarc-rzg2lc_build-only:
   extends: [.rzg2l_meta-renesas-ai_release, .smarc-rzg2lc]
   variables:
-  variables:
-    CI_META_RENESAS_AI_CONFIGURATION: meta-tensorflow-lite/templates/smarc-rzg2lc
     CI_CONF_NAME: tensorflow-lite
   rules: *build-only_rules
 
 tensorflow-lite_smarc-rzg2ul_build-only:
   extends: [.rzg2l_meta-renesas-ai_release, .smarc-rzg2ul]
   variables:
-  variables:
-    CI_META_RENESAS_AI_CONFIGURATION: meta-tensorflow-lite/templates/smarc-rzg2ul
     CI_CONF_NAME: tensorflow-lite
   rules: *build-only_rules

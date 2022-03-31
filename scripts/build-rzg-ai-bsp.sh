@@ -315,32 +315,35 @@ configure_build () {
 	# This will create and take us to the $WORK_DIR/build directory
 	source poky/oe-init-build-env
 
-	# Remove benchmark from framework name
+	# Set framework name for set-config-files.sh
 	case "${FRAMEWORK}" in
 		"armnn" | "onnxruntime" | "tensorflow-lite")
 			BENCHMARK=false
 			;;
 
 		"benchmark-armnn+tfl")
-			FRAMEWORK="armnn+tfl"
+			FRAMEWORK="armnn"
 			BENCHMARK=true
 			;;
 
 		"benchmark-onnx")
-			FRAMEWORK="onnx"
+			FRAMEWORK="onnxruntime"
 			BENCHMARK=true
 			;;
 
 		"benchmark-tflite")
-			FRAMEWORK="tflite"
+			FRAMEWORK="tensorflow-lite"
 			BENCHMARK=true
 			;;
 	esac
 
-	if ${BENCHMARK}; then
-		cp $WORK_DIR/meta-renesas-ai/meta-benchmark/templates/${FRAMEWORK}/${PLATFORM}/*.conf ./conf/
+	cp $WORK_DIR/meta-renesas-ai/templates/${FAMILY}/*.conf ./conf/
+
+	# Set configuration files
+	if [ ${BENCHMARK} == "true" ]; then
+		$WORK_DIR/meta-renesas-ai/scripts/set-config-files.sh -d ${WORK_DIR} -f ${FRAMEWORK} -b -p ${PLATFORM}
 	else
-		cp $WORK_DIR/meta-renesas-ai/meta-${FRAMEWORK}/templates/${PLATFORM}/*.conf ./conf/
+		$WORK_DIR/meta-renesas-ai/scripts/set-config-files.sh -d ${WORK_DIR} -f ${FRAMEWORK} -p ${PLATFORM}
 	fi
 }
 

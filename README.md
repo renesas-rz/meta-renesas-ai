@@ -18,19 +18,19 @@ example:
 *meta-tensorflow-lite/README.md*
 
 
-This project comes with template files to make it easier for the user to quickly
-integrate their specific application with the specific AI tool. Only specific
-platforms are supported, therefore template files are machine specific and can
-be found under:  
-**meta-${AI\_TOOL\_NAME}/templates/${MACHINE}**  
+This project comes with template files for the RZ/G2 and RZ/G2L families. The
+templates can be found under:  
+**templates/${FAMILY}**  
 
 
 Copying *local.conf* and *bblayers.conf* from the templates directory to your
 build conf directory is usually the first thing the user wants to do, but
 the configuration must be inspected and further customized according to the
-project requirements.
+project requirements. This can be done by running the configuration script
+which will add the specified platform and AI framework to the configuration
+files.
 
-Before using the configuration files from the desired templates directory,
+Before using the configuration files from the templates directory,
 please make sure you have read and understood the terms and conditions found
 in the [Licensing](#licensing) section.
 
@@ -63,6 +63,18 @@ libraries from the Renesas website. See the Renesas RZ/G2 and RZ/G2L BSP readme
 files for details on how to do this.
 
 Run `./scripts/build-rzg-ai-bsp.sh -h` to get an overview on how to use the
+script.
+
+### Configuration Script ###
+A simple configuration script has been created to set up the configuration
+files and add the necessary dependencies.  
+Before running the script you will need to source the yocto environment and
+copy over the configuration templates for the appropriate device family from
+the templates/ directory.  
+This script is used automatically by `build-rzg-ai-bsp.sh` but can be run
+independently if required.
+
+Run `./scripts/set-config-files.sh -h` to get an overview on how to use the
 script.
 
 ---
