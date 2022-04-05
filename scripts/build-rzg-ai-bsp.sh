@@ -102,7 +102,7 @@ while getopts ":cdf:l:o:p:h" opt; do
                 ;;
         o)
                 if [ ! -d "${OPTARG}" ]; then
-                        echo " ERROR: -l \"${OPTARG}\" No such directory"
+                        echo " ERROR: -o \"${OPTARG}\" No such directory"
                         print_help
                         exit 1
                 fi
