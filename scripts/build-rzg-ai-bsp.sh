@@ -290,7 +290,7 @@ install_prop_libs () {
 		case "${PLATFORM}" in
 			"smarc-rzg2l" | "smarc-rzg2lc")
 				unzip RTK0EF0045Z13001ZJ-v0.81_EN.zip
-				tar -xf RTK0EF0045Z13001ZJ-v0.81_EN/meta-rz-features.tar.gz -C ${WORK_DIR}i
+				tar -xf RTK0EF0045Z13001ZJ-v0.81_EN/meta-rz-features.tar.gz -C ${WORK_DIR}
 				;;
 		esac
 
