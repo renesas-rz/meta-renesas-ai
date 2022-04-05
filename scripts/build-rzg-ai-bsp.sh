@@ -52,7 +52,7 @@ print_help () {
 	                    tensorflow-lite.
 	                    By default ${FRAMEWORK} will be used.
 	 -l <prop lib dir>  Location when proprietary libraries have been
-	                    downloaded to.
+	                    downloaded to. This is not needed for smarc-rzg2ul.
 	 -o <output dir>    Location to copy binaries to when build is complete.
 	                    By default ${OUTPUT_DIR} will be used.
 	 -p <platform>      Platform to build for. Choose from:
@@ -87,12 +87,18 @@ while getopts ":cdf:l:o:p:h" opt; do
 		esac
 		;;
         l)
-                if [ ! -d "${OPTARG}" ]; then
-                        echo " ERROR: -l \"${OPTARG}\" No such directory"
-                        print_help
-                        exit 1
-                fi
-                PROP_DIR="$(realpath "${OPTARG}")"
+		# Ignore the prop lib directory for RZ/G2UL
+		if [ ${PLATFORM} == "smarc-rzg2ul" ]; then
+                        echo " WARNING: No prop libs required for smarc-rzg2ul"
+                        echo " Continuing build..."
+		else
+                	if [ ! -d "${OPTARG}" ]; then
+                        	echo " ERROR: -l \"${OPTARG}\" No such directory"
+                        	print_help
+                        	exit 1
+                	fi
+                	PROP_DIR="$(realpath "${OPTARG}")"
+		fi
                 ;;
         o)
                 if [ ! -d "${OPTARG}" ]; then
@@ -144,9 +150,11 @@ if [ -z "$PLATFORM" ]; then
 fi
 
 if [ -z "$PROP_DIR" ]; then
-	echo " ERROR: Proprietary library directory (-l) must be set"
-	print_help
-	exit 1
+	if [ ${PLATFORM} != "smarc-rzg2ul" ]; then
+		echo " ERROR: Proprietary library directory (-l) must be set"
+		print_help
+		exit 1
+	fi
 fi
 
 ################################################################################
@@ -284,18 +292,18 @@ install_prop_libs () {
 		sh docs/sample/copyscript/copy_proprietary_softwares.sh \
 			-f ${PROP_DIR}
 		popd
-	elif [ ${FAMILY} == "rzg2l" ]; then
+	elif [ ${PLATFORM} == "smarc-rzg2l" ]; then
 		pushd ${PROP_DIR}
-
-		case "${PLATFORM}" in
-			"smarc-rzg2l" | "smarc-rzg2lc")
-				unzip RTK0EF0045Z13001ZJ-v0.81_EN.zip
-				tar -xf RTK0EF0045Z13001ZJ-v0.81_EN/meta-rz-features.tar.gz -C ${WORK_DIR}
-				;;
-		esac
+		unzip RTK0EF0045Z13001ZJ-v0.81_EN.zip
+		tar -xf RTK0EF0045Z13001ZJ-v0.81_EN/meta-rz-features.tar.gz -C ${WORK_DIR}
 
 		unzip RTK0EF0045Z15001ZJ-v0.55_EN.zip
 		tar -xf RTK0EF0045Z15001ZJ-v0.55_EN/meta-rz-features.tar.gz -C ${WORK_DIR}
+		popd
+	elif [ ${PLATFORM} == "smarc-rzg2lc" ]; then
+		pushd ${PROP_DIR}
+		unzip RTK0EF0045Z13001ZJ-v0.81_EN.zip
+		tar -xf RTK0EF0045Z13001ZJ-v0.81_EN/meta-rz-features.tar.gz -C ${WORK_DIR}
 		popd
 	fi
 }
@@ -387,14 +395,20 @@ echo "RZ/G BSP version: ${RZG_BSP_VER}"
 echo "Working Directory: ${WORK_DIR}"
 echo "Platform: ${PLATFORM}"
 echo "AI Framework: ${FRAMEWORK}"
-echo "Proprietary Library Directory: ${PROP_DIR}"
+
+if [ ${PLATFORM} != "smarc-rzg2ul"  ]; then
+	echo "Proprietary Library Directory: ${PROP_DIR}"
+fi
 echo "Output Directory: ${OUTPUT_DIR}"
 
 if $INSTALL_DEPENDENCIES; then
 	install_dependencies
 fi
 download_source
-install_prop_libs
+
+if [ ${PLATFORM} != "smarc-rzg2ul"  ]; then
+	install_prop_libs
+fi
 configure_build
 
 if $BUILD; then
