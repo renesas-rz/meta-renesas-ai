@@ -19,8 +19,8 @@ WORK_DIR="${PWD}"
 COMMAND_NAME="$0"
 INSTALL_DEPENDENCIES=false
 PLATFORM=""
-FRAMEWORK="benchmark-armnn+tfl"
-BENCHMARK=true
+FRAMEWORK="armnn"
+BENCHMARK=false
 PROP_DIR=""
 BUILD=true
 OUTPUT_DIR="${WORK_DIR}/output"
@@ -41,16 +41,16 @@ print_help () {
 
 	 OPTIONS:
 	 -h                 Print this help and exit.
+	 -b		    Enable benchmarking.
 	 -c                 Only perform checkout, proprietary library
 	                    extraction and configuration. Don't start the build.
 	 -d                 Install OS dependencies before starting build.
 	 -f <framework>     Select which AI framework to include in the
 	                    filesystem.
 	                    Choose from:
-	                    benchmark-armnn+tfl, benchmark-onnx,
-	                    benchmark-tflite, armnn, onnxruntime or
-	                    tensorflow-lite.
-	                    By default ${FRAMEWORK} will be used.
+                                armnn (default)
+                                onnxruntime
+                                tensorflow-lite
 	 -l <prop lib dir>  Location when proprietary libraries have been
 	                    downloaded to. This is not needed for smarc-rzg2ul.
 	 -o <output dir>    Location to copy binaries to when build is complete.
@@ -65,8 +65,11 @@ print_help () {
 ################################################################################
 # Options parsing
 
-while getopts ":cdf:l:o:p:h" opt; do
+while getopts ":bcdf:l:o:p:h" opt; do
         case $opt in
+	b)
+		BENCHMARK=true
+		;;
 	c)	BUILD=false
 		;;
         d)
@@ -74,8 +77,7 @@ while getopts ":cdf:l:o:p:h" opt; do
                 ;;
         f)
 		case "${OPTARG}" in
-		"armnn" | "onnxruntime" | "tensorflow-lite" | \
-		"benchmark-armnn+tfl" | "benchmark-onnx" | "benchmark-tflite")
+			"armnn" | "onnxruntime" | "tensorflow-lite")
 			FRAMEWORK="${OPTARG}"
 			;;
 
@@ -315,28 +317,6 @@ configure_build () {
 	# This will create and take us to the $WORK_DIR/build directory
 	source poky/oe-init-build-env
 
-	# Set framework name for set-config-files.sh
-	case "${FRAMEWORK}" in
-		"armnn" | "onnxruntime" | "tensorflow-lite")
-			BENCHMARK=false
-			;;
-
-		"benchmark-armnn+tfl")
-			FRAMEWORK="armnn"
-			BENCHMARK=true
-			;;
-
-		"benchmark-onnx")
-			FRAMEWORK="onnxruntime"
-			BENCHMARK=true
-			;;
-
-		"benchmark-tflite")
-			FRAMEWORK="tensorflow-lite"
-			BENCHMARK=true
-			;;
-	esac
-
 	cp $WORK_DIR/meta-renesas-ai/templates/${FAMILY}/*.conf ./conf/
 
 	# Set configuration files
@@ -398,6 +378,7 @@ echo "RZ/G BSP version: ${RZG_BSP_VER}"
 echo "Working Directory: ${WORK_DIR}"
 echo "Platform: ${PLATFORM}"
 echo "AI Framework: ${FRAMEWORK}"
+echo "Benchmark: ${BENCHMARK}"
 
 if [ ${PLATFORM} != "smarc-rzg2ul"  ]; then
 	echo "Proprietary Library Directory: ${PROP_DIR}"
