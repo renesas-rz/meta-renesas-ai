@@ -245,7 +245,10 @@ download_source () {
 			git://git.yoctoproject.org/poky \
 			dunfell-23.0.13
 
-		cd poky; git cherry-pick e256885889; cd -
+		cd poky; git cherry-pick e256885889
+
+		# We need to cherry-pick the following commit to prevent SDK basehash issue
+		git cherry-pick cfd897e213d; cd -
 
 		update_git_repo \
 			meta-openembedded \
