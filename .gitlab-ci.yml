@@ -104,7 +104,7 @@ variables:
   image: gitlab.renesas.solutions:5050/spl2/continuous-integration/dockerfiles:ubuntu-18.04-latest
   extends: [.build_meta-renesas-ai, .rzg2-test]
   script:
-    - ci-yocto-build.sh -s ${BUILD_SCRIPT} -p $(pwd)/build-scripts
+    - ci-yocto-build.sh -s ${BUILD_SCRIPT} -p $(pwd)/build-scripts -D ${YOCTO_DL_DIR}
     - cd ..
     - 'submit-lava-job.sh -E ${GITLAB_USER_EMAIL} -m "gitlab.pipeline-url: ${CI_PIPELINE_URL}" -m "gitlab.job-url: ${CI_JOB_URL}" -f build-scripts/url_list.csv'
     - cat job_list.csv || true
@@ -113,13 +113,13 @@ variables:
   image: gitlab.renesas.solutions:5050/spl2/continuous-integration/dockerfiles:ubuntu-18.04-latest
   extends: [.build_meta-renesas-ai, .rzg2-release]
   script:
-    - ci-yocto-build.sh -s ${BUILD_SCRIPT} -p $(pwd)/build-scripts
+    - ci-yocto-build.sh -s ${BUILD_SCRIPT} -p $(pwd)/build-scripts -D {YOCTO_DL_DIR}
 
 .rzg2l_meta-renesas-ai_test:
   image: gitlab.renesas.solutions:5050/spl2/continuous-integration/dockerfiles:ubuntu-20.04-latest
   extends: [.build_meta-renesas-ai, .rzg2l-test]
   script:
-    - ci-yocto-build.sh -s ${BUILD_SCRIPT} -p $(pwd)/build-scripts
+    - ci-yocto-build.sh -s ${BUILD_SCRIPT} -p $(pwd)/build-scripts -D {YOCTO_DL_DIR}
     - cd ..
     - 'submit-lava-job.sh -E ${GITLAB_USER_EMAIL} -m "gitlab.pipeline-url: ${CI_PIPELINE_URL}" -m "gitlab.job-url: ${CI_JOB_URL}" -f build-scripts/url_list.csv'
     - cat job_list.csv || true
@@ -128,7 +128,7 @@ variables:
   image: gitlab.renesas.solutions:5050/spl2/continuous-integration/dockerfiles:ubuntu-20.04-latest
   extends: [.build_meta-renesas-ai, .rzg2l-release]
   script:
-    - ci-yocto-build.sh -s ${BUILD_SCRIPT} -p $(pwd)/build-scripts
+    - ci-yocto-build.sh -s ${BUILD_SCRIPT} -p $(pwd)/build-scripts -D {YOCTO_DL_DIR}
 
 ################################################################################
 # Build and test
