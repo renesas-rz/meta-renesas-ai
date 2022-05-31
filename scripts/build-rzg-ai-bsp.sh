@@ -5,10 +5,10 @@
 #   RZ/G2: hihope-rzg2h, hihope-rzg2m, hihope-rzg2n, ek874
 #   RZ/G2L: smarc-rzg2l, smarc-rzg2lc, smarc-rzg2ul
 #
-# This script has been tested on Ubuntu 18.04.
+# This script has been tested on Ubuntu 20.04.
 #
 # SPDX-License-Identifier: MIT
-# Copyright (C) 2020 Renesas Electronics Corp.
+# Copyright (C) 2022 Renesas Electronics Corp.
 
 set -e
 
@@ -48,7 +48,7 @@ print_help () {
 
 	 OPTIONS:
 	 -h                 Print this help and exit.
-	 -b		    Enable benchmarking.
+	 -b                 Enable benchmarking.
 	 -c                 Only perform checkout, proprietary library
 	                    extraction and configuration. Don't start the build.
 	 -d                 Install OS dependencies before starting build.
@@ -117,7 +117,7 @@ while getopts ":bcdef:j:k:l:o:p:stTh" opt; do
 		;;
         l)
 		# Ignore the prop lib directory for RZ/G2UL
-		if [ ${PLATFORM} == "smarc-rzg2ul" ]; then
+		if [ "${PLATFORM}" == "smarc-rzg2ul" ]; then
                         echo " WARNING: No prop libs required for smarc-rzg2ul"
                         echo " Continuing build..."
 		else
