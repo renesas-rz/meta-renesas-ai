@@ -1,0 +1,5 @@
+device_type: PLACEHOLDER_DEVICE_TYPE
+job_name: PLACEHOLDER_JOB_NAME
+priority: medium
+visibility: public
+

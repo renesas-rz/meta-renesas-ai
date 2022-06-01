@@ -1,0 +1,16 @@
+- test:
+    timeout:
+      minutes: 5
+    definitions:
+    - repository:
+        metadata:
+          format: Lava-Test Test Definition 1.0
+          name: setup-swap
+          description: "Create and enable swap partition"
+        run:
+          steps:
+               - cd /usr/bin/ai-tests
+               - ./run_tests.sh swap_setup.sh
+      from: inline
+      name: setup-swap
+      path: inline/setup-swap.yaml

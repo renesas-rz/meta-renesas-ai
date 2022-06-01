@@ -1,0 +1,14 @@
+actions:
+- deploy:
+    timeout:
+      minutes: 30
+    to: tftp
+    kernel:
+      url: PLACEHOLDER_KERNEL_URL
+      type: image
+    nfsrootfs:
+      url: PLACEHOLDER_NFSROOTFS_URL
+      compression: gz
+    dtb:
+      url: PLACEHOLDER_DTB_URL
+

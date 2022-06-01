@@ -1,0 +1,9 @@
+notify:
+  criteria:
+    status: finished
+  verbosity: verbose
+  recipients:
+  - to:
+     method: email
+     user: PLACEHOLDER_LAVA_USER
+

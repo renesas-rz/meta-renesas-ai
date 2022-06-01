@@ -1,0 +1,11 @@
+- boot:
+    timeout:
+      minutes: 5
+    auto_login:
+      login_prompt: PLACEHOLDER_LOGIN_PROMPT
+      username: root
+    prompts:
+      - PLACEHOLDER_PROMPT
+    method: u-boot
+    commands: nfs
+

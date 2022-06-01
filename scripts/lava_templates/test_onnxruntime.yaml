@@ -1,0 +1,18 @@
+- test:
+    timeout:
+      minutes: 10
+    definitions:
+    - repository:
+        metadata:
+          format: Lava-Test Test Definition 1.0
+          name: ort-tests
+          description: "A series of tests and benchmarks for the ONNX Runtime ML framework"
+        run:
+          steps:
+               - cd /usr/bin/ai-tests
+               - ./run_tests.sh meta-renesas-ai_ort_t_001.sh
+               - ./run_tests.sh meta-renesas-ai_ort_t_002.sh
+      from: inline
+      name: ort-tests
+      path: inline/ort-tests.yaml
+

@@ -1,0 +1,25 @@
+- test:
+    timeout:
+      hours: 3
+    definitions:
+    - repository:
+        metadata:
+          format: Lava-Test Test Definition 1.0
+          name: armnn-tests
+          description: "A series of tests and benchmarks for the ArmNN ML framework"
+        run:
+          steps:
+               - cd /usr/bin/ai-tests
+               - ./run_tests.sh meta-renesas-ai_armnn_t_001.sh
+               - ./run_tests.sh meta-renesas-ai_armnn_t_002.sh
+               - ./run_tests.sh meta-renesas-ai_armnn_t_003.sh
+               - ./run_tests.sh meta-renesas-ai_armnn_t_004.sh
+               - ./run_tests.sh meta-renesas-ai_armnn_t_005.sh
+               - ./run_tests.sh meta-renesas-ai_armnn_t_006.sh
+               - ./run_tests.sh meta-renesas-ai_armnn_t_007.sh
+               - ./run_tests.sh meta-renesas-ai_armnn_t_008.sh
+               - ./run_tests.sh meta-renesas-ai_armnn_t_009.sh
+      from: inline
+      name: armnn-tests
+      path: inline/armnn-tests.yaml
+

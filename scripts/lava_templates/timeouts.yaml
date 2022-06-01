@@ -1,0 +1,8 @@
+timeouts:
+  job:
+    hours: 4
+  action:
+    hours: 1
+  connection:
+    minutes: 2
+
