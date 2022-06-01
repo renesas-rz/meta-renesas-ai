@@ -1,5 +1,6 @@
 stages:
   - build-ai-bsp
+  - test-ai-bsp
   - build-sdk
 
 variables:
@@ -74,6 +75,8 @@ variables:
     - pushd ${PROP_LIBS_DIR} && git checkout ${PROP_LIBS_BRANCH} && popd
     - pushd ${BUILD_DIR}
     - ${CI_PROJECT_DIR}/scripts/build-rzg-ai-bsp.sh -p ${PLATFORM} -l ${PROP_LIBS_DIR} -f ${FRAMEWORK} -o ${OUTPUT_DIR} -e -s -j ${DL_DIR} -k ${SSTATE_DIR} ${EXTRA_BUILD_ARGS}
+  after_script:
+    - echo "BUILD_JOB_ID=$CI_JOB_ID" >> job.env
   cache:
       - key: "downloads"
         paths:
@@ -85,10 +88,19 @@ variables:
     name: "${CI_JOB_NAME}"
     when: always
     expire_in: 1 month
+    reports:
+      dotenv: job.env
     paths:
       - ${BUILD_DIR}/build/conf/bblayers.conf
       - ${BUILD_DIR}/build/conf/local.conf
       - ${OUTPUT_DIR}/
+
+.test-meta-renesas-ai:
+  stage: test-ai-bsp
+  before_script:
+    - printenv
+  script:
+    - ${CI_PROJECT_DIR}/scripts/submit-lava-job.sh -p ${PLATFORM} -t ${CI_PROJECT_DIR}/scripts/lava_templates/ -u spl2-bot ${FRAMEWORK_ARG}
 
 
 benchmark:armnn:hihope-rzg2h:
@@ -252,6 +264,145 @@ benchmark:tflite:smarc-rzg2ul:
     FRAMEWORK: tensorflow-lite
     EXTRA_BUILD_ARGS: "-b"
   <<: *selective_rules
+
+
+test:benchmark:armnn:hihope-rzg2h:
+  image: gitlab.renesas.solutions:5050/spl2/continuous-integration/dockerfiles:ubuntu-20.04-latest
+  needs: ["benchmark:armnn:hihope-rzg2h"]
+  extends: [".test-meta-renesas-ai", ".hihope-rzg2h"]
+  variables:
+    FRAMEWORK_ARG: "-f armnn -f tensorflow-lite"
+
+test:benchmark:ort:hihope-rzg2h:
+  image: gitlab.renesas.solutions:5050/spl2/continuous-integration/dockerfiles:ubuntu-20.04-latest
+  needs: ["benchmark:ort:hihope-rzg2h"]
+  extends: [".test-meta-renesas-ai", ".hihope-rzg2h"]
+  variables:
+    FRAMEWORK_ARG: "-f onnxruntime"
+
+test:benchmark:tflite:hihope-rzg2h:
+  image: gitlab.renesas.solutions:5050/spl2/continuous-integration/dockerfiles:ubuntu-20.04-latest
+  needs: ["benchmark:tflite:hihope-rzg2h"]
+  extends: [".test-meta-renesas-ai", ".hihope-rzg2h"]
+  variables:
+    FRAMEWORK_ARG: "-f tensorflow-lite"
+
+test:benchmark:armnn:hihope-rzg2m:
+  image: gitlab.renesas.solutions:5050/spl2/continuous-integration/dockerfiles:ubuntu-20.04-latest
+  needs: ["benchmark:armnn:hihope-rzg2m"]
+  extends: [".test-meta-renesas-ai", ".hihope-rzg2m"]
+  variables:
+    FRAMEWORK_ARG: "-f armnn -f tensorflow-lite"
+
+test:benchmark:ort:hihope-rzg2m:
+  image: gitlab.renesas.solutions:5050/spl2/continuous-integration/dockerfiles:ubuntu-20.04-latest
+  needs: ["benchmark:ort:hihope-rzg2m"]
+  extends: [".test-meta-renesas-ai", ".hihope-rzg2m"]
+  variables:
+    FRAMEWORK_ARG: "-f onnxruntime"
+
+test:benchmark:tflite:hihope-rzg2m:
+  image: gitlab.renesas.solutions:5050/spl2/continuous-integration/dockerfiles:ubuntu-20.04-latest
+  needs: ["benchmark:tflite:hihope-rzg2m"]
+  extends: [".test-meta-renesas-ai", ".hihope-rzg2m"]
+  variables:
+    FRAMEWORK_ARG: "-f tensorflow-lite"
+
+test:benchmark:armnn:hihope-rzg2n:
+  image: gitlab.renesas.solutions:5050/spl2/continuous-integration/dockerfiles:ubuntu-20.04-latest
+  needs: ["benchmark:armnn:hihope-rzg2n"]
+  extends: [".test-meta-renesas-ai", ".hihope-rzg2n"]
+  variables:
+    FRAMEWORK_ARG: "-f armnn -f tensorflow-lite"
+
+test:benchmark:ort:hihope-rzg2n:
+  image: gitlab.renesas.solutions:5050/spl2/continuous-integration/dockerfiles:ubuntu-20.04-latest
+  needs: ["benchmark:ort:hihope-rzg2n"]
+  extends: [".test-meta-renesas-ai", ".hihope-rzg2n"]
+  variables:
+    FRAMEWORK_ARG: "-f onnxruntime"
+
+test:benchmark:tflite:hihope-rzg2n:
+  image: gitlab.renesas.solutions:5050/spl2/continuous-integration/dockerfiles:ubuntu-20.04-latest
+  needs: ["benchmark:tflite:hihope-rzg2n"]
+  extends: [".test-meta-renesas-ai", ".hihope-rzg2n"]
+  variables:
+    FRAMEWORK_ARG: "-f tensorflow-lite"
+
+test:benchmark:armnn:ek874:
+  image: gitlab.renesas.solutions:5050/spl2/continuous-integration/dockerfiles:ubuntu-20.04-latest
+  needs: ["benchmark:armnn:ek874"]
+  extends: [".test-meta-renesas-ai", ".ek874"]
+  variables:
+    FRAMEWORK_ARG: "-f armnn -f tensorflow-lite"
+
+test:benchmark:ort:ek874:
+  image: gitlab.renesas.solutions:5050/spl2/continuous-integration/dockerfiles:ubuntu-20.04-latest
+  needs: ["benchmark:ort:ek874"]
+  extends: [".test-meta-renesas-ai", ".ek874"]
+  variables:
+    FRAMEWORK_ARG: "-f onnxruntime"
+
+test:benchmark:tflite:ek874:
+  image: gitlab.renesas.solutions:5050/spl2/continuous-integration/dockerfiles:ubuntu-20.04-latest
+  needs: ["benchmark:tflite:ek874"]
+  extends: [".test-meta-renesas-ai", ".ek874"]
+  variables:
+    FRAMEWORK_ARG: "-f tensorflow-lite"
+
+test:benchmark:armnn:smarc-rzg2l:
+  needs: ["benchmark:armnn:smarc-rzg2l"]
+  extends: [".test-meta-renesas-ai", ".smarc-rzg2l"]
+  variables:
+    FRAMEWORK_ARG: "-f armnn -f tensorflow-lite"
+
+test:benchmark:ort:smarc-rzg2l:
+  needs: ["benchmark:ort:smarc-rzg2l"]
+  extends: [".test-meta-renesas-ai", ".smarc-rzg2l"]
+  variables:
+    FRAMEWORK_ARG: "-f onnxruntime"
+
+test:benchmark:tflite:smarc-rzg2l:
+  needs: ["benchmark:tflite:smarc-rzg2l"]
+  extends: [".test-meta-renesas-ai", ".smarc-rzg2l"]
+  variables:
+    FRAMEWORK_ARG: "-f tensorflow-lite"
+
+test:benchmark:armnn:smarc-rzg2lc:
+  needs: ["benchmark:armnn:smarc-rzg2lc"]
+  extends: [".test-meta-renesas-ai", ".smarc-rzg2lc"]
+  variables:
+    FRAMEWORK_ARG: "-f armnn -f tensorflow-lite"
+
+test:benchmark:ort:smarc-rzg2lc:
+  needs: ["benchmark:ort:smarc-rzg2lc"]
+  extends: [".test-meta-renesas-ai", ".smarc-rzg2lc"]
+  variables:
+    FRAMEWORK_ARG: "-f onnxruntime"
+
+test:benchmark:tflite:smarc-rzg2lc:
+  needs: ["benchmark:tflite:smarc-rzg2lc"]
+  extends: [".test-meta-renesas-ai", ".smarc-rzg2lc"]
+  variables:
+    FRAMEWORK_ARG: "-f tensorflow-lite"
+
+test:benchmark:armnn:smarc-rzg2ul:
+  needs: ["benchmark:armnn:smarc-rzg2ul"]
+  extends: [".test-meta-renesas-ai", ".smarc-rzg2ul"]
+  variables:
+    FRAMEWORK_ARG: "-f armnn -f tensorflow-lite"
+
+test:benchmark:ort:smarc-rzg2ul:
+  needs: ["benchmark:ort:smarc-rzg2ul"]
+  extends: [".test-meta-renesas-ai", ".smarc-rzg2ul"]
+  variables:
+    FRAMEWORK_ARG: "-f onnxruntime"
+
+test:benchmark:tflite:smarc-rzg2ul:
+  needs: ["benchmark:tflite:smarc-rzg2ul"]
+  extends: [".test-meta-renesas-ai", ".smarc-rzg2ul"]
+  variables:
+    FRAMEWORK_ARG: "-f tensorflow-lite"
 
 
 sdk:benchmark:armnn:hihope-rzg2h:
