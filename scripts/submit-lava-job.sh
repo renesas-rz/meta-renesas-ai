@@ -1,7 +1,10 @@
 #!/bin/bash
 #
 # This script prepares and submit LAVA job definitions.
+#
 # It is assumed that lavacli.yml has been configured as required.
+# It is assumed that the ${BUILD_JOB_ID} variable is set to the GitLab CI job
+# that contains the build artifacts that are to be tested.
 #
 # This script has been tested on Ubuntu 20.04.
 #
@@ -118,7 +121,9 @@ create_combined_job_template () {
 	local job_template="${TMP_DIR}"/job_template.yaml
 
 	cat "${LAVA_TEMPLATES_DIR}"/header.yaml > "${job_template}"
-	cat "${LAVA_TEMPLATES_DIR}"/metadata.yaml >> "${job_template}"
+	if [ ${CI} ]; then
+		cat "${LAVA_TEMPLATES_DIR}"/metadata.yaml >> "${job_template}"
+	fi
 	cat "${LAVA_TEMPLATES_DIR}"/notify.yaml >> "${job_template}"
 	cat "${LAVA_TEMPLATES_DIR}"/timeouts.yaml >> "${job_template}"
 	cat "${LAVA_TEMPLATES_DIR}"/deploy.yaml >> "${job_template}"
