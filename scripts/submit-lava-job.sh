@@ -25,7 +25,8 @@ print_help () {
 	Create test job definitions and submit them to LAVA server.
 	This script is designed to run in a GitLab CI environment.
 
-	USAGE: $0 -p PLATFORM -t DIR -u USERNAME [-a DIR] [-f FRAMEWORK] [-h]
+	USAGE: $0 -p PLATFORM -t DIR -u USERNAME [-a DIR] [-f FRAMEWORK] [-r] \
+	       [-h]
 
 	MANDATORY:
 	-p, --platform PLATFORM      Specify Yocto machine  name.
@@ -37,6 +38,8 @@ print_help () {
 	                             If not specified the default for DIR is
 	                             "output/\$PLATFORM".
 	-f, --framework FRAMEWORK    Include tests for this framework.
+	-r, --check-results          After job is submitted, wait for test to
+	                             run and get results.
 	-h, --help                   Print this help and exit.
 
 	EOF
@@ -64,6 +67,10 @@ parse_options () {
 			;;
 		-p|--platform)
 			PLATFORM="${2}"
+			shift
+			;;
+		-r|--check-results)
+			CHECK_FOR_RESULTS=true
 			shift
 			;;
 		-t|--templates)
@@ -114,6 +121,9 @@ parse_options () {
 	# Set defaults for optional arguments
 	if [ -z ${ARTIFACTS_DIR+x} ]; then
 		ARTIFACTS_DIR="output/${PLATFORM}"
+	fi
+	if [ -z ${CHECK_FOR_RESULTS+x} ]; then
+		CHECK_FOR_RESULTS=false
 	fi
 }
 
@@ -367,12 +377,46 @@ customise_template () {
 }
 
 # This function assumes that ~/.config/lavacli.yaml is already configured
-# $1: Job template file
+# $1:     Job template file
+# return: URL to submitted job
 submit_job () {
 	local job_url=$(lavacli jobs submit "${1}" --url)
 	echo "${job_url}"
 }
 
+# This function assumes that ~/.config/lavacli.yaml is already configured
+# $1: Submitted job number
+wait_for_job_to_complete () {
+	echo "========================================================================="
+	lavacli jobs wait "${1}"
+}
+
+# This function assumes that ~/.config/lavacli.yaml is already configured
+# $1:       Submitted job number
+get_job_results () {
+	echo "========================================================================="
+	lavacli results "${1}"
+}
+
+# This function assumes that ~/.config/lavacli.yaml is already configured
+# $1:       Submitted job number
+# return PASS: Job completed okay
+#        FAIL: Job did not complete
+get_job_result () {
+	local lavacli_output=$TMP_DIR/lavacli_output
+	lavacli jobs show "${1}" > ${lavacli_output}
+
+	local health=$(cat "$lavacli_output" \
+		| grep "Health" \
+		| cut -d ":" -f 2 \
+		| awk '{$1=$1};1')
+
+	if [ "${health}" != "Complete" ]; then
+		echo "FAIL"
+	else
+		echo "PASS"
+	fi
+}
 
 trap clean_up SIGHUP SIGINT SIGTERM
 set_up
@@ -385,15 +429,28 @@ echo "========================================================================="
 echo "GENERATED LAVA TEMPLATE"
 echo "========================================================================="
 cat ${JOB_TEMPLATE}
-echo "========================================================================="
 
+echo "========================================================================="
 JOB_LINK=$(submit_job "${JOB_TEMPLATE}")
+JOB_NO=$(echo ${JOB_LINK} | rev | cut -d "/" -f 1 | rev)
 if [[ "${JOB_LINK}" == "http"* ]]; then
-	echo "LAVA job submitted: ${JOB_LINK}"
+	echo "LAVA job #${JOB_NO} submitted: ${JOB_LINK}"
 else
 	echo "ERROR: LAVA job submission failed: ${JOB_LINK}"
 	clean_up
 	exit 1
+fi
+
+if ${CHECK_FOR_RESULTS}; then
+	wait_for_job_to_complete ${JOB_NO}
+
+	get_job_results ${JOB_NO}
+
+	RESULT=$(get_job_result ${JOB_NO})
+	if [ ${RESULT} != "PASS" ]; then
+		clean_up
+		exit 1
+	fi
 fi
 
 clean_up

@@ -97,10 +97,12 @@ variables:
 
 .test-meta-renesas-ai:
   stage: test-ai-bsp
+  tags:
+    - lava-job
   before_script:
     - printenv
   script:
-    - ${CI_PROJECT_DIR}/scripts/submit-lava-job.sh -p ${PLATFORM} -t ${CI_PROJECT_DIR}/scripts/lava_templates/ -u spl2-bot ${FRAMEWORK_ARG}
+    - ${CI_PROJECT_DIR}/scripts/submit-lava-job.sh -p ${PLATFORM} -t ${CI_PROJECT_DIR}/scripts/lava_templates/ -u spl2-bot ${FRAMEWORK_ARG} -r
 
 
 benchmark:armnn:hihope-rzg2h:
