@@ -74,6 +74,23 @@ independently if required.
 Run `./scripts/set-config-files.sh -h` to get an overview on how to use the
 script.
 
+### LAVA Test Job Submission Script ###
+The 'submit-lava-job.sh' script has been created to manage the creation and
+submission of LAVA test jobs. These test jobs run a number of test cases to
+verify functionality of the AI BSP. The test scripts are provided by the
+*ai-tests* recipe.
+
+Run `./scripts/submit-lava-job.sh -h` to get an overview on how to use the
+script.
+
+The script depends on the *${BUILD\_JOB\_ID}* variable to be set in the
+environment, as it uses this in order to set the correct URL to the GitLab CI
+build artifacts that LAVA needs to download. See *.gitlab-ci.yml* for an example
+of how this is done in this project.
+
+If *${BUILD\_JOB\_ID}* and *${CI\_PROJECT\_URL}* are set manually it is possible
+to run this script outside of a GitLab CI environment.
+
 ---
 
 ## Notes ##
