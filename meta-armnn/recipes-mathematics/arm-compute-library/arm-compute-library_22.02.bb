@@ -32,7 +32,7 @@ OESCONS_COMMON_FLAG = " extra_cxx_flags="${TOOLCHAIN_OPTIONS} -Wno-error=noexcep
 
 EXTRA_OESCONS_aarch64 = "arch=arm64-v8a${OESCONS_COMMON_FLAG}"
 
-# Override the platform generic opencl flag for the RZ/G2L
+# Override the platform generic opencl flag for RZ/G2L and RZ/G2LC
 OESCONS_COMMON_FLAG_append_smarc-rzg2l  = " opencl=1 embed_kernels=1"
 OESCONS_COMMON_FLAG_append_smarc-rzg2lc = " opencl=1 embed_kernels=1"
 
