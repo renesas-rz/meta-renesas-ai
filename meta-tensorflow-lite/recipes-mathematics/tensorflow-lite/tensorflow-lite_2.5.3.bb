@@ -42,17 +42,6 @@ EXTRA_OECMAKE_aarch64 = " \
 	-DCMAKE_SYSROOT=${STAGING_DIR_TARGET} \
 	-DCMAKE_C_COMPILER=${STAGING_DIR_NATIVE}/usr/bin/aarch64-poky-linux/aarch64-poky-linux-gcc \
 	-DCMAKE_CXX_COMPILER=${STAGING_DIR_NATIVE}/usr/bin/aarch64-poky-linux/aarch64-poky-linux-g++ \
-"
-
-EXTRA_OECMAKE_append_smarc-rzg2l = " \
-	-DCMAKE_CXX_FLAGS="-flax-vector-conversions" \
-	-DCMAKE_C_FLAGS="-flax-vector-conversions" \
-"
-EXTRA_OECMAKE_append_smarc-rzg2lc = " \
-	-DCMAKE_CXX_FLAGS="-flax-vector-conversions" \
-	-DCMAKE_C_FLAGS="-flax-vector-conversions" \
-"
-EXTRA_OECMAKE_append_smarc-rzg2ul = " \
 	-DCMAKE_CXX_FLAGS="-flax-vector-conversions" \
 	-DCMAKE_C_FLAGS="-flax-vector-conversions" \
 "

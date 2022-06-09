@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python3
 
 '''
 Copyright (C) 2022 Renesas Electronics Corp.
@@ -88,7 +88,7 @@ def run_command(command):
     #print("Run Command: " + command)
     p = subprocess.Popen(command, shell=True,
                          stdout=subprocess.PIPE,
-                         stderr=subprocess.STDOUT)
+                         stderr=subprocess.STDOUT, text=True)
     return iter(p.stdout.readline, b'')
 
 if __name__ == '__main__':
