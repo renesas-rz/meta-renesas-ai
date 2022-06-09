@@ -12,7 +12,7 @@ growing number of usage scenarios in Machine Learning. Our investments focus on:
 2. High performance
 3. Cross platform
 
-The official website is:  
+The official website is:
 **https://github.com/microsoft/onnxruntime**
 
 This Yocto/OpenEmbedded meta-layer provides ONNX Runtime support for the Renesas
@@ -34,26 +34,28 @@ https://github.com/microsoft/onnxruntime/tree/master/onnxruntime/test/onnx.
 
 This program is installed under */usr/bin/onnxruntime/examples/unittest*.
 
-To use *onnx_test_runner*:  
+To use *onnx_test_runner*:
 1. Execute *onnx_test_runner* by running the following commands:
 ```
 cd /usr/bin/onnxruntime/examples/unittest/
 ./onnx_test_runner ./squeezenet
 ```
 The output of a healthy execution should look like the following:
-> result:   
->	Models: 1  
->	Total test cases: 12  
->		Succeeded: 12  
->		Not implemented: 0  
->		Failed: 0  
->	Stats by Operator type:  
->		Not implemented(0):   
->		Failed:  
-> Failed Test Cases:  
+```
+result:
+Models: 1
+Total test cases: 12
+	Succeeded: 12
+	Not implemented: 0
+	Failed: 0
+Stats by Operator type:
+	Not implemented(0):
+	Failed:
+Failed Test Cases:
+```
 
 ## Notes ##
-**Using Large Models**  
+**Using Large Models**\
 Due to the limited memory size on some platforms, large pre-trained models could
 cause out of memory issues. To overcome this memory limitation, a swap file can
 used. Please see the top level *README.md* file for details.
