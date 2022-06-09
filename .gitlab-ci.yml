@@ -19,14 +19,12 @@ variables:
       when: always
 
 .rzg2:
-  image: gitlab.renesas.solutions:5050/spl2/continuous-integration/dockerfiles:ubuntu-18.04-latest
   variables:
-    PROP_LIBS_BRANCH: rzg2_v1.0.10_prod
+    PROP_LIBS_BRANCH: rzg2_v3.0.0_prod
 
 .rzg2l:
-  image: gitlab.renesas.solutions:5050/spl2/continuous-integration/dockerfiles:ubuntu-20.04-latest
   variables:
-    PROP_LIBS_BRANCH: rzg2l_v1.4_prod
+    PROP_LIBS_BRANCH: rzg2l_v3.0.0_prod
 
 .hihope-rzg2h:
   extends: [".rzg2"]
@@ -64,6 +62,7 @@ variables:
     PLATFORM: smarc-rzg2ul
 
 .build-meta-renesas-ai:
+  image: gitlab.renesas.solutions:5050/spl2/continuous-integration/dockerfiles:ubuntu-20.04-latest
   tags:
     - yocto
   before_script:
@@ -96,6 +95,7 @@ variables:
       - ${OUTPUT_DIR}/
 
 .test-meta-renesas-ai:
+  image: gitlab.renesas.solutions:5050/spl2/continuous-integration/dockerfiles:ubuntu-20.04-latest
   stage: test-ai-bsp
   tags:
     - lava-job
@@ -269,84 +269,72 @@ benchmark:tflite:smarc-rzg2ul:
 
 
 test:benchmark:armnn:hihope-rzg2h:
-  image: gitlab.renesas.solutions:5050/spl2/continuous-integration/dockerfiles:ubuntu-20.04-latest
   needs: ["benchmark:armnn:hihope-rzg2h"]
   extends: [".test-meta-renesas-ai", ".hihope-rzg2h"]
   variables:
     FRAMEWORK_ARG: "-f armnn -f tensorflow-lite"
 
 test:benchmark:ort:hihope-rzg2h:
-  image: gitlab.renesas.solutions:5050/spl2/continuous-integration/dockerfiles:ubuntu-20.04-latest
   needs: ["benchmark:ort:hihope-rzg2h"]
   extends: [".test-meta-renesas-ai", ".hihope-rzg2h"]
   variables:
     FRAMEWORK_ARG: "-f onnxruntime"
 
 test:benchmark:tflite:hihope-rzg2h:
-  image: gitlab.renesas.solutions:5050/spl2/continuous-integration/dockerfiles:ubuntu-20.04-latest
   needs: ["benchmark:tflite:hihope-rzg2h"]
   extends: [".test-meta-renesas-ai", ".hihope-rzg2h"]
   variables:
     FRAMEWORK_ARG: "-f tensorflow-lite"
 
 test:benchmark:armnn:hihope-rzg2m:
-  image: gitlab.renesas.solutions:5050/spl2/continuous-integration/dockerfiles:ubuntu-20.04-latest
   needs: ["benchmark:armnn:hihope-rzg2m"]
   extends: [".test-meta-renesas-ai", ".hihope-rzg2m"]
   variables:
     FRAMEWORK_ARG: "-f armnn -f tensorflow-lite"
 
 test:benchmark:ort:hihope-rzg2m:
-  image: gitlab.renesas.solutions:5050/spl2/continuous-integration/dockerfiles:ubuntu-20.04-latest
   needs: ["benchmark:ort:hihope-rzg2m"]
   extends: [".test-meta-renesas-ai", ".hihope-rzg2m"]
   variables:
     FRAMEWORK_ARG: "-f onnxruntime"
 
 test:benchmark:tflite:hihope-rzg2m:
-  image: gitlab.renesas.solutions:5050/spl2/continuous-integration/dockerfiles:ubuntu-20.04-latest
   needs: ["benchmark:tflite:hihope-rzg2m"]
   extends: [".test-meta-renesas-ai", ".hihope-rzg2m"]
   variables:
     FRAMEWORK_ARG: "-f tensorflow-lite"
 
 test:benchmark:armnn:hihope-rzg2n:
-  image: gitlab.renesas.solutions:5050/spl2/continuous-integration/dockerfiles:ubuntu-20.04-latest
   needs: ["benchmark:armnn:hihope-rzg2n"]
   extends: [".test-meta-renesas-ai", ".hihope-rzg2n"]
   variables:
     FRAMEWORK_ARG: "-f armnn -f tensorflow-lite"
 
 test:benchmark:ort:hihope-rzg2n:
-  image: gitlab.renesas.solutions:5050/spl2/continuous-integration/dockerfiles:ubuntu-20.04-latest
   needs: ["benchmark:ort:hihope-rzg2n"]
   extends: [".test-meta-renesas-ai", ".hihope-rzg2n"]
   variables:
     FRAMEWORK_ARG: "-f onnxruntime"
 
 test:benchmark:tflite:hihope-rzg2n:
-  image: gitlab.renesas.solutions:5050/spl2/continuous-integration/dockerfiles:ubuntu-20.04-latest
   needs: ["benchmark:tflite:hihope-rzg2n"]
   extends: [".test-meta-renesas-ai", ".hihope-rzg2n"]
   variables:
     FRAMEWORK_ARG: "-f tensorflow-lite"
 
 test:benchmark:armnn:ek874:
-  image: gitlab.renesas.solutions:5050/spl2/continuous-integration/dockerfiles:ubuntu-20.04-latest
   needs: ["benchmark:armnn:ek874"]
   extends: [".test-meta-renesas-ai", ".ek874"]
   variables:
     FRAMEWORK_ARG: "-f armnn -f tensorflow-lite"
 
 test:benchmark:ort:ek874:
-  image: gitlab.renesas.solutions:5050/spl2/continuous-integration/dockerfiles:ubuntu-20.04-latest
   needs: ["benchmark:ort:ek874"]
   extends: [".test-meta-renesas-ai", ".ek874"]
   variables:
     FRAMEWORK_ARG: "-f onnxruntime"
 
 test:benchmark:tflite:ek874:
-  image: gitlab.renesas.solutions:5050/spl2/continuous-integration/dockerfiles:ubuntu-20.04-latest
   needs: ["benchmark:tflite:ek874"]
   extends: [".test-meta-renesas-ai", ".ek874"]
   variables:

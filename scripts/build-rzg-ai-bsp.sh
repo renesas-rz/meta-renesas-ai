@@ -16,6 +16,7 @@ set -e
 # Global parameters
 RZG_AI_BSP_URL="${CI_REPOSITORY_URL:-https://github.com/renesas-rz/meta-renesas-ai.git}"
 RZG_AI_BSP_VER="${CI_COMMIT_REF_NAME:-master}"
+RZG_BSP_VER="BSP-3.0.0"
 WORK_DIR="${PWD}"
 COMMAND_NAME="$0"
 INSTALL_DEPENDENCIES=false
@@ -233,90 +234,42 @@ download_source () {
 	echo "#################################################################"
 	echo "Downloading source..."
 
-	if [ ${FAMILY} == "rzg2" ]; then
-		update_git_repo \
-			poky \
-			git://git.yoctoproject.org/poky \
-			7e7ee662f5dea4d090293045f7498093322802cc
+	update_git_repo \
+		poky \
+		git://git.yoctoproject.org/poky \
+		bba323389749ec3e306509f8fb12649f031be152
 
-		cd poky; git cherry-pick 0810ac6b92; cd -
+	cd poky
+	# gcc-runtime: Avoid march conflicts with newer cortex-a55 CPUs
+	git cherry-pick 9e44438a9deb7b6bfac3f82f31a1a7ad138a5d16
+	# metadata_scm.bbclass: Use immediate expansion for the METADATA_* variables
+	git cherry-pick cfd897e213debb2e32589378b2f5d390a265eb7f
+	cd -
 
-		update_git_repo \
-			meta-linaro \
-			git://git.linaro.org/openembedded/meta-linaro.git \
-			75dfb67bbb14a70cd47afda9726e2e1c76731885
+	update_git_repo \
+		meta-openembedded \
+		git://git.openembedded.org/meta-openembedded \
+		ec978232732edbdd875ac367b5a9c04b881f2e19
 
-		update_git_repo \
-			meta-openembedded \
-			git://git.openembedded.org/meta-openembedded \
-			352531015014d1957d6444d114f4451e241c4d23
+	update_git_repo \
+		meta-gplv2 \
+		https://git.yoctoproject.org/meta-gplv2 \
+		60b251c25ba87e946a0ca4cdc8d17b1cb09292ac
 
-		update_git_repo \
-			meta-gplv2 \
-			https://git.yoctoproject.org/meta-gplv2 \
-			f875c60ecd6f30793b80a431a2423c4b98e51548
+	update_git_repo \
+		meta-qt5 \
+		https://github.com/meta-qt5/meta-qt5.git \
+		c1b0c9f546289b1592d7a895640de103723a0305
 
-		update_git_repo \
-			meta-qt5 \
-			https://github.com/meta-qt5/meta-qt5.git \
-			c1b0c9f546289b1592d7a895640de103723a0305
+	update_git_repo \
+		meta-renesas \
+		https://github.com/renesas-rz/meta-renesas.git \
+		${RZG_BSP_VER}
 
-		update_git_repo \
-			meta-virtualization \
-			https://git.yoctoproject.org/git/meta-virtualization \
-			b704c689b67639214b9568a3d62e82df27e9434f
-
-		update_git_repo \
-			meta-rzg2 \
-			https://github.com/renesas-rz/meta-rzg2.git \
-			${RZG_BSP_VER}
-
-		update_git_repo \
-			meta-renesas-ai \
-			${RZG_AI_BSP_URL} \
-			${RZG_AI_BSP_VER}
-
-	elif [ ${FAMILY} == "rzg2l" ]; then
-		update_git_repo \
-			poky \
-			git://git.yoctoproject.org/poky \
-			dunfell-23.0.13
-
-		cd poky; git cherry-pick e256885889
-
-		# We need to cherry-pick the following commit to prevent SDK basehash issue
-		git cherry-pick cfd897e213d; cd -
-
-		update_git_repo \
-			meta-openembedded \
-			git://git.openembedded.org/meta-openembedded \
-			ab9fca485e13f6f2f9761e1d2810f87c2e4f060a
-
-		update_git_repo \
-			meta-gplv2 \
-			https://git.yoctoproject.org/meta-gplv2 \
-			60b251c25ba87e946a0ca4cdc8d17b1cb09292ac
-
-		update_git_repo \
-			meta-qt5 \
-			https://github.com/meta-qt5/meta-qt5.git \
-			c1b0c9f546289b1592d7a895640de103723a0305
-
-		update_git_repo \
-			meta-virtualization \
-			https://git.yoctoproject.org/git/meta-virtualization \
-			9e9868ef3d6e5da7f0ecd0680fcd69324593842b
-
-		update_git_repo \
-			meta-rzg2 \
-			https://github.com/renesas-rz/meta-rzg2.git \
-			${RZG_BSP_VER}
-
-		update_git_repo \
-			meta-renesas-ai \
-			${RZG_AI_BSP_URL} \
-			${RZG_AI_BSP_VER}
-	fi
+	update_git_repo \
+		meta-renesas-ai \
+		${RZG_AI_BSP_URL} \
+		${RZG_AI_BSP_VER}
 }
 
 install_prop_libs () {
@@ -324,28 +277,26 @@ install_prop_libs () {
 	echo "Installing proprietary libraries..."
 
 	if [ ${FAMILY} == "rzg2" ]; then
-		if ! $PROP_LIBS_EXTRACTED; then
+		if $PROP_LIBS_EXTRACTED; then
+			rm -rf ${WORK_DIR}/meta-rz-features
+			cp -r ${PROP_DIR} ${WORK_DIR}/meta-rz-features
+		else
 			pushd ${PROP_DIR}
-			tar -zxf RZG2_Group_*_Software_Package_for_Linux_*.tar.gz
-			PROP_DIR=${PROP_DIR}/proprietary
+			unzip RTK0EF0045Z0022AZJ-v1.0_EN.zip
+			tar -xf RTK0EF0045Z0022AZJ-v1.0_EN/meta-rz-features.tar.gz -C ${WORK_DIR}
 			popd
 		fi
-
-		pushd ${WORK_DIR}/meta-rzg2
-		sh docs/sample/copyscript/copy_proprietary_softwares.sh \
-			-f ${PROP_DIR}
-		popd
 	elif [ ${PLATFORM} == "smarc-rzg2l" ]; then
 		if $PROP_LIBS_EXTRACTED; then
 			rm -rf ${WORK_DIR}/meta-rz-features
 			cp -r ${PROP_DIR} ${WORK_DIR}/meta-rz-features
 		else
 			pushd ${PROP_DIR}
-			unzip RTK0EF0045Z13001ZJ-v0.81_EN.zip
-			tar -xf RTK0EF0045Z13001ZJ-v0.81_EN/meta-rz-features.tar.gz -C ${WORK_DIR}
+			unzip RTK0EF0045Z13001ZJ-v1.0_EN.zip
+			tar -xf RTK0EF0045Z13001ZJ-v1.0_EN/meta-rz-features.tar.gz -C ${WORK_DIR}
 
-			unzip RTK0EF0045Z15001ZJ-v0.55_EN.zip
-			tar -xf RTK0EF0045Z15001ZJ-v0.55_EN/meta-rz-features.tar.gz -C ${WORK_DIR}
+			unzip RTK0EF0045Z15001ZJ-v0.56_EN.zip
+			tar -xf RTK0EF0045Z15001ZJ-v0.56_EN/meta-rz-features.tar.gz -C ${WORK_DIR}
 			popd
 		fi
 	elif [ ${PLATFORM} == "smarc-rzg2lc" ]; then
@@ -354,8 +305,8 @@ install_prop_libs () {
 			cp -r ${PROP_DIR} ${WORK_DIR}/meta-rz-features
 		else
 			pushd ${PROP_DIR}
-			unzip RTK0EF0045Z13001ZJ-v0.81_EN.zip
-			tar -xf RTK0EF0045Z13001ZJ-v0.81_EN/meta-rz-features.tar.gz -C ${WORK_DIR}
+			unzip RTK0EF0045Z13001ZJ-v1.0_EN.zip
+			tar -xf RTK0EF0045Z13001ZJ-v1.0_EN/meta-rz-features.tar.gz -C ${WORK_DIR}
 			popd
 		fi
 	fi
@@ -368,7 +319,7 @@ configure_build () {
 	# This will create and take us to the $WORK_DIR/build directory
 	source poky/oe-init-build-env
 
-	cp $WORK_DIR/meta-renesas-ai/templates/${FAMILY}/*.conf ./conf/
+	cp $WORK_DIR/meta-renesas-ai/templates/rzg2/*.conf ./conf/
 
 	# Set configuration files
 	if [ ${BENCHMARK} == "true" ]; then
@@ -410,14 +361,24 @@ copy_output () {
 	mkdir -p ${OUTPUT_DIR}/${PLATFORM}
 
 	if [ $BUILD_SDK != "only" ]; then
+		cp ${bin_dir}/core-image-qt-${PLATFORM}.tar.gz ${OUTPUT_DIR}/${PLATFORM}
+		cp ${bin_dir}/Image-${PLATFORM}.bin ${OUTPUT_DIR}/${PLATFORM}
+
 		if [ ${FAMILY} == "rzg2" ]; then
-			cp ${bin_dir}/core-image-*-${PLATFORM}.tar.gz ${OUTPUT_DIR}/${PLATFORM}
-			cp ${bin_dir}/Image-${PLATFORM}.bin ${OUTPUT_DIR}/${PLATFORM}
 			cp ${bin_dir}/Image-*-${PLATFORM}*.dtb ${OUTPUT_DIR}/${PLATFORM}
-		elif [ ${FAMILY} == "rzg2l" ]; then
-			cp ${bin_dir}/core-image-*-${PLATFORM}.tar.gz ${OUTPUT_DIR}/${PLATFORM}
-			cp ${bin_dir}/Image-${PLATFORM}.bin ${OUTPUT_DIR}/${PLATFORM}
-			cp ${bin_dir}/*${PLATFORM}.dtb ${OUTPUT_DIR}/${PLATFORM}
+			cp ${bin_dir}/u-boot-elf-${PLATFORM}.srec ${OUTPUT_DIR}/${PLATFORM}
+			cp ${bin_dir}/bootparam_sa0.srec ${OUTPUT_DIR}/${PLATFORM}
+			cp ${bin_dir}/bl2-${PLATFORM}.srec ${OUTPUT_DIR}/${PLATFORM}
+			cp ${bin_dir}/bl31-${PLATFORM}.srec ${OUTPUT_DIR}/${PLATFORM}
+			cp ${bin_dir}/tee-${PLATFORM}.srec ${OUTPUT_DIR}/${PLATFORM}
+			cp ${bin_dir}/cert_header_sa6.srec ${OUTPUT_DIR}/${PLATFORM}
+			cp ${bin_dir}/AArch64_Flash_writer_SCIF*.mot ${OUTPUT_DIR}/${PLATFORM}
+		fi
+		if [ ${FAMILY} == "rzg2l" ]; then
+			cp ${bin_dir}/Image-*-smarc.dtb ${OUTPUT_DIR}/${PLATFORM}
+			cp ${bin_dir}/bl2_bp-${PLATFORM}*.srec ${OUTPUT_DIR}/${PLATFORM}
+			cp ${bin_dir}/fip-${PLATFORM}*.srec ${OUTPUT_DIR}/${PLATFORM}
+			cp ${bin_dir}/Flash_Writer_SCIF*.mot ${OUTPUT_DIR}/${PLATFORM}
 		fi
 
 		# Save license information
@@ -434,17 +395,6 @@ copy_output () {
 
 ################################################################################
 # Main
-
-case ${RZG_AI_BSP_VER} in
-*)
-	if [ ${FAMILY} == "rzg2" ]; then
-		RZG_BSP_VER="BSP-1.0.10-update1"
-	elif [ ${FAMILY} == "rzg2l" ]; then
-		RZG_BSP_VER="rzg2l_bsp_v1.4"
-	fi
-	;;
-esac
-
 
 echo "#################################################################"
 echo "RZ/G AI BSP version: ${RZG_AI_BSP_VER}"

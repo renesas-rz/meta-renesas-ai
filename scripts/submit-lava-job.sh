@@ -261,9 +261,9 @@ get_filename () {
 	local rzg2m_files=("Image-hihope-rzg2m.bin" "Image-r8a774a1-hihope-rzg2m-ex.dtb" "core-image-qt-hihope-rzg2m.tar.gz")
 	local rzg2n_files=("Image-hihope-rzg2n.bin" "Image-r8a774b1-hihope-rzg2n-ex.dtb" "core-image-qt-hihope-rzg2n.tar.gz")
 	local rzg2e_files=("Image-ek874.bin" "Image-r8a774c0-es10-ek874.dtb" "core-image-qt-ek874.tar.gz")
-	local rzg2l_files=("Image-smarc-rzg2l.bin" "r9a07g044l2-smarc-smarc-rzg2l.dtb" "core-image-qt-smarc-rzg2l.tar.gz")
-	local rzg2lc_files=("Image-smarc-rzg2lc.bin" "r9a07g044c2-smarc-smarc-rzg2lc.dtb" "core-image-qt-smarc-rzg2lc.tar.gz")
-	local rzg2ul_files=("Image-smarc-rzg2ul.bin" "r9a07g043u11-smarc-smarc-rzg2ul.dtb" "core-image-qt-smarc-rzg2ul.tar.gz")
+	local rzg2l_files=("Image-smarc-rzg2l.bin" "Image-r9a07g044l2-smarc.dtb" "core-image-qt-smarc-rzg2l.tar.gz")
+	local rzg2lc_files=("Image-smarc-rzg2lc.bin" "Image-r9a07g044c2-smarc.dtb" "core-image-qt-smarc-rzg2lc.tar.gz")
+	local rzg2ul_files=("Image-smarc-rzg2ul.bin" "Image-r9a07g043u11-smarc.dtb" "core-image-qt-smarc-rzg2ul.tar.gz")
 	local filename="unknown"
 
 	# Get index number for filetype

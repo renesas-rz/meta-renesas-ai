@@ -21,8 +21,6 @@ COMMAND_NAME="$0"
 PLATFORM=""
 FRAMEWORK="armnn"
 BENCHMARK=false
-FAMILY=""
-BBMASK_CMD=""
 
 ################################################################################
 # Helpers
@@ -94,16 +92,9 @@ while getopts ":d:f:bp:h" opt; do
 		;;
 	p)
 		case "${OPTARG}" in
-		"hihope-rzg2h" | "hihope-rzg2m" | "hihope-rzg2n" | "ek874")
-			PLATFORM="${OPTARG}"
-			FAMILY="rzg2"
-			BBMASK_CMD="BBMASK"
-			;;
-
+		"hihope-rzg2h" | "hihope-rzg2m" | "hihope-rzg2n" | "ek874" | \
 		"smarc-rzg2l" | "smarc-rzg2lc" | "smarc-rzg2ul")
 			PLATFORM="${OPTARG}"
-			FAMILY="rzg2l"
-			BBMASK_CMD="BBMASK_non_debian"
 			;;
 		*)
 			echo " ERROR: -p \"${OPTARG}\" Not supported"
@@ -153,9 +144,9 @@ configure_layers_and_masks () {
 
 		# Mask bbappends that have no recipe from the meta-benchmark layer to prevent errors
 		if [ ${FRAMEWORK} == "onnxruntime" ]; then
-			echo ''${BBMASK_CMD}' += "armnn/|tensorflow-lite/"' >> ${BUILD_DIR}/conf/local.conf
+			echo 'BBMASK_non_debian += "armnn/|tensorflow-lite/"' >> ${BUILD_DIR}/conf/local.conf
 		elif [ ${FRAMEWORK} == "tensorflow-lite" ]; then
-			echo ''${BBMASK_CMD}' += "armnn/"' >> ${BUILD_DIR}/conf/local.conf
+			echo 'BBMASK_non_debian += "armnn/"' >> ${BUILD_DIR}/conf/local.conf
 		fi
 	fi
 
@@ -189,7 +180,15 @@ configure_machine () {
 	elif [ ${PLATFORM} == "smarc-rzg2lc" ]; then
 		echo 'SOC_FAMILY = "r9a07g044c"' >> ${BUILD_DIR}/conf/local.conf
 	elif [ ${PLATFORM} == "smarc-rzg2ul" ]; then
-		echo 'SOC_FAMILY = "r9a07g043u11"' >> ${BUILD_DIR}/conf/local.conf
+		echo 'SOC_FAMILY = "r9a07g043u"' >> ${BUILD_DIR}/conf/local.conf
+	elif [ ${PLATFORM} == "hihope-rzg2h" ]; then
+		echo 'SOC_FAMILY = "r8a774e1"' >> ${BUILD_DIR}/conf/local.conf
+	elif [ ${PLATFORM} == "hihope-rzg2m" ]; then
+		echo 'SOC_FAMILY = "r8a774a1"' >> ${BUILD_DIR}/conf/local.conf
+	elif [ ${PLATFORM} == "hihope-rzg2n" ]; then
+		echo 'SOC_FAMILY = "r8a774b1"' >> ${BUILD_DIR}/conf/local.conf
+	elif [ ${PLATFORM} == "ek874" ]; then
+		echo 'SOC_FAMILY = "r8a774c0"' >> ${BUILD_DIR}/conf/local.conf
 	fi
 }
 
@@ -203,12 +202,7 @@ configure_packages () {
 
 		# Enable Tensorflow-lite for benchmarking
 		if [ ${BENCHMARK} == "true" ]; then
-
-			if [ ${FAMILY} == "rzg2" ]; then
-				echo 'IMAGE_INSTALL_append = " tensorflow-lite-staticdev tensorflow-lite-dev tensorflow-lite-examples"' >> ${BUILD_DIR}/conf/local.conf
-			elif [ ${FAMILY} == "rzg2l" ]; then
-				echo 'IMAGE_INSTALL_append = " tensorflow-lite-staticdev tensorflow-lite-dev tensorflow-lite-benchmark"' >> ${BUILD_DIR}/conf/local.conf
-			fi
+			echo 'IMAGE_INSTALL_append = " tensorflow-lite-staticdev tensorflow-lite-dev tensorflow-lite-benchmark"' >> ${BUILD_DIR}/conf/local.conf
 
 			# Enable Tensorflow-lite Delegate benchmark
 			echo 'IMAGE_INSTALL_append = " tensorflow-lite-delegate-benchmark"' >> ${BUILD_DIR}/conf/local.conf
