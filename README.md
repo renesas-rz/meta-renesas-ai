@@ -1,24 +1,20 @@
 # meta-renesas-ai #
-This OpenEmbedded/Yocto layer collector adds AI tools support to Renesas RZ/G2
-platforms.
+This OpenEmbedded/Yocto layer collector adds AI tools support to the Renesas
+RZ/G2 and RZ/G2L families of SoCs and reference platforms.
 
-#### For RZ/G2 family ####
+#### For RZ/G2 and RZ/G2L families ####
 The layers should be used with the official Renesas RZ/G2 Yocto Poky BSP based
 on the CIP Kernel:\
-URI: **https://github.com/renesas-rz/meta-rzg2.git**\
-tag: BSP-1.0.10-update1 (85d5f8cc554413fc19e4fff43cb0c027f55d0778)
+URI: **https://github.com/renesas-rz/meta-renesas.git** \
+tag: BSP-3.0.0 (852c67f90fcdaf80a5727589cb7e41f7300cfa04)
 
-#### For RZ/G2L family ####
-The layers should be used with the official Renesas RZ/G2L Yocto Poky BSP:\
-URI: **https://github.com/renesas-rz/meta-rzg2/tree/dunfell/rzg2l**\
-tag: rzg2l\_bsp\_v1.4 (fe55191cb573c7db4cf71a5e65848434dbdf6b31)
 
 For each AI tool, please refer to **meta-${AI\_TOOL\_NAME}/README.md**. For
 example: *meta-tensorflow-lite/README.md*.
 
 
-This project comes with template files for the RZ/G2 and RZ/G2L families. The
-templates can be found under **templates/${FAMILY}**.
+This project comes with joint template files for all of the supported platforms.
+The templates can be found under **templates/rzg2/**.
 
 Copying *local.conf* and *bblayers.conf* from the templates directory to your
 build conf directory is usually the first thing the user wants to do, but
@@ -33,13 +29,11 @@ in the [Licensing](#licensing) section.
 
 ### Supported Frameworks/Versions ###
 
-| Framework                                       | Version   | Parser(s)                                 | Inference Hardware |
-| :---------------------------------------------- | :-------- | :---------------------------------------- | :----------------- |
-| ArmNN                                           | v21.05    | ONNX (v1.6.0)<br>TensorFlow Lite (v2.3.1) | CPU                |
-| ArmNN (smarc-rzg2l, smarc-rzg2lc, smarc-rzg2ul) | v22.02    | ONNX (v1.6.0)<br>TensorFlow Lite (v2.5.3) | CPU<br>GPU         |
-| ONNX Runtime                                    | v1.8.0    | ONNX                                      | CPU                |
-| TensorFlow Lite                                 | v2.3.1    | TensorFlow Lite                           | CPU                |
-| TensorFlow Lite                                 | v2.5.3    | TensorFlow Lite                           | CPU                |
+| Framework       | Version   | Parser(s)                                 | Inference Hardware                     |
+| :-------------- | :-------- | :---------------------------------------- | :------------------------------------- |
+| ArmNN           | v22.02    | ONNX (v1.6.0)<br>TensorFlow Lite (v2.5.3) | CPU<br>GPU (smarc-rzg2l, smarc-rzg2lc) |
+| ONNX Runtime    | v1.8.0    | ONNX                                      | CPU                                    |
+| TensorFlow Lite | v2.5.3    | TensorFlow Lite                           | CPU                                    |
 
 ### Supported Embedded Platforms ###
 
@@ -56,8 +50,8 @@ in the [Licensing](#licensing) section.
 ### Build Script ###
 A simple build script has been created to manage the build process.\
 Before running the script you will need to download the relevant proprietary
-libraries from the Renesas website. See the Renesas RZ/G2 and RZ/G2L BSP readme
-files for details on how to do this.
+libraries from the Renesas website. See the Renesas BSP readme file for details
+on how to do this.
 
 Run `./scripts/build-rzg-ai-bsp.sh -h` to get an overview on how to use the
 script.
@@ -66,8 +60,7 @@ script.
 A simple configuration script has been created to set up the configuration
 files and add the necessary dependencies.\
 Before running the script you will need to source the yocto environment and
-copy over the configuration templates for the appropriate device family from
-the templates/ directory.\
+copy over the configuration templates from the **templates/rzg2/** directory.\
 This script is used automatically by `build-rzg-ai-bsp.sh` but can be run
 independently if required.
 
@@ -110,7 +103,7 @@ IMAGE_INSTALL_append = " mkswap"
 ```
 
 
-By default, this will create and enable a 2048 MB swapfile.\
+By default, this will create and enable a 2048 MB swapfile.
 
 
 If needed, the size of the swap file can be set (in MB) in local.conf:
@@ -128,7 +121,7 @@ The configuration files found under:
 meta-*/templates/*/local.conf
 ```
 This is needed to add full video encoding/decoding support to the BSP.\
-For example for the RZ/G2L:
+For example:
 ```
 LICENSE_FLAGS_WHITELIST = "commercial_gstreamer1.0-libav \
 commercial_gstreamer1.0 plugins-ugly commercial_ffmpeg commercial_mpeg2dec \
