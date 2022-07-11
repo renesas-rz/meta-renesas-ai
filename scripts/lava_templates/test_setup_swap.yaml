@@ -11,6 +11,7 @@
           steps:
                - cd /usr/bin/ai-tests
                - ./run_tests.sh swap_setup.sh
+               - free -hltw
       from: inline
       name: setup-swap
       path: inline/setup-swap.yaml
