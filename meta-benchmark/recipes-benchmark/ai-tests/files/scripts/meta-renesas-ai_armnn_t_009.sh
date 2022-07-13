@@ -8,7 +8,7 @@ CORES=$(get_active_cpu_count)
 BIG_CORES=$(get_big_cpu_count)
 LOOP_INFERENCE=30
 BACKENDS=("CpuAcc")
-DELEGATES=("none" "armnn")
+DELEGATES=("armnn")
 BENCHMARK_DIR="/usr/bin/tfLiteDelegateBenchmark"
 
 case "${RZG_LABEL}" in
