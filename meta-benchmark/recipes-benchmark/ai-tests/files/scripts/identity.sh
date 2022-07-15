@@ -140,6 +140,15 @@ case ${MODEL_STRING} in
 		RZG_NAME="RZ/G2M"
 		RZG_LABEL="rzg2m"
 		;;
+	"HopeRun HiHope RZ/G2M v3.0 with sub board")
+		SOC="r8a774a3"
+		SOC_FULL="r8a774a3"
+		BOARD="hihope-rzg2m-ex"
+		RZG_GENERATION="2"
+		RZG_VARIANT="m"
+		RZG_NAME="RZ/G2M"
+		RZG_LABEL="rzg2m"
+		;;
 	"HopeRun HiHope RZ/G2M main board based on r8a774a1")
 		SOC="r8a774a1"
 		SOC_FULL="r8a774a1"
