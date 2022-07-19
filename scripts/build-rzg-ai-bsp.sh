@@ -45,7 +45,7 @@ print_help () {
 
 	 USAGE: ${COMMAND_NAME} -p <platform> -l <prop lib dir> [-b] [-c] \\
 	                    [-d] [-e] [-f <framework>] [-j <dir>] [-k <dir>] \\
-	                    [-o <output dir>] [-s] [-t] [-T] [-h]
+	                    [-n <threads>] [-o <output dir>] [-s] [-t] [-T] [-h]
 
 	 OPTIONS:
 	 -h                 Print this help and exit.
@@ -68,6 +68,10 @@ print_help () {
 	                    variable.
 	 -l <prop lib dir>  Location when proprietary libraries have been
 	                    downloaded to. This is not needed for smarc-rzg2ul.
+	 -n <threads>       Number of threads to be used for the build. This
+	                    will be set for PARALLEL_MAKE and BB_NUMBER_THREADS.
+	                    By default these settings will be set to the number
+	                    of CPU cores on the build host (nproc).
 	 -o <output dir>    Location to copy binaries to when build is complete.
 	                    By default ${OUTPUT_DIR} will be used.
 	 -p <platform>      Platform to build for. Choose from:
@@ -84,8 +88,8 @@ print_help () {
 ################################################################################
 # Options parsing
 
-while getopts ":bcdef:j:k:l:o:p:stTh" opt; do
-        case $opt in
+while getopts ":bcdef:j:k:l:n:o:p:stTh" opt; do
+	case $opt in
 	b)
 		BENCHMARK=true
 		;;
@@ -139,6 +143,9 @@ while getopts ":bcdef:j:k:l:o:p:stTh" opt; do
                 OUTPUT_DIR="$(realpath "${OPTARG}")"
                 ;;
         p)
+	n)
+		THREADS="${OPTARG}"
+		;;
 		case "${OPTARG}" in
 		"hihope-rzg2h" | "hihope-rzg2m" | "hihope-rzg2n" | "ek874")
 			PLATFORM="${OPTARG}"
@@ -339,6 +346,9 @@ configure_build () {
 	if $SKIP_LICENSE_WARNING; then
 		sed -i 's/#LICENSE_FLAGS_WHITELIST/LICENSE_FLAGS_WHITELIST/g' ./conf/local.conf
 	fi
+
+	echo "BB_NUMBER_THREADS = \"${THREADS}\"" >> ./conf/local.conf
+	echo "PARALLEL_MAKE = \"-j ${THREADS}\"" >> ./conf/local.conf
 }
 
 do_build () {
