@@ -32,6 +32,7 @@ SKIP_LICENSE_WARNING=false
 BUILD_SDK=false
 YOCTO_DL_DIR=""
 YOCTO_SSTATE_DIR=""
+THREADS=$(nproc)
 
 ################################################################################
 # Helpers
@@ -95,13 +96,13 @@ while getopts ":bcdef:j:k:l:n:o:p:stTh" opt; do
 		;;
 	c)	BUILD=false
 		;;
-        d)
+	d)
 		INSTALL_DEPENDENCIES=true
-                ;;
+		;;
 	e)
 		PROP_LIBS_EXTRACTED=true
 		;;
-        f)
+	f)
 		case "${OPTARG}" in
 			"armnn" | "onnxruntime" | "tensorflow-lite")
 			FRAMEWORK="${OPTARG}"
@@ -120,37 +121,37 @@ while getopts ":bcdef:j:k:l:n:o:p:stTh" opt; do
 	k)
 		YOCTO_SSTATE_DIR="${OPTARG}"
 		;;
-        l)
+	l)
 		# Ignore the prop lib directory for RZ/G2UL
 		if [ "${PLATFORM}" == "smarc-rzg2ul" ]; then
-                        echo " WARNING: No prop libs required for smarc-rzg2ul"
-                        echo " Continuing build..."
+			echo " WARNING: No prop libs required for smarc-rzg2ul"
+			echo " Continuing build..."
 		else
-                	if [ ! -d "${OPTARG}" ]; then
-                        	echo " ERROR: -l \"${OPTARG}\" No such directory"
-                        	print_help
-                        	exit 1
-                	fi
-                	PROP_DIR="$(realpath "${OPTARG}")"
+			if [ ! -d "${OPTARG}" ]; then
+				echo " ERROR: -l \"${OPTARG}\" No such directory"
+				print_help
+				exit 1
+			fi
+			PROP_DIR="$(realpath "${OPTARG}")"
 		fi
-                ;;
-        o)
-                if [ ! -d "${OPTARG}" ]; then
-                        echo " ERROR: -o \"${OPTARG}\" No such directory"
-                        print_help
-                        exit 1
-                fi
-                OUTPUT_DIR="$(realpath "${OPTARG}")"
-                ;;
-        p)
+		;;
 	n)
 		THREADS="${OPTARG}"
 		;;
+	o)
+		if [ ! -d "${OPTARG}" ]; then
+			echo " ERROR: -o \"${OPTARG}\" No such directory"
+			print_help
+			exit 1
+		fi
+		OUTPUT_DIR="$(realpath "${OPTARG}")"
+		;;
+	p)
 		case "${OPTARG}" in
 		"hihope-rzg2h" | "hihope-rzg2m" | "hihope-rzg2n" | "ek874")
 			PLATFORM="${OPTARG}"
 			FAMILY="rzg2"
-        	        ;;
+			;;
 
 		"smarc-rzg2l" | "smarc-rzg2lc" | "smarc-rzg2ul")
 			PLATFORM="${OPTARG}"
