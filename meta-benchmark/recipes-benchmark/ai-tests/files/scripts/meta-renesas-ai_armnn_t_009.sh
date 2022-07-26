@@ -8,7 +8,7 @@ CORES=$(get_active_cpu_count)
 BIG_CORES=$(get_big_cpu_count)
 LOOP_INFERENCE=30
 BACKENDS=("CpuAcc")
-DELEGATES=("armnn")
+DELEGATES=("armnn" "xnnpack")
 BENCHMARK_DIR="/usr/bin/tfLiteDelegateBenchmark"
 
 case "${RZG_LABEL}" in
@@ -18,11 +18,9 @@ case "${RZG_LABEL}" in
 	"rzg2l" | "rzg2lc")
 		LOOP_INFERENCE=10
 		BACKENDS+=("GpuAcc")
-		DELEGATES+=("xnnpack")
 		;;
 	"rzg2ul")
 		LOOP_INFERENCE=10
-		DELEGATES+=("xnnpack")
 esac
 
 cd $BENCHMARK_DIR
