@@ -180,6 +180,27 @@ do_install_append() {
 		${WORKDIR}/build/tests/ExecuteNetwork \
 		${D}${bindir}/${PN}-${PV}/examples/ExecuteNetwork/
 
+	install -d ${D}${includedir}/armnn/renesas
+	install -d ${D}${includedir}/tests
+	install -d ${D}${includedir}/profiling/common/include/*
+	install -d ${D}${includedir}/third-party/mapbox
+	install -d ${D}${includedir}/third-party/ghc
+	install -d ${D}${includedir}/third-party/fmt
+	install -d ${D}${includedir}/third-party/cxxopts
+
+	install -m 0555 ${S}/src/armnn/*.hpp ${D}${includedir}/armnn/
+	install -m 0555 ${S}/tests/*.hpp ${D}${includedir}/tests/
+	install -m 0555 ${S}/tests/*.inl ${D}${includedir}/tests/
+	install -m 0555 ${S}/profiling/common/include/* ${D}${includedir}/profiling/common/include
+	install -m 0555 ${S}/third-party/mapbox/* ${D}${includedir}/third-party/mapbox
+	install -m 0555 ${S}/third-party/ghc/* ${D}${includedir}/third-party/ghc
+	install -m 0555 ${S}/third-party/fmt/*.h ${D}${includedir}/third-party/fmt
+	install -m 0555 ${S}/third-party/cxxopts/*.h* ${D}${includedir}/third-party/cxxopts
+	install -m 0555 ${S}/src/armnnUtils/*.hpp ${D}${includedir}/armnn
+
+	cp -Ravp ${WORKDIR}/build/tests/CMakeFiles/RenesasSample-Armnn.dir/*.cpp.o \
+		 ${D}${includedir}/armnn/renesas
+
 	cd ${D}${bindir}
 	ln -sf ${PN}-${PV} ${PN}
 
@@ -240,6 +261,14 @@ FILES_${PN} = " \
 	${libdir}/libarmnnTestUtils.so \
 	${libdir}/libtimelineDecoder.so* \
 	${libdir}/libtimelineDecoderJson.so* \
+	${includedir}/tests/* \
+	${includedir}/third-party/mapbox/* \
+	${includedir}/third-party/ghc/* \
+	${includedir}/third-party/fmt/* \
+	${includedir}/third-party/cxxopts/* \
+	${includedir}/profiling/common/include/* \
+	${includedir}/armnn/* \
+	${includedir}/armnn/renesas/* \
 "
 
 FILES_${PN}-dev = " \

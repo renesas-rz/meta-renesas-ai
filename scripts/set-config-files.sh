@@ -141,13 +141,6 @@ configure_layers_and_masks () {
 	# Set meta-benchmark
 	if [ ${BENCHMARK} == "true" ]; then
 		echo '  ${TOPDIR}/../meta-renesas-ai/meta-benchmark \' >> ${BUILD_DIR}/conf/bblayers.conf
-
-		# Mask bbappends that have no recipe from the meta-benchmark layer to prevent errors
-		if [ ${FRAMEWORK} == "onnxruntime" ]; then
-			echo 'BBMASK_non_debian += "armnn/|tensorflow-lite/"' >> ${BUILD_DIR}/conf/local.conf
-		elif [ ${FRAMEWORK} == "tensorflow-lite" ]; then
-			echo 'BBMASK_non_debian += "armnn/"' >> ${BUILD_DIR}/conf/local.conf
-		fi
 	fi
 
 	case "${FRAMEWORK}" in
@@ -200,9 +193,9 @@ configure_packages () {
 	if [ ${FRAMEWORK} == "armnn" ]; then
 		echo 'IMAGE_INSTALL_append = " armnn-dev armnn-examples armnn-tensorflow-lite-dev armnn-onnx-dev armnn-onnx-examples"' >> ${BUILD_DIR}/conf/local.conf
 
-		# Enable Tensorflow-lite for benchmarking
+		# Enable Tensorflow-lite and ArmNN Benchmark
 		if [ ${BENCHMARK} == "true" ]; then
-			echo 'IMAGE_INSTALL_append = " tensorflow-lite-staticdev tensorflow-lite-dev tensorflow-lite-benchmark"' >> ${BUILD_DIR}/conf/local.conf
+			echo 'IMAGE_INSTALL_append = " tensorflow-lite-staticdev tensorflow-lite-dev tensorflow-lite-benchmark armnn-benchmark"' >> ${BUILD_DIR}/conf/local.conf
 
 			# Enable Tensorflow-lite Delegate benchmark
 			echo 'IMAGE_INSTALL_append = " tensorflow-lite-delegate-benchmark"' >> ${BUILD_DIR}/conf/local.conf
