@@ -29,16 +29,16 @@ SRC_URI += " \
 "
 
 LDFLAGS += " \
-		${STAGING_DIR_TARGET}/usr/lib64/libflatbuffers.a \
-		${STAGING_DIR_TARGET}/usr/lib64/libfft2d_fftsg2d.a \
-		${STAGING_DIR_TARGET}/usr/lib64/libruy.a \
-		${STAGING_DIR_TARGET}/usr/lib64/libXNNPACK.a \
-		${STAGING_DIR_TARGET}/usr/lib64/libpthreadpool.a \
-		${STAGING_DIR_TARGET}/usr/lib64/libcpuinfo.a \
-		${STAGING_DIR_TARGET}/usr/lib64/libclog.a \
-		${STAGING_DIR_TARGET}/usr/lib64/libfft2d_fftsg.a \
-		${STAGING_DIR_TARGET}/usr/lib64/libfarmhash.a \
-		-DDUNFELL_XNNPACK \
+	${STAGING_DIR_TARGET}/usr/lib64/libflatbuffers.a \
+	${STAGING_DIR_TARGET}/usr/lib64/libfft2d_fftsg2d.a \
+	${STAGING_DIR_TARGET}/usr/lib64/libruy.a \
+	${STAGING_DIR_TARGET}/usr/lib64/libXNNPACK.a \
+	${STAGING_DIR_TARGET}/usr/lib64/libpthreadpool.a \
+	${STAGING_DIR_TARGET}/usr/lib64/libcpuinfo.a \
+	${STAGING_DIR_TARGET}/usr/lib64/libclog.a \
+	${STAGING_DIR_TARGET}/usr/lib64/libfft2d_fftsg.a \
+	${STAGING_DIR_TARGET}/usr/lib64/libfarmhash.a \
+	-DDUNFELL_XNNPACK \
 "
 
 do_compile() {
