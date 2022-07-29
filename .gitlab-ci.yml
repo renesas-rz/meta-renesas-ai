@@ -63,6 +63,7 @@ variables:
 
 .build-meta-renesas-ai:
   image: gitlab.renesas.solutions:5050/spl2/continuous-integration/dockerfiles:ubuntu-20.04-latest
+  needs: []
   tags:
     - yocto
   before_script:
