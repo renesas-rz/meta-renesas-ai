@@ -19,8 +19,6 @@ PACKAGES += " \
 	${PN}-examples-dbg \
 "
 
-COMPATIBLE_MACHINE = "(hihope-rzg2h|hihope-rzg2m|hihope-rzg2n|ek874|smarc-rzg2l|smarc-rzg2lc|smarc-rzg2ul)"
-
 inherit cmake PyHelper
 
 ARM_NN_GIT_BRANCH_VERSION = "${@replaceChar("${PV}",".","_")}"
