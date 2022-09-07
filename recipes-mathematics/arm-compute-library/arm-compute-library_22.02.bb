@@ -17,6 +17,7 @@ SRCREV = "8f587de9214dbc3aee4ff4eeb2ede66747769b19"
 SRC_URI = " \
 	git://github.com/ARM-software/ComputeLibrary.git \
 	file://0001-Add-support-for-building-aarch64-CL-with-Scons.patch \
+	file://0001-Fix-validation-problem-in-CLQLSTMLayer.patch \
 "
 
 COMPATIBLE_MACHINE = "(hihope-rzg2h|hihope-rzg2m|hihope-rzg2n|ek874|smarc-rzg2l|smarc-rzg2lc|smarc-rzg2ul)"

@@ -1,0 +1,34 @@
+From c9b823df131cf7870eca09f8f4e97140be2d4393 Mon Sep 17 00:00:00 2001
+From: Gareth Williams <gareth.williams.jx@renesas.com>
+Date: Mon, 5 Sep 2022 11:28:46 +0100
+Subject: [PATCH] Fix validation problem in CLQLSTMLayer
+
+* Resolves MLCE-799
+
+Change-Id: I3d5b2afbf65d159aa5e645743c1e139110dfc20e
+Signed-off-by: Pablo Marquez Tello <pablo.tello@arm.com>
+Reviewed-on: https://review.mlplatform.org/c/ml/ComputeLibrary/+/8093
+Tested-by: Arm Jenkins <bsgcomp@arm.com>
+Comments-Addressed: Arm Jenkins <bsgcomp@arm.com>
+Reviewed-by: Gian Marco Iodice <gianmarco.iodice@arm.com>
+Benchmark: Arm Jenkins <bsgcomp@arm.com>
+---
+ src/runtime/CL/functions/CLQLSTMLayer.cpp | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/runtime/CL/functions/CLQLSTMLayer.cpp b/src/runtime/CL/functions/CLQLSTMLayer.cpp
+index a8df466..003ffbc 100644
+--- a/src/runtime/CL/functions/CLQLSTMLayer.cpp
++++ b/src/runtime/CL/functions/CLQLSTMLayer.cpp
+@@ -779,7 +779,7 @@ Status CLQLSTMLayer::validate(const ITensorInfo *input,
+     ARM_COMPUTE_RETURN_ON_ERROR(validate_mm(gemmlowp_info, input, &input_weights_transposed, &eff_bias_info, input_to_cell_scale, &mm_out_info, &cell_outstage_info));
+ 
+     const float recurrent_to_cell_scale = recurrent_to_cell_weights->quantization_info().uniform().scale * qoutput_state_in.scale / lstm_params.cell_intermediate_scale();
+-    ARM_COMPUTE_RETURN_ON_ERROR(validate_mm(gemmlowp_info, output_state_in, &input_weights_transposed, &eff_bias_info, recurrent_to_cell_scale, &mm_out_info, &cell_outstage_info));
++    ARM_COMPUTE_RETURN_ON_ERROR(validate_mm(gemmlowp_info, output_state_in, &recurrent_weights_transposed, &eff_bias_info, recurrent_to_cell_scale, &mm_out_info, &cell_outstage_info));
+ 
+     ARM_COMPUTE_RETURN_ON_ERROR(CLArithmeticAddition::validate(&cell_outstage_info, &cell_outstage_info, &cell_outstage_info, ConvertPolicy::SATURATE));
+ 
+-- 
+2.7.4
+
