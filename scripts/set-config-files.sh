@@ -32,7 +32,7 @@ print_help () {
  	platform and add the necessary dependencies based on the
  	framework chosen. This is intended to be run after the yocto environment
  	has been sourced and the configuration templates from meta-renesas-ai
- 	have been copied.
+ 	have been copied to the build/conf directory.
 
  	USAGE: ${COMMAND_NAME} -p <platform>
  			[-b] [-f <framework>] [-d <directory>] [-h]
@@ -129,37 +129,6 @@ fi
 ################################################################################
 # Functions
 
-configure_layers_and_masks () {
-	echo "#################################################################"
-	echo "Setting bblayers and applying relevant masks to local.conf..."
-
-	cd ${WORK_DIR}
-
-	# Remove the double quote from the end of bblayers.conf
-	sed -i '$d' $BUILD_DIR/conf/bblayers.conf
-
-	# Set meta-benchmark
-	if [ ${BENCHMARK} == "true" ]; then
-		echo '  ${TOPDIR}/../meta-renesas-ai/meta-benchmark \' >> ${BUILD_DIR}/conf/bblayers.conf
-	fi
-
-	case "${FRAMEWORK}" in
-		"armnn")
-			echo '  ${TOPDIR}/../meta-renesas-ai/meta-armnn \' >> ${BUILD_DIR}/conf/bblayers.conf
-			echo '  ${TOPDIR}/../meta-renesas-ai/meta-tensorflow-lite \' >> ${BUILD_DIR}/conf/bblayers.conf
-			;;
-		"onnxruntime")
-			echo '  ${TOPDIR}/../meta-renesas-ai/meta-onnxruntime \' >> ${BUILD_DIR}/conf/bblayers.conf
-			;;
-		"tensorflow-lite")
-			echo '  ${TOPDIR}/../meta-renesas-ai/meta-tensorflow-lite \' >> ${BUILD_DIR}/conf/bblayers.conf
-			;;
-	esac
-
-	# Add the double quote back to the end of bblayers.conf
-	sed -i -e '$a"' $BUILD_DIR/conf/bblayers.conf
-}
-
 configure_machine () {
 	echo "#################################################################"
 	echo "Adding machine name in local.conf..."
@@ -193,11 +162,11 @@ configure_packages () {
 	if [ ${FRAMEWORK} == "armnn" ]; then
 		echo 'IMAGE_INSTALL_append = " armnn-dev armnn-examples armnn-tensorflow-lite-dev armnn-onnx-dev armnn-onnx-examples tensorflow-lite-python"' >> ${BUILD_DIR}/conf/local.conf
 
-		# Enable Tensorflow-lite and ArmNN Benchmark
+		# Enable TensorFlow Lite and ArmNN Benchmark
 		if [ ${BENCHMARK} == "true" ]; then
 			echo 'IMAGE_INSTALL_append = " tensorflow-lite-staticdev tensorflow-lite-dev tensorflow-lite-benchmark armnn-benchmark"' >> ${BUILD_DIR}/conf/local.conf
 
-			# Enable Tensorflow-lite Delegate benchmark
+			# Enable TensorFlow Lite Delegate benchmark
 			echo 'IMAGE_INSTALL_append = " tensorflow-lite-delegate-benchmark"' >> ${BUILD_DIR}/conf/local.conf
 		fi
 	elif [ ${FRAMEWORK} == "onnxruntime" ]; then
@@ -210,7 +179,7 @@ configure_packages () {
 	elif [ ${FRAMEWORK} == "tensorflow-lite" ]; then
 		echo 'IMAGE_INSTALL_append = " tensorflow-lite-staticdev tensorflow-lite-dev tensorflow-lite-python"' >> ${BUILD_DIR}/conf/local.conf
 
-		# Enable Tensorflow-lite benchmark
+		# Enable TensorFlow Lite benchmark
 		if [ ${BENCHMARK} == "true" ]; then
 			echo 'IMAGE_INSTALL_append = " tensorflow-lite-benchmark"' >> ${BUILD_DIR}/conf/local.conf
 		fi
@@ -232,7 +201,6 @@ echo "Platform: ${PLATFORM}"
 echo "AI Framework: ${FRAMEWORK}"
 echo "Benchmark: ${BENCHMARK}"
 
-configure_layers_and_masks
 configure_machine
 configure_packages
 

@@ -1,4 +1,4 @@
-# meta-tensorflow-lite
+# TensorFlow Lite
 
 TensorFlow Lite is TensorFlow’s lightweight solution for mobile and embedded
 devices. It enables on-device machine learning inference with low latency and
@@ -9,10 +9,6 @@ and quantized kernels that allow smaller and faster (fixed-point math) models.
 
 The official website is:
 **https://www.tensorflow.org/mobile/tflite/**
-
-
-This Yocto/OpenEmbedded meta-layer provides TensorFlow Lite support for the
-RZ/G2 and RZ/G2L families of System on Chips.
 
 
 In order to add TensorFlow Lite support to your project, make sure

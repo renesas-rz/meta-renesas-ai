@@ -320,7 +320,7 @@ configure_build () {
 	# This will create and take us to the $WORK_DIR/build directory
 	source poky/oe-init-build-env
 
-	cp $WORK_DIR/meta-renesas-ai/templates/rzg2/*.conf ./conf/
+	cp $WORK_DIR/meta-renesas-ai/docs/templates/rzg2/*.conf ./conf/
 
 	# Set configuration files
 	if [ ${BENCHMARK} == "true" ]; then

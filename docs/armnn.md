@@ -1,4 +1,4 @@
-# meta-armnn
+# ArmNN
 The Arm Neural Network SDK is a set of open-source Linux software and tools that
 enables machine learning workloads on power-efficient devices. It provides a
 bridge between existing neural network frameworks and power-efficient Arm Cortex
@@ -9,9 +9,6 @@ Cortex-A CPUs and Mali GPUs, as efficiently as possible.
 
 The official website is:\
 **https://developer.arm.com/products/processors/machine-learning/arm-nn**
-
-This Yocto/OpenEmbedded meta-layer provides Arm NN support for the RZ/G2 and
-RZ/G2L families of System on Chips.
 
 ## Build Configuration
 **armnn-tensorflow-lite**: Add as a dependency to your recipe/package to add Arm

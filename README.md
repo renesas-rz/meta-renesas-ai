@@ -14,7 +14,7 @@ example: *meta-tensorflow-lite/README.md*.
 
 
 This project comes with joint template files for all of the supported platforms.
-The templates can be found under **templates/rzg2/**.
+The templates can be found under **docs/templates/rzg2/**.
 
 Copying *local.conf* and *bblayers.conf* from the templates directory to your
 build conf directory is usually the first thing the user wants to do, but
@@ -60,7 +60,7 @@ script.
 A simple configuration script has been created to set up the configuration
 files and add the necessary dependencies.\
 Before running the script you will need to source the yocto environment and
-copy over the configuration templates from the **templates/rzg2/** directory.\
+copy over the configuration templates from the **docs/templates/rzg2/** directory.\
 This script is used automatically by `build-rzg-ai-bsp.sh` but can be run
 independently if required.
 
@@ -116,9 +116,9 @@ SWAP_SIZE = "512"
 This project is licensed under the terms of the MIT license (please see file
 *COPYING.MIT* in this directory for further details).
 
-Configuration file template:
+The configuration files found under:
 ```
-templates/rzg2/local.conf
+docs/templates/rzg2/local.conf
 ```
 This is needed to add full video encoding/decoding support to the BSP.\
 For example:

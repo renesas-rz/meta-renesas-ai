@@ -1,16 +1,16 @@
-# meta-benchmark
+# Benchmarking
 
-This meta-layer provides benchmark tools for Arm NN SDK,
-TensorFlow Lite and ONNX Runtime.
+The recipes in the recipes-benchmark directory provide benchmark tools for
+Arm NN SDK, TensorFlow Lite and ONNX Runtime.
 
 Each framework has its own benchmark tool.
 
-* For Arm NN SDK, it is armnnBenchmark
-* For TensorFlow-lite, it is tensorflow-lite-benchmark
-* For ONNX Runtime, it is onnxruntime_benchmark
+* For Arm NN SDK, it is *armnnBenchmark*
+* For TensorFlow Lite, it is *tensorflow-lite-benchmark*
+* For ONNX Runtime, it is *onnxruntime_benchmark*
 
-tfLiteDelegateBenchmark is also provided as a tool for
-benchmarking the TensorFlow Lite delegates provided by various frameworks.
+*tfLiteDelegateBenchmark* is also provided as a tool for benchmarking the
+TensorFlow Lite delegates provided by various frameworks.
 
 The output of each benchmark tool shows the average inference time and the
 standard deviation for each available model, which are printed in the terminal.
