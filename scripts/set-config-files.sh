@@ -191,7 +191,7 @@ configure_packages () {
 
 	# Add AI packages to local.conf
 	if [ ${FRAMEWORK} == "armnn" ]; then
-		echo 'IMAGE_INSTALL_append = " armnn-dev armnn-examples armnn-tensorflow-lite-dev armnn-onnx-dev armnn-onnx-examples"' >> ${BUILD_DIR}/conf/local.conf
+		echo 'IMAGE_INSTALL_append = " armnn-dev armnn-examples armnn-tensorflow-lite-dev armnn-onnx-dev armnn-onnx-examples tensorflow-lite-python"' >> ${BUILD_DIR}/conf/local.conf
 
 		# Enable Tensorflow-lite and ArmNN Benchmark
 		if [ ${BENCHMARK} == "true" ]; then
@@ -208,7 +208,7 @@ configure_packages () {
 			echo 'IMAGE_INSTALL_append = " onnxruntime-benchmark"' >> ${BUILD_DIR}/conf/local.conf
 		fi
 	elif [ ${FRAMEWORK} == "tensorflow-lite" ]; then
-		echo 'IMAGE_INSTALL_append = " tensorflow-lite-staticdev tensorflow-lite-dev"' >> ${BUILD_DIR}/conf/local.conf
+		echo 'IMAGE_INSTALL_append = " tensorflow-lite-staticdev tensorflow-lite-dev tensorflow-lite-python"' >> ${BUILD_DIR}/conf/local.conf
 
 		# Enable Tensorflow-lite benchmark
 		if [ ${BENCHMARK} == "true" ]; then

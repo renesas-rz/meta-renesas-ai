@@ -19,7 +19,10 @@ In order to add TensorFlow Lite support to your project, make sure
 *tensorflow-lite* is listed as a dependency to your recipe/package.
 Listing *tensorflow-lite-staticdev* and *tensorflow-dev* in *IMAGE\_INSTALL*
 variable could be beneficial when you just want to populate an SDK for
-developing an application based on TensorFlow Lite.
+developing an application based on TensorFlow Lite. Adding
+*tensorflow-lite-python* will include the Python TfLite module in
+the RFS/SDK. Note that the Python bindings have the XNNPack Delegate
+built in and enabled.
 
 
 After the build is complete the static C++ TensorFlow Lite library
