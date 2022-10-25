@@ -9,6 +9,7 @@ TFL_VER = "2.5.3"
 
 SRC_URI = " \
 	git://github.com/tensorflow/tensorflow.git;branch=r2.5 \
+	file://label_image.py \
 	file://0001-Remove-GPU-and-NNAPI.patch \
 	file://0001-Use-wget-instead-of-curl-to-fetch-https-source.patch \
 	file://0001-tensorflow-lite-Do-not-build-XNNPack-into-library-ou.patch \
@@ -33,6 +34,7 @@ DEPENDS = " \
 # DEPENDS also includes the runtime dependencies in the image here.
 DEPENDS_aarch64 = " \
 	python3-numpy \
+	python3-pillow \
 	python3-pybind11-native \
 	python3-wheel-native \
 "
@@ -74,7 +76,7 @@ do_compile() {
 	cmake --build . -t benchmark_model -j
 }
 
-do_compile_aarch64() {
+do_compile_append_aarch64() {
 	# Compile and add python support
 	cd ${S}
 	PYTHON_INCLUDES=" \
@@ -135,6 +137,10 @@ do_install_append() {
 }
 
 do_install_append_aarch64() {
+	install -m 0555 \
+		${WORKDIR}/label_image.py \
+		${D}${bindir}/${PN}-${TFL_VER}/examples
+
 	install -d ${D}${libdir}/${PYTHON_DIR}/site-packages/tflite_runtime/
 	install -m 0555 \
 		${WORKDIR}/build/python/* \
@@ -149,4 +155,7 @@ FILES_${PN} += " \
 "
 
 FILES_${PN} += "${bindir}/${PN}-${TFL_VER}/examples/*"
-FILES_${PN}-python += "${libdir}/${PYTHON_DIR}/site-packages/tflite_runtime/*"
+FILES_${PN}-python += " \
+	${bindir}/${PN}-${TFL_VER}/examples/label_image.py \
+	${libdir}/${PYTHON_DIR}/site-packages/tflite_runtime/* \
+"

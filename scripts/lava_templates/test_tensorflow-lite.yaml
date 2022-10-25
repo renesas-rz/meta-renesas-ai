@@ -22,6 +22,7 @@
                - ./run_tests.sh meta-renesas-ai_tflite_t_010.sh
                - ./run_tests.sh meta-renesas-ai_tflite_t_011.sh
                - ./run_tests.sh meta-renesas-ai_tflite_t_012.sh
+               - ./run_tests.sh meta-renesas-ai_tflite_t_013.sh
       from: inline
       name: tflite-tests
       path: inline/tflite-tests.yaml

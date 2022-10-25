@@ -35,7 +35,7 @@ package *tensorflow-lite*). The sample application is installed under
 */usr/bin/tensorflow-lite/examples/*.
 
 
-To use *label_image*:
+To use *label_image* (C++):
 1. Download model data:
 `wget https://storage.googleapis.com/download.tensorflow.org/models/tflite/mobilenet_v1_224_android_quant_2017_11_08.zip`
 2. Extract to */usr/bin/tensorflow-lite/examples/*
@@ -60,6 +60,16 @@ average time: 317.484 ms
 0.00392157: 922 book jacket
 ```
 
+To use *label_image* (Python):
+1. Execute *label_image* by running the following commands:
+```
+cd /usr/bin/tensorflow-lite/examples/
+python3 label_image.py \
+--model_file /home/root/models/tensorflowlite/Mobile_Net_V1_Model/mobilenet_v1_1.0_224_quant.tflite \
+--label_file /home/root/models/tensorflowlite/Mobile_Net_V1_Model/labels.txt \
+--image /usr/bin/tensorflow-lite/examples/grace_hopper.bmp \
+--num_threads 2
+```
 
 To use *benchmark_model*:
 1. Download model data:
