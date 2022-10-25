@@ -116,9 +116,9 @@ SWAP_SIZE = "512"
 This project is licensed under the terms of the MIT license (please see file
 *COPYING.MIT* in this directory for further details).
 
-The configuration files found under:
+Configuration file template:
 ```
-meta-*/templates/*/local.conf
+templates/rzg2/local.conf
 ```
 This is needed to add full video encoding/decoding support to the BSP.\
 For example:
