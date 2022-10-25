@@ -6,7 +6,7 @@ RZ/G2 and RZ/G2L families of SoCs and reference platforms.
 The layers should be used with the official Renesas RZ/G2 Yocto Poky BSP based
 on the CIP Kernel:\
 URI: **https://github.com/renesas-rz/meta-renesas.git** \
-tag: BSP-3.0.0 (852c67f90fcdaf80a5727589cb7e41f7300cfa04)
+tag: BSP-3.0.1 (b5783592961561c9bfdfe0144540d7eccee44bb8)
 
 
 For each AI tool, please refer to **meta-${AI\_TOOL\_NAME}/README.md**. For

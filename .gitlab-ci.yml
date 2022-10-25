@@ -20,11 +20,11 @@ variables:
 
 .rzg2:
   variables:
-    PROP_LIBS_BRANCH: rzg2_v3.0.0_prod
+    PROP_LIBS_BRANCH: rzg2_v3.0.1_prod
 
 .rzg2l:
   variables:
-    PROP_LIBS_BRANCH: rzg2l_v3.0.0_prod
+    PROP_LIBS_BRANCH: rzg2l_v3.0.1_prod
 
 .hihope-rzg2h:
   extends: [".rzg2"]

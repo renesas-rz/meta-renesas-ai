@@ -16,7 +16,7 @@ set -e
 # Global parameters
 RZG_AI_BSP_URL="${CI_REPOSITORY_URL:-https://github.com/renesas-rz/meta-renesas-ai.git}"
 RZG_AI_BSP_VER="${CI_COMMIT_REF_NAME:-master}"
-RZG_BSP_VER="BSP-3.0.0"
+RZG_BSP_VER="BSP-3.0.1"
 WORK_DIR="${PWD}"
 COMMAND_NAME="$0"
 INSTALL_DEPENDENCIES=false
@@ -245,19 +245,12 @@ download_source () {
 	update_git_repo \
 		poky \
 		git://git.yoctoproject.org/poky \
-		bba323389749ec3e306509f8fb12649f031be152
-
-	cd poky
-	# gcc-runtime: Avoid march conflicts with newer cortex-a55 CPUs
-	git cherry-pick 9e44438a9deb7b6bfac3f82f31a1a7ad138a5d16
-	# metadata_scm.bbclass: Use immediate expansion for the METADATA_* variables
-	git cherry-pick cfd897e213debb2e32589378b2f5d390a265eb7f
-	cd -
+		1e298a42223dd2628288b372caf66c52506a8081
 
 	update_git_repo \
 		meta-openembedded \
 		git://git.openembedded.org/meta-openembedded \
-		ec978232732edbdd875ac367b5a9c04b881f2e19
+		deee226017877d51188e0a46f9e6b93c10ffbb34
 
 	update_git_repo \
 		meta-gplv2 \
@@ -300,11 +293,11 @@ install_prop_libs () {
 			cp -r ${PROP_DIR} ${WORK_DIR}/meta-rz-features
 		else
 			pushd ${PROP_DIR}
-			unzip RTK0EF0045Z13001ZJ-v1.0_EN.zip
-			tar -xf RTK0EF0045Z13001ZJ-v1.0_EN/meta-rz-features.tar.gz -C ${WORK_DIR}
+			unzip RTK0EF0045Z13001ZJ-v1.3_EN.zip
+			tar -xf RTK0EF0045Z13001ZJ-v1.3_EN/meta-rz-features.tar.gz -C ${WORK_DIR}
 
-			unzip RTK0EF0045Z15001ZJ-v0.56_EN.zip
-			tar -xf RTK0EF0045Z15001ZJ-v0.56_EN/meta-rz-features.tar.gz -C ${WORK_DIR}
+			unzip RTK0EF0045Z15001ZJ-v1.0_EN.zip
+			tar -xf RTK0EF0045Z15001ZJ-v1.0_EN/meta-rz-features.tar.gz -C ${WORK_DIR}
 			popd
 		fi
 	elif [ ${PLATFORM} == "smarc-rzg2lc" ]; then
@@ -313,8 +306,8 @@ install_prop_libs () {
 			cp -r ${PROP_DIR} ${WORK_DIR}/meta-rz-features
 		else
 			pushd ${PROP_DIR}
-			unzip RTK0EF0045Z13001ZJ-v1.0_EN.zip
-			tar -xf RTK0EF0045Z13001ZJ-v1.0_EN/meta-rz-features.tar.gz -C ${WORK_DIR}
+			unzip RTK0EF0045Z13001ZJ-v1.3_EN.zip
+			tar -xf RTK0EF0045Z13001ZJ-v1.3_EN/meta-rz-features.tar.gz -C ${WORK_DIR}
 			popd
 		fi
 	fi
