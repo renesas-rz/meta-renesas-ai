@@ -154,7 +154,6 @@ FILES_${PN} += " \
 	${bindir}/${PN}-${TFL_VER}/examples/benchmark_model \
 "
 
-FILES_${PN} += "${bindir}/${PN}-${TFL_VER}/examples/*"
 FILES_${PN}-python += " \
 	${bindir}/${PN}-${TFL_VER}/examples/label_image.py \
 	${libdir}/${PYTHON_DIR}/site-packages/tflite_runtime/* \
