@@ -329,18 +329,21 @@ test:benchmark:armnn:ek874:
   extends: [".test-meta-renesas-ai", ".ek874"]
   variables:
     FRAMEWORK_ARG: "-f armnn -f tensorflow-lite"
+  when: manual
 
 test:benchmark:ort:ek874:
   needs: ["benchmark:ort:ek874"]
   extends: [".test-meta-renesas-ai", ".ek874"]
   variables:
     FRAMEWORK_ARG: "-f onnxruntime"
+  when: manual
 
 test:benchmark:tflite:ek874:
   needs: ["benchmark:tflite:ek874"]
   extends: [".test-meta-renesas-ai", ".ek874"]
   variables:
     FRAMEWORK_ARG: "-f tensorflow-lite"
+  when: manual
 
 test:benchmark:armnn:smarc-rzg2l:
   needs: ["benchmark:armnn:smarc-rzg2l"]
