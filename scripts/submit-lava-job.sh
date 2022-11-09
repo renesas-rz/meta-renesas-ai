@@ -392,14 +392,14 @@ wait_for_job_to_complete () {
 }
 
 # This function assumes that ~/.config/lavacli.yaml is already configured
-# $1:       Submitted job number
+# $1: Submitted job number
 get_job_results () {
 	echo "========================================================================="
 	lavacli results "${1}"
 }
 
 # This function assumes that ~/.config/lavacli.yaml is already configured
-# $1:       Submitted job number
+# $1: Submitted job number
 # return PASS: Job completed okay
 #        FAIL: Job did not complete
 get_job_result () {
@@ -416,6 +416,14 @@ get_job_result () {
 	else
 		echo "PASS"
 	fi
+}
+
+# This function assumes that ~/.config/lavacli.yaml is already configured
+# $1: Submitted job number
+# return: Number of failed test cases
+get_test_case_failure_count () {
+	local count=$(lavacli results "${1}" | grep -c "\[fail\]")
+	echo ${count}
 }
 
 trap clean_up SIGHUP SIGINT SIGTERM
@@ -448,10 +456,17 @@ if ${CHECK_FOR_RESULTS}; then
 
 	RESULT=$(get_job_result ${JOB_NO})
 	if [ ${RESULT} != "PASS" ]; then
+		echo "ERROR: Test job did not complete successfully"
+		clean_up
+		exit 1
+	fi
+
+	RESULT=$(get_test_case_failure_count ${JOB_NO})
+	if [ ${RESULT} -gt "0" ]; then
+		echo "ERROR: Test case failures found"
 		clean_up
 		exit 1
 	fi
 fi
 
 clean_up
-
