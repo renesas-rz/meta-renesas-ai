@@ -29,7 +29,7 @@ print_help () {
 	       [-k FILE] [-r] [-h]
 
 	MANDATORY:
-	-p, --platform PLATFORM      Specify Yocto machine  name.
+	-p, --platform PLATFORM      Specify Yocto machine name.
 	-t, --templates DIR          Specify location of LAVA templates.
 	-u, --lava-username USERNAME LAVA username to use to submit jobs.
 
@@ -90,7 +90,6 @@ parse_options () {
 			;;
 		-r|--check-results)
 			CHECK_FOR_RESULTS=true
-			shift
 			;;
 		-t|--templates)
 			if [ ! -d "$2" ]; then
@@ -108,7 +107,6 @@ parse_options () {
 			;;
 		-h|--help)
 			print_help
-			shift
 			;;
 		*)
 			break
