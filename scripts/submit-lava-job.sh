@@ -25,8 +25,8 @@ print_help () {
 	Create test job definitions and submit them to LAVA server.
 	This script is designed to run in a GitLab CI environment.
 
-	USAGE: $0 -p PLATFORM -t DIR -u USERNAME [-a DIR] [-f FRAMEWORK] [-r] \
-	       [-h]
+	USAGE: $0 -p PLATFORM -t DIR -u USERNAME [-a DIR] [-f FRAMEWORK] \
+	       [-k FILE] [-r] [-h]
 
 	MANDATORY:
 	-p, --platform PLATFORM      Specify Yocto machine  name.
@@ -38,6 +38,15 @@ print_help () {
 	                             If not specified the default for DIR is
 	                             "output/\$PLATFORM".
 	-f, --framework FRAMEWORK    Include tests for this framework.
+	-k, --known-errors FILE      CSV formatted file detailing known issues.
+	                             It lists devices that are expected to fail
+	                             for each test case.
+	                             If this file is provided test case failures
+	                             that match will be ignored.
+	                             Format: TEST_CASE,LAVA_DEVICE_TYPE1,
+	                             LAVA_DEVICE_TYPE2,LAVA_DEVICE_TYPEn...
+	                             --check-results must be set to use this
+	                             functionality.
 	-r, --check-results          After job is submitted, wait for test to
 	                             run and get results.
 	-h, --help                   Print this help and exit.
@@ -63,6 +72,16 @@ parse_options () {
 			;;
 		-f|--framework)
 			FRAMEWORKS+=( "${2}" )
+			shift
+			;;
+		-k|--known-errors)
+			if [ ! -f "$2" ]; then
+				echo "ERROR: Specified known errors csv file does not exist"
+				print_help
+				clean_up
+				exit 1
+			fi
+			KNOWN_ERRORS="$(realpath ${2})"
 			shift
 			;;
 		-p|--platform)
@@ -426,6 +445,43 @@ get_test_case_failure_count () {
 	echo ${count}
 }
 
+# This function assumes that ~/.config/lavacli.yaml is already configured
+# $1: CSV formatted file detailing known issues. Format: TEST_CASE,LAVA_DEVICE_TYPE1,LAVA_DEVICE_TYPEn...
+# $2: LAVA device type being tested
+# $3: Submitted job number
+# return: Number of failed test cases, once known issues have been ignored
+get_new_test_case_failure_count () {
+	local known_issues="${1}"
+	local device="${2}"
+	local lavacli_output=$TMP_DIR/lavacli_output
+	local new_issue_count=0
+
+	lavacli results "${3}" > "${lavacli_output}"
+	if [ $? == 0 ]; then
+		while read -r line; do
+			if grep -q "fail" <<< "${line}"; then
+				# Get test case name from LAVA output
+				local test_case=$(echo "${line}" | awk -F'.' '{print $2}')
+				test_case=$(echo "${test_case}" | awk -F' ' '{print $1}')
+
+				# Seach known issues file for test case and
+				# check to see if target platform is listed
+				local known_issue=$(grep "${test_case}" "${known_issues}" | grep -c "${device}")
+				if [ ${known_issue} == 0 ]; then
+					((new_issue_count++))
+				fi
+			fi
+		done < "${lavacli_output}"
+	else
+		# Something went wrong with obtaining the results.
+		# Better to fail and trigger a manual check of results then
+		# return a false positive.
+		((new_issue_count++))
+	fi
+
+	echo ${new_issue_count}
+}
+
 trap clean_up SIGHUP SIGINT SIGTERM
 set_up
 
@@ -461,11 +517,21 @@ if ${CHECK_FOR_RESULTS}; then
 		exit 1
 	fi
 
-	RESULT=$(get_test_case_failure_count ${JOB_NO})
-	if [ ${RESULT} -gt "0" ]; then
-		echo "ERROR: Test case failures found"
-		clean_up
-		exit 1
+	if [ -n "${KNOWN_ERRORS}" ]; then
+		RESULT=$(get_new_test_case_failure_count ${KNOWN_ERRORS} \
+				$(get_device_type ${PLATFORM}) ${JOB_NO})
+		if [ ${RESULT} -gt "0" ]; then
+			echo "ERROR: New test case failures found"
+			clean_up
+			exit 1
+		fi
+	else
+		RESULT=$(get_test_case_failure_count ${JOB_NO})
+		if [ ${RESULT} -gt "0" ]; then
+			echo "ERROR: Test case failures found"
+			clean_up
+			exit 1
+		fi
 	fi
 fi
 

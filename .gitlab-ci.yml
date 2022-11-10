@@ -104,7 +104,7 @@ variables:
   before_script:
     - printenv
   script:
-    - ${CI_PROJECT_DIR}/scripts/submit-lava-job.sh -p ${PLATFORM} -t ${CI_PROJECT_DIR}/scripts/lava_templates/ -u spl2-bot ${FRAMEWORK_ARG} -r
+    - ${CI_PROJECT_DIR}/scripts/submit-lava-job.sh -p ${PLATFORM} -t ${CI_PROJECT_DIR}/scripts/lava_templates/ -k ${CI_PROJECT_DIR}/scripts/known-test-issues.csv -u spl2-bot ${FRAMEWORK_ARG} -r
 
 
 benchmark:armnn:hihope-rzg2h:
