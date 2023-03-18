@@ -104,8 +104,16 @@ variables:
   before_script:
     - printenv
   script:
-    - ${CI_PROJECT_DIR}/scripts/submit-lava-job.sh -p ${PLATFORM} -t ${CI_PROJECT_DIR}/scripts/lava_templates/ -k ${CI_PROJECT_DIR}/scripts/known-test-issues.csv -u spl2-bot ${FRAMEWORK_ARG} -r
-
+    - mkdir results
+    - ${CI_PROJECT_DIR}/scripts/submit-lava-job.sh -p ${PLATFORM} -t ${CI_PROJECT_DIR}/scripts/lava_templates/ -k ${CI_PROJECT_DIR}/scripts/known-test-issues.csv -u spl2-bot ${FRAMEWORK_ARG} -r -j results
+  artifacts:
+    name: "${CI_JOB_NAME}"
+    when: always
+    expire_in: 1 year
+    reports:
+      junit: results/results*.xml
+    paths:
+      - results
 
 benchmark:armnn:hihope-rzg2h:
   stage: build-ai-bsp
