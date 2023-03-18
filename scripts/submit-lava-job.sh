@@ -1,8 +1,9 @@
 #!/bin/bash
 #
-# This script prepares and submit LAVA job definitions.
+# This script prepares and submits LAVA job definitions.
 #
-# It is assumed that lavacli.yml has been configured as required.
+# It is assumed that lavacli.yml has been configured as required. The default
+# identity will be used.
 # It is assumed that the ${BUILD_JOB_ID} variable is set to the GitLab CI job
 # that contains the build artifacts that are to be tested.
 #
