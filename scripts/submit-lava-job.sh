@@ -27,7 +27,7 @@ print_help () {
 	This script is designed to run in a GitLab CI environment.
 
 	USAGE: $0 -p PLATFORM -t DIR -u USERNAME [-a DIR] [-f FRAMEWORK] \
-	       [-k FILE] [-r] [-h]
+	       [-j DIR] [-k FILE] [-r] [-h]
 
 	MANDATORY:
 	-p, --platform PLATFORM      Specify Yocto machine name.
@@ -39,6 +39,12 @@ print_help () {
 	                             If not specified the default for DIR is
 	                             "output/\$PLATFORM".
 	-f, --framework FRAMEWORK    Include tests for this framework.
+	-j, --save-junit DIR         Export test results from LAVA in junit
+	                             format. They will be called
+	                             "results_<lava-job-no>.xml" and saved into
+	                             the specified directory.
+	                             Results will only be saved if
+	                             --check-results is set.
 	-k, --known-errors FILE      CSV formatted file detailing known issues.
 	                             It lists devices that are expected to fail
 	                             for each test case.
@@ -68,11 +74,21 @@ parse_options () {
 				clean_up
 				exit 1
 			fi
-			ARTIFACTS_DIR="$(realpath ${2})"
+			ARTIFACTS_DIR="$(realpath "${2}")"
 			shift
 			;;
 		-f|--framework)
 			FRAMEWORKS+=( "${2}" )
+			shift
+			;;
+		-j|--save-junit)
+			if [ ! -d "$2" ]; then
+				echo "ERROR: Specificed directory does not exist"
+				print_help
+				clean_up
+				exit 1
+			fi
+			JUNIT_DIR="$(realpath "${2}")"
 			shift
 			;;
 		-k|--known-errors)
@@ -82,7 +98,7 @@ parse_options () {
 				clean_up
 				exit 1
 			fi
-			KNOWN_ERRORS="$(realpath ${2})"
+			KNOWN_ERRORS="$(realpath "${2}")"
 			shift
 			;;
 		-p|--platform)
@@ -99,7 +115,7 @@ parse_options () {
 				clean_up
 				exit 1
 			fi
-			LAVA_TEMPLATES_DIR="$(realpath ${2})"
+			LAVA_TEMPLATES_DIR="$(realpath "${2}")"
 			shift
 			;;
 		-u|--lava-username)
@@ -418,6 +434,18 @@ get_job_results () {
 
 # This function assumes that ~/.config/lavacli.yaml is already configured
 # $1: Submitted job number
+get_junit_results () {
+	echo "========================================================================="
+	# Extract server URL from LAVA CLI configuration file
+	local lava_config_file="${HOME}/.config/lavacli.yaml"
+	local lava_api_url=$(grep uri "${lava_config_file}" | \
+			     cut -d " " -f 4 | \
+		             sed 's|RPC2|api/v0.2|g')
+	curl -s -o "${JUNIT_DIR}"/results_${1}.xml ${lava_api_url}/jobs/${1}/junit/
+}
+
+# This function assumes that ~/.config/lavacli.yaml is already configured
+# $1: Submitted job number
 # return PASS: Job completed okay
 #        FAIL: Job did not complete
 get_job_result () {
@@ -508,6 +536,10 @@ if ${CHECK_FOR_RESULTS}; then
 	wait_for_job_to_complete ${JOB_NO}
 
 	get_job_results ${JOB_NO}
+
+	if [ ! -z ${JUNIT_DIR+x} ]; then
+		get_junit_results ${JOB_NO}
+	fi
 
 	RESULT=$(get_job_result ${JOB_NO})
 	if [ ${RESULT} != "PASS" ]; then
