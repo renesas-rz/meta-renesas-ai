@@ -115,33 +115,27 @@ SWAP_SIZE = "512"
 This project is licensed under the terms of the MIT license (please see file
 *COPYING.MIT* in this directory for further details).
 
-The configuration files found under:
+The configuration files provided in the RZ/G BSP include the following
+whitelisted licenses that the user should be aware of before using this project:
 ```
-docs/templates/rzg2/local.conf
+LICENSE_FLAGS_WHITELIST = " \
+	commercial_gstreamer1.0-plugins-ugly commercial_mpeg2dec \
+	commercial_gst-plugins-bad commercial_faad2 commercial_faac \
+	commercial_gstreamer1.0-libav commercial_ffmpeg commercial_x264 \
+"
 ```
-This is needed to add full video encoding/decoding support to the BSP.\
-For example:
-```
-LICENSE_FLAGS_WHITELIST = "commercial_gstreamer1.0-libav \
-commercial_gstreamer1.0 plugins-ugly commercial_ffmpeg commercial_mpeg2dec \
-commercial_faac commercial_faad2 commercial_x264"
-```
+These are needed to add full video encoding/decoding support to the BSP.
 
-By editing these commented lines in the template files coming from this
-repository, the user agrees to the terms and conditions from the licenses of the
-packages that are installed into the final image and that are covered by a
-commercial license.
-
-The user also acknowledges that it's their responsibility to make sure
-they hold the right to use code protected by commercial agreements, whether
-the commercially protected packages are selected by Renesas' BSPs or by them.
+By using this project the user agrees to the terms and conditions from the
+licenses of the packages that are installed into the final image and that are
+covered by a commercial license. The user also acknowledges that it's their
+responsibility to make sure they hold the right to use code protected by
+commercial agreements, whether the commercially protected packages are selected
+by Renesas' BSPs or by them.
 
 Finally, the user acknowledges that it's their responsibility to make sure
 they hold the right to copy, use, modify, and re-distribute the intellectual
-property offered by this collection of meta-layers.
-
-**Note:** Without uncommenting the `LICENSE_FLAGS_WHITELIST` lines the BSP build
-will fail.
+property offered by this meta-layer.
 
 ---
 

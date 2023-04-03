@@ -28,7 +28,6 @@ PROP_LIBS_EXTRACTED=false
 BUILD=true
 OUTPUT_DIR="${WORK_DIR}/output"
 FAMILY=""
-SKIP_LICENSE_WARNING=false
 BUILD_SDK=false
 YOCTO_DL_DIR=""
 YOCTO_SSTATE_DIR=""
@@ -46,7 +45,7 @@ print_help () {
 
 	 USAGE: ${COMMAND_NAME} -p <platform> -l <prop lib dir> [-b] [-c] \\
 	                    [-d] [-e] [-f <framework>] [-j <dir>] [-k <dir>] \\
-	                    [-n <threads>] [-o <output dir>] [-s] [-t] [-T] [-h]
+	                    [-n <threads>] [-o <output dir>] [-t] [-T] [-h]
 
 	 OPTIONS:
 	 -h                 Print this help and exit.
@@ -78,8 +77,6 @@ print_help () {
 	 -p <platform>      Platform to build for. Choose from:
 	                    hihope-rzg2h, hihope-rzg2m, hihope-rzg2n, ek874,
 	                    smarc-rzg2l, smarc-rzg2lc, smarc-rzg2ul.
-	 -s                 Skip the license warning prompt and automatically
-	                    include the packages in LICENSE_FLAGS_WHITELIST.
 	 -t                 Build toolchain/SDK once main build has completed.
 	 -T                 Only build toolchain/SDK.
 
@@ -89,7 +86,7 @@ print_help () {
 ################################################################################
 # Options parsing
 
-while getopts ":bcdef:j:k:l:n:o:p:stTh" opt; do
+while getopts ":bcdef:j:k:l:n:o:p:tTh" opt; do
 	case $opt in
 	b)
 		BENCHMARK=true
@@ -163,9 +160,6 @@ while getopts ":bcdef:j:k:l:n:o:p:stTh" opt; do
 			exit 1
 			;;
 		esac
-		;;
-	s)
-		SKIP_LICENSE_WARNING=true
 		;;
 	t)
 		BUILD_SDK=true
@@ -337,10 +331,6 @@ configure_build () {
 		echo "SSTATE_DIR = \"${YOCTO_SSTATE_DIR}\"" >> ./conf/local.conf
 	fi
 
-	if $SKIP_LICENSE_WARNING; then
-		sed -i 's/#LICENSE_FLAGS_WHITELIST/LICENSE_FLAGS_WHITELIST/g' ./conf/local.conf
-	fi
-
 	echo "BB_NUMBER_THREADS = \"${THREADS}\"" >> ./conf/local.conf
 	echo "PARALLEL_MAKE = \"-j ${THREADS}\"" >> ./conf/local.conf
 }
@@ -424,14 +414,6 @@ fi
 configure_build
 
 if $BUILD; then
-	if [ $SKIP_LICENSE_WARNING != "true" ]; then
-		echo -ne "\nHave licensing options been updated in the local.conf file? "; read
-		if [[ ! $REPLY =~ ^[Yy]$ ]]; then
-			echo "Please uncomment the LICENSE_FLAGS_WHITELIST to build the BSP and restart"
-			exit 1
-		fi
-	fi
-
 	if [ $BUILD_SDK == "true" ]; then
 		do_build && do_sdk_build
 	elif [ $BUILD_SDK == "only" ]; then
