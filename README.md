@@ -9,8 +9,7 @@ URI: **https://github.com/renesas-rz/meta-renesas.git** \
 tag: BSP-3.0.1 (b5783592961561c9bfdfe0144540d7eccee44bb8)
 
 
-For each AI tool, please refer to **meta-${AI\_TOOL\_NAME}/README.md**. For
-example: *meta-tensorflow-lite/README.md*.
+For each AI tool, please refer to the documentaion provided in [docs](./docs/).
 
 
 This project comes with joint template files for all of the supported platforms.
