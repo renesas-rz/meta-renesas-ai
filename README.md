@@ -1,32 +1,15 @@
 # meta-renesas-ai #
-This OpenEmbedded/Yocto layer collector adds AI tools support to the Renesas
-RZ/G2 and RZ/G2L families of SoCs and reference platforms.
+This OpenEmbedded/Yocto layer, nicknamed the "RZ/G AI BSP", adds FOSS
+AI tools support to the Renesas RZ/G2 and RZ/G2L families of SoCs and reference
+platforms.
 
 #### For RZ/G2 and RZ/G2L families ####
-The layers should be used with the official Renesas RZ/G2 Yocto Poky BSP based
-on the CIP Kernel:\
+This meta-layer should be used with the official Renesas RZ/G2 Yocto Poky BSP
+based on the CIP Kernel:\
 URI: **https://github.com/renesas-rz/meta-renesas.git** \
-tag: BSP-3.0.1 (b5783592961561c9bfdfe0144540d7eccee44bb8)
+tag: BSP-3.0.3 (44148f2fd4d94d3fb9f888df7540c4f8075b4d7f)
 
-
-For each AI tool, please refer to the documentaion provided in [docs](./docs/).
-
-
-This project comes with joint template files for all of the supported platforms.
-The templates can be found under **docs/templates/rzg2/**.
-
-Copying *local.conf* and *bblayers.conf* from the templates directory to your
-build conf directory is usually the first thing the user wants to do, but
-the configuration must be inspected and further customized according to the
-project requirements. This can be done by running the configuration script
-which will add the specified platform and AI framework to the configuration
-files.
-
-Before using the configuration files from the templates directory,
-please make sure you have read and understood the terms and conditions found
-in the [Licensing](#licensing) section.
-
-### Supported Frameworks/Versions ###
+## Supported Frameworks/Versions ##
 
 | Framework       | Version   | Parser(s)                                 | Inference Hardware                     |
 | :-------------- | :-------- | :---------------------------------------- | :------------------------------------- |
@@ -34,7 +17,7 @@ in the [Licensing](#licensing) section.
 | ONNX Runtime    | v1.8.0    | ONNX                                      | CPU                                    |
 | TensorFlow Lite | v2.5.3    | TensorFlow Lite                           | CPU                                    |
 
-### Supported Embedded Platforms ###
+## Supported Embedded Platforms ##
 
 | SoC             | Platform                 |
 | :-------------- | :----------------------- |
@@ -46,6 +29,10 @@ in the [Licensing](#licensing) section.
 | Renesas RZ/G2LC | Renesas smarc-rzg2lc evk |
 | Renesas RZ/G2UL | Renesas smarc-rzg2ul evk |
 
+## Documentation ##
+For each AI tool, please refer to the documentaion provided in [docs](./docs/).
+
+## Helper Scripts ##
 ### Build Script ###
 A simple build script has been created to manage the build process.\
 Before running the script you will need to download the relevant proprietary
@@ -58,8 +45,6 @@ script.
 ### Configuration Script ###
 A simple configuration script has been created to set up the configuration
 files and add the necessary dependencies.\
-Before running the script you will need to source the yocto environment and
-copy over the configuration templates from the **docs/templates/rzg2/** directory.\
 This script is used automatically by `build-rzg-ai-bsp.sh` but can be run
 independently if required.
 

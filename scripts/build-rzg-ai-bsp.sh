@@ -16,7 +16,7 @@ set -e
 # Global parameters
 RZG_AI_BSP_URL="${CI_REPOSITORY_URL:-https://github.com/renesas-rz/meta-renesas-ai.git}"
 RZG_AI_BSP_VER="${CI_COMMIT_REF_NAME:-master}"
-RZG_BSP_VER="BSP-3.0.1"
+RZG_BSP_VER="BSP-3.0.3"
 WORK_DIR="${PWD}"
 COMMAND_NAME="$0"
 INSTALL_DEPENDENCIES=false
@@ -147,7 +147,7 @@ while getopts ":bcdef:j:k:l:n:o:p:tTh" opt; do
 		case "${OPTARG}" in
 		"hihope-rzg2h" | "hihope-rzg2m" | "hihope-rzg2n" | "ek874")
 			PLATFORM="${OPTARG}"
-			FAMILY="rzg2"
+			FAMILY="rzg2h"
 			;;
 
 		"smarc-rzg2l" | "smarc-rzg2lc" | "smarc-rzg2ul")
@@ -212,9 +212,10 @@ install_dependencies () {
 
 	$beroot apt update
 	$beroot apt install -y gawk wget git-core diffstat unzip texinfo \
-		gcc-multilib build-essential chrpath socat cpio python python3 \
+		gcc-multilib build-essential chrpath socat cpio python3 \
 		python3-pip python3-pexpect xz-utils debianutils iputils-ping \
-		libsdl1.2-dev xterm p7zip-full
+		python3-git python3-jinja2 libegl1-mesa libsdl1.2-dev pylint3 \
+		xterm python3-subunit mesa-common-dev
 }
 
 # $1 project/directory name
@@ -239,12 +240,12 @@ download_source () {
 	update_git_repo \
 		poky \
 		git://git.yoctoproject.org/poky \
-		1e298a42223dd2628288b372caf66c52506a8081
+		aa0073041806c9f417a33b0b7f747d2a86289eda
 
 	update_git_repo \
 		meta-openembedded \
 		git://git.openembedded.org/meta-openembedded \
-		deee226017877d51188e0a46f9e6b93c10ffbb34
+		7952135f650b4a754e2255f5aa03973a32344123
 
 	update_git_repo \
 		meta-gplv2 \
@@ -271,14 +272,14 @@ install_prop_libs () {
 	echo "#################################################################"
 	echo "Installing proprietary libraries..."
 
-	if [ ${FAMILY} == "rzg2" ]; then
+	if [ ${FAMILY} == "rzg2h" ]; then
 		if $PROP_LIBS_EXTRACTED; then
 			rm -rf ${WORK_DIR}/meta-rz-features
 			cp -r ${PROP_DIR} ${WORK_DIR}/meta-rz-features
 		else
 			pushd ${PROP_DIR}
-			unzip RTK0EF0045Z0022AZJ-v1.0_EN.zip
-			tar -xf RTK0EF0045Z0022AZJ-v1.0_EN/meta-rz-features.tar.gz -C ${WORK_DIR}
+			unzip RTK0EF0045Z0022AZJ-v1.0.2_EN.zip
+			tar -xf RTK0EF0045Z0022AZJ-v1.0.2_EN/meta-rz-features.tar.gz -C ${WORK_DIR}
 			popd
 		fi
 	elif [ ${PLATFORM} == "smarc-rzg2l" ]; then
@@ -287,11 +288,11 @@ install_prop_libs () {
 			cp -r ${PROP_DIR} ${WORK_DIR}/meta-rz-features
 		else
 			pushd ${PROP_DIR}
-			unzip RTK0EF0045Z13001ZJ-v1.3_EN.zip
-			tar -xf RTK0EF0045Z13001ZJ-v1.3_EN/meta-rz-features.tar.gz -C ${WORK_DIR}
+			unzip RTK0EF0045Z13001ZJ-v1.0.5_EN.zip
+			tar -xf RTK0EF0045Z13001ZJ-v1.0.5_EN/meta-rz-features_graphics_v1.0.5.tar.gz -C ${WORK_DIR}
 
-			unzip RTK0EF0045Z15001ZJ-v1.0_EN.zip
-			tar -xf RTK0EF0045Z15001ZJ-v1.0_EN/meta-rz-features.tar.gz -C ${WORK_DIR}
+			unzip RTK0EF0045Z15001ZJ-v1.1.0_EN.zip
+			tar -xf RTK0EF0045Z15001ZJ-v1.1.0_EN/meta-rz-features_codec_v1.1.0.tar.gz -C ${WORK_DIR}
 			popd
 		fi
 	elif [ ${PLATFORM} == "smarc-rzg2lc" ]; then
@@ -300,8 +301,8 @@ install_prop_libs () {
 			cp -r ${PROP_DIR} ${WORK_DIR}/meta-rz-features
 		else
 			pushd ${PROP_DIR}
-			unzip RTK0EF0045Z13001ZJ-v1.3_EN.zip
-			tar -xf RTK0EF0045Z13001ZJ-v1.3_EN/meta-rz-features.tar.gz -C ${WORK_DIR}
+			unzip RTK0EF0045Z13001ZJ-v1.0.5_EN.zip
+			tar -xf RTK0EF0045Z13001ZJ-v1.0.5_EN/meta-rz-features_graphics_v1.0.5.tar.gz -C ${WORK_DIR}
 			popd
 		fi
 	fi
@@ -312,9 +313,7 @@ configure_build () {
 	echo "Configuring build..."
 
 	# This will create and take us to the $WORK_DIR/build directory
-	source poky/oe-init-build-env
-
-	cp $WORK_DIR/meta-renesas-ai/docs/templates/rzg2/*.conf ./conf/
+	TEMPLATECONF=$WORK_DIR/meta-renesas/meta-${FAMILY}/docs/template/conf/ source poky/oe-init-build-env
 
 	# Set configuration files
 	if [ ${BENCHMARK} == "true" ]; then
@@ -338,13 +337,13 @@ configure_build () {
 do_build () {
 	echo "#################################################################"
 	echo "Starting build..."
-	bitbake core-image-qt
+	MACHINE=${PLATFORM} bitbake core-image-qt
 }
 
 do_sdk_build () {
 	echo "#################################################################"
 	echo "Starting SDK build..."
-	bitbake core-image-qt -c populate_sdk
+	MACHINE=${PLATFORM} bitbake core-image-qt -c populate_sdk
 }
 
 copy_output () {
@@ -358,7 +357,7 @@ copy_output () {
 		cp ${bin_dir}/core-image-qt-${PLATFORM}.tar.gz ${OUTPUT_DIR}/${PLATFORM}
 		cp ${bin_dir}/Image-${PLATFORM}.bin ${OUTPUT_DIR}/${PLATFORM}
 
-		if [ ${FAMILY} == "rzg2" ]; then
+		if [ ${FAMILY} == "rzg2h" ]; then
 			cp ${bin_dir}/Image-*-${PLATFORM}*.dtb ${OUTPUT_DIR}/${PLATFORM}
 			cp ${bin_dir}/u-boot-elf-${PLATFORM}.srec ${OUTPUT_DIR}/${PLATFORM}
 			cp ${bin_dir}/bootparam_sa0.srec ${OUTPUT_DIR}/${PLATFORM}
@@ -367,8 +366,7 @@ copy_output () {
 			cp ${bin_dir}/tee-${PLATFORM}.srec ${OUTPUT_DIR}/${PLATFORM}
 			cp ${bin_dir}/cert_header_sa6.srec ${OUTPUT_DIR}/${PLATFORM}
 			cp ${bin_dir}/AArch64_Flash_writer_SCIF*.mot ${OUTPUT_DIR}/${PLATFORM}
-		fi
-		if [ ${FAMILY} == "rzg2l" ]; then
+		elif [ ${FAMILY} == "rzg2l" ]; then
 			cp ${bin_dir}/Image-*-smarc.dtb ${OUTPUT_DIR}/${PLATFORM}
 			cp ${bin_dir}/bl2_bp-${PLATFORM}*.srec ${OUTPUT_DIR}/${PLATFORM}
 			cp ${bin_dir}/fip-${PLATFORM}*.srec ${OUTPUT_DIR}/${PLATFORM}

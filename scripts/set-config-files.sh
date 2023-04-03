@@ -129,34 +129,30 @@ fi
 ################################################################################
 # Functions
 
-configure_machine () {
+configure_layers () {
 	echo "#################################################################"
-	echo "Adding machine name in local.conf..."
+	echo "Adding bitbake layers"
 
-	# Add machine name
-	echo 'MACHINE = "'${PLATFORM}'"' >> ${BUILD_DIR}/conf/local.conf
-
-	# Add SoC family for rzg2l
-	if [ ${PLATFORM} == "smarc-rzg2l" ]; then
-		echo 'SOC_FAMILY = "r9a07g044l"' >> ${BUILD_DIR}/conf/local.conf
-	elif [ ${PLATFORM} == "smarc-rzg2lc" ]; then
-		echo 'SOC_FAMILY = "r9a07g044c"' >> ${BUILD_DIR}/conf/local.conf
-	elif [ ${PLATFORM} == "smarc-rzg2ul" ]; then
-		echo 'SOC_FAMILY = "r9a07g043u"' >> ${BUILD_DIR}/conf/local.conf
-	elif [ ${PLATFORM} == "hihope-rzg2h" ]; then
-		echo 'SOC_FAMILY = "r8a774e1"' >> ${BUILD_DIR}/conf/local.conf
-	elif [ ${PLATFORM} == "hihope-rzg2m" ]; then
-		echo 'SOC_FAMILY = "r8a774a1"' >> ${BUILD_DIR}/conf/local.conf
-	elif [ ${PLATFORM} == "hihope-rzg2n" ]; then
-		echo 'SOC_FAMILY = "r8a774b1"' >> ${BUILD_DIR}/conf/local.conf
-	elif [ ${PLATFORM} == "ek874" ]; then
-		echo 'SOC_FAMILY = "r8a774c0"' >> ${BUILD_DIR}/conf/local.conf
+	# Add GFX/MMP layers where appropriate
+	if [ ${PLATFORM} != "smarc-rzg2ul" ]; then
+		if [ ${PLATFORM} != "smarc-rzg2lc" ]; then
+			bitbake-layers add-layer ${WORK_DIR}/meta-rz-features/meta-rz-codecs
+		fi
+		bitbake-layers add-layer ${WORK_DIR}/meta-rz-features/meta-rz-graphics
 	fi
+
+	bitbake-layers add-layer ${WORK_DIR}/meta-qt5
+
+	# Add AI BSP layer
+	bitbake-layers add-layer ${WORK_DIR}/meta-renesas-ai
 }
 
 configure_packages () {
 	echo "#################################################################"
 	echo "Adding AI packages to local.conf..."
+
+	# Disable CIP Core
+	sed -i 's/CIP_MODE = "Buster"/CIP_MODE = "None"/g' ${BUILD_DIR}/conf/local.conf
 
 	# Add AI packages to local.conf
 	if [ ${FRAMEWORK} == "armnn" ]; then
@@ -201,7 +197,7 @@ echo "Platform: ${PLATFORM}"
 echo "AI Framework: ${FRAMEWORK}"
 echo "Benchmark: ${BENCHMARK}"
 
-configure_machine
+configure_layers
 configure_packages
 
 echo "#################################################################"
