@@ -1,0 +1,25 @@
+From f0d592e7ac186a75937cb9e693c581816791304c Mon Sep 17 00:00:00 2001
+From: Chris Paterson <chris.paterson2@renesas.com>
+Date: Fri, 21 Apr 2023 21:15:02 +0100
+Subject: [PATCH] layer.conf: Add LAYERSERIES_COMPAT for dunfell
+
+This will stop the warning we get for not having it set.
+
+Signed-off-by: Chris Paterson <chris.paterson2@renesas.com>
+---
+ conf/layer.conf | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/conf/layer.conf b/conf/layer.conf
+index b7207e6302c1..25aa4dc33288 100644
+--- a/conf/layer.conf
++++ b/conf/layer.conf
+@@ -29,3 +29,5 @@ IMAGE_FEATURES[validitems] += "qtcreator-debug"
+ 
+ QT_GIT ?= "git://github.com/qtproject"
+ QT_GIT_PROTOCOL ?= "git"
++
++LAYERSERIES_COMPAT_qt5-layer = "dunfell"
+-- 
+2.40.0
+

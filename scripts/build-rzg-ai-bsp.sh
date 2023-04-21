@@ -272,6 +272,10 @@ patch_source () {
 	cd ${WORK_DIR}/meta-renesas
 	git am ${WORK_DIR}/meta-renesas-ai/patches/meta-renesas/*
 	cd -
+
+	cd ${WORK_DIR}/meta-qt5
+	git am ${WORK_DIR}/meta-renesas-ai/patches/meta-qt5/*
+	cd -
 }
 
 install_prop_libs () {

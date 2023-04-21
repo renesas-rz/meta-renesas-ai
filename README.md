@@ -77,6 +77,9 @@ started. This is done automatically by the *build-rzg-ai-bsp.sh* build script.
 ### meta-renesas ###
 *0001-template-Mask-security-configurator.bb-by-default.patch*
 
+### meta-qt5 ###
+*0001-layer.conf-Add-LAYERSERIES_COMPAT-for-dunfell.patch*
+
 ---
 
 ## Notes ##
