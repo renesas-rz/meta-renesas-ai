@@ -68,6 +68,15 @@ of how this is done in this project.
 If *${BUILD\_JOB\_ID}* and *${CI\_PROJECT\_URL}* are set manually it is possible
 to run this script outside of a GitLab CI environment.
 
+## Patches For Other meta-layers ##
+In order to build meta-renesas-ai some external meta-layers need to be patched.
+
+The patches below should be applied to the relevant meta-layer before a build is
+started. This is done automatically by the *build-rzg-ai-bsp.sh* build script.
+
+### meta-renesas ###
+*0001-template-Mask-security-configurator.bb-by-default.patch*
+
 ---
 
 ## Notes ##

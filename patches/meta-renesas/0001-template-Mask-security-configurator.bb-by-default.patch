@@ -1,0 +1,80 @@
+From 9d95f8eda17ba35435f2c7b2db1d3064d95a6cc8 Mon Sep 17 00:00:00 2001
+From: Chris Paterson <chris.paterson2@renesas.com>
+Date: Fri, 21 Apr 2023 21:53:39 +0100
+Subject: [PATCH] template: Mask security-configurator.bb by default
+
+meta-renesas doesn't include security_configurator.zip; it is provided by
+Renesas separately. This means that most users will always get warnings
+due to the file being missing.
+
+Masking security-configurator.bb will prevent this warning.
+
+Users who want to use the security-configurator can unmask again.
+
+Signed-off-by: Chris Paterson <chris.paterson2@renesas.com>
+---
+ docs/template/conf/local.conf                    | 1 +
+ docs/template/conf/local.rzfive.conf             | 1 +
+ meta-rzfive/docs/template/conf/local.conf.sample | 1 +
+ meta-rzg2h/docs/template/conf/local.conf.sample  | 1 +
+ meta-rzg2l/docs/template/conf/local.conf.sample  | 1 +
+ meta-rzv2l/docs/template/conf/local.conf.sample  | 1 +
+ 6 files changed, 6 insertions(+)
+
+diff --git a/docs/template/conf/local.conf b/docs/template/conf/local.conf
+index 07ff9664c17b..684c787ee586 100644
+--- a/docs/template/conf/local.conf
++++ b/docs/template/conf/local.conf
+@@ -320,3 +320,4 @@ DISTRO_FEATURES_append = "${@oe.utils.conditional('VIRTUALIZATION_CHECK', 'True'
+ 
+ # Remove dnf package which causes high CPU workload
+ PACKAGE_INSTALL_remove = " dnf "
++BBMASK_append = " security-configurator.bb"
+diff --git a/docs/template/conf/local.rzfive.conf b/docs/template/conf/local.rzfive.conf
+index 5bd1c4bcdc0b..d6e9ee9403fb 100644
+--- a/docs/template/conf/local.rzfive.conf
++++ b/docs/template/conf/local.rzfive.conf
+@@ -275,3 +275,4 @@ PACKAGE_INSTALL_remove = " dnf "
+ 
+ # Comment out a following line to enable the Docker Engine.
+ DISTRO_FEATURES_remove = " docker"
++BBMASK_append = " security-configurator.bb"
+diff --git a/meta-rzfive/docs/template/conf/local.conf.sample b/meta-rzfive/docs/template/conf/local.conf.sample
+index 6cd7961a6a71..e5701263d002 100644
+--- a/meta-rzfive/docs/template/conf/local.conf.sample
++++ b/meta-rzfive/docs/template/conf/local.conf.sample
+@@ -295,3 +295,4 @@ INCOMPATIBLE_LICENSE = "GPLv3 GPLv3+"
+ 
+ # Remove dnf package which causes high CPU workload
+ PACKAGE_INSTALL_remove = " dnf "
++BBMASK_append = " security-configurator.bb"
+diff --git a/meta-rzg2h/docs/template/conf/local.conf.sample b/meta-rzg2h/docs/template/conf/local.conf.sample
+index 9b10bfaffd5a..b3b33371c922 100644
+--- a/meta-rzg2h/docs/template/conf/local.conf.sample
++++ b/meta-rzg2h/docs/template/conf/local.conf.sample
+@@ -334,3 +334,4 @@ MACHINE_FEATURES_append = " usb3"
+ # Example of setting:
+ #MACHINE_FEATURES_append = " ecc"
+ #ECC_MODE = "Partial"
++BBMASK_append = " security-configurator.bb"
+diff --git a/meta-rzg2l/docs/template/conf/local.conf.sample b/meta-rzg2l/docs/template/conf/local.conf.sample
+index 5ab4e00e509a..e9a1121c27eb 100644
+--- a/meta-rzg2l/docs/template/conf/local.conf.sample
++++ b/meta-rzg2l/docs/template/conf/local.conf.sample
+@@ -317,3 +317,4 @@ DISTRO_FEATURES_append = "${@oe.utils.conditional('VIRTUALIZATION_CHECK', 'True'
+ 
+ # Remove dnf package which causes high CPU workload
+ PACKAGE_INSTALL_remove = " dnf "
++BBMASK_append = " security-configurator.bb"
+diff --git a/meta-rzv2l/docs/template/conf/local.conf.sample b/meta-rzv2l/docs/template/conf/local.conf.sample
+index 5ab4e00e509a..e9a1121c27eb 100644
+--- a/meta-rzv2l/docs/template/conf/local.conf.sample
++++ b/meta-rzv2l/docs/template/conf/local.conf.sample
+@@ -317,3 +317,4 @@ DISTRO_FEATURES_append = "${@oe.utils.conditional('VIRTUALIZATION_CHECK', 'True'
+ 
+ # Remove dnf package which causes high CPU workload
+ PACKAGE_INSTALL_remove = " dnf "
++BBMASK_append = " security-configurator.bb"
+-- 
+2.40.0
+

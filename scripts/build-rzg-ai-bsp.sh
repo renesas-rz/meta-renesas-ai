@@ -268,6 +268,12 @@ download_source () {
 		${RZG_AI_BSP_VER}
 }
 
+patch_source () {
+	cd ${WORK_DIR}/meta-renesas
+	git am ${WORK_DIR}/meta-renesas-ai/patches/meta-renesas/*
+	cd -
+}
+
 install_prop_libs () {
 	echo "#################################################################"
 	echo "Installing proprietary libraries..."
@@ -405,6 +411,7 @@ if $INSTALL_DEPENDENCIES; then
 	install_dependencies
 fi
 download_source
+patch_source
 
 if [ ${PLATFORM} != "smarc-rzg2ul"  ]; then
 	install_prop_libs
