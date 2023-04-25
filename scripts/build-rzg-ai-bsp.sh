@@ -269,13 +269,13 @@ download_source () {
 }
 
 patch_source () {
-	cd ${WORK_DIR}/meta-renesas
-	git am ${WORK_DIR}/meta-renesas-ai/patches/meta-renesas/*
-	cd -
-
-	cd ${WORK_DIR}/meta-qt5
-	git am ${WORK_DIR}/meta-renesas-ai/patches/meta-qt5/*
-	cd -
+	while read CURRENT_DIR; do
+	if [ -d ${WORK_DIR}/${CURRENT_DIR} ]; then
+		pushd ${WORK_DIR}/${CURRENT_DIR}
+		git am ${WORK_DIR}/meta-renesas-ai/patches/${CURRENT_DIR}/*
+		popd
+	fi
+	done < <(find ${WORK_DIR}/meta-renesas-ai/patches/ -maxdepth 1 -mindepth 1 -type d -exec basename '{}' \;)
 }
 
 install_prop_libs () {
