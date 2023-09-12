@@ -6,7 +6,7 @@ platforms.
 This meta-layer should be used with the official Renesas RZ/G2 Yocto Poky BSP
 based on the CIP Kernel:\
 URI: **https://github.com/renesas-rz/meta-renesas.git** \
-tag: BSP-3.0.3 (44148f2fd4d94d3fb9f888df7540c4f8075b4d7f)
+tag: BSP-3.0.4 (e5f7055d78ff0219932557f25645024f35ac5d9a)
 
 ## Supported Frameworks/Versions ##
 
@@ -57,7 +57,7 @@ This meta-layer depends on the following:
   * URI: https://github.com/renesas-rz/meta-renesas
   * layers: meta-rz-common, meta-rzg2h, meta-rzg2l
   * branch: dunfell/rz
-  * revision: 44148f2fd4d94d3fb9f888df7540c4f8075b4d7f
+  * revision: e5f7055d78ff0219932557f25645024f35ac5d9a
 
 ## Patches for other meta-layers ##
 In order to build meta-renesas-ai some external meta-layers need to be patched.
@@ -108,7 +108,7 @@ cd ..
 
 git clone https://github.com/renesas-rz/meta-renesas
 cd meta-renesas
-git checkout BSP-3.0.3
+git checkout BSP-3.0.4
 git am ../meta-renesas-ai/patches/meta-renesas/*.patch
 cd ..
 ```
@@ -124,11 +124,11 @@ For hihope-rzg2h, hihope-rzg2m, hihope-rzg2n, ek874:
 * [RTK0EF0045Z0022AZJ-v1.0.2_EN.zip](https://www.renesas.com/us/en/document/sws/rz-mpu-multimedia-package-evaluation-version-v102-verified-linux-package-rzg2h-rzg2m-rzg2n-and-rzg2e?r=1597486)
 
 For smarc-rzg2l:
-* [RTK0EF0045Z13001ZJ-v1.0.5_EN.zip](https://www.renesas.com/us/en/document/swo/rz-mpu-graphics-library-evaluation-version-rzg2l-and-rzg2lc-rtk0ef0045z13001zj-v105xxzip?r=1522761)
+* [RTK0EF0045Z13001ZJ-v1.1.0_EN.zip](https://www.renesas.com/us/en/document/sws/rz-mpu-graphics-library-evaluation-version-rzv2l-rtk0ef0045z13001zj-v110enzip?r=1843541)
 * [RTK0EF0045Z15001ZJ-v1.1.0_EN.zip](https://www.renesas.com/us/en/document/swo/rz-mpu-video-codec-library-evaluation-version-rzg2l-rtk0ef0045z15001zj-v110xxzip?r=1535641)
 
 For smarc-rzg2lc:
-* [RTK0EF0045Z13001ZJ-v1.0.5_EN.zip](https://www.renesas.com/us/en/document/swo/rz-mpu-graphics-library-evaluation-version-rzg2l-and-rzg2lc-rtk0ef0045z13001zj-v105xxzip?r=1522761)
+* [RTK0EF0045Z13001ZJ-v1.1.0_EN.zip](https://www.renesas.com/us/en/document/sws/rz-mpu-graphics-library-evaluation-version-rzv2l-rtk0ef0045z13001zj-v110enzip?r=1843541)
 
 No packages are required for devices not listed above.
 

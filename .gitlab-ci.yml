@@ -24,7 +24,7 @@ variables:
 
 .rzg2l:
   variables:
-    PROP_LIBS_BRANCH: rzg2l_v3.0.3_eval
+    PROP_LIBS_BRANCH: rzg2l_v3.0.4_eval
 
 .hihope-rzg2h:
   extends: [".rzg2"]

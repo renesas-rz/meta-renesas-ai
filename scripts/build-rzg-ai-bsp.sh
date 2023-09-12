@@ -16,7 +16,7 @@ set -e
 # Global parameters
 RZG_AI_BSP_URL="${CI_REPOSITORY_URL:-https://github.com/renesas-rz/meta-renesas-ai.git}"
 RZG_AI_BSP_VER="${CI_COMMIT_REF_NAME:-master}"
-RZG_BSP_VER="BSP-3.0.3"
+RZG_BSP_VER="BSP-3.0.4"
 WORK_DIR="${PWD}"
 COMMAND_NAME="$0"
 INSTALL_DEPENDENCIES=false
@@ -298,8 +298,8 @@ install_prop_libs () {
 			cp -r ${PROP_DIR} ${WORK_DIR}/meta-rz-features
 		else
 			pushd ${PROP_DIR}
-			unzip RTK0EF0045Z13001ZJ-v1.0.5_EN.zip
-			tar -xf RTK0EF0045Z13001ZJ-v1.0.5_EN/meta-rz-features_graphics_v1.0.5.tar.gz -C ${WORK_DIR}
+			unzip RTK0EF0045Z13001ZJ-v1.1.0_EN.zip
+			tar -xf RTK0EF0045Z13001ZJ-v1.1.0_EN/meta-rz-features_graphics_v1.1.0.tar.gz -C ${WORK_DIR}
 
 			unzip RTK0EF0045Z15001ZJ-v1.1.0_EN.zip
 			tar -xf RTK0EF0045Z15001ZJ-v1.1.0_EN/meta-rz-features_codec_v1.1.0.tar.gz -C ${WORK_DIR}
@@ -311,8 +311,8 @@ install_prop_libs () {
 			cp -r ${PROP_DIR} ${WORK_DIR}/meta-rz-features
 		else
 			pushd ${PROP_DIR}
-			unzip RTK0EF0045Z13001ZJ-v1.0.5_EN.zip
-			tar -xf RTK0EF0045Z13001ZJ-v1.0.5_EN/meta-rz-features_graphics_v1.0.5.tar.gz -C ${WORK_DIR}
+			unzip RTK0EF0045Z13001ZJ-v1.1.0_EN.zip
+			tar -xf RTK0EF0045Z13001ZJ-v1.1.0_EN/meta-rz-features_graphics_v1.1.0.tar.gz -C ${WORK_DIR}
 			popd
 		fi
 	fi
