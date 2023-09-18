@@ -156,7 +156,7 @@ $ tree -L 1
 # For hihope-rzg2h, hihope-rzg2m, hihope-rzg2n, ek874:
 TEMPLATECONF=$PWD/meta-renesas/meta-rzg2h/docs/template/conf/ source poky/oe-init-build-env build
 
-# For smarc-rzg2l, smarc-rzg2lc, smarc-g2ul:
+# For smarc-rzg2l, smarc-rzg2lc, smarc-rzg2ul:
 TEMPLATECONF=$PWD/meta-renesas/meta-rzg2l/docs/template/conf/ source poky/oe-init-build-env build
 
 # For smarc-rzv2l:
@@ -202,13 +202,13 @@ echo 'IMAGE_INSTALL_append = " ai-tests"' >> conf/local.conf
 ### 5) Start Build ###
 To build the complete BSP:
 ```bash
-# PLATFORM = hihope-rzg2h, hihope-rzg2m, hihope-rzg2n, ek874, smarc-rzg2l, smarc-rzg2lc, smarc-g2ul or smarc-rzv2l
+# PLATFORM = hihope-rzg2h, hihope-rzg2m, hihope-rzg2n, ek874, smarc-rzg2l, smarc-rzg2lc, smarc-rzg2ul or smarc-rzv2l
 MACHINE=${PLATFORM} bitbake core-image-qt
 ```
 
 To build the SDK:
 ```bash
-# PLATFORM = hihope-rzg2h, hihope-rzg2m, hihope-rzg2n, ek874, smarc-rzg2l, smarc-rzg2lc, smarc-g2ul or smarc-rzv2l
+# PLATFORM = hihope-rzg2h, hihope-rzg2m, hihope-rzg2n, ek874, smarc-rzg2l, smarc-rzg2lc, smarc-rzg2ul or smarc-rzv2l
 MACHINE=${PLATFORM} bitbake core-image-qt -c populate_sdk
 ```
 
