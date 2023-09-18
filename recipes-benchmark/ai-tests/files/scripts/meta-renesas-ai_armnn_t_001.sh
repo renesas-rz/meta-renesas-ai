@@ -12,7 +12,7 @@ case "${RZG_LABEL}" in
 	"rzg1e")
 		OPTIONS="${OPTIONS} -i 10"
 		;;
-	"rzg2l" | "rzg2lc")
+	"rzg2l" | "rzg2lc" | "rzv2l")
 		# Turbo mode with GPU backend
 		./armnnBenchmark -f -c GpuAcc
 		# Set Turbo mode for CpuAcc tests

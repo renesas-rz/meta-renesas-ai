@@ -4,6 +4,7 @@
 # The script supports building for the following devices:
 #   RZ/G2: hihope-rzg2h, hihope-rzg2m, hihope-rzg2n, ek874
 #   RZ/G2L: smarc-rzg2l, smarc-rzg2lc, smarc-rzg2ul
+#   RZ/V2L: smarc-rzv2l
 #
 # This script has been tested on Ubuntu 20.04.
 #
@@ -76,7 +77,8 @@ print_help () {
 	                    By default ${OUTPUT_DIR} will be used.
 	 -p <platform>      Platform to build for. Choose from:
 	                    hihope-rzg2h, hihope-rzg2m, hihope-rzg2n, ek874,
-	                    smarc-rzg2l, smarc-rzg2lc, smarc-rzg2ul.
+	                    smarc-rzg2l, smarc-rzg2lc, smarc-rzg2ul,
+	                    smarc-rzv2l.
 	 -t                 Build toolchain/SDK once main build has completed.
 	 -T                 Only build toolchain/SDK.
 
@@ -153,6 +155,10 @@ while getopts ":bcdef:j:k:l:n:o:p:tTh" opt; do
 		"smarc-rzg2l" | "smarc-rzg2lc" | "smarc-rzg2ul")
 			PLATFORM="${OPTARG}"
 			FAMILY="rzg2l"
+			;;
+		"smarc-rzv2l")
+			PLATFORM="${OPTARG}"
+			FAMILY="rzv2l"
 			;;
 		*)
 			echo " ERROR: -p \"${OPTARG}\" Not supported"
@@ -292,7 +298,7 @@ install_prop_libs () {
 			tar -xf RTK0EF0045Z0022AZJ-v1.0.2_EN/meta-rz-features.tar.gz -C ${WORK_DIR}
 			popd
 		fi
-	elif [ ${PLATFORM} == "smarc-rzg2l" ]; then
+	elif [ ${PLATFORM} == "smarc-rzg2l" ] || [ ${PLATFORM} == "smarc-rzv2l" ]; then
 		if $PROP_LIBS_EXTRACTED; then
 			rm -rf ${WORK_DIR}/meta-rz-features
 			cp -r ${PROP_DIR} ${WORK_DIR}/meta-rz-features
@@ -376,7 +382,7 @@ copy_output () {
 			cp ${bin_dir}/tee-${PLATFORM}.srec ${OUTPUT_DIR}/${PLATFORM}
 			cp ${bin_dir}/cert_header_sa6.srec ${OUTPUT_DIR}/${PLATFORM}
 			cp ${bin_dir}/AArch64_Flash_writer_SCIF*.mot ${OUTPUT_DIR}/${PLATFORM}
-		elif [ ${FAMILY} == "rzg2l" ]; then
+		elif [ ${FAMILY} == "rzg2l" ] || [ ${FAMILY} == "rzv2l" ]; then
 			cp ${bin_dir}/Image-*-smarc.dtb ${OUTPUT_DIR}/${PLATFORM}
 			cp ${bin_dir}/bl2_bp-${PLATFORM}*.srec ${OUTPUT_DIR}/${PLATFORM}
 			cp ${bin_dir}/fip-${PLATFORM}*.srec ${OUTPUT_DIR}/${PLATFORM}

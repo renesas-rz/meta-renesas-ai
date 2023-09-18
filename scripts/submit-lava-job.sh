@@ -208,6 +208,9 @@ get_device_type () {
 		smarc-rzg2ul)
 			device_type="r9a07g043u11-smarc-rzg2ul"
 			;;
+		smarc-rzv2l)
+			device_type="r9a07g054l2-smarc-rzv2l"
+			;;
 		*)
 			device_type="unknown"
 			;;
@@ -242,6 +245,9 @@ get_login_prompt () {
 			;;
 		smarc-rzg2ul)
 			login_prompt="smarc-rzg2ul login:"
+			;;
+		smarc-rzv2l)
+			login_prompt="smarc-rzv2l login:"
 			;;
 		*)
 			login_prompt="unknown"
@@ -278,6 +284,9 @@ get_prompt () {
 		smarc-rzg2ul)
 			prompt="root@smarc-rzg2ul:~#"
 			;;
+		smarc-rzv2l)
+			prompt="root@smarc-rzv2l:~#"
+			;;
 		*)
 			prompt="unknown"
 			;;
@@ -298,6 +307,7 @@ get_filename () {
 	local rzg2l_files=("Image-smarc-rzg2l.bin" "Image-r9a07g044l2-smarc.dtb" "core-image-qt-smarc-rzg2l.tar.gz")
 	local rzg2lc_files=("Image-smarc-rzg2lc.bin" "Image-r9a07g044c2-smarc.dtb" "core-image-qt-smarc-rzg2lc.tar.gz")
 	local rzg2ul_files=("Image-smarc-rzg2ul.bin" "Image-r9a07g043u11-smarc.dtb" "core-image-qt-smarc-rzg2ul.tar.gz")
+	local rzv2l_files=("Image-smarc-rzv2l.bin" "Image-r9a07g054l2-smarc.dtb" "core-image-qt-smarc-rzv2l.tar.gz")
 	local filename="unknown"
 
 	# Get index number for filetype
@@ -330,6 +340,9 @@ get_filename () {
 			;;
 		smarc-rzg2ul)
 			filename=${rzg2ul_files[${index}]}
+			;;
+		smarc-rzv2l)
+			filename=${rzv2l_files[${index}]}
 			;;
 		esac
 	fi

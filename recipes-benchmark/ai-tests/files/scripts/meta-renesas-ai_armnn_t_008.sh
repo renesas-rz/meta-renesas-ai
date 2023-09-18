@@ -19,7 +19,7 @@ if [ $? != 0 ]; then
 fi
 
 case "${RZG_LABEL}" in
-	"rzg2l" | "rzg2lc")
+	"rzg2l" | "rzg2lc" | "rzv2l")
 		./DelegateUnitTests --test-suite=*GpuAcc*
 		if [ $? != 0 ]; then
 			print_failure "Arm NN delegate unit test GpuAcc exit failure"

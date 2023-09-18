@@ -9,10 +9,7 @@ cd /usr/bin/onnxruntime_benchmark
 LOOP_INFERENCE=30
 
 case "${RZG_LABEL}" in
-	"rzg1e")
-		LOOP_INFERENCE=10
-		;;
-	"rzg2l" | "rzg2lc")
+	"rzg1e" | "rzg2l" | "rzg2lc" | "rzv2l")
 		LOOP_INFERENCE=10
 		;;
 esac

@@ -15,7 +15,7 @@ case "${RZG_LABEL}" in
 	"rzg1e")
 		LOOP_INFERENCE=10
 		;;
-	"rzg2l" | "rzg2lc")
+	"rzg2l" | "rzg2lc" | "rzv2l")
 		LOOP_INFERENCE=10
 		BACKENDS+=("GpuAcc")
 		;;

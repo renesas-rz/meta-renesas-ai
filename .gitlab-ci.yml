@@ -61,6 +61,11 @@ variables:
   variables:
     PLATFORM: smarc-rzg2ul
 
+.smarc-rzv2l:
+  extends: [".rzg2l"]
+  variables:
+    PLATFORM: smarc-rzv2l
+
 .build-meta-renesas-ai:
   image: gitlab.renesas.solutions:5050/spl2/continuous-integration/dockerfiles:ubuntu-20.04-latest
   needs: []
@@ -277,6 +282,30 @@ benchmark:tflite:smarc-rzg2ul:
     EXTRA_BUILD_ARGS: "-b"
   <<: *selective_rules
 
+benchmark:armnn:smarc-rzv2l:
+  stage: build-ai-bsp
+  extends: [".build-meta-renesas-ai", ".smarc-rzv2l"]
+  variables:
+    FRAMEWORK: armnn
+    EXTRA_BUILD_ARGS: "-b"
+  <<: *selective_rules
+
+benchmark:ort:smarc-rzv2l:
+  stage: build-ai-bsp
+  extends: [".build-meta-renesas-ai", ".smarc-rzv2l"]
+  variables:
+    FRAMEWORK: onnxruntime
+    EXTRA_BUILD_ARGS: "-b"
+  <<: *selective_rules
+
+benchmark:tflite:smarc-rzv2l:
+  stage: build-ai-bsp
+  extends: [".build-meta-renesas-ai", ".smarc-rzv2l"]
+  variables:
+    FRAMEWORK: tensorflow-lite
+    EXTRA_BUILD_ARGS: "-b"
+  <<: *selective_rules
+
 
 test:benchmark:armnn:hihope-rzg2h:
   needs: ["benchmark:armnn:hihope-rzg2h"]
@@ -401,6 +430,24 @@ test:benchmark:ort:smarc-rzg2ul:
 test:benchmark:tflite:smarc-rzg2ul:
   needs: ["benchmark:tflite:smarc-rzg2ul"]
   extends: [".test-meta-renesas-ai", ".smarc-rzg2ul"]
+  variables:
+    FRAMEWORK_ARG: "-f tensorflow-lite"
+
+test:benchmark:armnn:smarc-rzv2l:
+  needs: ["benchmark:armnn:smarc-rzv2l"]
+  extends: [".test-meta-renesas-ai", ".smarc-rzv2l"]
+  variables:
+    FRAMEWORK_ARG: "-f armnn -f tensorflow-lite"
+
+test:benchmark:ort:smarc-rzv2l:
+  needs: ["benchmark:ort:smarc-rzv2l"]
+  extends: [".test-meta-renesas-ai", ".smarc-rzv2l"]
+  variables:
+    FRAMEWORK_ARG: "-f onnxruntime"
+
+test:benchmark:tflite:smarc-rzv2l:
+  needs: ["benchmark:tflite:smarc-rzv2l"]
+  extends: [".test-meta-renesas-ai", ".smarc-rzv2l"]
   variables:
     FRAMEWORK_ARG: "-f tensorflow-lite"
 
@@ -568,6 +615,30 @@ sdk:benchmark:ort:smarc-rzg2ul:
 sdk:benchmark:tflite:smarc-rzg2ul:
   stage: build-sdk
   extends: [".build-meta-renesas-ai", ".smarc-rzg2ul"]
+  variables:
+    FRAMEWORK: tensorflow-lite
+    EXTRA_BUILD_ARGS: "-b -T"
+  <<: *selective_rules
+
+sdk:benchmark:armnn:smarc-rzv2l:
+  stage: build-sdk
+  extends: [".build-meta-renesas-ai", ".smarc-rzv2l"]
+  variables:
+    FRAMEWORK: armnn
+    EXTRA_BUILD_ARGS: "-b -T"
+  <<: *selective_rules
+
+sdk:benchmark:ort:smarc-rzv2l:
+  stage: build-sdk
+  extends: [".build-meta-renesas-ai", ".smarc-rzv2l"]
+  variables:
+    FRAMEWORK: onnxruntime
+    EXTRA_BUILD_ARGS: "-b -T"
+  <<: *selective_rules
+
+sdk:benchmark:tflite:smarc-rzv2l:
+  stage: build-sdk
+  extends: [".build-meta-renesas-ai", ".smarc-rzv2l"]
   variables:
     FRAMEWORK: tensorflow-lite
     EXTRA_BUILD_ARGS: "-b -T"

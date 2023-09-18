@@ -5,6 +5,7 @@
 # The script supports building for the following devices:
 #   RZ/G2: hihope-rzg2h, hihope-rzg2m, hihope-rzg2n, ek874
 #   RZ/G2L: smarc-rzg2l, smarc-rzg2lc, smarc-rzg2ul
+#   RZ/V2L: smarc-rzv2l
 #
 # This script has been tested on Ubuntu 18.04, Ubuntu 20.04.
 #
@@ -57,6 +58,7 @@ print_help () {
  				smarc-rzg2l
  				smarc-rzg2lc
  				smarc-rzg2ul
+ 				smarc-rzv2l
 
 	EOF
 }
@@ -93,7 +95,7 @@ while getopts ":d:f:bp:h" opt; do
 	p)
 		case "${OPTARG}" in
 		"hihope-rzg2h" | "hihope-rzg2m" | "hihope-rzg2n" | "ek874" | \
-		"smarc-rzg2l" | "smarc-rzg2lc" | "smarc-rzg2ul")
+		"smarc-rzg2l" | "smarc-rzg2lc" | "smarc-rzg2ul" | "smarc-rzv2l")
 			PLATFORM="${OPTARG}"
 			;;
 		*)

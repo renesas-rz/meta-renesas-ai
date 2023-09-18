@@ -1,6 +1,6 @@
 # meta-renesas-ai #
 This OpenEmbedded/Yocto layer, nicknamed the "RZ/G AI BSP", adds FOSS
-AI tools support to the Renesas RZ/G2 and RZ/G2L families of SoCs and reference
+AI tools support to the Renesas RZ/G2, RZ/G2L and RZ/V2L families of SoCs and reference
 platforms.
 
 This meta-layer should be used with the official Renesas RZ/G2 Yocto Poky BSP
@@ -10,11 +10,11 @@ tag: BSP-3.0.4 (e5f7055d78ff0219932557f25645024f35ac5d9a)
 
 ## Supported Frameworks/Versions ##
 
-| Framework       | Version   | Parser(s)                                 | Inference Hardware                     |
-| :-------------- | :-------- | :---------------------------------------- | :------------------------------------- |
-| ArmNN           | v22.02    | ONNX (v1.6.0)<br>TensorFlow Lite (v2.5.3) | CPU<br>GPU (smarc-rzg2l, smarc-rzg2lc) |
-| ONNX Runtime    | v1.8.0    | ONNX                                      | CPU                                    |
-| TensorFlow Lite | v2.5.3    | TensorFlow Lite                           | CPU                                    |
+| Framework       | Version   | Parser(s)                                 | Inference Hardware                                  |
+| :-------------- | :-------- | :---------------------------------------- | :-------------------------------------------------- |
+| ArmNN           | v22.02    | ONNX (v1.6.0)<br>TensorFlow Lite (v2.5.3) | CPU<br>GPU (smarc-rzg2l, smarc-rzg2lc, smarc-rzv2l) |
+| ONNX Runtime    | v1.8.0    | ONNX                                      | CPU                                                 |
+| TensorFlow Lite | v2.5.3    | TensorFlow Lite                           | CPU                                                 |
 
 ## Supported Embedded Platforms ##
 
@@ -27,6 +27,7 @@ tag: BSP-3.0.4 (e5f7055d78ff0219932557f25645024f35ac5d9a)
 | Renesas RZ/G2L  | Renesas smarc-rzg2l evk  |
 | Renesas RZ/G2LC | Renesas smarc-rzg2lc evk |
 | Renesas RZ/G2UL | Renesas smarc-rzg2ul evk |
+| Renesas RZ/V2L  | Renesas smarc-rzv2l evk  |
 
 ## Documentation ##
 For each AI tool, please refer to the documentaion provided in [docs](./docs/).
@@ -123,7 +124,7 @@ download the libraries as an ELA must be signed.
 For hihope-rzg2h, hihope-rzg2m, hihope-rzg2n, ek874:
 * [RTK0EF0045Z0022AZJ-v1.0.2_EN.zip](https://www.renesas.com/us/en/document/sws/rz-mpu-multimedia-package-evaluation-version-v102-verified-linux-package-rzg2h-rzg2m-rzg2n-and-rzg2e?r=1597486)
 
-For smarc-rzg2l:
+For smarc-rzg2l, smarc-rzv2l:
 * [RTK0EF0045Z13001ZJ-v1.1.0_EN.zip](https://www.renesas.com/us/en/document/sws/rz-mpu-graphics-library-evaluation-version-rzv2l-rtk0ef0045z13001zj-v110enzip?r=1843541)
 * [RTK0EF0045Z15001ZJ-v1.1.0_EN.zip](https://www.renesas.com/us/en/document/swo/rz-mpu-video-codec-library-evaluation-version-rzg2l-rtk0ef0045z15001zj-v110xxzip?r=1535641)
 
@@ -157,6 +158,9 @@ TEMPLATECONF=$PWD/meta-renesas/meta-rzg2h/docs/template/conf/ source poky/oe-ini
 
 # For smarc-rzg2l, smarc-rzg2lc, smarc-g2ul:
 TEMPLATECONF=$PWD/meta-renesas/meta-rzg2l/docs/template/conf/ source poky/oe-init-build-env build
+
+# For smarc-rzv2l:
+TEMPLATECONF=$PWD/meta-renesas/meta-rzv2l/docs/template/conf/ source poky/oe-init-build-env build
 ```
 
 #### Configure bblayers.conf ####
@@ -165,7 +169,7 @@ TEMPLATECONF=$PWD/meta-renesas/meta-rzg2l/docs/template/conf/ source poky/oe-ini
 bitbake-layers add-layer ../meta-qt5
 bitbake-layers add-layer ../meta-renesas-ai
 
-# For hihope-rzg2h, hihope-rzg2m, hihope-rzg2n, ek874, smarc-rzg2l:
+# For hihope-rzg2h, hihope-rzg2m, hihope-rzg2n, ek874, smarc-rzg2l, smarc-rzv2l:
 bitbake-layers add-layer ../meta-rz-features/meta-rz-codecs
 bitbake-layers add-layer ../meta-rz-features/meta-rz-graphics
 
@@ -198,13 +202,13 @@ echo 'IMAGE_INSTALL_append = " ai-tests"' >> conf/local.conf
 ### 5) Start Build ###
 To build the complete BSP:
 ```bash
-# PLATFORM = hihope-rzg2h, hihope-rzg2m, hihope-rzg2n, ek874, smarc-rzg2l, smarc-rzg2lc or smarc-g2ul
+# PLATFORM = hihope-rzg2h, hihope-rzg2m, hihope-rzg2n, ek874, smarc-rzg2l, smarc-rzg2lc, smarc-g2ul or smarc-rzv2l
 MACHINE=${PLATFORM} bitbake core-image-qt
 ```
 
 To build the SDK:
 ```bash
-# PLATFORM = hihope-rzg2h, hihope-rzg2m, hihope-rzg2n, ek874, smarc-rzg2l, smarc-rzg2lc or smarc-g2ul
+# PLATFORM = hihope-rzg2h, hihope-rzg2m, hihope-rzg2n, ek874, smarc-rzg2l, smarc-rzg2lc, smarc-g2ul or smarc-rzv2l
 MACHINE=${PLATFORM} bitbake core-image-qt -c populate_sdk
 ```
 

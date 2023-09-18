@@ -125,6 +125,7 @@ EXTRA_OECMAKE= " \
 
 EXTRA_OECMAKE_append_smarc-rzg2l  = "-DARMCOMPUTECL=1"
 EXTRA_OECMAKE_append_smarc-rzg2lc = "-DARMCOMPUTECL=1"
+EXTRA_OECMAKE_append_smarc-rzv2l = "-DARMCOMPUTECL=1"
 
 do_configure_prepend() {
 	# Install sources + build artifacts as required by Arm NN

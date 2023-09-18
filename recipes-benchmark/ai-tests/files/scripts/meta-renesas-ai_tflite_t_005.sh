@@ -9,10 +9,7 @@ BIG_CORES=$(get_big_cpu_count)
 LOOP_INFERENCE=30
 
 case "${RZG_LABEL}" in
-	"rzg1e")
-		LOOP_INFERENCE=10
-		;;
-	"rzg2l" | "rzg2lc" | "rzg2ul")
+	"rzg1e" | "rzg2l" | "rzg2lc" | "rzg2ul" | "rzv2l")
 		LOOP_INFERENCE=10
 		;;
 esac
