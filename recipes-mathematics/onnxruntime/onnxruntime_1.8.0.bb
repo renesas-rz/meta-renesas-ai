@@ -19,11 +19,11 @@ OECMAKE_SOURCEPATH = "${S}/cmake"
 SRC_URI = " \
 	gitsm://github.com/microsoft/onnxruntime.git;protocol=https;branch=rel-1.8.0;name=onnxruntime \
 	file://patches/0001-Fix-no-test-cases-are-loaded-in-onnxruntime-test-cod.patch;patchdir=${WORKDIR}/git \
-	https://s3.amazonaws.com/download.onnx/models/opset_9/squeezenet.tar.gz;name=onnx-squeezenet;subdir=${WORKDIR}/onnx-squeezenet \
+	https://download.onnxruntime.ai/onnx/models/squeezenet.tar.gz;name=onnx-squeezenet;subdir=${WORKDIR}/onnx-squeezenet \
 "
 
-SRC_URI[onnx-squeezenet.md5sum] = "92e240a948f9bbc92534d752eb465317"
-SRC_URI[onnx-squeezenet.sha256sum] = "f4c9a2906a949f089bee5ef1bf9ea1c0dc1b49d5abeb1874fff3d206751d0f3b"
+SRC_URI[onnx-squeezenet.md5sum] = "d57cfb70480d4617ed11957b8f4b0965"
+SRC_URI[onnx-squeezenet.sha256sum] = "efb9f930c2cc9d69854afea506446f296f75d0ec3530f3f8394956e9dab78fcb"
 
 DEPENDS = " \
 	cmake-native \
