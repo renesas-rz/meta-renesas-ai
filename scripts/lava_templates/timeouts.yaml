@@ -1,6 +1,6 @@
 timeouts:
   job:
-    hours: 4
+    hours: 5
   action:
     hours: 1
   connection:

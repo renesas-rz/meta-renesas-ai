@@ -1,7 +1,9 @@
 actions:
 - deploy:
     timeout:
-      minutes: 30
+      minutes: 90
+    failure_retry: 3
+    failure_retry_interval: 60
     to: tftp
     kernel:
       url: PLACEHOLDER_KERNEL_URL
