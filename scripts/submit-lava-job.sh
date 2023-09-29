@@ -435,7 +435,18 @@ submit_job () {
 # $1: Submitted job number
 wait_for_job_to_complete () {
 	echo "========================================================================="
-	lavacli jobs wait "${1}"
+	for i in {1..10}; do
+		lavacli jobs wait "${1}"
+		if [[ $? -eq 0 ]]; then
+			break
+		fi
+
+		if [[ $i -eq 10 ]]; then
+			echo "Something is still wrong. Give up!"
+		else
+			echo "Something went awry. Let's try again..."
+		fi
+	done
 }
 
 # This function assumes that ~/.config/lavacli.yaml is already configured
