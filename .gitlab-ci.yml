@@ -72,9 +72,9 @@ variables:
   tags:
     - yocto
   before_script:
-    - printenv
     - rm -rf ${OUTPUT_DIR} ${PROP_LIBS_DIR} ${BUILD_DIR}
     - export BUILD_THREADS=$(($(nproc)/2))
+    - git config --global --add safe.directory '*'
   script:
     - mkdir -p ${OUTPUT_DIR} ${PROP_LIBS_DIR} ${BUILD_DIR}
     - git clone git@gitlab.renesas.solutions:spl2/continuous-integration/proprietary-libs.git ${PROP_LIBS_DIR}
