@@ -255,6 +255,12 @@ of how this is done in this project.
 If *${BUILD\_JOB\_ID}* and *${CI\_PROJECT\_URL}* are set manually it is possible
 to run this script outside of a GitLab CI environment.
 
+### Generate Results Spreadsheet Script ###
+The script `gen-benchmark-csv.sh` creates a .csv file that contains the AI benchmark
+performance metrics of a provided LAVA job number or log file. 
+
+Run `./scripts/gen-benchmark-csv.sh -h` to get an overview on how to use the script.
+
 ---
 
 ## Notes ##
