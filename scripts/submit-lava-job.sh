@@ -12,6 +12,9 @@
 # SPDX-License-Identifier: MIT
 # Copyright (C) 2022 Renesas Electronics Corp.
 
+GATHER_BENCHMARK_STEP=false
+WORK_DIR="${PWD}"
+
 set_up () {
 	TMP_DIR="$(mktemp -d)"
 }
@@ -26,8 +29,8 @@ print_help () {
 	Create test job definitions and submit them to LAVA server.
 	This script is designed to run in a GitLab CI environment.
 
-	USAGE: $0 -p PLATFORM -t DIR -u USERNAME [-a DIR] [-f FRAMEWORK] \
-	       [-j DIR] [-k FILE] [-r] [-h]
+	USAGE: $0 -p PLATFORM -t DIR -u USERNAME [-a DIR] \\
+	       [-f FRAMEWORK] [-j DIR] [-k FILE] [-r [-b]] [-h]
 
 	MANDATORY:
 	-p, --platform PLATFORM      Specify Yocto machine name.
@@ -38,6 +41,10 @@ print_help () {
 	-a, --artifacts-dir DIR      Directory containing build artifacts.
 	                             If not specified the default for DIR is
 	                             "output/\$PLATFORM".
+	-b, --gather-benchmarks      Create a CSV formatted file containing
+	                             benchmarking results for the submitted
+	                             LAVA job. File will only be created if
+	                             --check-results is set.
 	-f, --framework FRAMEWORK    Include tests for this framework.
 	-j, --save-junit DIR         Export test results from LAVA in junit
 	                             format. They will be called
@@ -76,6 +83,9 @@ parse_options () {
 			fi
 			ARTIFACTS_DIR="$(realpath "${2}")"
 			shift
+			;;
+		-b|--gather-benchmarks)
+			GATHER_BENCHMARK_STEP=true
 			;;
 		-f|--framework)
 			FRAMEWORKS+=( "${2}" )
@@ -570,6 +580,10 @@ if ${CHECK_FOR_RESULTS}; then
 		echo "ERROR: Test job did not complete successfully"
 		clean_up
 		exit 1
+	fi
+
+	if ${GATHER_BENCHMARK_STEP}; then
+		${WORK_DIR}/scripts/gen-benchmark-csv.sh ${JOB_NO}
 	fi
 
 	if [ -n "${KNOWN_ERRORS}" ]; then

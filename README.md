@@ -259,6 +259,9 @@ to run this script outside of a GitLab CI environment.
 The script `gen-benchmark-csv.sh` creates a .csv file that contains the AI benchmark
 performance metrics of a provided LAVA job number or log file. 
 
+This script can be used by `submit-lava-job.sh` by setting the options `--gather-benchmarks`
+and `--check-results`. It can also be run independently if required.
+
 Run `./scripts/gen-benchmark-csv.sh -h` to get an overview on how to use the script.
 
 ---
