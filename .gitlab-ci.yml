@@ -110,7 +110,7 @@ variables:
     - printenv
   script:
     - mkdir results
-    - ${CI_PROJECT_DIR}/scripts/submit-lava-job.sh -p ${PLATFORM} -t ${CI_PROJECT_DIR}/scripts/lava_templates/ -k ${CI_PROJECT_DIR}/scripts/known-test-issues.csv -u spl2-bot ${FRAMEWORK_ARG} -r -j results
+    - ${CI_PROJECT_DIR}/scripts/submit-lava-job.sh -b -p ${PLATFORM} -t ${CI_PROJECT_DIR}/scripts/lava_templates/ -k ${CI_PROJECT_DIR}/scripts/known-test-issues.csv -u spl2-bot ${FRAMEWORK_ARG} -r -j results
   artifacts:
     name: "${CI_JOB_NAME}"
     when: always
@@ -119,6 +119,7 @@ variables:
       junit: results/results*.xml
     paths:
       - results
+      - "benchmark_*.csv"
 
 benchmark:armnn:hihope-rzg2h:
   stage: build-ai-bsp
