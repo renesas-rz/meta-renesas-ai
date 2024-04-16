@@ -1,6 +1,6 @@
-From b21e44e276e84e561617308636afcaa6ecd3594a Mon Sep 17 00:00:00 2001
-From: Gareth Williams <gareth.williams.jx@renesas.com>
-Date: Fri, 18 Mar 2022 12:03:32 +0000
+From 45ba261e1c35bc06ec38fcc3fdc32a5223d1dac7 Mon Sep 17 00:00:00 2001
+From: Ayman Chaudhry <ayman.chaudhry.kc@renesas.com>
+Date: Tue, 16 Apr 2024 15:41:45 +0100
 Subject: [PATCH] Add generic Arm NN SDK inference framework and test code
 
 A C++ framework and test that is able to seperate the original
@@ -12,49 +12,54 @@ Armnn test framework class into following four independent steps:
 
 Signed-off-by: Jianming Qiao <jianming.qiao@bp.renesas.com>
 Signed-off-by: Gareth Williams <gareth.williams.jx@renesas.com>
+Signed-off-by: Ayman Chaudhry <ayman.chaudhry.kc@renesas.com>
 ---
- tests/CMakeLists.txt                              |  21 ++
- tests/InferenceTest.hpp                           |  48 +++
- tests/RenesasSample-Armnn/RenesasSample-Armnn.cpp | 384 ++++++++++++++++++++++
- 3 files changed, 453 insertions(+)
+ tests/CMakeLists.txt                          |  21 +
+ tests/InferenceTest.hpp                       |  47 +++
+ .../RenesasSample-Armnn.cpp                   | 384 ++++++++++++++++++
+ 3 files changed, 452 insertions(+)
  create mode 100644 tests/RenesasSample-Armnn/RenesasSample-Armnn.cpp
 
 diff --git a/tests/CMakeLists.txt b/tests/CMakeLists.txt
-index 4cb324f..ae93d8c 100644
+index eca03b1bd..b9aac5013 100644
 --- a/tests/CMakeLists.txt
 +++ b/tests/CMakeLists.txt
-@@ -153,15 +153,30 @@ if (BUILD_ARMNN_SERIALIZER
-     target_include_directories(ExecuteNetwork PRIVATE ../src/backends)
-     target_include_directories(ExecuteNetwork PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
+@@ -172,6 +172,18 @@ if (BUILD_ARMNN_SERIALIZER
+                                                       ./NetworkExecutionUtils
+                                                       ${CMAKE_CURRENT_SOURCE_DIR})
  
 +    set(Renesas-Reference-Code-Armnn_sources
-+        RenesasSample-Armnn/RenesasSample-Armnn.cpp
-+        ImagePreprocessor.hpp
-+        ImagePreprocessor.cpp
-+        InferenceTestImage.hpp
-+        InferenceTestImage.cpp)
++	RenesasSample-Armnn/RenesasSample-Armnn.cpp
++	ImagePreprocessor.hpp
++	ImagePreprocessor.cpp
++	InferenceTestImage.hpp
++	InferenceTestImage.cpp)
 +
 +    add_executable_ex(RenesasSample-Armnn ${Renesas-Reference-Code-Armnn_sources})
 +    target_include_directories(RenesasSample-Armnn PRIVATE ../src/armnn)
 +    target_include_directories(RenesasSample-Armnn PRIVATE ../src/armnnUtils)
 +    target_include_directories(RenesasSample-Armnn PRIVATE ../src/backends)
 +
-     if (BUILD_ARMNN_SERIALIZER)
-         target_link_libraries(ExecuteNetwork armnnSerializer)
-+        target_link_libraries(RenesasSample-Armnn armnnSerializer)
-     endif()
- 
-     if (BUILD_TF_LITE_PARSER)
-         target_link_libraries(ExecuteNetwork armnnTfLiteParser)
-+        target_link_libraries(RenesasSample-Armnn armnnTfLiteParser)
-     endif()
-     if (BUILD_ONNX_PARSER)
-         target_link_libraries(ExecuteNetwork armnnOnnxParser)
-+        target_link_libraries(RenesasSample-Armnn armnnOnnxParser)
-     endif()
-     if (BUILD_ARMNN_TFLITE_DELEGATE)
-         target_link_libraries(ExecuteNetwork ArmnnDelegate::ArmnnDelegate)
-@@ -170,6 +185,10 @@ if (BUILD_ARMNN_SERIALIZER
+     if(EXECUTE_NETWORK_STATIC)
+         target_link_libraries(ExecuteNetwork
+                 -Wl,--whole-archive
+@@ -184,12 +196,15 @@ if (BUILD_ARMNN_SERIALIZER
+     else()
+         if (BUILD_ARMNN_SERIALIZER)
+             target_link_libraries(ExecuteNetwork armnnSerializer)
++            target_link_libraries(RenesasSample-Armnn armnnSerializer)
+         endif()
+         if (BUILD_TF_LITE_PARSER)
+             target_link_libraries(ExecuteNetwork armnnTfLiteParser)
++            target_link_libraries(RenesasSample-Armnn armnnTfLiteParser)
+         endif()
+         if (BUILD_ONNX_PARSER)
+             target_link_libraries(ExecuteNetwork armnnOnnxParser)
++            target_link_libraries(RenesasSample-Armnn armnnOnnxParser)
+         endif()
+         if (BUILD_CLASSIC_DELEGATE)
+             target_link_libraries(ExecuteNetwork ArmnnDelegate::ArmnnDelegate)
+@@ -202,6 +217,10 @@ if (BUILD_ARMNN_SERIALIZER
  
     target_link_libraries(ExecuteNetwork ${CMAKE_THREAD_LIBS_INIT})
     addDllCopyCommands(ExecuteNetwork)
@@ -65,7 +70,7 @@ index 4cb324f..ae93d8c 100644
  endif()
  
  if(BUILD_ACCURACY_TOOL)
-@@ -180,9 +199,11 @@ if(BUILD_ACCURACY_TOOL)
+@@ -212,9 +231,11 @@ if(BUILD_ACCURACY_TOOL)
          endif()
          if (BUILD_TF_LITE_PARSER)
              target_link_libraries(${executorName} armnnTfLiteParser)
@@ -78,10 +83,10 @@ index 4cb324f..ae93d8c 100644
          addDllCopyCommands(${executorName})
      endmacro()
 diff --git a/tests/InferenceTest.hpp b/tests/InferenceTest.hpp
-index fb9c048..0181266 100644
+index f8a7d5e61..fb454b0a3 100644
 --- a/tests/InferenceTest.hpp
 +++ b/tests/InferenceTest.hpp
-@@ -108,6 +108,54 @@ public:
+@@ -108,6 +108,53 @@ public:
      virtual bool OnInferenceTestFinished() { return true; };
  };
  
@@ -132,13 +137,12 @@ index fb9c048..0181266 100644
 +    }
 +};
 +
-+
  template <typename TModel>
  class InferenceModelTestCase : public IInferenceTestCase
  {
 diff --git a/tests/RenesasSample-Armnn/RenesasSample-Armnn.cpp b/tests/RenesasSample-Armnn/RenesasSample-Armnn.cpp
 new file mode 100644
-index 0000000..7f958de
+index 000000000..7f958de83
 --- /dev/null
 +++ b/tests/RenesasSample-Armnn/RenesasSample-Armnn.cpp
 @@ -0,0 +1,384 @@
@@ -527,5 +531,5 @@ index 0000000..7f958de
 +    return 0;
 +}
 -- 
-2.7.4
+2.34.1
 

@@ -41,8 +41,8 @@ limitations under the License.
 /* ArmNN */
 #include <armnn/ArmNN.hpp>
 #include <armnn/Utils.hpp>
-#include <delegate/armnn_delegate.hpp>
-#include <delegate/DelegateOptions.hpp>
+#include <armnn/delegate/classic/include/armnn_delegate.hpp>
+#include <armnn/delegate/common/include/DelegateOptions.hpp>
 
 /* TfLite */
 #include "tensorflow/lite/kernels/register.h"

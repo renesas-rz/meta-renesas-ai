@@ -108,6 +108,9 @@ do_install_append() {
 	install -m 0644 ${WORKDIR}/build/_deps/fft2d-build/libfft2d_fftsg.a ${D}${libdir}
 	install -m 0644 ${WORKDIR}/build/_deps/farmhash-build/libfarmhash.a ${D}${libdir}
 	install -m 0644 ${WORKDIR}/build/_deps/abseil-cpp-build/absl/strings/libabsl_strings.a ${D}${libdir}
+	install -m 0644 ${WORKDIR}/build/_deps/abseil-cpp-build/absl/synchronization/libabsl_synchronization.a ${D}${libdir}
+	install -m 0644 ${WORKDIR}/build/_deps/abseil-cpp-build/absl/synchronization/libabsl_graphcycles_internal.a ${D}${libdir}
+	install -m 0644 ${WORKDIR}/build/_deps/ruy-build/ruy/profiler/libruy_profiler_instrumentation.a ${D}${libdir}
 	install -m 0644 ${WORKDIR}/build/pthreadpool/libpthreadpool.a ${D}${libdir}
 	install -m 0644 ${WORKDIR}/build/_deps/cpuinfo-build/libcpuinfo.a ${D}${libdir}
 

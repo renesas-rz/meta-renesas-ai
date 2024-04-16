@@ -34,6 +34,7 @@
 #include <algorithm>
 #include <iterator>
 #include <numeric>
+#include <list>
 
 enum ModelType { MODEL_TYPE_FLOAT32, MODEL_TYPE_UINT8 };
 

@@ -9,15 +9,14 @@ HOMEPAGE = "https://developer.arm.com/technologies/compute-library"
 DESCRIPTION = "Arm Compute Library"
 LICENSE = "MIT"
 
-LIC_FILES_CHKSUM = "file://LICENSE;md5=f3c5879801d3cffc4ac2399f2b8e8ec5"
+LIC_FILES_CHKSUM = "file://LICENSE;md5=44ab5c3155cc6931b2798b49c354b7bd"
 
-# Tag v22.02
-SRCREV = "8f587de9214dbc3aee4ff4eeb2ede66747769b19"
+# Tag v24.02.1
+SRCREV = "f2eda6665c12d568e179f5b0e7a24ccdc0ac824d"
 
 SRC_URI = " \
-	git://github.com/ARM-software/ComputeLibrary.git \
+	git://github.com/ARM-software/ComputeLibrary.git;branch=main;protocol=https \
 	file://0001-Add-support-for-building-aarch64-CL-with-Scons.patch \
-	file://0001-Fix-validation-problem-in-CLQLSTMLayer.patch \
 "
 
 COMPATIBLE_MACHINE = "(hihope-rzg2h|hihope-rzg2m|hihope-rzg2n|ek874|smarc-rzg2l|smarc-rzg2lc|smarc-rzg2ul|smarc-rzv2l)"
@@ -60,18 +59,16 @@ do_install() {
 	cp $CP_ARGS ${S}/support ${D}${datadir}/${BPN}/.
 }
 
-FILES_${PN} = "${libdir}/libarm_compute_core.so.26.0.0 \
-               ${libdir}/libarm_compute_graph.so.26.0.0 \
-               ${libdir}/libarm_compute.so.26.0.0 \
+FILES_${PN} = " \
+               ${libdir}/libarm_compute_graph.so.35.0.1 \
+               ${libdir}/libarm_compute.so.35.0.1 \
 "
 
 #Symlink .so files should go into the -dev package
 FILES_${PN}-dev = "${datadir}/arm-compute-library \
-                   ${libdir}/libarm_compute_graph.so.26 \
-                   ${libdir}/libarm_compute.so.26 \
+                   ${libdir}/libarm_compute_graph.so.35 \
+                   ${libdir}/libarm_compute.so.35 \
                    ${libdir}/libarm_compute.so \
-                   ${libdir}/libarm_compute_core.so.26 \
-                   ${libdir}/libarm_compute_core.so \
                    ${libdir}/libarm_compute_graph.so \
 "
 

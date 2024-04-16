@@ -28,20 +28,19 @@ SRCREV_FORMAT = "armnn"
 S = "${WORKDIR}/git"
 
 SRC_URI = " \
-	git://github.com/ARM-software/armnn.git;name=armnn;branch="branches/armnn_${ARM_NN_GIT_BRANCH_VERSION}" \
+	git://github.com/ARM-software/armnn.git;name=armnn;branch="branches/armnn_${ARM_NN_GIT_BRANCH_VERSION}";protocol=https \
 	http://download.tensorflow.org/models/mobilenet_v1_2018_08_02/mobilenet_v1_1.0_224_quant.tgz;name=mobilenetQuant;subdir=${WORKDIR}/tflitemodel;destsuffix=tflitemodel \
 	https://s3.amazonaws.com/onnx-model-zoo/mobilenet/mobilenetv2-1.0/mobilenetv2-1.0.onnx;name=mobilenetv2;subdir=${WORKDIR}/onnxmodel;destsuffix=onnxmodel \
 	https://github.com/tensorflow/tensorflow/raw/master/tensorflow/examples/label_image/data/grace_hopper.jpg;name=grace_hopper;subdir=${WORKDIR}/images;destsuffix=images \
-	gitsm://github.com/onnx/onnx.git;protocol=https;name=onnx;branch=rel-1.6.0;subdir=${WORKDIR}/onnx;destsuffix=onnx \
-	file://0001-Remove-the-input-tensor-s-dimension-check.patch \
+	gitsm://github.com/onnx/onnx.git;protocol=https;name=onnx;branch=rel-1.6.0;subdir=${WORKDIR}/onnx;destsuffix=onnx;protocol=https \
 	file://0001-Change-test-image-set-to-grace_hopper.jpg.patch \
 	file://0001-Add-generic-Arm-NN-SDK-inference-framework-and-test-.patch \
 	file://0001-Do-not-use-the-CMAKE_FIND_ROOT_PATH-variable-when-lo.patch \
 	file://rsz_grace_hopper.csv \
 "
 
-# v22.02
-SRCREV_armnn = "b254731ff27a40f382695d5753e1b537c4736bfa"
+# v24.02
+SRCREV_armnn = "a75ae30ac3849a37ec39698dc046460d5ab9a1cd"
 
 # v1.6.0
 SRCREV_onnx = "553df22c67bee5f0fe6599cff60f1afc6748c635"
@@ -102,10 +101,11 @@ EXTRA_OECMAKE= " \
 	-DBUILD_TESTS=1 \
 	-DBUILD_SAMPLE_APP=1 \
 	-DPROFILING=1 \
+	-DBUILD_DELEGATE_JNI_INTERFACE=0 \
 	-DTHIRD_PARTY_INCLUDE_DIRS=${STAGING_DIR_HOST}${includedir} \
 	-DBUILD_ARMNN_EXAMPLES=1 \
 	-DCMAKE_CXX_IMPLICIT_INCLUDE_DIRECTORIES=${STAGING_INCDIR} \
-	-DBUILD_ARMNN_TFLITE_DELEGATE=1 \
+	-DBUILD_CLASSIC_DELEGATE=1 \
 	-DTfLite_INCLUDE_DIR=${STAGING_DIR_TARGET}/usr/include/tensorflow_lite/ \
 	-DTfLite_Schema_INCLUDE_PATH=${STAGING_DIR_TARGET}/usr/include/tensorflow/lite/schema/ \
 	-DTFLITE_LIB_ROOT=${STAGING_DIR_TARGET}/usr/include/tensorflow/lite/ \
@@ -118,8 +118,6 @@ EXTRA_OECMAKE= " \
 	-DCMAKE_CXX_STANDARD_LIBRARIES="-ldl -fopenmp \
 	${STAGING_DIR_TARGET}/usr/lib64/libtensorflow-lite.a \
 	${STAGING_DIR_TARGET}/usr/lib64/libXNNPACK.a \
-	${STAGING_DIR_TARGET}/usr/lib64/libcpuinfo.a \
-	${STAGING_DIR_TARGET}/usr/lib64/libclog.a \
 	${STAGING_DIR_TARGET}/usr/lib64/libpthreadpool.a" \
 "
 
@@ -180,16 +178,26 @@ do_install_append() {
 
 	install -d ${D}${includedir}/armnn/renesas
 	install -d ${D}${includedir}/tests
-	install -d ${D}${includedir}/profiling/common/include/*
+	install -d ${D}${includedir}/profiling/client/include/backends
+	install -d ${D}${includedir}/profiling/common/include
 	install -d ${D}${includedir}/third-party/mapbox
 	install -d ${D}${includedir}/third-party/ghc
 	install -d ${D}${includedir}/third-party/fmt
 	install -d ${D}${includedir}/third-party/cxxopts
 
+	install -d ${D}${includedir}/NetworkExecutionUtils
+	install -m 0555 ${S}/tests/NetworkExecutionUtils/*.hpp ${D}${includedir}/NetworkExecutionUtils/
+	install -d ${D}${includedir}/armnn/delegate/classic/include
+	install -m 0555 ${S}/delegate/classic/include/*.hpp ${D}${includedir}/armnn/delegate/classic/include/
+	install -d ${D}${includedir}/armnn/delegate/common/include
+	install -m 0555 ${S}/delegate/common/include/*.hpp ${D}${includedir}/armnn/delegate/common/include/
+
 	install -m 0555 ${S}/src/armnn/*.hpp ${D}${includedir}/armnn/
 	install -m 0555 ${S}/tests/*.hpp ${D}${includedir}/tests/
 	install -m 0555 ${S}/tests/*.inl ${D}${includedir}/tests/
-	install -m 0555 ${S}/profiling/common/include/* ${D}${includedir}/profiling/common/include
+	install -m 0555 ${S}/profiling/client/include/*.hpp ${D}${includedir}/profiling/client/include
+	install -m 0555 ${S}/profiling/client/include/backends/*.hpp ${D}${includedir}/profiling/client/include/backends
+	install -m 0555 ${S}/profiling/common/include/*.hpp ${D}${includedir}/profiling/common/include
 	install -m 0555 ${S}/third-party/mapbox/* ${D}${includedir}/third-party/mapbox
 	install -m 0555 ${S}/third-party/ghc/* ${D}${includedir}/third-party/ghc
 	install -m 0555 ${S}/third-party/fmt/*.h ${D}${includedir}/third-party/fmt
@@ -256,14 +264,17 @@ FILES_${PN} = " \
 	${libdir}/libarmnn.so* \
 	${libdir}/libarmnnBasePipeServer.so* \
 	${libdir}/libarmnnDelegate.so* \
-	${libdir}/libarmnnTestUtils.so \
+	${libdir}/libarmnnTestUtils.so* \
 	${libdir}/libtimelineDecoder.so* \
 	${libdir}/libtimelineDecoderJson.so* \
 	${includedir}/tests/* \
+	${includedir}/NetworkExecutionUtils/* \
 	${includedir}/third-party/mapbox/* \
 	${includedir}/third-party/ghc/* \
 	${includedir}/third-party/fmt/* \
 	${includedir}/third-party/cxxopts/* \
+	${includedir}/profiling/client/include/* \
+	${includedir}/profiling/client/include/backends/* \
 	${includedir}/profiling/common/include/* \
 	${includedir}/armnn/* \
 	${includedir}/armnn/renesas/* \
@@ -327,7 +338,6 @@ FILES_${PN}-onnx-examples-dbg = "${bindir}/${PN}-${PV}/examples/onnx/.debug"
 
 # ArmNN files
 FILES_${PN}-dev += "${libdir}/cmake/*"
-
 
 INSANE_SKIP_${PN} = "dev-deps dev-so"
 INSANE_SKIP_${PN}-dev = "dev-elf"

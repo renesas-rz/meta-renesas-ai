@@ -10,11 +10,11 @@ tag: BSP-3.0.4 (e5f7055d78ff0219932557f25645024f35ac5d9a)
 
 ## Supported Frameworks/Versions ##
 
-| Framework       | Version   | Parser(s)                                 | Inference Hardware                                  |
-| :-------------- | :-------- | :---------------------------------------- | :-------------------------------------------------- |
-| ArmNN           | v22.02    | ONNX (v1.6.0)<br>TensorFlow Lite (v2.5.3) | CPU<br>GPU (smarc-rzg2l, smarc-rzg2lc, smarc-rzv2l) |
-| ONNX Runtime    | v1.8.0    | ONNX                                      | CPU                                                 |
-| TensorFlow Lite | v2.15.1   | TensorFlow Lite                           | CPU                                                 |
+| Framework       | Version   | Parser(s)                                  | Inference Hardware                                  |
+| :-------------- | :-------- | :----------------------------------------- | :-------------------------------------------------- |
+| ArmNN           | v24.02    | ONNX (v1.6.0)<br>TensorFlow Lite (v2.15.1) | CPU<br>GPU (smarc-rzg2l, smarc-rzg2lc, smarc-rzv2l) |
+| ONNX Runtime    | v1.8.0    | ONNX                                       | CPU                                                 |
+| TensorFlow Lite | v2.15.1   | TensorFlow Lite                            | CPU                                                 |
 
 ## Supported Embedded Platforms ##
 
@@ -184,10 +184,8 @@ echo 'CIP_MODE = "None"' >> conf/local.conf
 
 # To add ArmNN support
 echo 'IMAGE_INSTALL_append = " armnn-dev armnn-examples armnn-tensorflow-lite-dev armnn-onnx-dev armnn-onnx-examples tensorflow-lite-python"' >> conf/local.conf
-echo 'IMAGE_INSTALL_append = " tensorflow-lite-staticdev tensorflow-lite-dev armnn-benchmark"' >> conf/local.conf
+echo 'IMAGE_INSTALL_append = " tensorflow-lite-staticdev tensorflow-lite-dev tensorflow-lite-benchmark armnn-benchmark"' >> conf/local.conf
 echo 'IMAGE_INSTALL_append = " tensorflow-lite-delegate-benchmark"' >> conf/local.conf
-# Set TensorFlow Lite to v2.5.3 for ArmNN support since it does not support v2.15.1
-sed -i 's/PREFERRED_VERSION_tensorflow-lite ?= "2.15.1"/PREFERRED_VERSION_tensorflow-lite ?= "2.5.3"/g' ../meta-renesas-ai/conf/layer.conf
 
 # To add ONNX Runtime support
 echo 'IMAGE_INSTALL_append = " onnxruntime"' >> conf/local.conf
