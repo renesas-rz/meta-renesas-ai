@@ -43,7 +43,7 @@ def main():
      benchmark = False
 
    tfl_ver = glob.glob("/usr/bin/tensorflow-lite-2.*")
-   tfl_ver = tfl_ver[0][-1-4:len(tfl_ver[0])]
+   tfl_ver = tfl_ver[0].split('/')[-1].split('tensorflow-lite-')[-1]
 
    with open(filepath) as fp:
        for line in fp:

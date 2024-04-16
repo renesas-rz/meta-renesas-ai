@@ -66,10 +66,10 @@ def main():
 
    # Retreive Library versions
    armnn_ver = glob.glob("/usr/bin/armnn-2*")
-   armnn_ver = armnn_ver[0][-1-4:len(armnn_ver[0])]
+   armnn_ver = armnn_ver[0].split('/')[-1].split('armnn-')[-1]
 
    tfl_ver = glob.glob("/usr/bin/tensorflow-lite-2.*")
-   tfl_ver = tfl_ver[0][-1-4:len(tfl_ver[0])]
+   tfl_ver = tfl_ver[0].split('/')[-1].split('tensorflow-lite-')[-1]
 
    # Retreive model and label files
    with open(filepath) as fp:
