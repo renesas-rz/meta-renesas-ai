@@ -1,19 +1,21 @@
 SUMMARY = "A sophisticated Numeric Processing Package for Python"
+HOMEPAGE = "https://numpy.org/"
+DESCRIPTION = "NumPy is the fundamental package needed for scientific computing with Python."
 SECTION = "devel/python"
-LICENSE = "BSD-3-Clause & BSD-2-Clause & PSF & Apache-2.0 & BSD & MIT"
-LIC_FILES_CHKSUM = "file://LICENSE.txt;md5=e527e2a94c4584cd192d03ffb1f4a744"
+LICENSE = "BSD-3-Clause & BSD-2-Clause & PSF-2.0 & Apache-2.0 & MIT"
+LIC_FILES_CHKSUM = "file://LICENSE.txt;md5=8026691468924fb6ec155dadfe2a1a7f"
 
 SRCNAME = "numpy"
 
-SRC_URI = "https://github.com/${SRCNAME}/${SRCNAME}/releases/download/v${PV}/${SRCNAME}-${PV}.tar.gz \
+SRC_URI = "${GITHUB_BASE_URI}/download/v${PV}/${SRCNAME}-${PV}.tar.gz \
            file://0001-Don-t-search-usr-and-so-on-for-libraries-by-default-.patch \
            file://0001-numpy-core-Define-RISCV-32-support.patch \
            file://run-ptest \
-"
-SRC_URI[sha256sum] = "d1654047d75fb9d55cc3d46f312d5247eec5f4999039874d2f571bb8021d8f0b"
+           file://0001-generate_umath.py-do-not-write-full-path-to-output-f.patch \
+           "
+SRC_URI[sha256sum] = "51bf49c0cd1d52be0a240aa66f3458afc4b95d8993d2d04f0d91fa60c10af6cd"
 
-UPSTREAM_CHECK_URI = "https://github.com/numpy/numpy/releases"
-UPSTREAM_CHECK_REGEX = "(?P<pver>\d+(\.\d+)+)\.tar"
+GITHUB_BASE_URI = "https://github.com/numpy/numpy/releases"
 
 DEPENDS += "python3-cython-native"
 
@@ -22,6 +24,10 @@ inherit ptest setuptools3
 S = "${WORKDIR}/numpy-${PV}"
 
 CLEANBROKEN = "1"
+
+do_compile_prepend() {
+    export NPY_DISABLE_SVML=1
+}
 
 FILES_${PN}-staticdev += "${PYTHON_SITEPACKAGES_DIR}/numpy/core/lib/*.a ${PYTHON_SITEPACKAGES_DIR}/numpy/random/lib/*.a"
 
@@ -45,6 +51,7 @@ RDEPENDS_${PN} = "${PYTHON_PN}-unittest \
                   ${PYTHON_PN}-ctypes \
                   ${PYTHON_PN}-threading \
                   ${PYTHON_PN}-multiprocessing \
+                  ${PYTHON_PN}-json \
 "
 RDEPENDS_${PN}-ptest += "${PYTHON_PN}-pytest \
                          ${PYTHON_PN}-hypothesis \
@@ -52,7 +59,5 @@ RDEPENDS_${PN}-ptest += "${PYTHON_PN}-pytest \
                          ${PYTHON_PN}-resource \
                          ldd \
 "
-
-RDEPENDS_${PN}_class-native = ""
 
 BBCLASSEXTEND = "native nativesdk"

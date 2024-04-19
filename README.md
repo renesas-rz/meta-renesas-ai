@@ -14,7 +14,7 @@ tag: BSP-3.0.4 (e5f7055d78ff0219932557f25645024f35ac5d9a)
 | :-------------- | :-------- | :---------------------------------------- | :-------------------------------------------------- |
 | ArmNN           | v22.02    | ONNX (v1.6.0)<br>TensorFlow Lite (v2.5.3) | CPU<br>GPU (smarc-rzg2l, smarc-rzg2lc, smarc-rzv2l) |
 | ONNX Runtime    | v1.8.0    | ONNX                                      | CPU                                                 |
-| TensorFlow Lite | v2.5.3    | TensorFlow Lite                           | CPU                                                 |
+| TensorFlow Lite | v2.15.1   | TensorFlow Lite                           | CPU                                                 |
 
 ## Supported Embedded Platforms ##
 

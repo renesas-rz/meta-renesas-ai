@@ -1,3 +1,5 @@
+SUMMARY = "The Cython language"
+HOMEPAGE = "https://pypi.org/project/Cython/"
 DESCRIPTION = "Cython is a language specially designed for writing Python extension modules. \
 It's designed to bridge the gap between the nice, high-level, easy-to-use world of Python \
 and the messy, low-level world of C."
@@ -7,7 +9,7 @@ LIC_FILES_CHKSUM = "file://LICENSE.txt;md5=e23fadd6ceef8c618fc1c65191d846fa"
 PYPI_PACKAGE = "Cython"
 BBCLASSEXTEND = "native nativesdk"
 
-SRC_URI[sha256sum] = "e57acb89bd55943c8d8bf813763d20b9099cc7165c0f16b707631a7654be9cad"
+SRC_URI[sha256sum] = "8733cf4758b79304f2a4e39ebfac5e92341bce47bcceb26c1254398b2f8c1af7"
 UPSTREAM_CHECK_REGEX = "Cython-(?P<pver>.*)\.tar"
 
 inherit pypi

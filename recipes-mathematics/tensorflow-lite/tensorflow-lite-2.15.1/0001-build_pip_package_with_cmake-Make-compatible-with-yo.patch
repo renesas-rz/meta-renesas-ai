@@ -1,0 +1,37 @@
+From 32c6182d9038ed79bbaf0aac16ca121cea0729cf Mon Sep 17 00:00:00 2001
+From: Ayman Chaudhry <ayman.chaudhry.kc@renesas.com>
+Date: Tue, 26 Mar 2024 14:26:00 +0000
+Subject: [PATCH] build_pip_package_with_cmake: Make compatible with yocto
+
+We can adjust the content of build_pip_package_with_cmake.sh to allow
+building using a Yocto environment.
+
+Signed-off-by: Gareth Williams <gareth.williams.jx@renesas.com>
+Signed-off-by: Ayman Chaudhry <ayman.chaudhry.kc@renesas.com>
+---
+ .../lite/tools/pip_package/build_pip_package_with_cmake.sh      | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/tensorflow/lite/tools/pip_package/build_pip_package_with_cmake.sh b/tensorflow/lite/tools/pip_package/build_pip_package_with_cmake.sh
+index 3815751d063..000ff218ccf 100755
+--- a/tensorflow/lite/tools/pip_package/build_pip_package_with_cmake.sh
++++ b/tensorflow/lite/tools/pip_package/build_pip_package_with_cmake.sh
+@@ -95,7 +95,6 @@ case "${TENSORFLOW_TARGET}" in
+       "${TENSORFLOW_LITE_DIR}"
+     ;;
+   aarch64)
+-    eval $(${TENSORFLOW_LITE_DIR}/tools/cmake/download_toolchains.sh "${TENSORFLOW_TARGET}")
+     ARMCC_FLAGS="${ARMCC_FLAGS} -I${PYBIND11_INCLUDE} -I${NUMPY_INCLUDE}"
+     cmake \
+       -DCMAKE_C_COMPILER=${ARMCC_PREFIX}gcc \
+@@ -104,6 +103,7 @@ case "${TENSORFLOW_TARGET}" in
+       -DCMAKE_CXX_FLAGS="${ARMCC_FLAGS}" \
+       -DCMAKE_SYSTEM_NAME=Linux \
+       -DCMAKE_SYSTEM_PROCESSOR=aarch64 \
++      -DCMAKE_SYSROOT=${POKY_SYSROOT} \
+       -DXNNPACK_ENABLE_ARM_I8MM=OFF \
+       "${TENSORFLOW_LITE_DIR}"
+     ;;
+-- 
+2.34.1
+
