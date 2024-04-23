@@ -6,7 +6,10 @@ LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/Apache-2.0;md5=89aea4e17d99a7ca
 RDEPENDS_${PN} = " models-onnx models-tensorflow-lite"
 DEPENDS = " armnn"
 
-SRC_URI = "file://armnnBenchmark.cpp"
+SRC_URI += " \
+	file://armnnBenchmark.cpp \
+	file://model_list.txt \
+"
 
 LDFLAGS += " \
 	${STAGING_DIR_TARGET}/usr/lib64/libtensorflow-lite.a \
@@ -67,6 +70,9 @@ do_install() {
 	install -m 0555 \
 		${WORKDIR}/armnn-benchmark-${PV}/armnnBenchmark \
 		${D}${bindir}/armnnBenchmark/
+	install -m 0644 \
+		${WORKDIR}/model_list.txt \
+		${D}${bindir}/armnnBenchmark/
 }
 
-FILES_${PN} = " ${bindir}/armnnBenchmark/armnnBenchmark"
+FILES_${PN} = " ${bindir}/armnnBenchmark"

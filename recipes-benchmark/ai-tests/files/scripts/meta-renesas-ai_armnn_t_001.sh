@@ -14,7 +14,7 @@ case "${RZG_LABEL}" in
 		;;
 	"rzg2l" | "rzg2lc" | "rzv2l")
 		# Turbo mode with GPU backend
-		./armnnBenchmark -f -c GpuAcc
+		./armnnBenchmark -l model_list.txt -f -c GpuAcc
 		# Set Turbo mode for CpuAcc tests
 		OPTIONS="${OPTIONS} -f"
 		;;
@@ -24,7 +24,7 @@ case "${RZG_LABEL}" in
 		;;
 esac
 
-./armnnBenchmark $OPTIONS
+./armnnBenchmark -l model_list.txt $OPTIONS
 if [ $? != 0 ]; then
 	print_failure "Arm NN benchmark exit failure"
 fi

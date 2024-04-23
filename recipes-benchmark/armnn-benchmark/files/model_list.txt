@@ -1,0 +1,84 @@
+# Models are expected to be defined as:
+# MODEL_NAME=MODEL_FORMAT,MODEL_DATATYPE,MODEL_FILEPATH,INPUT_TENSORSHAPE,INPUT_NAME,OUTPUT_NAME
+# Model names must be followed by an equals sign "=" and values must be separated by commas ","
+# If any of the values above are not present, or too many values are present, the model will be skipped
+# There should be no spaces between any of the values
+# The program skips any line that starts with a "#", any empty lines and any lines that don't contain "="
+# MnasNet
+mnasnet_0.5_224.tflite=tflite-binary,float32,/home/root/models/tensorflowlite/MnasNet/mnasnet_0.5_224.tflite,1x224x224x3,input,output
+mnasnet_0.75_224.tflite=tflite-binary,float32,/home/root/models/tensorflowlite/MnasNet/mnasnet_0.75_224.tflite,1x224x224x3,input,output
+mnasnet_1.0_96.tflite=tflite-binary,float32,/home/root/models/tensorflowlite/MnasNet/mnasnet_1.0_96.tflite,1x96x96x3,input,output
+mnasnet_1.0_128.tflite=tflite-binary,float32,/home/root/models/tensorflowlite/MnasNet/mnasnet_1.0_128.tflite,1x128x128x3,input,output
+mnasnet_1.0_160.tflite=tflite-binary,float32,/home/root/models/tensorflowlite/MnasNet/mnasnet_1.0_160.tflite,1x160x160x3,input,output
+mnasnet_1.0_192.tflite=tflite-binary,float32,/home/root/models/tensorflowlite/MnasNet/mnasnet_1.0_192.tflite,1x192x192x3,input,output
+mnasnet_1.0_224.tflite=tflite-binary,float32,/home/root/models/tensorflowlite/MnasNet/mnasnet_1.0_224.tflite,1x224x224x3,input,output
+mnasnet_1.3_224.tflite=tflite-binary,float32,/home/root/models/tensorflowlite/MnasNet/mnasnet_1.3_224.tflite,1x224x224x3,input,output
+
+# SqueezeNet
+squeezenet.tflite=tflite-binary,float32,/home/root/models/tensorflowlite/Squeezenet/squeezenet.tflite,1x224x224x3,Placeholder,softmax_tensor
+
+# Inception
+inception_v3.tflite=tflite-binary,float32,/home/root/models/tensorflowlite/Mobile_InceptionV3/inception_v3.tflite,1x299x299x3,input,InceptionV3/Predictions/Reshape_1
+inception_v3_quant.tflite=tflite-binary,uint8,/home/root/models/tensorflowlite/Mobile_InceptionV3/inception_v3_quant.tflite,1x299x299x3,input,output
+inception_v4.tflite=tflite-binary,float32,/home/root/models/tensorflowlite/Mobile_InceptionV4/inception_v4.tflite,1x299x299x3,input,InceptionV4/Logits/Predictions
+inception_v4_299_quant.tflite=tflite-binary,uint8,/home/root/models/tensorflowlite/Mobile_InceptionV4/inception_v4_299_quant.tflite,1x299x299x3,input,InceptionV4/Logits/Predictions
+
+# MobileNet TFLite
+mobilenet_v1_1.0_224_quant.tflite=tflite-binary,uint8,/home/root/models/tensorflowlite/Mobile_Net_V1_Model/mobilenet_v1_1.0_224_quant.tflite,1x224x224x3,input,MobilenetV1/Predictions/Reshape_1
+mobilenet_v1_1.0_192_quant.tflite=tflite-binary,uint8,/home/root/models/tensorflowlite/Mobile_Net_V1_Model/mobilenet_v1_1.0_192_quant.tflite,1x192x192x3,input,MobilenetV1/Predictions/Reshape_1
+mobilenet_v1_1.0_160_quant.tflite=tflite-binary,uint8,/home/root/models/tensorflowlite/Mobile_Net_V1_Model/mobilenet_v1_1.0_160_quant.tflite,1x160x160x3,input,MobilenetV1/Predictions/Reshape_1
+mobilenet_v1_1.0_128_quant.tflite=tflite-binary,uint8,/home/root/models/tensorflowlite/Mobile_Net_V1_Model/mobilenet_v1_1.0_128_quant.tflite,1x128x128x3,input,MobilenetV1/Predictions/Reshape_1
+mobilenet_v1_0.75_224_quant.tflite=tflite-binary,uint8,/home/root/models/tensorflowlite/Mobile_Net_V1_Model/mobilenet_v1_0.75_224_quant.tflite,1x224x224x3,input,MobilenetV1/Predictions/Reshape_1
+mobilenet_v1_0.75_192_quant.tflite=tflite-binary,uint8,/home/root/models/tensorflowlite/Mobile_Net_V1_Model/mobilenet_v1_0.75_192_quant.tflite,1x192x192x3,input,MobilenetV1/Predictions/Reshape_1
+mobilenet_v1_0.75_160_quant.tflite=tflite-binary,uint8,/home/root/models/tensorflowlite/Mobile_Net_V1_Model/mobilenet_v1_0.75_160_quant.tflite,1x160x160x3,input,MobilenetV1/Predictions/Reshape_1
+mobilenet_v1_0.75_128_quant.tflite=tflite-binary,uint8,/home/root/models/tensorflowlite/Mobile_Net_V1_Model/mobilenet_v1_0.75_128_quant.tflite,1x128x128x3,input,MobilenetV1/Predictions/Reshape_1
+mobilenet_v1_0.5_224_quant.tflite=tflite-binary,uint8,/home/root/models/tensorflowlite/Mobile_Net_V1_Model/mobilenet_v1_0.5_224_quant.tflite,1x224x224x3,input,MobilenetV1/Predictions/Reshape_1
+mobilenet_v1_0.5_192_quant.tflite=tflite-binary,uint8,/home/root/models/tensorflowlite/Mobile_Net_V1_Model/mobilenet_v1_0.5_192_quant.tflite,1x192x192x3,input,MobilenetV1/Predictions/Reshape_1
+mobilenet_v1_0.5_160_quant.tflite=tflite-binary,uint8,/home/root/models/tensorflowlite/Mobile_Net_V1_Model/mobilenet_v1_0.5_160_quant.tflite,1x160x160x3,input,MobilenetV1/Predictions/Reshape_1
+mobilenet_v1_0.5_128_quant.tflite=tflite-binary,uint8,/home/root/models/tensorflowlite/Mobile_Net_V1_Model/mobilenet_v1_0.5_128_quant.tflite,1x128x128x3,input,MobilenetV1/Predictions/Reshape_1
+mobilenet_v1_0.25_224_quant.tflite=tflite-binary,uint8,/home/root/models/tensorflowlite/Mobile_Net_V1_Model/mobilenet_v1_0.25_224_quant.tflite,1x224x224x3,input,MobilenetV1/Predictions/Reshape_1
+mobilenet_v1_0.25_192_quant.tflite=tflite-binary,uint8,/home/root/models/tensorflowlite/Mobile_Net_V1_Model/mobilenet_v1_0.25_192_quant.tflite,1x192x192x3,input,MobilenetV1/Predictions/Reshape_1
+mobilenet_v1_0.25_160_quant.tflite=tflite-binary,uint8,/home/root/models/tensorflowlite/Mobile_Net_V1_Model/mobilenet_v1_0.25_160_quant.tflite,1x160x160x3,input,MobilenetV1/Predictions/Reshape_1
+mobilenet_v1_0.25_128_quant.tflite=tflite-binary,uint8,/home/root/models/tensorflowlite/Mobile_Net_V1_Model/mobilenet_v1_0.25_128_quant.tflite,1x128x128x3,input,MobilenetV1/Predictions/Reshape_1
+mobilenet_v1_1.0_224.tflite=tflite-binary,float32,/home/root/models/tensorflowlite/Mobile_Net_V1_Model/mobilenet_v1_1.0_224.tflite,1x224x224x3,input,MobilenetV1/Predictions/Reshape_1
+mobilenet_v1_1.0_192.tflite=tflite-binary,float32,/home/root/models/tensorflowlite/Mobile_Net_V1_Model/mobilenet_v1_1.0_192.tflite,1x192x192x3,input,MobilenetV1/Predictions/Reshape_1
+mobilenet_v1_1.0_160.tflite=tflite-binary,float32,/home/root/models/tensorflowlite/Mobile_Net_V1_Model/mobilenet_v1_1.0_160.tflite,1x160x160x3,input,MobilenetV1/Predictions/Reshape_1
+mobilenet_v1_1.0_128.tflite=tflite-binary,float32,/home/root/models/tensorflowlite/Mobile_Net_V1_Model/mobilenet_v1_1.0_128.tflite,1x128x128x3,input,MobilenetV1/Predictions/Reshape_1
+mobilenet_v1_0.75_224.tflite=tflite-binary,float32,/home/root/models/tensorflowlite/Mobile_Net_V1_Model/mobilenet_v1_0.75_224.tflite,1x224x224x3,input,MobilenetV1/Predictions/Reshape_1
+mobilenet_v1_0.75_192.tflite=tflite-binary,float32,/home/root/models/tensorflowlite/Mobile_Net_V1_Model/mobilenet_v1_0.75_192.tflite,1x192x192x3,input,MobilenetV1/Predictions/Reshape_1
+mobilenet_v1_0.75_160.tflite=tflite-binary,float32,/home/root/models/tensorflowlite/Mobile_Net_V1_Model/mobilenet_v1_0.75_160.tflite,1x160x160x3,input,MobilenetV1/Predictions/Reshape_1
+mobilenet_v1_0.75_128.tflite=tflite-binary,float32,/home/root/models/tensorflowlite/Mobile_Net_V1_Model/mobilenet_v1_0.75_128.tflite,1x128x128x3,input,MobilenetV1/Predictions/Reshape_1
+mobilenet_v1_0.5_224.tflite=tflite-binary,float32,/home/root/models/tensorflowlite/Mobile_Net_V1_Model/mobilenet_v1_0.5_224.tflite,1x224x224x3,input,MobilenetV1/Predictions/Reshape_1
+mobilenet_v1_0.5_192.tflite=tflite-binary,float32,/home/root/models/tensorflowlite/Mobile_Net_V1_Model/mobilenet_v1_0.5_192.tflite,1x192x192x3,input,MobilenetV1/Predictions/Reshape_1
+mobilenet_v1_0.5_160.tflite=tflite-binary,float32,/home/root/models/tensorflowlite/Mobile_Net_V1_Model/mobilenet_v1_0.5_160.tflite,1x160x160x3,input,MobilenetV1/Predictions/Reshape_1
+mobilenet_v1_0.5_128.tflite=tflite-binary,float32,/home/root/models/tensorflowlite/Mobile_Net_V1_Model/mobilenet_v1_0.5_128.tflite,1x128x128x3,input,MobilenetV1/Predictions/Reshape_1
+mobilenet_v1_0.25_224.tflite=tflite-binary,float32,/home/root/models/tensorflowlite/Mobile_Net_V1_Model/mobilenet_v1_0.25_224.tflite,1x224x224x3,input,MobilenetV1/Predictions/Reshape_1
+mobilenet_v1_0.25_192.tflite=tflite-binary,float32,/home/root/models/tensorflowlite/Mobile_Net_V1_Model/mobilenet_v1_0.25_192.tflite,1x192x192x3,input,MobilenetV1/Predictions/Reshape_1
+mobilenet_v1_0.25_160.tflite=tflite-binary,float32,/home/root/models/tensorflowlite/Mobile_Net_V1_Model/mobilenet_v1_0.25_160.tflite,1x160x160x3,input,MobilenetV1/Predictions/Reshape_1
+mobilenet_v1_0.25_128.tflite=tflite-binary,float32,/home/root/models/tensorflowlite/Mobile_Net_V1_Model/mobilenet_v1_0.25_128.tflite,1x128x128x3,input,MobilenetV1/Predictions/Reshape_1
+mobilenet_v2_1.0_224_quant.tflite=tflite-binary,uint8,/home/root/models/tensorflowlite/Mobile_Net_V2_Model/mobilenet_v2_1.0_224_quant.tflite,1x224x224x3,input,output
+mobilenet_v2_1.4_224.tflite=tflite-binary,float32,/home/root/models/tensorflowlite/Mobile_Net_V2_Model/mobilenet_v2_1.4_224.tflite,1x224x224x3,input,MobilenetV2/Predictions/Reshape_1
+mobilenet_v2_1.3_224.tflite=tflite-binary,float32,/home/root/models/tensorflowlite/Mobile_Net_V2_Model/mobilenet_v2_1.3_224.tflite,1x224x224x3,input,MobilenetV2/Predictions/Reshape_1
+mobilenet_v2_1.0_224.tflite=tflite-binary,float32,/home/root/models/tensorflowlite/Mobile_Net_V2_Model/mobilenet_v2_1.0_224.tflite,1x224x224x3,input,MobilenetV2/Predictions/Reshape_1
+mobilenet_v2_1.0_192.tflite=tflite-binary,float32,/home/root/models/tensorflowlite/Mobile_Net_V2_Model/mobilenet_v2_1.0_192.tflite,1x192x192x3,input,MobilenetV2/Predictions/Reshape_1
+mobilenet_v2_1.0_160.tflite=tflite-binary,float32,/home/root/models/tensorflowlite/Mobile_Net_V2_Model/mobilenet_v2_1.0_160.tflite,1x160x160x3,input,MobilenetV2/Predictions/Reshape_1
+mobilenet_v2_1.0_128.tflite=tflite-binary,float32,/home/root/models/tensorflowlite/Mobile_Net_V2_Model/mobilenet_v2_1.0_128.tflite,1x128x128x3,input,MobilenetV2/Predictions/Reshape_1
+mobilenet_v2_1.0_96.tflite=tflite-binary,float32,/home/root/models/tensorflowlite/Mobile_Net_V2_Model/mobilenet_v2_1.0_96.tflite,1x96x96x3,input,MobilenetV2/Predictions/Reshape_1
+mobilenet_v2_0.75_224.tflite=tflite-binary,float32,/home/root/models/tensorflowlite/Mobile_Net_V2_Model/mobilenet_v2_0.75_224.tflite,1x224x224x3,input,MobilenetV2/Predictions/Reshape_1
+mobilenet_v2_0.75_192.tflite=tflite-binary,float32,/home/root/models/tensorflowlite/Mobile_Net_V2_Model/mobilenet_v2_0.75_192.tflite,1x192x192x3,input,MobilenetV2/Predictions/Reshape_1
+mobilenet_v2_0.75_160.tflite=tflite-binary,float32,/home/root/models/tensorflowlite/Mobile_Net_V2_Model/mobilenet_v2_0.75_160.tflite,1x160x160x3,input,MobilenetV2/Predictions/Reshape_1
+mobilenet_v2_0.75_128.tflite=tflite-binary,float32,/home/root/models/tensorflowlite/Mobile_Net_V2_Model/mobilenet_v2_0.75_128.tflite,1x128x128x3,input,MobilenetV2/Predictions/Reshape_1
+mobilenet_v2_0.75_96.tflite=tflite-binary,float32,/home/root/models/tensorflowlite/Mobile_Net_V2_Model/mobilenet_v2_0.75_96.tflite,1x96x96x3,input,MobilenetV2/Predictions/Reshape_1
+mobilenet_v2_0.5_224.tflite=tflite-binary,float32,/home/root/models/tensorflowlite/Mobile_Net_V2_Model/mobilenet_v2_0.5_224.tflite,1x224x224x3,input,MobilenetV2/Predictions/Reshape_1
+mobilenet_v2_0.5_192.tflite=tflite-binary,float32,/home/root/models/tensorflowlite/Mobile_Net_V2_Model/mobilenet_v2_0.5_192.tflite,1x192x192x3,input,MobilenetV2/Predictions/Reshape_1
+mobilenet_v2_0.5_160.tflite=tflite-binary,float32,/home/root/models/tensorflowlite/Mobile_Net_V2_Model/mobilenet_v2_0.5_160.tflite,1x160x160x3,input,MobilenetV2/Predictions/Reshape_1
+mobilenet_v2_0.5_128.tflite=tflite-binary,float32,/home/root/models/tensorflowlite/Mobile_Net_V2_Model/mobilenet_v2_0.5_128.tflite,1x128x128x3,input,MobilenetV2/Predictions/Reshape_1
+mobilenet_v2_0.5_96.tflite=tflite-binary,float32,/home/root/models/tensorflowlite/Mobile_Net_V2_Model/mobilenet_v2_0.5_96.tflite,1x96x96x3,input,MobilenetV2/Predictions/Reshape_1
+mobilenet_v2_0.35_224.tflite=tflite-binary,float32,/home/root/models/tensorflowlite/Mobile_Net_V2_Model/mobilenet_v2_0.35_224.tflite,1x224x224x3,input,MobilenetV2/Predictions/Reshape_1
+mobilenet_v2_0.35_192.tflite=tflite-binary,float32,/home/root/models/tensorflowlite/Mobile_Net_V2_Model/mobilenet_v2_0.35_192.tflite,1x192x192x3,input,MobilenetV2/Predictions/Reshape_1
+mobilenet_v2_0.35_160.tflite=tflite-binary,float32,/home/root/models/tensorflowlite/Mobile_Net_V2_Model/mobilenet_v2_0.35_160.tflite,1x160x160x3,input,MobilenetV2/Predictions/Reshape_1
+mobilenet_v2_0.35_128.tflite=tflite-binary,float32,/home/root/models/tensorflowlite/Mobile_Net_V2_Model/mobilenet_v2_0.35_128.tflite,1x128x128x3,input,MobilenetV2/Predictions/Reshape_1
+mobilenet_v2_0.35_96.tflite=tflite-binary,float32,/home/root/models/tensorflowlite/Mobile_Net_V2_Model/mobilenet_v2_0.35_96.tflite,1x96x96x3,input,MobilenetV2/Predictions/Reshape_1
+
+# MobileNet ONNX
+mobilenet_v2-1.0.onnx=onnx-binary,float32,/usr/bin/armnn/examples/onnx/models/mobilenetv2-1.0.onnx,1x224x224x3,data,mobilenetv20_output_flatten0_reshape0

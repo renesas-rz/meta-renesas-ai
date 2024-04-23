@@ -22,7 +22,7 @@ The instructions for using these benchmark tools are listed below:
 cd /usr/bin/armnnBenchmark
 
 # Run inference 30 times
-./armnnBenchmark
+./armnnBenchmark -l model_list.txt
 ```
 
 ## TensorFlow Lite

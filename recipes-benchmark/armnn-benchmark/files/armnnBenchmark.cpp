@@ -29,14 +29,13 @@
 
 #include <iostream>
 #include <fstream>
+#include <sstream>
 #include <functional>
 #include <future>
 #include <algorithm>
 #include <iterator>
 #include <numeric>
 #include <list>
-
-enum ModelType { MODEL_TYPE_FLOAT32, MODEL_TYPE_UINT8 };
 
 static long int iterations = 30;
 
@@ -51,25 +50,22 @@ std::string benched_backend;
 std::string benched_model;
 std::string benched_type;
 
+enum ModelStatus {
+    MODEL_TEST_SKIP = -1,
+    MODEL_TEST_FAIL = -2
+};
+
 std::map<int,std::string> label_file_map;
-
-std::string base_path = "/usr/bin/armnn/examples";
-
-std::string common_model_path = "/home/root/models/";
-
-std::string base_more_models_path_tensorflow_lite = common_model_path + "tensorflowlite";
-
-std::string base_more_models_path_onnx = base_path + "/onnx/models";
 
 typedef struct model_params {
     std::string modelFormat;
-    ModelType ModelDtype;
+    std::string ModelDtype;
     std::string modelPath;
     armnn::TensorShape inputTensorShape;
-    std::string inputName;
-    std::string outputName;
     unsigned int inputImageWidth;
     unsigned int inputImageHeight;
+    std::string inputName;
+    std::string outputName;
 }model_params;
 
 std::map<std::string,model_params> Model_Table;
@@ -135,7 +131,7 @@ void CaculateAvergeDeviation(vector<double>& time_vec)
 
 template<typename TParser, typename TDataType>
 int MainImpl(const char* modelPath,
-             ModelType ModelDtype,
+             const string ModelDtype,
              const string mode_type,
              const char* inputName,
              const armnn::TensorShape* inputTensorShape,
@@ -158,7 +154,7 @@ int MainImpl(const char* modelPath,
     if (!inputTensorFile.good())
     {
         std::cout << "Failed to load input tensor data file from " << inputTensorDataFilePath;
-        return EXIT_FAILURE;
+        return MODEL_TEST_FAIL;
     }
 
     using TContainer = 
@@ -190,8 +186,7 @@ int MainImpl(const char* modelPath,
         // Executes the model.
         std::unique_ptr<ClassifierTestCaseData<TDataType>> TestCaseData;
 
-        switch(ModelDtype) {
-        case MODEL_TYPE_FLOAT32:
+        if (ModelDtype == "float32")
         {
             std::cout << "float32 Model is loaded" << std::endl;
             if(mode_type == "onnx")
@@ -209,9 +204,8 @@ int MainImpl(const char* modelPath,
             }
 
             outputDataContainers.push_back(std::vector<float>(model.GetOutputSize()));
-            break;
         }
-        case MODEL_TYPE_UINT8:
+        else if (ModelDtype == "uint8")
         {
             std::cout << "uint8 Model is loaded" << std::endl;
             auto inputBinding = model.GetInputBindingInfo();
@@ -223,11 +217,6 @@ int MainImpl(const char* modelPath,
             TestCaseData = Image.GetTestCaseData(0);
 
             outputDataContainers.push_back(std::vector<uint8_t>(model.GetOutputSize()));
-            break;
-        }
-        default:
-            std::cout << "Failed to get test case data, unsupported model type " << ModelDtype;
-            return EXIT_FAILURE;
         }
 
         inputDataContainers.push_back(TestCaseData->m_InputImage);
@@ -273,7 +262,7 @@ int MainImpl(const char* modelPath,
             }
         } else {
             std::cout << "Error opening" << usrDir << std::endl;
-            return EXIT_FAILURE;
+            return MODEL_TEST_FAIL;
         }
         closedir(dir);
 
@@ -301,196 +290,189 @@ int MainImpl(const char* modelPath,
         bench.push_back(benched_type);
         CaculateAvergeDeviation(time_vector);
 
-        switch(ModelDtype) {
-        case MODEL_TYPE_FLOAT32:
+        if (ModelDtype == "float32")
         {
             std::vector<float> output;
             output = mapbox::util::get<std::vector<float>>(outputDataContainers[0]);
             ProcessResult<float>(output, model.GetQuantizationParams(), mode_type);
-            break;
         }
-        case MODEL_TYPE_UINT8:
+        else if (ModelDtype == "uint8")
         {
             std::vector<unsigned char> output;
             output = mapbox::util::get<std::vector<unsigned char>>(outputDataContainers[0]);
             ProcessResult<unsigned char>(output, model.GetQuantizationParams(), mode_type);
-            break;
-        }
-        default:
-            std::cout << "Failed to map vector, unsupported model type " << ModelDtype;
-            return EXIT_FAILURE;
         }
     }
     catch (armnn::Exception const& e)
     {
         std::cout << "Armnn Error: " << e.what();
-        return EXIT_FAILURE;
+        return MODEL_TEST_FAIL;
     }
 
     return EXIT_SUCCESS;
 }
 
 std::vector<std::string> excelTestModel;
+std::map<std::string, int> model_line_numbers;
+std::vector<std::string> skipped_models;
 
-void CreateModelTestOrder()
+std::map<std::string, model_params> CreateModelMap(const std::string& filepath)
 {
-    excelTestModel.push_back("mnasnet_0.5_224.tflite");
-    excelTestModel.push_back("mnasnet_0.75_224.tflite");
-    excelTestModel.push_back("mnasnet_1.0_96.tflite");
-    excelTestModel.push_back("mnasnet_1.0_128.tflite");
-    excelTestModel.push_back("mnasnet_1.0_160.tflite");
-    excelTestModel.push_back("mnasnet_1.0_192.tflite");
-    excelTestModel.push_back("mnasnet_1.0_224.tflite");
-    excelTestModel.push_back("mnasnet_1.3_224.tflite");
-    excelTestModel.push_back("inception_v3.tflite");
-    excelTestModel.push_back("inception_v3_quant.tflite");
-    excelTestModel.push_back("inception_v4.tflite");
-    excelTestModel.push_back("inception_v4_299_quant.tflite");
-    excelTestModel.push_back("squeezenet.tflite");
-    excelTestModel.push_back("mobilenet_v1_1.0_224_quant.tflite");
-    excelTestModel.push_back("mobilenet_v1_1.0_192_quant.tflite");
-    excelTestModel.push_back("mobilenet_v1_1.0_160_quant.tflite");
-    excelTestModel.push_back("mobilenet_v1_1.0_128_quant.tflite");
-    excelTestModel.push_back("mobilenet_v1_0.75_224_quant.tflite");
-    excelTestModel.push_back("mobilenet_v1_0.75_192_quant.tflite");
-    excelTestModel.push_back("mobilenet_v1_0.75_160_quant.tflite");
-    excelTestModel.push_back("mobilenet_v1_0.75_128_quant.tflite");
-    excelTestModel.push_back("mobilenet_v1_0.5_224_quant.tflite");
-    excelTestModel.push_back("mobilenet_v1_0.5_192_quant.tflite");
-    excelTestModel.push_back("mobilenet_v1_0.5_160_quant.tflite");
-    excelTestModel.push_back("mobilenet_v1_0.5_128_quant.tflite");
-    excelTestModel.push_back("mobilenet_v1_0.25_224_quant.tflite");
-    excelTestModel.push_back("mobilenet_v1_0.25_192_quant.tflite");
-    excelTestModel.push_back("mobilenet_v1_0.25_160_quant.tflite");
-    excelTestModel.push_back("mobilenet_v1_0.25_128_quant.tflite");
-    excelTestModel.push_back("mobilenet_v1_1.0_224.tflite");
-    excelTestModel.push_back("mobilenet_v1_1.0_192.tflite");
-    excelTestModel.push_back("mobilenet_v1_1.0_160.tflite");
-    excelTestModel.push_back("mobilenet_v1_1.0_128.tflite");
-    excelTestModel.push_back("mobilenet_v1_0.75_224.tflite");
-    excelTestModel.push_back("mobilenet_v1_0.75_192.tflite");
-    excelTestModel.push_back("mobilenet_v1_0.75_160.tflite");
-    excelTestModel.push_back("mobilenet_v1_0.75_128.tflite");
-    excelTestModel.push_back("mobilenet_v1_0.5_224.tflite");
-    excelTestModel.push_back("mobilenet_v1_0.5_192.tflite");
-    excelTestModel.push_back("mobilenet_v1_0.5_160.tflite");
-    excelTestModel.push_back("mobilenet_v1_0.5_128.tflite");
-    excelTestModel.push_back("mobilenet_v1_0.25_224.tflite");
-    excelTestModel.push_back("mobilenet_v1_0.25_192.tflite");
-    excelTestModel.push_back("mobilenet_v1_0.25_160.tflite");
-    excelTestModel.push_back("mobilenet_v1_0.25_128.tflite");
-    excelTestModel.push_back("mobilenet_v2_1.0_224_quant.tflite");
-    excelTestModel.push_back("mobilenet_v2_1.4_224.tflite");
-    excelTestModel.push_back("mobilenet_v2_1.3_224.tflite");
-    excelTestModel.push_back("mobilenet_v2_1.0_224.tflite");
-    excelTestModel.push_back("mobilenet_v2_1.0_192.tflite");
-    excelTestModel.push_back("mobilenet_v2_1.0_160.tflite");
-    excelTestModel.push_back("mobilenet_v2_1.0_128.tflite");
-    excelTestModel.push_back("mobilenet_v2_1.0_96.tflite");
-    excelTestModel.push_back("mobilenet_v2_0.75_224.tflite");
-    excelTestModel.push_back("mobilenet_v2_0.75_192.tflite");
-    excelTestModel.push_back("mobilenet_v2_0.75_160.tflite");
-    excelTestModel.push_back("mobilenet_v2_0.75_128.tflite");
-    excelTestModel.push_back("mobilenet_v2_0.75_96.tflite");
-    excelTestModel.push_back("mobilenet_v2_0.5_224.tflite");
-    excelTestModel.push_back("mobilenet_v2_0.5_192.tflite");
-    excelTestModel.push_back("mobilenet_v2_0.5_160.tflite");
-    excelTestModel.push_back("mobilenet_v2_0.5_128.tflite");
-    excelTestModel.push_back("mobilenet_v2_0.5_96.tflite");
-    excelTestModel.push_back("mobilenet_v2_0.35_224.tflite");
-    excelTestModel.push_back("mobilenet_v2_0.35_192.tflite");
-    excelTestModel.push_back("mobilenet_v2_0.35_160.tflite");
-    excelTestModel.push_back("mobilenet_v2_0.35_128.tflite");
-    excelTestModel.push_back("mobilenet_v2_0.35_96.tflite");
-    excelTestModel.push_back("mobilenet_v2-1.0.onnx");
-}
+    std::map<std::string, model_params> Model_Table;
+    std::ifstream infile(filepath);
+    int line_number = 0;
 
-void initModelTable()
-{
-    //Mnasnet Model
-    Model_Table["mnasnet_0.5_224.tflite"] = {"tflite-binary", MODEL_TYPE_FLOAT32, base_more_models_path_tensorflow_lite + "/MnasNet/mnasnet_0.5_224.tflite", armnn::TensorShape({ 1, 224, 224, 3}), "input", "output", 224, 224};
-    Model_Table["mnasnet_0.75_224.tflite"] = {"tflite-binary", MODEL_TYPE_FLOAT32, base_more_models_path_tensorflow_lite + "/MnasNet/mnasnet_0.75_224.tflite", armnn::TensorShape({ 1, 224, 224, 3}), "input", "output", 224, 224};
-    Model_Table["mnasnet_1.0_96.tflite"] = {"tflite-binary", MODEL_TYPE_FLOAT32, base_more_models_path_tensorflow_lite + "/MnasNet/mnasnet_1.0_96.tflite", armnn::TensorShape({ 1, 96, 96, 3}), "input", "output", 96, 96};
-    Model_Table["mnasnet_1.0_128.tflite"] = {"tflite-binary", MODEL_TYPE_FLOAT32, base_more_models_path_tensorflow_lite + "/MnasNet/mnasnet_1.0_128.tflite", armnn::TensorShape({ 1, 128, 128, 3}), "input", "output", 128, 128};
-    Model_Table["mnasnet_1.0_160.tflite"] = {"tflite-binary", MODEL_TYPE_FLOAT32, base_more_models_path_tensorflow_lite + "/MnasNet/mnasnet_1.0_160.tflite", armnn::TensorShape({ 1, 160, 160, 3}), "input", "output", 160, 160};
-    Model_Table["mnasnet_1.0_192.tflite"] = {"tflite-binary", MODEL_TYPE_FLOAT32, base_more_models_path_tensorflow_lite + "/MnasNet/mnasnet_1.0_192.tflite", armnn::TensorShape({ 1, 192, 192, 3}), "input", "output", 192, 192};
-    Model_Table["mnasnet_1.0_224.tflite"] = {"tflite-binary", MODEL_TYPE_FLOAT32, base_more_models_path_tensorflow_lite + "/MnasNet/mnasnet_1.0_224.tflite", armnn::TensorShape({ 1, 224, 224, 3}), "input", "output", 224, 224};
-    Model_Table["mnasnet_1.3_224.tflite"] = {"tflite-binary", MODEL_TYPE_FLOAT32, base_more_models_path_tensorflow_lite + "/MnasNet/mnasnet_1.3_224.tflite", armnn::TensorShape({ 1, 224, 224, 3}), "input", "output", 224, 224};
+    if (!infile)
+    {
+        std::cout << "Cannot open file: " << filepath << std::endl;
+        exit(EXIT_FAILURE);
+    }
 
-    //Squeezenet model
-    Model_Table["squeezenet.tflite"] = {"tflite-binary", MODEL_TYPE_FLOAT32, base_more_models_path_tensorflow_lite + "/Squeezenet/squeezenet.tflite", armnn::TensorShape({ 1, 224, 224, 3}), "Placeholder", "softmax_tensor", 224, 224};
+    std::string line;
 
-    //Tensorflow lite model
-    Model_Table["inception_v3.tflite"] = {"tflite-binary", MODEL_TYPE_FLOAT32, base_more_models_path_tensorflow_lite + "/Mobile_InceptionV3/inception_v3.tflite", armnn::TensorShape({ 1, 299, 299, 3}), "input", "InceptionV3/Predictions/Reshape_1", 299, 299};
-    Model_Table["inception_v3_quant.tflite"] = {"tflite-binary", MODEL_TYPE_UINT8, base_more_models_path_tensorflow_lite + "/Mobile_InceptionV3/inception_v3_quant.tflite", armnn::TensorShape({ 1, 299, 299, 3}), "input", "output", 299, 299};
-    Model_Table["inception_v4.tflite"] = {"tflite-binary", MODEL_TYPE_FLOAT32, base_more_models_path_tensorflow_lite + "/Mobile_InceptionV4/inception_v4.tflite", armnn::TensorShape({ 1, 299, 299, 3}), "input", "InceptionV4/Logits/Predictions", 299, 299};
-    Model_Table["inception_v4_299_quant.tflite"] = {"tflite-binary", MODEL_TYPE_UINT8, base_more_models_path_tensorflow_lite + "/Mobile_InceptionV4/inception_v4_299_quant.tflite", armnn::TensorShape({ 1, 299, 299, 3}), "input", "InceptionV4/Logits/Predictions", 299, 299};
+    while (std::getline(infile, line))
+    {
+        line_number++;
+        bool skip_model = false;
 
-   Model_Table["mobilenet_v1_1.0_224_quant.tflite"] = {"tflite-binary", MODEL_TYPE_UINT8, base_more_models_path_tensorflow_lite + "/Mobile_Net_V1_Model/mobilenet_v1_1.0_224_quant.tflite", armnn::TensorShape({ 1, 224, 224, 3}), "input", "MobilenetV1/Predictions/Reshape_1", 224, 224};
-    Model_Table["mobilenet_v1_1.0_192_quant.tflite"] = {"tflite-binary", MODEL_TYPE_UINT8, base_more_models_path_tensorflow_lite + "/Mobile_Net_V1_Model/mobilenet_v1_1.0_192_quant.tflite", armnn::TensorShape({ 1, 192, 192, 3}), "input", "MobilenetV1/Predictions/Reshape_1", 192, 192};
-    Model_Table["mobilenet_v1_1.0_160_quant.tflite"] = {"tflite-binary", MODEL_TYPE_UINT8, base_more_models_path_tensorflow_lite + "/Mobile_Net_V1_Model/mobilenet_v1_1.0_160_quant.tflite", armnn::TensorShape({ 1, 160, 160, 3}), "input", "MobilenetV1/Predictions/Reshape_1", 160, 160};
-    Model_Table["mobilenet_v1_1.0_128_quant.tflite"] = {"tflite-binary", MODEL_TYPE_UINT8, base_more_models_path_tensorflow_lite + "/Mobile_Net_V1_Model/mobilenet_v1_1.0_128_quant.tflite", armnn::TensorShape({ 1, 128, 128, 3}), "input","MobilenetV1/Predictions/Reshape_1", 128, 128};
-    Model_Table["mobilenet_v1_0.75_224_quant.tflite"] = {"tflite-binary", MODEL_TYPE_UINT8, base_more_models_path_tensorflow_lite + "/Mobile_Net_V1_Model/mobilenet_v1_0.75_224_quant.tflite", armnn::TensorShape({ 1, 224, 224, 3}), "input", "MobilenetV1/Predictions/Reshape_1", 224, 224};
-    Model_Table["mobilenet_v1_0.75_192_quant.tflite"] = {"tflite-binary", MODEL_TYPE_UINT8, base_more_models_path_tensorflow_lite + "/Mobile_Net_V1_Model/mobilenet_v1_0.75_192_quant.tflite", armnn::TensorShape({ 1, 192, 192, 3}), "input", "MobilenetV1/Predictions/Reshape_1", 192, 192};
-    Model_Table["mobilenet_v1_0.75_160_quant.tflite"] = {"tflite-binary", MODEL_TYPE_UINT8, base_more_models_path_tensorflow_lite + "/Mobile_Net_V1_Model/mobilenet_v1_0.75_160_quant.tflite", armnn::TensorShape({ 1, 160, 160, 3}), "input", "MobilenetV1/Predictions/Reshape_1", 160, 160};
-    Model_Table["mobilenet_v1_0.75_128_quant.tflite"] = {"tflite-binary", MODEL_TYPE_UINT8, base_more_models_path_tensorflow_lite + "/Mobile_Net_V1_Model/mobilenet_v1_0.75_128_quant.tflite", armnn::TensorShape({ 1, 128, 128, 3}), "input", "MobilenetV1/Predictions/Reshape_1", 128, 128};
-    Model_Table["mobilenet_v1_0.5_224_quant.tflite"] = {"tflite-binary", MODEL_TYPE_UINT8, base_more_models_path_tensorflow_lite + "/Mobile_Net_V1_Model/mobilenet_v1_0.5_224_quant.tflite", armnn::TensorShape({ 1, 224, 224, 3}), "input", "MobilenetV1/Predictions/Reshape_1", 224, 224};
-    Model_Table["mobilenet_v1_0.5_192_quant.tflite"] = {"tflite-binary", MODEL_TYPE_UINT8, base_more_models_path_tensorflow_lite + "/Mobile_Net_V1_Model/mobilenet_v1_0.5_192_quant.tflite", armnn::TensorShape({ 1, 192, 192, 3}), "input", "MobilenetV1/Predictions/Reshape_1", 192, 192};
-    Model_Table["mobilenet_v1_0.5_160_quant.tflite"] = {"tflite-binary", MODEL_TYPE_UINT8, base_more_models_path_tensorflow_lite + "/Mobile_Net_V1_Model/mobilenet_v1_0.5_160_quant.tflite", armnn::TensorShape({ 1, 160, 160, 3}), "input", "MobilenetV1/Predictions/Reshape_1", 160, 160};
-    Model_Table["mobilenet_v1_0.5_128_quant.tflite"] = {"tflite-binary", MODEL_TYPE_UINT8, base_more_models_path_tensorflow_lite + "/Mobile_Net_V1_Model/mobilenet_v1_0.5_128_quant.tflite", armnn::TensorShape({ 1, 128, 128, 3}), "input", "MobilenetV1/Predictions/Reshape_1", 128, 128};
-    Model_Table["mobilenet_v1_0.25_224_quant.tflite"] = {"tflite-binary", MODEL_TYPE_UINT8, base_more_models_path_tensorflow_lite + "/Mobile_Net_V1_Model/mobilenet_v1_0.25_224_quant.tflite", armnn::TensorShape({ 1, 224, 224, 3}), "input", "MobilenetV1/Predictions/Reshape_1", 224, 224};
-    Model_Table["mobilenet_v1_0.25_192_quant.tflite"] = {"tflite-binary", MODEL_TYPE_UINT8, base_more_models_path_tensorflow_lite + "/Mobile_Net_V1_Model/mobilenet_v1_0.25_192_quant.tflite", armnn::TensorShape({ 1, 192, 192, 3}), "input", "MobilenetV1/Predictions/Reshape_1", 192, 192};
-    Model_Table["mobilenet_v1_0.25_160_quant.tflite"] = {"tflite-binary", MODEL_TYPE_UINT8, base_more_models_path_tensorflow_lite + "/Mobile_Net_V1_Model/mobilenet_v1_0.25_160_quant.tflite", armnn::TensorShape({ 1, 160, 160, 3}), "input", "MobilenetV1/Predictions/Reshape_1", 160, 160};
-    Model_Table["mobilenet_v1_0.25_128_quant.tflite"] = {"tflite-binary", MODEL_TYPE_UINT8, base_more_models_path_tensorflow_lite + "/Mobile_Net_V1_Model/mobilenet_v1_0.25_128_quant.tflite", armnn::TensorShape({ 1, 128, 128, 3}), "input", "MobilenetV1/Predictions/Reshape_1", 128, 128};
-    Model_Table["mobilenet_v1_1.0_224.tflite"] = {"tflite-binary", MODEL_TYPE_FLOAT32, base_more_models_path_tensorflow_lite + "/Mobile_Net_V1_Model/mobilenet_v1_1.0_224.tflite", armnn::TensorShape({ 1, 224, 224, 3}), "input","MobilenetV1/Predictions/Reshape_1", 224, 224};
-    Model_Table["mobilenet_v1_1.0_192.tflite"] = {"tflite-binary", MODEL_TYPE_FLOAT32, base_more_models_path_tensorflow_lite + "/Mobile_Net_V1_Model/mobilenet_v1_1.0_192.tflite", armnn::TensorShape({ 1, 192, 192, 3}), "input", "MobilenetV1/Predictions/Reshape_1", 192, 192};
-    Model_Table["mobilenet_v1_1.0_160.tflite"] = {"tflite-binary", MODEL_TYPE_FLOAT32, base_more_models_path_tensorflow_lite + "/Mobile_Net_V1_Model/mobilenet_v1_1.0_160.tflite", armnn::TensorShape({ 1, 160, 160, 3}), "input", "MobilenetV1/Predictions/Reshape_1", 160, 160};
-    Model_Table["mobilenet_v1_1.0_128.tflite"] = {"tflite-binary", MODEL_TYPE_FLOAT32, base_more_models_path_tensorflow_lite + "/Mobile_Net_V1_Model/mobilenet_v1_1.0_128.tflite", armnn::TensorShape({ 1, 128, 128, 3}), "input", "MobilenetV1/Predictions/Reshape_1", 128, 128};
-    Model_Table["mobilenet_v1_0.75_224.tflite"] = {"tflite-binary", MODEL_TYPE_FLOAT32, base_more_models_path_tensorflow_lite + "/Mobile_Net_V1_Model/mobilenet_v1_0.75_224.tflite", armnn::TensorShape({ 1, 224, 224, 3}), "input", "MobilenetV1/Predictions/Reshape_1", 224, 224};
-    Model_Table["mobilenet_v1_0.75_192.tflite"] = {"tflite-binary", MODEL_TYPE_FLOAT32, base_more_models_path_tensorflow_lite + "/Mobile_Net_V1_Model/mobilenet_v1_0.75_192.tflite", armnn::TensorShape({ 1, 192, 192, 3}), "input", "MobilenetV1/Predictions/Reshape_1", 192, 192};
-    Model_Table["mobilenet_v1_0.75_160.tflite"] = {"tflite-binary", MODEL_TYPE_FLOAT32, base_more_models_path_tensorflow_lite + "/Mobile_Net_V1_Model/mobilenet_v1_0.75_160.tflite", armnn::TensorShape({ 1, 160, 160, 3}), "input", "MobilenetV1/Predictions/Reshape_1", 160, 160};
-    Model_Table["mobilenet_v1_0.75_128.tflite"] = {"tflite-binary", MODEL_TYPE_FLOAT32, base_more_models_path_tensorflow_lite + "/Mobile_Net_V1_Model/mobilenet_v1_0.75_128.tflite", armnn::TensorShape({ 1, 128, 128, 3}), "input", "MobilenetV1/Predictions/Reshape_1", 128, 128};
-    Model_Table["mobilenet_v1_0.5_224.tflite"] = {"tflite-binary", MODEL_TYPE_FLOAT32, base_more_models_path_tensorflow_lite + "/Mobile_Net_V1_Model/mobilenet_v1_0.5_224.tflite", armnn::TensorShape({ 1, 224, 224, 3}), "input", "MobilenetV1/Predictions/Reshape_1", 224, 224};
-    Model_Table["mobilenet_v1_0.5_192.tflite"] = {"tflite-binary", MODEL_TYPE_FLOAT32, base_more_models_path_tensorflow_lite + "/Mobile_Net_V1_Model/mobilenet_v1_0.5_192.tflite", armnn::TensorShape({ 1, 192, 192, 3}), "input", "MobilenetV1/Predictions/Reshape_1", 192, 192};
-    Model_Table["mobilenet_v1_0.5_160.tflite"] = {"tflite-binary", MODEL_TYPE_FLOAT32, base_more_models_path_tensorflow_lite + "/Mobile_Net_V1_Model/mobilenet_v1_0.5_160.tflite", armnn::TensorShape({ 1, 160, 160, 3}), "input", "MobilenetV1/Predictions/Reshape_1", 160, 160};
-    Model_Table["mobilenet_v1_0.5_128.tflite"] = {"tflite-binary", MODEL_TYPE_FLOAT32, base_more_models_path_tensorflow_lite + "/Mobile_Net_V1_Model/mobilenet_v1_0.5_128.tflite", armnn::TensorShape({ 1, 128, 128, 3}), "input", "MobilenetV1/Predictions/Reshape_1", 128, 128};
-    Model_Table["mobilenet_v1_0.25_224.tflite"] = {"tflite-binary", MODEL_TYPE_FLOAT32, base_more_models_path_tensorflow_lite + "/Mobile_Net_V1_Model/mobilenet_v1_0.25_224.tflite", armnn::TensorShape({ 1, 224, 224, 3}), "input", "MobilenetV1/Predictions/Reshape_1", 224, 224};
-    Model_Table["mobilenet_v1_0.25_192.tflite"] = {"tflite-binary", MODEL_TYPE_FLOAT32, base_more_models_path_tensorflow_lite + "/Mobile_Net_V1_Model/mobilenet_v1_0.25_192.tflite", armnn::TensorShape({ 1, 192, 192, 3}), "input", "MobilenetV1/Predictions/Reshape_1", 192, 192};
-    Model_Table["mobilenet_v1_0.25_160.tflite"] = {"tflite-binary", MODEL_TYPE_FLOAT32, base_more_models_path_tensorflow_lite + "/Mobile_Net_V1_Model/mobilenet_v1_0.25_160.tflite", armnn::TensorShape({ 1, 160, 160, 3}), "input", "MobilenetV1/Predictions/Reshape_1", 160, 160};
-    Model_Table["mobilenet_v1_0.25_128.tflite"] = {"tflite-binary", MODEL_TYPE_FLOAT32, base_more_models_path_tensorflow_lite + "/Mobile_Net_V1_Model/mobilenet_v1_0.25_128.tflite", armnn::TensorShape({ 1, 128, 128, 3}), "input", "MobilenetV1/Predictions/Reshape_1", 128, 128};
+        // Skip any line that is empty or has a # as the first character
+        if (line.empty() || line.at(0) == '#')
+        {
+            continue;
+        }
 
-    Model_Table["mobilenet_v2_1.0_224_quant.tflite"] = {"tflite-binary", MODEL_TYPE_UINT8, base_more_models_path_tensorflow_lite + "/Mobile_Net_V2_Model/mobilenet_v2_1.0_224_quant.tflite", armnn::TensorShape({ 1, 224, 224, 3}),"input", "output", 224, 224};
-    Model_Table["mobilenet_v2_1.4_224.tflite"] = {"tflite-binary", MODEL_TYPE_FLOAT32, base_more_models_path_tensorflow_lite + "/Mobile_Net_V2_Model/mobilenet_v2_1.4_224.tflite", armnn::TensorShape({ 1, 224, 224, 3}), "input", "MobilenetV2/Predictions/Reshape_1", 224, 224};
-    Model_Table["mobilenet_v2_1.3_224.tflite"] = {"tflite-binary", MODEL_TYPE_FLOAT32, base_more_models_path_tensorflow_lite + "/Mobile_Net_V2_Model/mobilenet_v2_1.3_224.tflite", armnn::TensorShape({ 1, 224, 224, 3}), "input", "MobilenetV2/Predictions/Reshape_1", 224, 224};
-    Model_Table["mobilenet_v2_1.0_224.tflite"] = {"tflite-binary", MODEL_TYPE_FLOAT32, base_more_models_path_tensorflow_lite + "/Mobile_Net_V2_Model/mobilenet_v2_1.0_224.tflite", armnn::TensorShape({ 1, 224, 224, 3}), "input", "MobilenetV2/Predictions/Reshape_1", 224, 224};
-    Model_Table["mobilenet_v2_1.0_192.tflite"] = {"tflite-binary", MODEL_TYPE_FLOAT32, base_more_models_path_tensorflow_lite + "/Mobile_Net_V2_Model/mobilenet_v2_1.0_192.tflite", armnn::TensorShape({ 1, 192, 192, 3}), "input", "MobilenetV2/Predictions/Reshape_1", 192, 192};
-    Model_Table["mobilenet_v2_1.0_160.tflite"] = {"tflite-binary", MODEL_TYPE_FLOAT32, base_more_models_path_tensorflow_lite + "/Mobile_Net_V2_Model/mobilenet_v2_1.0_160.tflite", armnn::TensorShape({ 1, 160, 160, 3}), "input", "MobilenetV2/Predictions/Reshape_1", 160, 160};
-    Model_Table["mobilenet_v2_1.0_128.tflite"] = {"tflite-binary", MODEL_TYPE_FLOAT32, base_more_models_path_tensorflow_lite + "/Mobile_Net_V2_Model/mobilenet_v2_1.0_128.tflite", armnn::TensorShape({ 1, 128, 128, 3}), "input", "MobilenetV2/Predictions/Reshape_1", 128, 128};
-    Model_Table["mobilenet_v2_1.0_96.tflite"] = {"tflite-binary", MODEL_TYPE_FLOAT32, base_more_models_path_tensorflow_lite + "/Mobile_Net_V2_Model/mobilenet_v2_1.0_96.tflite", armnn::TensorShape({ 1, 96, 96, 3}), "input", "MobilenetV2/Predictions/Reshape_1", 96, 96};
-    Model_Table["mobilenet_v2_0.75_224.tflite"] = {"tflite-binary", MODEL_TYPE_FLOAT32, base_more_models_path_tensorflow_lite + "/Mobile_Net_V2_Model/mobilenet_v2_0.75_224.tflite", armnn::TensorShape({ 1, 224, 224, 3}), "input","MobilenetV2/Predictions/Reshape_1", 224, 224};
-    Model_Table["mobilenet_v2_0.75_192.tflite"] = {"tflite-binary", MODEL_TYPE_FLOAT32, base_more_models_path_tensorflow_lite + "/Mobile_Net_V2_Model/mobilenet_v2_0.75_192.tflite", armnn::TensorShape({ 1, 192, 192, 3}), "input", "MobilenetV2/Predictions/Reshape_1", 192, 192};
-    Model_Table["mobilenet_v2_0.75_160.tflite"] = {"tflite-binary", MODEL_TYPE_FLOAT32, base_more_models_path_tensorflow_lite + "/Mobile_Net_V2_Model/mobilenet_v2_0.75_160.tflite", armnn::TensorShape({ 1, 160, 160, 3}), "input", "MobilenetV2/Predictions/Reshape_1", 160, 160};
-    Model_Table["mobilenet_v2_0.75_128.tflite"] = {"tflite-binary", MODEL_TYPE_FLOAT32, base_more_models_path_tensorflow_lite + "/Mobile_Net_V2_Model/mobilenet_v2_0.75_128.tflite", armnn::TensorShape({ 1, 128, 128, 3}), "input", "MobilenetV2/Predictions/Reshape_1", 128, 128};
-    Model_Table["mobilenet_v2_0.75_96.tflite"] = {"tflite-binary", MODEL_TYPE_FLOAT32, base_more_models_path_tensorflow_lite + "/Mobile_Net_V2_Model/mobilenet_v2_0.75_96.tflite", armnn::TensorShape({ 1, 96, 96, 3}), "input", "MobilenetV2/Predictions/Reshape_1", 96, 96};
-    Model_Table["mobilenet_v2_0.5_224.tflite"] = {"tflite-binary", MODEL_TYPE_FLOAT32, base_more_models_path_tensorflow_lite + "/Mobile_Net_V2_Model/mobilenet_v2_0.5_224.tflite", armnn::TensorShape({ 1, 224, 224, 3}), "input","MobilenetV2/Predictions/Reshape_1", 224, 224};
-    Model_Table["mobilenet_v2_0.5_192.tflite"] = {"tflite-binary", MODEL_TYPE_FLOAT32, base_more_models_path_tensorflow_lite + "/Mobile_Net_V2_Model/mobilenet_v2_0.5_192.tflite", armnn::TensorShape({ 1, 192, 192, 3}), "input","MobilenetV2/Predictions/Reshape_1", 192, 192};
-    Model_Table["mobilenet_v2_0.5_160.tflite"] = {"tflite-binary", MODEL_TYPE_FLOAT32, base_more_models_path_tensorflow_lite + "/Mobile_Net_V2_Model/mobilenet_v2_0.5_160.tflite", armnn::TensorShape({ 1, 160, 160, 3}), "input", "MobilenetV2/Predictions/Reshape_1", 160, 160};
-    Model_Table["mobilenet_v2_0.5_128.tflite"] = {"tflite-binary", MODEL_TYPE_FLOAT32, base_more_models_path_tensorflow_lite + "/Mobile_Net_V2_Model/mobilenet_v2_0.5_128.tflite", armnn::TensorShape({ 1, 128, 128, 3}), "input", "MobilenetV2/Predictions/Reshape_1", 128, 128};
-    Model_Table["mobilenet_v2_0.5_96.tflite"] = {"tflite-binary", MODEL_TYPE_FLOAT32, base_more_models_path_tensorflow_lite + "/Mobile_Net_V2_Model/mobilenet_v2_0.5_96.tflite", armnn::TensorShape({ 1, 96, 96, 3}), "input", "MobilenetV2/Predictions/Reshape_1", 96, 96};
-    Model_Table["mobilenet_v2_0.35_224.tflite"] = {"tflite-binary", MODEL_TYPE_FLOAT32, base_more_models_path_tensorflow_lite + "/Mobile_Net_V2_Model/mobilenet_v2_0.35_224.tflite", armnn::TensorShape({ 1, 224, 224, 3}), "input", "MobilenetV2/Predictions/Reshape_1", 224, 224};
-    Model_Table["mobilenet_v2_0.35_192.tflite"] = {"tflite-binary", MODEL_TYPE_FLOAT32, base_more_models_path_tensorflow_lite + "/Mobile_Net_V2_Model/mobilenet_v2_0.35_192.tflite", armnn::TensorShape({ 1, 192, 192, 3}), "input", "MobilenetV2/Predictions/Reshape_1", 192, 192};
-    Model_Table["mobilenet_v2_0.35_160.tflite"] = {"tflite-binary", MODEL_TYPE_FLOAT32, base_more_models_path_tensorflow_lite + "/Mobile_Net_V2_Model/mobilenet_v2_0.35_160.tflite", armnn::TensorShape({ 1, 160, 160, 3}), "input", "MobilenetV2/Predictions/Reshape_1", 160, 160};
-    Model_Table["mobilenet_v2_0.35_128.tflite"] = {"tflite-binary", MODEL_TYPE_FLOAT32, base_more_models_path_tensorflow_lite + "/Mobile_Net_V2_Model/mobilenet_v2_0.35_128.tflite", armnn::TensorShape({ 1, 128, 128, 3}), "input", "MobilenetV2/Predictions/Reshape_1", 128, 128};
-    Model_Table["mobilenet_v2_0.35_96.tflite"] = {"tflite-binary", MODEL_TYPE_FLOAT32, base_more_models_path_tensorflow_lite + "/Mobile_Net_V2_Model/mobilenet_v2_0.35_96.tflite", armnn::TensorShape({ 1, 96, 96, 3}), "input", "MobilenetV2/Predictions/Reshape_1", 96, 96};
+        // Skip and print any line that does not contain an '=' sign
+        if (line.find('=') == std::string::npos)
+        {
+            std::cout << "Invalid format: " << line << std::endl << "Please check line: "
+                      << line_number << " in the text file: " << filepath << std::endl;
+            continue;
+        }
 
-    //ONNX model
-    Model_Table["mobilenet_v2-1.0.onnx"] = {"onnx-binary", MODEL_TYPE_FLOAT32, base_more_models_path_onnx + "/mobilenetv2-1.0.onnx", armnn::TensorShape({ 1, 224, 224, 3}), "data", "mobilenetv20_output_flatten0_reshape0", 224, 224};
+        std::stringstream model_info(line);
+
+        // Retrieve the model key used to identify the model
+        std::string key;
+        std::getline(model_info, key, '=');
+
+        if (key.empty())
+        {
+            std::cout << "No model name set: " << line << std::endl << "Please check line: "
+                      << line_number << " in the text file: " << filepath << std::endl;
+            continue;
+        }
+
+        model_params params;
+        std::string value;
+        int value_count = 0;
+
+        // Retrieve model information from the text file
+        // Each value is located by looking for commas ',' as delimiters
+        while (std::getline(model_info, value, ','))
+        {
+            switch (value_count)
+            {
+                case 0:
+                    params.modelFormat = value;
+                    break;
+                case 1:
+                    params.ModelDtype = value;
+
+                    if (params.ModelDtype != "float32" && params.ModelDtype != "uint8")
+                    {
+                        std::cout << "Invalid datatype for model: " << key << std::endl << "Please check line: "
+                                  << line_number << " in the text file: " << filepath << std::endl;
+                        skip_model = true;
+                    }
+
+                    break;
+                case 2:
+                {
+                    params.modelPath = value;
+                    std::ifstream model_file(params.modelPath);
+
+                    if (!model_file)
+                    {
+                        std::cout << "Cannot read file: " << params.modelPath << std::endl << "Please check line: "
+                                  << line_number << " in the text file: " << filepath << std::endl;
+                        skip_model = true;
+                    }
+
+                    break;
+                }
+                case 3:
+                {
+                    std::stringstream tensor_dimensions(value);
+                    std::string dim;
+                    std::vector<unsigned int> dimensions;
+
+                    // 'x' is used as the deliminator to find the values for the dimensions
+                    while (std::getline(tensor_dimensions, dim, 'x'))
+                    {
+                        dimensions.push_back(std::stoi(dim));
+                    }
+
+                    // Make sure that the number of dimensions is equal to 4 otherwise skip the model
+                    if (dimensions.size() != 4)
+                    {
+                        std::cout << "Invalid inputTensorShape parameters for model: " << key << std::endl << "Please check line: "
+                                  << line_number << " in the text file: " << filepath << std::endl;
+                        skip_model = true;
+                    }
+
+                    // Extract the input image height and width from the tensor shape provided
+                    params.inputTensorShape = armnn::TensorShape({dimensions[0], dimensions[1], dimensions[2], dimensions[3]});
+                    params.inputImageWidth = dimensions[2];
+                    params.inputImageHeight = dimensions[1];
+                    break;
+                }
+                case 4:
+                    params.inputName = value;
+                    break;
+                case 5:
+                    params.outputName = value;
+                    break;
+                default:
+                    std::cout << "Unexpected value encounted for model: " << key << std::endl;
+                    break;
+            }
+
+            if (skip_model)
+                break;
+
+            value_count++;
+        }
+
+        // Skip model if there are attributes missing or too many attributes present
+        if (value_count != 6 && !skip_model)
+        {
+            skip_model = true;
+            std::cout << "Invalid format for model: " << key << std::endl << "Please check line: "
+                      << line_number << " in the text file: " << filepath << std::endl;
+        }
+        model_line_numbers[key] = line_number;
+
+        // Create model map and model order
+        if (!skip_model)
+        {
+            Model_Table[key] = params;
+            excelTestModel.push_back(key);
+        }
+        else
+        {
+            skipped_models.push_back(key);
+        }
+    }
+
+    infile.close();
+
+    return Model_Table;
 }
 
 // This will run a test
 template<typename TDataType>
 int RunTest(const std::string& modelFormat,
-            const ModelType ModelDtype,
+            const string ModelDtype,
             const armnn::TensorShape& inputTensorShape,
             const std::string& modelPath,
             const std::string& inputName,
@@ -519,7 +501,7 @@ int RunTest(const std::string& modelFormat,
     else
     {
         std::cout << "Unknown model format: '" << modelFormat << "'. Please include 'binary' or 'text'";
-        return EXIT_FAILURE;
+        return MODEL_TEST_SKIP;
     }
 
     // Forward to implementation based on the parser type
@@ -536,7 +518,7 @@ int RunTest(const std::string& modelFormat,
                                                          enableFp16TurboMode, backend);
 #else
         std::cout << "Not built with Onnx parser support.";
-        return EXIT_FAILURE;
+        return MODEL_TEST_FAIL;
 #endif
     }
     else if(modelFormat.find("tflite") != std::string::npos)
@@ -546,7 +528,7 @@ int RunTest(const std::string& modelFormat,
         {
             std::cout << "Unknown model format: '" << modelFormat << "'. Only 'binary' format supported \
               for tflite files";
-            return EXIT_FAILURE;
+            return MODEL_TEST_SKIP;
         }
 
         test_parser = tfLite;
@@ -559,14 +541,14 @@ int RunTest(const std::string& modelFormat,
                                                                  enableFp16TurboMode, backend);
 #else
         std::cout << "Not built with TfLite parser support.";
-        return EXIT_FAILURE;
+        return MODEL_TEST_FAIL;
 #endif
     }
     else
     {
         std::cout << "Unknown model format: '" << modelFormat <<
                                  "'. Please include 'tflite' or 'onnx'";
-        return EXIT_FAILURE;
+        return MODEL_TEST_SKIP;
     }
 }
 
@@ -591,7 +573,8 @@ void loadLabelFile(string label_file_name)
 }
 
 void display_usage() {
-  std::cout << "./armnnBenchmark [-m] [-f] [-c <backend>] [-n <log level>]  [-i <iterations>] [-h]\n"
+  std::cout << "./armnnBenchmark -l <model attributes text file path> [-m] [-f] [-c <backend>] [-n <log level>]  [-i <iterations>] [-h]\n"
+            << "--list-of-models, -l: file path to .txt file containing the list of models and their attributes\n"
             << "--enable-fast-math, -m: use fast maths armnn option\n"
             << "--fp16-turbo-mode, -f: use fp16-turbo-mode armnn option\n"
             << "--compute, -c: [CpuAcc|CpuRef|GpuAcc] (Default: CpuAcc)\n"
@@ -603,14 +586,13 @@ void display_usage() {
 
 int main(int argc, char** argv)
 {
+    std::string model_list_filepath;
     armnn::LogSeverity armnnLogLevel = armnn::LogSeverity::Warning;
 
     // Default to the CpuAcc backend, otherwise InferenceModel.hpp
     // will use CpuRef
     std::vector<armnn::BackendId> backend = {armnn::Compute::CpuAcc};
     benched_backend = " (CpuAcc)";
-
-    initModelTable();
 
     model_params params;
 
@@ -620,13 +602,16 @@ int main(int argc, char** argv)
     size_t subgraphId = 0;
     string inputImageName = "grace_hopper.jpg";
     string inputImagePath = "/usr/bin/armnn/examples/images/";
-    int ret = 0;
+    std::vector<std::string> failed_models;
+    int ret_app = 0;
+    int ret_test_result = 0;
 
     while (1) {
         int arguement;
         int option_index = 0;
 
         static struct option long_options[] = {
+                {"list-of-models", required_argument, nullptr, 'l'},
                 {"enable-fast-math", no_argument, nullptr, 'm'},
                 {"fp16-turbo-mode", no_argument, nullptr, 'f'},
                 {"compute", required_argument, nullptr, 'c'},
@@ -636,13 +621,22 @@ int main(int argc, char** argv)
                 {nullptr, 0, nullptr, 0}
         };
 
-        arguement = getopt_long(argc, argv, "mfhc:i:",
+        arguement = getopt_long(argc, argv, "l:mfhc:i:",
                                 long_options, &option_index);
 
         /* Detect the end of the options. */
         if (arguement == -1) break;
 
         switch (arguement) {
+          case 'l':
+              model_list_filepath = optarg;
+              if (model_list_filepath.empty())
+              {
+                  std::cout << "Error: option -l not specified." << std::endl;
+                  display_usage();
+                  exit(-1);
+              }
+          break;
           case 'm':
               enableFastMath = true;
           break;
@@ -686,8 +680,16 @@ int main(int argc, char** argv)
         }
     }
 
+    if (model_list_filepath.empty())
+    {
+        std::cout << "Error: -l option is mandatory." << std::endl;
+        display_usage();
+        exit(-1);
+    }
+
     armnn::ConfigureLogging(true, true, armnnLogLevel);
-    CreateModelTestOrder();
+
+    std::map<std::string, model_params> Model_Table = CreateModelMap(model_list_filepath);
 
     for ( auto it = excelTestModel.begin(); it != excelTestModel.end(); it++ )
     {
@@ -703,26 +705,31 @@ int main(int argc, char** argv)
 
         benched_model = *it + ",";
 
-        switch (params.ModelDtype) {
-        case MODEL_TYPE_FLOAT32:
+        if (params.ModelDtype == "float32")
+        {
             benched_type = "float32,";
-            RunTest<float>(params.modelFormat, params.ModelDtype, params.inputTensorShape, params.modelPath,
+            ret_test_result = RunTest<float>(params.modelFormat, params.ModelDtype, params.inputTensorShape, params.modelPath,
             params.inputName, inputImagePath, inputImageName, params.inputImageWidth, params.inputImageHeight,
             params.outputName, enableProfiling, subgraphId, enableFastMath, enableFp16TurboMode, &backend);
-            break;
-        case MODEL_TYPE_UINT8:
+        }
+        else if (params.ModelDtype == "uint8")
+        {
             benched_type = "uint8,";
-            RunTest<uint8_t>(params.modelFormat, params.ModelDtype, params.inputTensorShape, params.modelPath,
+            ret_test_result = RunTest<uint8_t>(params.modelFormat, params.ModelDtype, params.inputTensorShape, params.modelPath,
             params.inputName, inputImagePath, inputImageName, params.inputImageWidth, params.inputImageHeight,
             params.outputName, enableProfiling, subgraphId, enableFastMath, enableFp16TurboMode, &backend);
-            break;
-        default:
-            std::cout << "un-supported model type " << params.ModelDtype << " for model " << *it << std::endl;
-            ret = -1;
-            continue;
         }
 
         bench.push_back("\n");
+
+        if (ret_test_result == MODEL_TEST_SKIP)
+        {
+            skipped_models.push_back(*it);
+        }
+        else if (ret_test_result == MODEL_TEST_FAIL)
+        {
+            failed_models.push_back(*it);
+        }
     }
 
     /* Output benchmarks */
@@ -731,7 +738,41 @@ int main(int argc, char** argv)
     }
     std::cout << std::endl;
 
+    if (!skipped_models.empty())
+    {
+        ret_app = EXIT_FAILURE;
+        std::cout << "====================" << std::endl << "Models skipped from "
+                  << model_list_filepath << " are:" << std::endl;
+
+        for (const auto& skipped_model : skipped_models)
+        {
+            if (model_line_numbers.find(skipped_model) != model_line_numbers.end())
+            {
+                std::cout << skipped_model << " on line number " << model_line_numbers[skipped_model] << std::endl;
+            }
+        }
+        std::cout << "Please check formatting" << std::endl;
+    }
+
+    if (!failed_models.empty())
+    {
+        ret_app = EXIT_FAILURE;
+        std::cout << "====================" << std::endl << "Models failed from "
+                  << model_list_filepath << " are:" << std::endl;
+        for (const auto& failed_model : failed_models)
+        {
+            std::cout << failed_model << std::endl;
+        }
+
+        std::cout << "Please check logs" << std::endl;
+    }
+
+    if (excelTestModel.empty())
+    {
+        std::cout << "No models found in file: " << model_list_filepath << std::endl;
+    }
+
     bench.clear();
 
-    return ret;
+    return ret_app;
 }
