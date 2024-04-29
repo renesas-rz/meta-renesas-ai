@@ -312,7 +312,7 @@ test:benchmark:armnn:hihope-rzg2h:
   needs: ["benchmark:armnn:hihope-rzg2h"]
   extends: [".test-meta-renesas-ai", ".hihope-rzg2h"]
   variables:
-    FRAMEWORK_ARG: "-f armnn -f tensorflow-lite"
+    FRAMEWORK_ARG: "-f armnn"
 
 test:benchmark:ort:hihope-rzg2h:
   needs: ["benchmark:ort:hihope-rzg2h"]
@@ -330,7 +330,7 @@ test:benchmark:armnn:hihope-rzg2m:
   needs: ["benchmark:armnn:hihope-rzg2m"]
   extends: [".test-meta-renesas-ai", ".hihope-rzg2m"]
   variables:
-    FRAMEWORK_ARG: "-f armnn -f tensorflow-lite"
+    FRAMEWORK_ARG: "-f armnn"
 
 test:benchmark:ort:hihope-rzg2m:
   needs: ["benchmark:ort:hihope-rzg2m"]
@@ -348,7 +348,7 @@ test:benchmark:armnn:hihope-rzg2n:
   needs: ["benchmark:armnn:hihope-rzg2n"]
   extends: [".test-meta-renesas-ai", ".hihope-rzg2n"]
   variables:
-    FRAMEWORK_ARG: "-f armnn -f tensorflow-lite"
+    FRAMEWORK_ARG: "-f armnn"
 
 test:benchmark:ort:hihope-rzg2n:
   needs: ["benchmark:ort:hihope-rzg2n"]
@@ -366,7 +366,7 @@ test:benchmark:armnn:ek874:
   needs: ["benchmark:armnn:ek874"]
   extends: [".test-meta-renesas-ai", ".ek874"]
   variables:
-    FRAMEWORK_ARG: "-f armnn -f tensorflow-lite"
+    FRAMEWORK_ARG: "-f armnn"
 
 test:benchmark:ort:ek874:
   needs: ["benchmark:ort:ek874"]
@@ -384,7 +384,7 @@ test:benchmark:armnn:smarc-rzg2l:
   needs: ["benchmark:armnn:smarc-rzg2l"]
   extends: [".test-meta-renesas-ai", ".smarc-rzg2l"]
   variables:
-    FRAMEWORK_ARG: "-f armnn -f tensorflow-lite"
+    FRAMEWORK_ARG: "-f armnn"
 
 test:benchmark:ort:smarc-rzg2l:
   needs: ["benchmark:ort:smarc-rzg2l"]
@@ -402,7 +402,7 @@ test:benchmark:armnn:smarc-rzg2lc:
   needs: ["benchmark:armnn:smarc-rzg2lc"]
   extends: [".test-meta-renesas-ai", ".smarc-rzg2lc"]
   variables:
-    FRAMEWORK_ARG: "-f armnn -f tensorflow-lite"
+    FRAMEWORK_ARG: "-f armnn"
 
 test:benchmark:ort:smarc-rzg2lc:
   needs: ["benchmark:ort:smarc-rzg2lc"]
@@ -420,7 +420,7 @@ test:benchmark:armnn:smarc-rzg2ul:
   needs: ["benchmark:armnn:smarc-rzg2ul"]
   extends: [".test-meta-renesas-ai", ".smarc-rzg2ul"]
   variables:
-    FRAMEWORK_ARG: "-f armnn -f tensorflow-lite"
+    FRAMEWORK_ARG: "-f armnn"
 
 test:benchmark:ort:smarc-rzg2ul:
   needs: ["benchmark:ort:smarc-rzg2ul"]
@@ -438,7 +438,7 @@ test:benchmark:armnn:smarc-rzv2l:
   needs: ["benchmark:armnn:smarc-rzv2l"]
   extends: [".test-meta-renesas-ai", ".smarc-rzv2l"]
   variables:
-    FRAMEWORK_ARG: "-f armnn -f tensorflow-lite"
+    FRAMEWORK_ARG: "-f armnn"
 
 test:benchmark:ort:smarc-rzv2l:
   needs: ["benchmark:ort:smarc-rzv2l"]

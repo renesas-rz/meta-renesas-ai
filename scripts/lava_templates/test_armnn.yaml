@@ -23,3 +23,24 @@
       name: armnn-tests
       path: inline/armnn-tests.yaml
 
+- test:
+    timeout:
+      hours: 2
+    definitions:
+    - repository:
+        metadata:
+          format: Lava-Test Test Definition 1.0
+          name: tflite-tests
+          description: "A series of tests for the TensorFlow Lite ML framework"
+        run:
+          steps:
+               - cd /usr/bin/ai-tests
+               - ./run_tests.sh meta-renesas-ai_tflite_t_007.sh
+               - ./run_tests.sh meta-renesas-ai_tflite_t_008.sh
+               - ./run_tests.sh meta-renesas-ai_tflite_t_009.sh
+               - ./run_tests.sh meta-renesas-ai_tflite_t_013.sh
+      from: inline
+      name: tflite-tests
+      path: inline/tflite-tests.yaml
+
+
