@@ -184,8 +184,10 @@ echo 'CIP_MODE = "None"' >> conf/local.conf
 
 # To add ArmNN support
 echo 'IMAGE_INSTALL_append = " armnn-dev armnn-examples armnn-tensorflow-lite-dev armnn-onnx-dev armnn-onnx-examples tensorflow-lite-python"' >> conf/local.conf
-echo 'IMAGE_INSTALL_append = " tensorflow-lite-staticdev tensorflow-lite-dev tensorflow-lite-benchmark armnn-benchmark"' >> conf/local.conf
+echo 'IMAGE_INSTALL_append = " tensorflow-lite-staticdev tensorflow-lite-dev armnn-benchmark"' >> conf/local.conf
 echo 'IMAGE_INSTALL_append = " tensorflow-lite-delegate-benchmark"' >> conf/local.conf
+# Set TensorFlow Lite to v2.5.3 for ArmNN support since it does not support v2.15.1
+sed -i 's/PREFERRED_VERSION_tensorflow-lite ?= "2.15.1"/PREFERRED_VERSION_tensorflow-lite ?= "2.5.3"/g' ../meta-renesas-ai/conf/layer.conf
 
 # To add ONNX Runtime support
 echo 'IMAGE_INSTALL_append = " onnxruntime"' >> conf/local.conf

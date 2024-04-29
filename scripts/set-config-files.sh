@@ -162,7 +162,7 @@ configure_packages () {
 
 		# Enable TensorFlow Lite and ArmNN Benchmark
 		if [ ${BENCHMARK} == "true" ]; then
-			echo 'IMAGE_INSTALL_append = " tensorflow-lite-staticdev tensorflow-lite-dev tensorflow-lite-benchmark armnn-benchmark"' >> ${BUILD_DIR}/conf/local.conf
+			echo 'IMAGE_INSTALL_append = " tensorflow-lite-staticdev tensorflow-lite-dev armnn-benchmark"' >> ${BUILD_DIR}/conf/local.conf
 
 			# Enable TensorFlow Lite Delegate benchmark
 			echo 'IMAGE_INSTALL_append = " tensorflow-lite-delegate-benchmark"' >> ${BUILD_DIR}/conf/local.conf
@@ -198,6 +198,12 @@ echo "Build Directory: ${BUILD_DIR}"
 echo "Platform: ${PLATFORM}"
 echo "AI Framework: ${FRAMEWORK}"
 echo "Benchmark: ${BENCHMARK}"
+
+# Set TensorFlow Lite version to v2.5.3 for ArmNN, since ArmNN v22.02
+# requires TensorFlow Lite r2.5 and is not compatible with v2.15.1
+if [ ${FRAMEWORK} == "armnn" ]; then
+	sed -i 's/PREFERRED_VERSION_tensorflow-lite ?= "2.15.1"/PREFERRED_VERSION_tensorflow-lite ?= "2.5.3"/g' ${WORK_DIR}/meta-renesas-ai/conf/layer.conf
+fi
 
 configure_layers
 configure_packages
