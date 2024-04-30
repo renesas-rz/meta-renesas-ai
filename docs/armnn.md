@@ -37,7 +37,7 @@ Each library can be verified with the relevant sample application below,
 if the relevant *-examples* was included in the build (see Build Configuration
 above).
 
-**armnn-examples**: *UnitTests*, *SimpleSample*, *RenesasSample-Armnn*\
+**armnn-examples**: *UnitTests*, *SimpleSample*, *RenesasSample-Armnn*, *ExecuteNetwork*\
 **armnn-tensorflow-lite**: *TfLiteMobilenetQuantized-Armnn*\
 **armnn-onnx-examples**: *OnnxMobileNet-Armnn*
 
@@ -56,9 +56,13 @@ $ ./UnitTests -- --dynamic-backend-build-dir "/usr/bin/armnn/examples/UnitTests/
 ```
 3. The output of a healthy execution should look like the following:
 ```
-Running 3360 test cases...
-
-*** No errors detected
+[doctest] doctest version is "2.4.6"
+[doctest] run with "--help" for options
+...
+===============================================================================
+[doctest] test cases:   4397 |   4397 passed | 0 failed | 3 skipped
+[doctest] assertions: 802893 | 802893 passed | 0 failed |
+[doctest] Status: SUCCESS!
 ```
 
 ### DelegateUnitTests
@@ -71,14 +75,20 @@ $ ./DelegateUnitTests --test-suite=*CpuAcc*
 ```
 [doctest] doctest version is "2.4.6"
 [doctest] run with "--help" for options
+INFO: TfLiteArmnnDelegate: Added backend CpuAcc
 INFO: TfLiteArmnnDelegate: Created TfLite ArmNN delegate.
-Info: ArmNN v28.0.0
+INFO: TfLiteArmnnDelegate: Added backend CpuRef
+INFO: TfLiteArmnnDelegate: Added backend CpuRef
+INFO: TfLiteArmnnDelegate: Added backend CpuRef
+INFO: TfLiteArmnnDelegate: Added backend CpuRef
+INFO: TfLiteArmnnDelegate: Added backend CpuRef
+INFO: TfLiteArmnnDelegate: Added backend CpuRef
+INFO: TfLiteArmnnDelegate: Added backend CpuRef
 ...
-[doctest] test cases:   195 |   195 passed | 0 failed | 424 skipped
-[doctest] assertions: 15487 | 15487 passed | 0 failed |
+===============================================================================
+[doctest] test cases:   7 |   7 passed | 0 failed | 287 skipped
+[doctest] assertions: 628 | 628 passed | 0 failed |
 [doctest] Status: SUCCESS!
-[doctest] doctest version is "2.4.0"
-[doctest] run with "--help" for options
 ```
 3. Execute *DelegateUnitTests* with CPU Reference by running the following commands:
 ```
@@ -89,10 +99,41 @@ $ ./DelegateUnitTests --test-suite=*CpuRef*
 ```
 [doctest] doctest version is "2.4.6"
 [doctest] run with "--help" for options
+INFO: TfLiteArmnnDelegate: Added backend CpuRef
 INFO: TfLiteArmnnDelegate: Created TfLite ArmNN delegate.
+INFO: TfLiteArmnnDelegate: Added backend CpuAcc
+INFO: TfLiteArmnnDelegate: Added backend CpuRef
+INFO: TfLiteArmnnDelegate: Added backend CpuAcc
+INFO: TfLiteArmnnDelegate: Added backend CpuRef
+INFO: TfLiteArmnnDelegate: Added backend CpuRef
+INFO: TfLiteArmnnDelegate: Added backend CpuAcc
+INFO: TfLiteArmnnDelegate: Added backend CpuRef
+INFO: TfLiteArmnnDelegate: Added backend CpuRef
+INFO: TfLiteArmnnDelegate: Added backend CpuRef
+INFO: TfLiteArmnnDelegate: Added backend CpuRef
+INFO: TfLiteArmnnDelegate: Added backend CpuRef
+INFO: TfLiteArmnnDelegate: Added backend CpuRef
+INFO: TfLiteArmnnDelegate: Added backend CpuRef
+INFO: TfLiteArmnnDelegate: Added backend CpuAcc
+INFO: TfLiteArmnnDelegate: Added backend CpuRef
+INFO: TfLiteArmnnDelegate: Added backend CpuAcc
+INFO: TfLiteArmnnDelegate: Added backend CpuRef
+INFO: TfLiteArmnnDelegate: Added backend CpuAcc
+INFO: TfLiteArmnnDelegate: Added backend CpuRef
+INFO: TfLiteArmnnDelegate: Added backend CpuAcc
+INFO: TfLiteArmnnDelegate: Added backend CpuRef
+INFO: TfLiteArmnnDelegate: Added backend CpuAcc
+INFO: TfLiteArmnnDelegate: Added backend CpuRef
+INFO: TfLiteArmnnDelegate: Added backend CpuRef
+INFO: TfLiteArmnnDelegate: Added backend CpuRef
+INFO: TfLiteArmnnDelegate: Added backend CpuRef
+INFO: TfLiteArmnnDelegate: Added backend CpuAcc
+INFO: TfLiteArmnnDelegate: Added backend CpuRef
+INFO: TfLiteArmnnDelegate: Added backend CpuAcc
+INFO: TfLiteArmnnDelegate: Added backend CpuRef
 ===============================================================================
-[doctest] test cases:   226 |   226 passed | 0 failed | 393 skipped
-[doctest] assertions: 18543 | 18543 passed | 0 failed |
+[doctest] test cases:   21 |   21 passed | 0 failed | 273 skipped
+[doctest] assertions: 2052 | 2052 passed | 0 failed |
 [doctest] Status: SUCCESS!
 ```
 
@@ -126,23 +167,23 @@ $ ./TfLiteMobilenetQuantized-Armnn -d /usr/bin/armnn/examples/images/ \
 
 2. The output of a healthy execution should look like the following:
 ```
-Info: ArmNN v28.0.0
-Info: Initialization time: 19.73 ms.
-Info: Network parsing time: 149.43 ms.
-Info: Optimization time: 7.52 ms.
-Info: Network loading time: 220.87 ms.
-Info: Execution time: 63.93 ms.
-Info: Execution time: 49.87 ms.
+Info: ArmNN v33.1.0
+Info: Initialization time: 0.18 ms.
+Info: Network parsing time: 152.52 ms.
+Info: Optimization time: 7.27 ms.
+Info: Network loading time: 38.33 ms.
+Info: Execution time: 205.03 ms.
+Info: Execution time: 60.63 ms.
 Info: = Prediction values for test #0
 Info: Top(1) prediction is 653 with value: 0.753906
 Info: Top(2) prediction is 907 with value: 0.140625
 Info: Top(3) prediction is 458 with value: 0.0195312
 Info: Top(4) prediction is 466 with value: 0.0117188
 Info: Top(5) prediction is 452 with value: 0.00390625
-Info: Total time for 1 test cases: 0.050 seconds
-Info: Average time per test case: 50.043 ms
+Info: Total time for 1 test cases: 0.061 seconds
+Info: Average time per test case: 60.756 ms
 Info: Overall accuracy: 1.000
-Info: Shutdown time: 3.68 ms.
+Info: Shutdown time: 1.87 ms.
 ```
 
 ### OnnxMobileNet-Armnn
@@ -156,37 +197,37 @@ $ ./OnnxMobileNet-Armnn -d /usr/bin/armnn/examples/images/ \
 
 2. The output of a healthy execution should look like the following:
 ```
-Info: ArmNN v28.0.0
-Info: Initialization time: 32.87 ms.
-Info: Network parsing time: 210.76 ms.
-Info: Optimization time: 239.95 ms.
-Info: Network loading time: 610.70 ms.
-Info: Execution time: 801.13 ms.
-Info: Execution time: 766.09 ms.
+Info: ArmNN v33.1.0
+Info: Initialization time: 0.18 ms.
+Info: Network parsing time: 365.14 ms.
+Info: Optimization time: 121.29 ms.
+Info: Network loading time: 268.53 ms.
+Info: Execution time: 602.47 ms.
+Info: Execution time: 374.40 ms.
 Info: = Prediction values for test #0
 Info: Top(1) prediction is 652 with value: 13.1776
 Info: Top(2) prediction is 457 with value: 11.1157
-Info: Top(3) prediction is 451 with value: 9.20583
-Info: Top(4) prediction is 439 with value: 8.73521
-Info: Top(5) prediction is 400 with value: 7.13392
-Info: Execution time: 766.69 ms.
+Info: Top(3) prediction is 451 with value: 9.20581
+Info: Top(4) prediction is 439 with value: 8.7352
+Info: Top(5) prediction is 400 with value: 7.13391
+Info: Execution time: 375.17 ms.
 Info: = Prediction values for test #1
 Info: Top(1) prediction is 652 with value: 13.1776
 Info: Top(2) prediction is 457 with value: 11.1157
-Info: Top(3) prediction is 451 with value: 9.20583
-Info: Top(4) prediction is 439 with value: 8.73521
-Info: Top(5) prediction is 400 with value: 7.13392
-Info: Execution time: 766.77 ms.
+Info: Top(3) prediction is 451 with value: 9.20581
+Info: Top(4) prediction is 439 with value: 8.7352
+Info: Top(5) prediction is 400 with value: 7.13391
+Info: Execution time: 375.35 ms.
 Info: = Prediction values for test #2
 Info: Top(1) prediction is 652 with value: 13.1776
 Info: Top(2) prediction is 457 with value: 11.1157
-Info: Top(3) prediction is 451 with value: 9.20583
-Info: Top(4) prediction is 439 with value: 8.73521
-Info: Top(5) prediction is 400 with value: 7.13392
-Info: Total time for 3 test cases: 2.300 seconds
-Info: Average time per test case: 766.689 ms
+Info: Top(3) prediction is 451 with value: 9.20581
+Info: Top(4) prediction is 439 with value: 8.7352
+Info: Top(5) prediction is 400 with value: 7.13391
+Info: Total time for 3 test cases: 1.125 seconds
+Info: Average time per test case: 375.077 ms
 Info: Overall accuracy: 1.000
-Info: Shutdown time: 14.03 ms.
+Info: Shutdown time: 4.94 ms.
 ```
 
 ### RenesasSample-Armnn
@@ -202,6 +243,59 @@ $ ./RenesasSample-Armnn
 2. The following models will be run automatically:
 * TensorFlow Lite: mobilenet quant v1.0.224
 
+3. The output of a healthy execution should look like the following:
+```
+====================
+current model is mobilenet_v1_1.0_224_quant.tflite
+Info: ArmNN v33.1.0
+Info: Initialization time: 0.13 ms.
+Info: Network parsing time: 75.72 ms.
+Info: Optimization time: 7.57 ms.
+Info: Network loading time: 38.40 ms.
+Quant Model is loaded
+Scale 0.007812
+Offset 128
+Info: Execution time: 189.77 ms.
+Info: Execution time: 61.74 ms.
+Info: Execution time: 59.86 ms.
+Info: Execution time: 60.25 ms.
+Info: Execution time: 59.52 ms.
+Info: Execution time: 60.09 ms.
+Info: Execution time: 59.82 ms.
+Info: Execution time: 60.13 ms.
+Info: Execution time: 60.38 ms.
+Info: Execution time: 60.38 ms.
+Info: Execution time: 74.31 ms.
+Info: Execution time: 60.34 ms.
+Info: Execution time: 60.20 ms.
+Info: Execution time: 59.45 ms.
+Info: Execution time: 59.88 ms.
+Info: Execution time: 59.47 ms.
+Info: Execution time: 60.47 ms.
+Info: Execution time: 59.80 ms.
+Info: Execution time: 60.19 ms.
+Info: Execution time: 59.88 ms.
+Info: Execution time: 59.52 ms.
+Info: Execution time: 60.29 ms.
+Info: Execution time: 59.75 ms.
+Info: Execution time: 59.92 ms.
+Info: Execution time: 59.72 ms.
+Info: Execution time: 59.96 ms.
+Info: Execution time: 60.84 ms.
+Info: Execution time: 59.68 ms.
+Info: Execution time: 59.38 ms.
+Info: Execution time: 59.89 ms.
+Info: Execution time: 59.83 ms.
+Total Time Takes 1818.14 ms
+Average Time Takes 60.6047 ms
+Standard Deviation 2.60664
+= Prediction values for test Top(1) prediction is 653 with confidence: 75.3906%Result is military uniform
+Top(2) prediction is 458 with confidence: 1.95312%Result is bow tie, bow-tie, bowtie
+Top(3) prediction is 452 with confidence: 0.390625%Result is bolo tie, bolo, bola tie, bola
+Top(4) prediction is 0 with confidence: 0%Result is background
+Info: Shutdown time: 1.84 ms.
+```
+
 ### ExecuteNetwork
 *ExecuteNetwork* is a generic model inference test application,
 which takes any model and any input tensor, and simply
@@ -216,33 +310,38 @@ For example, for mobilenet_v1_1.0_224:
 1. Execute *ExecuteNetwork* by running the following commands:
 ```
 $ cd /usr/bin/armnn/examples/ExecuteNetwork/
-$ ./ExecuteNetwork -f tflite-binary -i input \
-  -o MobilenetV1/Predictions/Reshape_1 \
-  -d /usr/bin/armnn/examples/images/rsz_grace_hopper.csv -s 1,224,224,3 \
+$ ./ExecuteNetwork -c CpuAcc\
+  -d /usr/bin/armnn/examples/images/rsz_grace_hopper.csv \
   -m /usr/bin/armnn/examples/tensorflow-lite/models/mobilenet_v1_1.0_224_quant.tflite \
-  -c CpuAcc
 ```
 2. It prints out the ouput tensor, for example,
 ```
-Info: ArmNN v28.0.0
-Info: Initialization time: 24.61 ms.
-Info: Network parsing time: 148.62 ms.
-Info: Optimization time: 7.51 ms.
-Info: Network loading time: 223.71 ms.
-Info: Execution time: 64.12 ms.
+Info: ArmNN v33.1.0
+Info: Initialization time: 0.19 ms.
+Info: Optimization time: 7.52 ms
 
-MobilenetV1/Predictions/Reshape_1: 0.000000 0.000000 0.000000...
-Info:
-Inference time: 64.27 ms
+===== Network Info =====
+Inputs in order:
+input, [1,224,224,3], QAsymmU8 Quantization Offset: 128 Quantization scale: 0.0078125
+Outputs in order:
+MobilenetV1/Predictions/Reshape_1, [1,1001], QAsymmU8 Quantization Offset: 0 Quantization scale: 0.00390625
 
-Info: Shutdown time: 3.72 ms.
+Info: Inferences began at: 1600599645776666818 ns
+
+Info: Execution time: 199.69 ms.
+MobilenetV1/Predictions/Reshape_1: 0 0 0...
+Info: Inference time: 199.79 ms
+
+Info: Inferences ended at: 1600599645976817419 ns
+
+Info: Shutdown time: 1.87 ms.
 ```
 
 ## Supported Frameworks and Operators
 The Arm NN SDK supports the following operators:
 
 TensorFlow Lite:
-**https://arm-software.github.io/armnn/22.02/parsers.xhtml#S6_tf_lite_parser**
+**https://arm-software.github.io/armnn/24.02/parsers.html#S6_tf_lite_parser**
 
 ONNX:
-**https://arm-software.github.io/armnn/22.02/parsers.xhtml#S5_onnx_parser**
+**https://arm-software.github.io/armnn/24.02/parsers.html#S5_onnx_parser**
