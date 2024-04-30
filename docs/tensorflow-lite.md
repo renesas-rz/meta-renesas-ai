@@ -8,7 +8,7 @@ and quantized kernels that allow smaller and faster (fixed-point math) models.
 
 
 The official website is:
-**https://www.tensorflow.org/mobile/tflite/**
+**https://www.tensorflow.org/lite**
 
 
 In order to add TensorFlow Lite support to your project, make sure
@@ -44,16 +44,15 @@ cd /usr/bin/tensorflow-lite/examples/
 
 The output of a healthy execution should look like the following:
 ```
-Loaded model ./mobilenet_quant_v1_224.tflite
-resolved reporter
-invoked
-INFO: Initialized TensorFlow Lite runtime.
-average time: 317.484 ms
-0.666667: 458 bow tie
-0.290196: 653 military uniform
-0.0117647: 835 suit
-0.00784314: 611 jersey
-0.00392157: 922 book jacket
+INFO: Loaded model ./mobilenet_quant_v1_224.tflite
+INFO: resolved reporter
+INFO: invoked
+INFO: average time: 44.46 ms
+INFO: 0.701961: 458 bow tie
+INFO: 0.262745: 653 military uniform
+INFO: 0.0117647: 835 suit
+INFO: 0.00784314: 611 jersey
+INFO: 0.00392157: 922 book jacket
 ```
 
 To use *label_image* (Python):
@@ -67,6 +66,18 @@ python3 label_image.py \
 --num_threads 2
 ```
 
+
+The output of a healthy execution should look like the following:
+```
+0.658824: military uniform
+0.149020: Windsor tie
+0.039216: bow tie
+0.027451: mortarboard
+0.019608: bulletproof vest
+time: 70.138ms
+```
+
+
 To use *benchmark_model*:
 1. Download model data:
 `wget https://storage.googleapis.com/download.tensorflow.org/models/tflite/mobilenet_v1_224_android_quant_2017_11_08.zip`
@@ -78,8 +89,28 @@ cd /usr/bin/tensorflow-lite/examples/
 ```
 
 
-For more information about the output of the execution, please refer to
-**https://github.com/tensorflow/tensorflow/tree/master/tensorflow/contrib/lite/tools/benchmark**
+The output of a healthy execution should look like the following:
+```
+INFO: STARTING!
+INFO: Log parameter values verbosely: [0]
+INFO: Graph: [mobilenet_quant_v1_224.tflite]
+INFO: Loaded model mobilenet_quant_v1_224.tflite
+INFO: The input model file size (MB): 4.2761
+INFO: Initialized session in 5.617ms.
+INFO: Running benchmark for at least 1 iterations and at least 0.5 seconds but terminate if exceeding 150 seconds.
+INFO: count=5 first=119340 curr=102705 min=102705 max=119340 avg=107466 std=6256
+
+INFO: Running benchmark for at least 50 iterations and at least 1 seconds but terminate if exceeding 150 seconds.
+INFO: count=50 first=103238 curr=102789 min=102639 max=103238 avg=102879 std=119
+
+INFO: Inference timings in us: Init: 5617, First inference: 119340, Warmup (avg): 107466, Inference (avg): 102879
+INFO: Note: as the benchmark tool itself affects memory footprint, the following is only APPROXIMATE to the actual memory footprint of the model at runtime. Take the information at your discretion.
+INFO: Memory footprint delta from the start of the tool (MB): init=5 overall=11.2695
+```
+
+
+For more information about the benchmark tool, please refer to
+**https://github.com/tensorflow/tensorflow/tree/master/tensorflow/lite/tools/benchmark**
 
 
 To use *minimal*:
