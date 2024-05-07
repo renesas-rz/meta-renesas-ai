@@ -17,7 +17,7 @@ set -e
 # Global parameters
 RZG_AI_BSP_URL="${CI_REPOSITORY_URL:-https://github.com/renesas-rz/meta-renesas-ai.git}"
 RZG_AI_BSP_VER="${CI_COMMIT_REF_NAME:-master}"
-RZG_BSP_VER="BSP-3.0.4"
+RZG_BSP_VER="BSP-3.0.6"
 WORK_DIR="${PWD}"
 COMMAND_NAME="$0"
 INSTALL_DEPENDENCIES=false
@@ -246,12 +246,12 @@ download_source () {
 	update_git_repo \
 		poky \
 		git://git.yoctoproject.org/poky \
-		aa0073041806c9f417a33b0b7f747d2a86289eda
+		a9e3cc3b9eab7a83c715bb8440454e8fea852c2a
 
 	update_git_repo \
 		meta-openembedded \
 		git://git.openembedded.org/meta-openembedded \
-		7952135f650b4a754e2255f5aa03973a32344123
+		daa4619fe3fbf8c28f342c4a7163a84a330f7653
 
 	update_git_repo \
 		meta-gplv2 \
@@ -304,11 +304,11 @@ install_prop_libs () {
 			cp -r ${PROP_DIR} ${WORK_DIR}/meta-rz-features
 		else
 			pushd ${PROP_DIR}
-			unzip RTK0EF0045Z13001ZJ-v1.1.0_EN.zip
-			tar -xf RTK0EF0045Z13001ZJ-v1.1.0_EN/meta-rz-features_graphics_v1.1.0.tar.gz -C ${WORK_DIR}
+			unzip RTK0EF0045Z13001ZJ-v1.2.2_EN.zip
+			tar -xf RTK0EF0045Z13001ZJ-v1.2.2_EN/meta-rz-features_graphics_v1.2.2.tar.gz -C ${WORK_DIR}
 
-			unzip RTK0EF0045Z15001ZJ-v1.1.0_EN.zip
-			tar -xf RTK0EF0045Z15001ZJ-v1.1.0_EN/meta-rz-features_codec_v1.1.0.tar.gz -C ${WORK_DIR}
+			unzip RTK0EF0045Z15001ZJ-v1.2.1_EN.zip
+			tar -xf RTK0EF0045Z15001ZJ-v1.2.1_EN/meta-rz-features_codec_v1.2.1.tar.gz -C ${WORK_DIR}
 			popd
 		fi
 	elif [ ${PLATFORM} == "smarc-rzg2lc" ]; then
@@ -317,8 +317,8 @@ install_prop_libs () {
 			cp -r ${PROP_DIR} ${WORK_DIR}/meta-rz-features
 		else
 			pushd ${PROP_DIR}
-			unzip RTK0EF0045Z13001ZJ-v1.1.0_EN.zip
-			tar -xf RTK0EF0045Z13001ZJ-v1.1.0_EN/meta-rz-features_graphics_v1.1.0.tar.gz -C ${WORK_DIR}
+			unzip RTK0EF0045Z13001ZJ-v1.2.2_EN.zip
+			tar -xf RTK0EF0045Z13001ZJ-v1.2.2_EN/meta-rz-features_graphics_v1.2.2.tar.gz -C ${WORK_DIR}
 			popd
 		fi
 	fi
@@ -379,7 +379,6 @@ copy_output () {
 			cp ${bin_dir}/bootparam_sa0.srec ${OUTPUT_DIR}/${PLATFORM}
 			cp ${bin_dir}/bl2-${PLATFORM}.srec ${OUTPUT_DIR}/${PLATFORM}
 			cp ${bin_dir}/bl31-${PLATFORM}.srec ${OUTPUT_DIR}/${PLATFORM}
-			cp ${bin_dir}/tee-${PLATFORM}.srec ${OUTPUT_DIR}/${PLATFORM}
 			cp ${bin_dir}/cert_header_sa6.srec ${OUTPUT_DIR}/${PLATFORM}
 			cp ${bin_dir}/AArch64_Flash_writer_SCIF*.mot ${OUTPUT_DIR}/${PLATFORM}
 		elif [ ${FAMILY} == "rzg2l" ] || [ ${FAMILY} == "rzv2l" ]; then

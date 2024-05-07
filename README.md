@@ -6,7 +6,7 @@ platforms.
 This meta-layer should be used with the official Renesas RZ/G2 Yocto Poky BSP
 based on the CIP Kernel:\
 URI: **https://github.com/renesas-rz/meta-renesas.git** \
-tag: BSP-3.0.4 (e5f7055d78ff0219932557f25645024f35ac5d9a)
+tag: BSP-3.0.6 (0f2f02c4cff3bfc9fed5c0671f3e3165608122b0)
 
 ## Supported Frameworks/Versions ##
 
@@ -39,12 +39,12 @@ This meta-layer depends on the following:
   * URI: https://git.yoctoproject.org/poky
   * layers: meta, meta-poky, meta-yocto-bsp
   * branch: dunfell
-  * revision: aa0073041806c9f417a33b0b7f747d2a86289eda
+  * revision: a9e3cc3b9eab7a83c715bb8440454e8fea852c2a
 * OpenEmbedded
   * URI: https://git.openembedded.org/meta-openembedded
   * layers: meta-oe, meta-python, meta-multimedia
   * branch: dunfell
-  * revision: 7952135f650b4a754e2255f5aa03973a32344123
+  * revision: daa4619fe3fbf8c28f342c4a7163a84a330f7653
 * GPLv2
   * URI: https://git.yoctoproject.org/meta-gplv2
   * layers: meta-gplv2
@@ -56,18 +56,15 @@ This meta-layer depends on the following:
   * revision: c1b0c9f546289b1592d7a895640de103723a0305
 * RZ/G BSP
   * URI: https://github.com/renesas-rz/meta-renesas
-  * layers: meta-rz-common, meta-rzg2h, meta-rzg2l
+  * layers: meta-rz-common, meta-rzg2h, meta-rzg2l, meta-rzv2l
   * branch: dunfell/rz
-  * revision: e5f7055d78ff0219932557f25645024f35ac5d9a
+  * revision: 0f2f02c4cff3bfc9fed5c0671f3e3165608122b0
 
 ## Patches for other meta-layers ##
 In order to build meta-renesas-ai some external meta-layers need to be patched.
 
 The patches below should be applied to the relevant meta-layer before a build is
 started. This is done automatically by the *build-rzg-ai-bsp.sh* build script.
-
-### meta-renesas ###
-* *0001-template-Mask-security-configurator.bb-by-default.patch*
 
 ### meta-qt5 ###
 * *0001-layer.conf-Add-LAYERSERIES_COMPAT-for-dunfell.patch*
@@ -88,12 +85,12 @@ for full details.
 ```bash
 git clone https://git.yoctoproject.org/poky
 cd poky
-git checkout dunfell-23.0.21
+git checkout dunfell-23.0.31
 cd ..
 
 git clone https://git.openembedded.org/meta-openembedded
 cd meta-openembedded
-git checkout 7952135f650b4a754e2255f5aa03973a32344123
+git checkout daa4619fe3fbf8c28f342c4a7163a84a330f7653
 cd ..
 
 git clone https://git.yoctoproject.org/meta-gplv2
@@ -109,8 +106,7 @@ cd ..
 
 git clone https://github.com/renesas-rz/meta-renesas
 cd meta-renesas
-git checkout BSP-3.0.4
-git am ../meta-renesas-ai/patches/meta-renesas/*.patch
+git checkout BSP-3.0.6
 cd ..
 ```
 
@@ -125,11 +121,11 @@ For hihope-rzg2h, hihope-rzg2m, hihope-rzg2n, ek874:
 * [RTK0EF0045Z0022AZJ-v1.0.2_EN.zip](https://www.renesas.com/us/en/document/sws/rz-mpu-multimedia-package-evaluation-version-v102-verified-linux-package-rzg2h-rzg2m-rzg2n-and-rzg2e?r=1597486)
 
 For smarc-rzg2l, smarc-rzv2l:
-* [RTK0EF0045Z13001ZJ-v1.1.0_EN.zip](https://www.renesas.com/us/en/document/sws/rz-mpu-graphics-library-evaluation-version-rzv2l-rtk0ef0045z13001zj-v110enzip?r=1843541)
-* [RTK0EF0045Z15001ZJ-v1.1.0_EN.zip](https://www.renesas.com/us/en/document/swo/rz-mpu-video-codec-library-evaluation-version-rzg2l-rtk0ef0045z15001zj-v110xxzip?r=1535641)
+* [RTK0EF0045Z13001ZJ-v1.2.2_EN.zip](https://www.renesas.com/us/en/document/swo/rz-mpu-graphics-library-evaluation-version-v122-rzg2l-and-rzg2lc-rtk0ef0045z13001zj-v122xxzip?r=1522761)
+* [RTK0EF0045Z15001ZJ-v1.2.1_EN.zip](https://www.renesas.com/us/en/document/swo/rz-mpu-video-codec-library-evaluation-version-v121-rzg2l-rtk0ef0045z15001zj-v121xxzip?r=1535641)
 
 For smarc-rzg2lc:
-* [RTK0EF0045Z13001ZJ-v1.1.0_EN.zip](https://www.renesas.com/us/en/document/sws/rz-mpu-graphics-library-evaluation-version-rzv2l-rtk0ef0045z13001zj-v110enzip?r=1843541)
+* [RTK0EF0045Z13001ZJ-v1.2.2_EN.zip](https://www.renesas.com/us/en/document/swo/rz-mpu-graphics-library-evaluation-version-v122-rzg2l-and-rzg2lc-rtk0ef0045z13001zj-v122xxzip?r=1522761)
 
 No packages are required for devices not listed above.
 
