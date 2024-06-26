@@ -1,14 +1,14 @@
-From 8b6ac560526eda17ff002fb7b0e4e4222df523ee Mon Sep 17 00:00:00 2001
+From aa1f6f1fb0e60329c2edb54b91bee7f9c1fff62e Mon Sep 17 00:00:00 2001
 From: Ayman Chaudhry <ayman.chaudhry.kc@renesas.com>
-Date: Wed, 17 Apr 2024 11:11:06 +0100
+Date: Wed, 26 Jun 2024 13:24:08 +0100
 Subject: [PATCH] Add support for building aarch64 CL with Scons
 
-Recreated for arm_compute v24.02.1, with support for Arm V8.2
-cores. This requires the compiler prefix variable to be unset
-in the SConstruct so the Yocto settings are used correctly.
-The check that ensures variables are set needs disabling in
-this case as ACL does not have awareness that it is running
-in a Yocto enviroment.
+Recreated for arm_compute v24.06, with support for Arm V8.2 cores. This
+requires the compiler prefix variable to be unset in the SConstruct so
+the Yocto settings are used correctly.
+The check that ensures variables are set needs disabling in this case as
+ACL does not have the awareness that it is running in a Yocto
+environment.
 
 Signed-off-by: Jianming Qiao <jianming.qiao@bp.renesas.com>
 Signed-off-by: Gareth Williams <gareth.williams.jx@renesas.com>
@@ -18,10 +18,10 @@ Signed-off-by: Ayman Chaudhry <ayman.chaudhry.kc@renesas.com>
  1 file changed, 2 insertions(+), 14 deletions(-)
 
 diff --git a/SConstruct b/SConstruct
-index 6f498b51c8..185de6b9da 100644
+index bad85e503d..0c26af43a3 100644
 --- a/SConstruct
 +++ b/SConstruct
-@@ -359,8 +359,6 @@ else: # NONE "multi_isa" builds
+@@ -356,8 +356,6 @@ else: # NONE "multi_isa" builds
              env.Append(CXXFLAGS = ['-march=armv8.4-a'])
          elif 'v8.' in env['arch']:
              env.Append(CXXFLAGS = ['-march=armv8.2-a+fp16']) # explicitly enable fp16 extension otherwise __ARM_FEATURE_FP16_VECTOR_ARITHMETIC is undefined
@@ -30,7 +30,7 @@ index 6f498b51c8..185de6b9da 100644
  
          if 'v8.' in env['arch']:
              env.Append(CPPDEFINES = ['ARM_COMPUTE_ENABLE_FP16'])
-@@ -380,9 +378,7 @@ else: # NONE "multi_isa" builds
+@@ -377,9 +375,7 @@ else: # NONE "multi_isa" builds
  auto_toolchain_prefix = ""
  if 'x86' not in env['arch']:
      if env['estate'] == '32':
@@ -41,7 +41,7 @@ index 6f498b51c8..185de6b9da 100644
              auto_toolchain_prefix = "arm-eabi-"
          elif env['os'] == 'android':
              auto_toolchain_prefix = "arm-linux-androideabi-"
-@@ -390,7 +386,7 @@ if 'x86' not in env['arch']:
+@@ -387,7 +383,7 @@ if 'x86' not in env['arch']:
              auto_toolchain_prefix = "armv7l-tizen-linux-gnueabi-"
      elif env['estate'] == '64' and 'v8' in env['arch']:
          if env['os'] == 'linux':
@@ -50,7 +50,7 @@ index 6f498b51c8..185de6b9da 100644
          elif env['os'] == 'bare_metal':
              auto_toolchain_prefix = "aarch64-elf-"
          elif env['os'] == 'android':
-@@ -670,11 +666,3 @@ if env['exceptions']:
+@@ -667,11 +663,3 @@ if env['exceptions']:
          print("WARNING: Building tests for bare metal and armv7a is not supported")
          Return()
      SConscript('./tests/SConscript', variant_dir='%s/tests' % build_path, duplicate=0)
