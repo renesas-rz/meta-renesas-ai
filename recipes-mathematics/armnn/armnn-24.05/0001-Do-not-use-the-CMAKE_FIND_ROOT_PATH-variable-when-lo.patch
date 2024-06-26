@@ -1,13 +1,13 @@
-From 9fd4f3586993d215b57c8fb9695748764f77bfc5 Mon Sep 17 00:00:00 2001
+From 96cdff8eadac7684053c9842c5ca720a6d690e22 Mon Sep 17 00:00:00 2001
 From: Ayman Chaudhry <ayman.chaudhry.kc@renesas.com>
-Date: Tue, 16 Apr 2024 16:19:17 +0100
+Date: Wed, 26 Jun 2024 13:00:37 +0100
 Subject: [PATCH] Do not use the CMAKE_FIND_ROOT_PATH variable when looking for
  Tensorflow Source
 
 CMAKE_FIND_ROOT_PATH variable is used in Yocto for cross-compiling.
 CMake uses it to point to the root directory of the target environment
-In Armnn. it requires the location of the tensorflow source code, therefore,
-we need to override this behaviour when looking for tensorflow source code.
+in Armnn. It requires the location of the tensorflow source code, therefore,
+we need to override this behaviour when looking for the tensorflow source code.
 
 Signed-off-by: Jianming Qiao <jianming.qiao@bp.renesas.com>
 Signed-off-by: Ayman Chaudhry <ayman.chaudhry.kc@renesas.com>
@@ -16,16 +16,16 @@ Signed-off-by: Ayman Chaudhry <ayman.chaudhry.kc@renesas.com>
  1 file changed, 2 insertions(+), 1 deletion(-)
 
 diff --git a/cmake/GlobalConfig.cmake b/cmake/GlobalConfig.cmake
-index b37417c7c..35e07c57e 100644
+index 687fd0540..1da1533a2 100644
 --- a/cmake/GlobalConfig.cmake
 +++ b/cmake/GlobalConfig.cmake
-@@ -269,7 +269,8 @@ endif()
+@@ -271,7 +271,8 @@ endif()
  if(BUILD_TF_LITE_PARSER)
      find_path(TF_LITE_SCHEMA_INCLUDE_PATH
                schema_generated.h
 -              HINTS ${TF_LITE_GENERATED_PATH})
 +              HINTS ${TF_LITE_GENERATED_PATH}
-+	      NO_CMAKE_FIND_ROOT_PATH)
++              NO_CMAKE_FIND_ROOT_PATH)
  
      message(STATUS "Tf Lite generated header found at: ${TF_LITE_SCHEMA_INCLUDE_PATH}")
  

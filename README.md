@@ -12,7 +12,7 @@ tag: BSP-3.0.6 (0f2f02c4cff3bfc9fed5c0671f3e3165608122b0)
 
 | Framework       | Version   | Parser(s)                                  | Inference Hardware                                  |
 | :-------------- | :-------- | :----------------------------------------- | :-------------------------------------------------- |
-| ArmNN           | v24.02    | ONNX (v1.6.0)<br>TensorFlow Lite (v2.15.1) | CPU<br>GPU (smarc-rzg2l, smarc-rzg2lc, smarc-rzv2l) |
+| ArmNN           | v24.05    | ONNX (v1.6.0)<br>TensorFlow Lite (v2.15.1) | CPU<br>GPU (smarc-rzg2l, smarc-rzg2lc, smarc-rzv2l) |
 | ONNX Runtime    | v1.8.0    | ONNX                                       | CPU                                                 |
 | TensorFlow Lite | v2.15.1   | TensorFlow Lite                            | CPU                                                 |
 

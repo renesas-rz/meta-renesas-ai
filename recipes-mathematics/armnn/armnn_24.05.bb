@@ -6,7 +6,9 @@ LICENSE = "MIT & Apache-2.0"
 
 # Apache-2.0 license applies to mobilenet tarball
 LIC_FILES_CHKSUM = "file://LICENSE;md5=3e14a924c16f7d828b8335a59da64074 \
-                    file://${COMMON_LICENSE_DIR}/Apache-2.0;md5=89aea4e17d99a7cacdbeed46a0096b10"
+                    file://${COMMON_LICENSE_DIR}/Apache-2.0;md5=89aea4e17d99a7cacdbeed46a0096b10 \
+                    file://LICENSES/BSD-3-Clause.txt;md5=71f739ef75581cae312e8c711bcdab16 \
+                    file://LICENSES/MIT.txt;md5=7dda4e90ded66ab88b86f76169f28663 "
 
 PACKAGES += " \
 	${PN}-tensorflow-lite \
@@ -39,8 +41,8 @@ SRC_URI = " \
 	file://rsz_grace_hopper.csv \
 "
 
-# v24.02
-SRCREV_armnn = "a75ae30ac3849a37ec39698dc046460d5ab9a1cd"
+# v24.05
+SRCREV_armnn = "1f3eb73c6c4f03181f657650bde3ff2b9e6bfae8"
 
 # v1.6.0
 SRCREV_onnx = "553df22c67bee5f0fe6599cff60f1afc6748c635"
