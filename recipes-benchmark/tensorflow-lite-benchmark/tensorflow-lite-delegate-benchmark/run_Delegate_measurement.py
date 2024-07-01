@@ -31,6 +31,7 @@ def main():
    args.add_argument("-c", "--compute", help = "[Optional] The ArmNN backend to use with the ArmNN delegate [CpuRef|CpuAcc|GpuAcc]", required = False, default = "CpuAcc")
    args.add_argument("-a", "--armnn_log_level", help = "[Optional] The level to set ArmNN Delegate to use [trace|debug|info|warning|error]", required = False, default = "warning")
    args.add_argument("-m", "--benchmark", help = "[Optional] Add \"benchmark\" to output benchmark results in a parsable format", required = False, action='store_true')
+   args.add_argument("-F", "--fp16-turbo-mode", help = "[Optional] Enable fp16-turbo mode for ArmNN Delegate (does not apply to XNNPack Delegate)", required = False, action='store_true')
 
    # Retreive command line parameters
    argument = args.parse_args()
@@ -63,6 +64,10 @@ def main():
        benchmark = True
    else:
        benchmark = False
+   if argument.fp16_turbo_mode:
+       fp16_turbo_mode = True
+   else:
+       fp16_turbo_mode = False
 
    # Retreive Library versions
    armnn_ver = glob.glob("/usr/bin/armnn-2*")
@@ -86,14 +91,20 @@ def main():
                subdir = line.split('/')[0]
 
                # Start benchmark app
-               run_delegate_benchmark(model_details[0], base_directory_path, base_directory_path+subdir+"/"+label_file, number_of_cores, number_of_iteration, list_tmp, list, delegateType, armnnLogLevel, armnnCompute)
+               run_delegate_benchmark(model_details[0], base_directory_path, base_directory_path+subdir+"/"+label_file, number_of_cores, number_of_iteration, list_tmp, list, delegateType, armnnLogLevel, armnnCompute, fp16_turbo_mode)
 
                print("Average Time" + " at Model " + model_details[0] + ": "  + str(Average(list_tmp)) + " ms ")
                print("Standard Deviation" + " at Model " + model_details[0] + ": " + str(Average(list)))
 
                if benchmark == True:
                    if delegateType == "armnn":
-                       print("AI_BENCHMARK_MARKER,TensorFlow Lite v" + tfl_ver + " (Delegate: ArmNN v" + armnn_ver + " " + armnnCompute + ")," + model_details[0].rstrip().rsplit('/', 1)[1] +  "," +  model_details[1] + "," + str(Average(list_tmp)) + "," + str(Average(list)) + ",")
+                       # Only add FP16 Turbo marker if enabled
+                       if fp16_turbo_mode == True:
+                           armnn_turbo_marker = " FP16 Turbo),"
+                       else:
+                           armnn_turbo_marker = "),"
+
+                       print("AI_BENCHMARK_MARKER,TensorFlow Lite v" + tfl_ver + " (Delegate: ArmNN v" + armnn_ver + " " + armnnCompute + armnn_turbo_marker + model_details[0].rstrip().rsplit('/', 1)[1] +  "," +  model_details[1] + "," + str(Average(list_tmp)) + "," + str(Average(list)) + ",")
                    elif delegateType == "xnnpack":
                        print("AI_BENCHMARK_MARKER,TensorFlow Lite v" + tfl_ver + " (Delegate: XNNPack)," + model_details[0].rstrip().rsplit('/', 1)[1] +  "," +  model_details[1] + "," + str(Average(list_tmp)) + "," + str(Average(list)) + ",")
                    else:
@@ -102,8 +113,8 @@ def main():
 def Average(lst):
     return sum(lst) / len(lst)
 
-def run_delegate_benchmark(model_file_name, base_directory, label_file_name, number_of_threads, times_to_run, list, list_dev, delegateType, armnnLogLevel, armnnCompute):
-    command = "/usr/bin/tfLiteDelegateBenchmark/tfLiteDelegateBenchmark -i /usr/bin/tensorflow-lite/examples/grace_hopper.bmp -c %s -l %s -t %d -m %s -d %s -n %s -r %s" % (times_to_run, label_file_name, number_of_threads, base_directory+model_file_name.rstrip(), delegateType, armnnLogLevel, armnnCompute)
+def run_delegate_benchmark(model_file_name, base_directory, label_file_name, number_of_threads, times_to_run, list, list_dev, delegateType, armnnLogLevel, armnnCompute, fp16_turbo_mode):
+    command = "/usr/bin/tfLiteDelegateBenchmark/tfLiteDelegateBenchmark -i /usr/bin/tensorflow-lite/examples/grace_hopper.bmp -c %s -l %s -t %d -m %s -d %s -n %s -r %s -f %d" % (times_to_run, label_file_name, number_of_threads, base_directory+model_file_name.rstrip(), delegateType, armnnLogLevel, armnnCompute, fp16_turbo_mode)
 
     for line in run_command(command):
         count = 0

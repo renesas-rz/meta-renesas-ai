@@ -244,7 +244,8 @@ void RunInference(Settings* settings, DelegateType selectedDelegate,
 
 	/* Setup the delegate */
 	if(selectedDelegate == ArmnnTfLite) {
-		armnnDelegate::DelegateOptions delegateOptions(backend);
+		armnn::OptimizerOptionsOpaque optimizerOptions(settings->allow_fp16, false, false, false);
+		armnnDelegate::DelegateOptions delegateOptions(backend, optimizerOptions);
 		std::unique_ptr<TfLiteDelegate, decltype(&armnnDelegate::TfLiteArmnnDelegateDelete)>
 			armnnTfLiteDelegate(armnnDelegate::TfLiteArmnnDelegateCreate(delegateOptions),
 			armnnDelegate::TfLiteArmnnDelegateDelete);
@@ -349,6 +350,7 @@ void display_usage()
 	<< "--threads, -t: number of threads. Does not apply to ArmNN Delegate\n"
 	<< "--verbose, -v: [0|1] print more information\n"
 	<< "--armnn-log-level, -n: [trace|debug|info|warning|error] print more armnn specific information\n"
+	<< "--fp16-turbo-mode, -f: [0|1] enable fp16-turbo-mode for armnn. Does not apply to XNNPack Delegate\n"
 	<< "\n";
 }
 
@@ -377,6 +379,7 @@ int Main(int argc, char** argv)
 			{"input_std", required_argument, nullptr, 's'},
 			{"delegate", required_argument, nullptr, 'd'},
 			{"armnn-log-level", required_argument, nullptr, 'n'},
+			{"fp16-turbo-mode", required_argument, nullptr, 'f'},
 			{nullptr, 0, nullptr, 0}
 		};
 
@@ -404,6 +407,9 @@ int Main(int argc, char** argv)
 			else
 				selectedDelegate = none;
 		break;
+		case 'f':
+			settings.allow_fp16 = strtol(optarg, nullptr, 10);
+		break;
 		case 'i':
 			settings.input_bmp_name = optarg;
 		break;
@@ -427,10 +433,18 @@ int Main(int argc, char** argv)
 			settings.profiling = strtol(optarg, nullptr, 10);
 		break;
 		case 'r':
-			if(strstr(optarg, "CpuRef"))
+			if(strstr(optarg, "CpuRef")) {
 				backend = {armnn::Compute::CpuRef};
-			else if (strstr(optarg, "GpuAcc"))
+
+				if (settings.allow_fp16) {
+					LOG(INFO) << "ArmNN's fp16-turbo-mode cannot be used with CpuRef backend\n"
+					<< "It will be disabled\n";
+
+					settings.allow_fp16 = 0;
+				}
+			} else if (strstr(optarg, "GpuAcc")) {
 				backend = {armnn::Compute::GpuAcc};
+			}
 		break;
 		case 's':
 			settings.input_std = strtod(optarg, nullptr);

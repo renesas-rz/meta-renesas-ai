@@ -10,15 +10,18 @@ LOOP_INFERENCE=30
 BACKENDS=("CpuAcc")
 DELEGATES=("armnn" "xnnpack")
 BENCHMARK_DIR="/usr/bin/tfLiteDelegateBenchmark"
+ENABLE_TURBO_MODE=""
 
 case "${RZG_LABEL}" in
 	"rzg1e")
 		LOOP_INFERENCE=10
 		;;
 	"rzg2l" | "rzg2lc" | "rzv2l")
+		ENABLE_TURBO_MODE="--fp16-turbo-mode"
 		LOOP_INFERENCE=10
 		;;
 	"rzg2ul")
+		ENABLE_TURBO_MODE="--fp16-turbo-mode"
 		LOOP_INFERENCE=10
 esac
 
@@ -31,7 +34,7 @@ if [ ${BIG_CORES} -lt ${CORES} ]; then
 			for BACKEND in "${BACKENDS[@]}"; do
 				./run_Delegate_measurement.py -f $BENCHMARK_DIR/test_model_list_delegate.txt \
 					-b /home/root/models/tensorflowlite/ -i $LOOP_INFERENCE -t "${BIG_CORES}" -d $DELEGATE \
-					-a warning -c $BACKEND --benchmark
+					-a warning -c $BACKEND $ENABLE_TURBO_MODE --benchmark
 
 				if [ $? != 0 ]; then
 					print_failure "ArmNN ($BACKEND) TfLite Delegate big cores benchmark exit failure"
@@ -53,7 +56,7 @@ if [ ${BIG_CORES} -lt ${CORES} ]; then
 			for BACKEND in "${BACKENDS[@]}"; do
 				./run_Delegate_measurement.py -f $BENCHMARK_DIR/test_model_list_delegate.txt \
 					-b /home/root/models/tensorflowlite/ -i $LOOP_INFERENCE -t "${CORES}" -d $DELEGATE \
-					-a warning -c $BACKEND
+					-a warning -c $BACKEND $ENABLE_TURBO_MODE
 
 				if [ $? != 0 ]; then
 					print_failure "ArmNN ($BACKEND) TfLite Delegate all cores benchmark exit failure"
@@ -82,7 +85,7 @@ else
 
 				./run_Delegate_measurement.py -f $BENCHMARK_DIR/$MODEL_LIST \
 					-b /home/root/models/tensorflowlite/ -i $LOOP_INFERENCE -t "${CORES}" -d $DELEGATE \
-					-a warning -c $BACKEND --benchmark
+					-a warning -c $BACKEND $ENABLE_TURBO_MODE --benchmark
 
 				if [ $? != 0 ]; then
 					print_failure "ArmNN ($BACKEND) TfLite Delegate benchmark exit failure"
