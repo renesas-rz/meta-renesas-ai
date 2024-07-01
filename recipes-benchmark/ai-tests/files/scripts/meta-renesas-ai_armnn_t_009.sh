@@ -19,6 +19,7 @@ case "${RZG_LABEL}" in
 	"rzg2l" | "rzg2lc" | "rzv2l")
 		ENABLE_TURBO_MODE="--fp16-turbo-mode"
 		LOOP_INFERENCE=10
+		BACKENDS+=("GpuAcc")
 		;;
 	"rzg2ul")
 		ENABLE_TURBO_MODE="--fp16-turbo-mode"
