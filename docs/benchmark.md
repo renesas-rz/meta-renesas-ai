@@ -83,7 +83,7 @@ Some examples can be found below (assuming 2 cores and inference 30 times):
 cd /usr/bin/tfLiteDelegateBenchmark
 
 # Run inference 30 times on each TfLite model using the ArmNN Delegate
-./run_Delegate_measurement.py -f /usr/bin/tfLiteDelegateBenchmark/test_model_list_delegate.txt \
+./run_Delegate_measurement.py --models_file /usr/bin/tfLiteDelegateBenchmark/test_model_list_delegate.txt \
                                         --base_dir /home/root/models/tensorflowlite/ \
                                         --iterations 30 --threads 2 --delegate armnn \
                                         --armnn_log_level warning --compute CpuAcc
@@ -95,7 +95,7 @@ cd /usr/bin/tfLiteDelegateBenchmark
 
 
 # Run inference 30 times on each TfLite model using the ArmNN Delegate and the GPU Accelerator
-./run_Delegate_measurement.py -f /usr/bin/tfLiteDelegateBenchmark/test_model_list_delegate.txt \
+./run_Delegate_measurement.py --models_file /usr/bin/tfLiteDelegateBenchmark/test_model_list_delegate.txt \
                                         --base_dir /home/root/models/tensorflowlite/ \
                                         --iterations 30 --threads 2 --delegate armnn \
                                         --armnn_log_level warning --compute GpuAcc
