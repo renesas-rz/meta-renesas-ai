@@ -60,8 +60,8 @@ $ ./UnitTests -- --dynamic-backend-build-dir "/usr/bin/armnn/examples/UnitTests/
 [doctest] run with "--help" for options
 ...
 ===============================================================================
-[doctest] test cases:   4397 |   4397 passed | 0 failed | 3 skipped
-[doctest] assertions: 802893 | 802893 passed | 0 failed |
+[doctest] test cases:   4445 |   4445 passed | 0 failed | 3 skipped
+[doctest] assertions: 808108 | 808108 passed | 0 failed |
 [doctest] Status: SUCCESS!
 ```
 
@@ -75,18 +75,9 @@ $ ./DelegateUnitTests --test-suite=*CpuAcc*
 ```
 [doctest] doctest version is "2.4.6"
 [doctest] run with "--help" for options
-INFO: TfLiteArmnnDelegate: Added backend CpuAcc
-INFO: TfLiteArmnnDelegate: Created TfLite ArmNN delegate.
-INFO: TfLiteArmnnDelegate: Added backend CpuRef
-INFO: TfLiteArmnnDelegate: Added backend CpuRef
-INFO: TfLiteArmnnDelegate: Added backend CpuRef
-INFO: TfLiteArmnnDelegate: Added backend CpuRef
-INFO: TfLiteArmnnDelegate: Added backend CpuRef
-INFO: TfLiteArmnnDelegate: Added backend CpuRef
-INFO: TfLiteArmnnDelegate: Added backend CpuRef
 ...
 ===============================================================================
-[doctest] test cases:   7 |   7 passed | 0 failed | 287 skipped
+[doctest] test cases:   7 |   7 passed | 0 failed | 315 skipped
 [doctest] assertions: 628 | 628 passed | 0 failed |
 [doctest] Status: SUCCESS!
 ```
@@ -132,7 +123,7 @@ INFO: TfLiteArmnnDelegate: Added backend CpuRef
 INFO: TfLiteArmnnDelegate: Added backend CpuAcc
 INFO: TfLiteArmnnDelegate: Added backend CpuRef
 ===============================================================================
-[doctest] test cases:   21 |   21 passed | 0 failed | 273 skipped
+[doctest] test cases:   21 |   21 passed | 0 failed | 301 skipped
 [doctest] assertions: 2052 | 2052 passed | 0 failed |
 [doctest] Status: SUCCESS!
 ```
@@ -168,22 +159,22 @@ $ ./TfLiteMobilenetQuantized-Armnn -d /usr/bin/armnn/examples/images/ \
 2. The output of a healthy execution should look like the following:
 ```
 Info: ArmNN v33.1.0
-Info: Initialization time: 0.18 ms.
-Info: Network parsing time: 152.52 ms.
-Info: Optimization time: 7.27 ms.
-Info: Network loading time: 38.33 ms.
-Info: Execution time: 205.03 ms.
-Info: Execution time: 60.63 ms.
+Info: Initialization time: 0.16 ms.
+Info: Network parsing time: 111.71 ms.
+Info: Optimization time: 7.64 ms.
+Info: Network loading time: 38.47 ms.
+Info: Execution time: 193.45 ms.
+Info: Execution time: 59.93 ms.
 Info: = Prediction values for test #0
 Info: Top(1) prediction is 653 with value: 0.753906
 Info: Top(2) prediction is 907 with value: 0.140625
 Info: Top(3) prediction is 458 with value: 0.0195312
 Info: Top(4) prediction is 466 with value: 0.0117188
 Info: Top(5) prediction is 452 with value: 0.00390625
-Info: Total time for 1 test cases: 0.061 seconds
-Info: Average time per test case: 60.756 ms
+Info: Total time for 1 test cases: 0.060 seconds
+Info: Average time per test case: 60.030 ms
 Info: Overall accuracy: 1.000
-Info: Shutdown time: 1.87 ms.
+Info: Shutdown time: 1.89 ms.
 ```
 
 ### OnnxMobileNet-Armnn
@@ -198,36 +189,36 @@ $ ./OnnxMobileNet-Armnn -d /usr/bin/armnn/examples/images/ \
 2. The output of a healthy execution should look like the following:
 ```
 Info: ArmNN v33.1.0
-Info: Initialization time: 0.18 ms.
-Info: Network parsing time: 365.14 ms.
-Info: Optimization time: 121.29 ms.
-Info: Network loading time: 268.53 ms.
-Info: Execution time: 602.47 ms.
-Info: Execution time: 374.40 ms.
+Info: Initialization time: 0.17 ms.
+Info: Network parsing time: 163.46 ms.
+Info: Optimization time: 122.46 ms.
+Info: Network loading time: 237.05 ms.
+Info: Execution time: 591.39 ms.
+Info: Execution time: 377.22 ms.
 Info: = Prediction values for test #0
 Info: Top(1) prediction is 652 with value: 13.1776
 Info: Top(2) prediction is 457 with value: 11.1157
 Info: Top(3) prediction is 451 with value: 9.20581
 Info: Top(4) prediction is 439 with value: 8.7352
 Info: Top(5) prediction is 400 with value: 7.13391
-Info: Execution time: 375.17 ms.
+Info: Execution time: 378.35 ms.
 Info: = Prediction values for test #1
 Info: Top(1) prediction is 652 with value: 13.1776
 Info: Top(2) prediction is 457 with value: 11.1157
 Info: Top(3) prediction is 451 with value: 9.20581
 Info: Top(4) prediction is 439 with value: 8.7352
 Info: Top(5) prediction is 400 with value: 7.13391
-Info: Execution time: 375.35 ms.
+Info: Execution time: 376.16 ms.
 Info: = Prediction values for test #2
 Info: Top(1) prediction is 652 with value: 13.1776
 Info: Top(2) prediction is 457 with value: 11.1157
 Info: Top(3) prediction is 451 with value: 9.20581
 Info: Top(4) prediction is 439 with value: 8.7352
 Info: Top(5) prediction is 400 with value: 7.13391
-Info: Total time for 3 test cases: 1.125 seconds
-Info: Average time per test case: 375.077 ms
+Info: Total time for 3 test cases: 1.132 seconds
+Info: Average time per test case: 377.343 ms
 Info: Overall accuracy: 1.000
-Info: Shutdown time: 4.94 ms.
+Info: Shutdown time: 7.58 ms.
 ```
 
 ### RenesasSample-Armnn
@@ -249,51 +240,51 @@ $ ./RenesasSample-Armnn
 current model is mobilenet_v1_1.0_224_quant.tflite
 Info: ArmNN v33.1.0
 Info: Initialization time: 0.13 ms.
-Info: Network parsing time: 75.72 ms.
-Info: Optimization time: 7.57 ms.
-Info: Network loading time: 38.40 ms.
+Info: Network parsing time: 78.80 ms.
+Info: Optimization time: 7.53 ms.
+Info: Network loading time: 38.51 ms.
 Quant Model is loaded
 Scale 0.007812
 Offset 128
-Info: Execution time: 189.77 ms.
-Info: Execution time: 61.74 ms.
-Info: Execution time: 59.86 ms.
-Info: Execution time: 60.25 ms.
-Info: Execution time: 59.52 ms.
-Info: Execution time: 60.09 ms.
-Info: Execution time: 59.82 ms.
-Info: Execution time: 60.13 ms.
-Info: Execution time: 60.38 ms.
-Info: Execution time: 60.38 ms.
-Info: Execution time: 74.31 ms.
-Info: Execution time: 60.34 ms.
-Info: Execution time: 60.20 ms.
+Info: Execution time: 190.01 ms.
 Info: Execution time: 59.45 ms.
-Info: Execution time: 59.88 ms.
-Info: Execution time: 59.47 ms.
-Info: Execution time: 60.47 ms.
-Info: Execution time: 59.80 ms.
-Info: Execution time: 60.19 ms.
-Info: Execution time: 59.88 ms.
-Info: Execution time: 59.52 ms.
-Info: Execution time: 60.29 ms.
-Info: Execution time: 59.75 ms.
-Info: Execution time: 59.92 ms.
-Info: Execution time: 59.72 ms.
-Info: Execution time: 59.96 ms.
-Info: Execution time: 60.84 ms.
-Info: Execution time: 59.68 ms.
-Info: Execution time: 59.38 ms.
+Info: Execution time: 59.27 ms.
+Info: Execution time: 60.07 ms.
+Info: Execution time: 59.93 ms.
+Info: Execution time: 59.95 ms.
+Info: Execution time: 60.75 ms.
+Info: Execution time: 59.65 ms.
+Info: Execution time: 60.11 ms.
+Info: Execution time: 59.20 ms.
+Info: Execution time: 59.17 ms.
 Info: Execution time: 59.89 ms.
+Info: Execution time: 59.55 ms.
+Info: Execution time: 59.40 ms.
+Info: Execution time: 59.16 ms.
+Info: Execution time: 59.48 ms.
+Info: Execution time: 59.30 ms.
+Info: Execution time: 59.23 ms.
+Info: Execution time: 59.74 ms.
+Info: Execution time: 60.13 ms.
+Info: Execution time: 59.90 ms.
+Info: Execution time: 59.74 ms.
+Info: Execution time: 59.26 ms.
+Info: Execution time: 59.77 ms.
+Info: Execution time: 60.38 ms.
+Info: Execution time: 60.35 ms.
+Info: Execution time: 59.86 ms.
+Info: Execution time: 59.94 ms.
 Info: Execution time: 59.83 ms.
-Total Time Takes 1818.14 ms
-Average Time Takes 60.6047 ms
-Standard Deviation 2.60664
+Info: Execution time: 60.41 ms.
+Info: Execution time: 59.43 ms.
+Total Time Takes 1795.1 ms
+Average Time Takes 59.8365 ms
+Standard Deviation 0.412387
 = Prediction values for test Top(1) prediction is 653 with confidence: 75.3906%Result is military uniform
 Top(2) prediction is 458 with confidence: 1.95312%Result is bow tie, bow-tie, bowtie
 Top(3) prediction is 452 with confidence: 0.390625%Result is bolo tie, bolo, bola tie, bola
 Top(4) prediction is 0 with confidence: 0%Result is background
-Info: Shutdown time: 1.84 ms.
+Info: Shutdown time: 1.90 ms.
 ```
 
 ### ExecuteNetwork
@@ -317,31 +308,26 @@ $ ./ExecuteNetwork -c CpuAcc\
 2. It prints out the ouput tensor, for example,
 ```
 Info: ArmNN v33.1.0
-Info: Initialization time: 0.19 ms.
-Info: Optimization time: 7.52 ms
-
+Info: Initialization time: 0.13 ms.
+Info: Optimization time: 8.84 ms
 ===== Network Info =====
 Inputs in order:
 input, [1,224,224,3], QAsymmU8 Quantization Offset: 128 Quantization scale: 0.0078125
 Outputs in order:
 MobilenetV1/Predictions/Reshape_1, [1,1001], QAsymmU8 Quantization Offset: 0 Quantization scale: 0.00390625
-
-Info: Inferences began at: 1600599645776666818 ns
-
-Info: Execution time: 199.69 ms.
+Info: Inferences began at: (1600598977135723166 ns) Sun Sep 20 10:49:37 2020
+Info: Execution time: 201.51 ms.
 MobilenetV1/Predictions/Reshape_1: 0 0 0...
-Info: Inference time: 199.79 ms
-
-Info: Inferences ended at: 1600599645976817419 ns
-
-Info: Shutdown time: 1.87 ms.
+Info: Inference time: 201.59 ms
+Info: Inferences ended at: (1600598977337754294 ns) Sun Sep 20 10:49:37 2020
+Info: Shutdown time: 1.88 ms.
 ```
 
 ## Supported Frameworks and Operators
 The Arm NN SDK supports the following operators:
 
 TensorFlow Lite:
-**https://arm-software.github.io/armnn/24.02/parsers.html#S6_tf_lite_parser**
+**https://arm-software.github.io/armnn/24.05/parsers.html#S6_tf_lite_parser**
 
 ONNX:
-**https://arm-software.github.io/armnn/24.02/parsers.html#S5_onnx_parser**
+**https://arm-software.github.io/armnn/24.05/parsers.html#S5_onnx_parser**
