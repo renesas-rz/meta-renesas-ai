@@ -77,14 +77,7 @@ else
 	for DELEGATE in "${DELEGATES[@]}"; do
 		if [ "$DELEGATE" == "armnn" ]; then
 			for BACKEND in "${BACKENDS[@]}"; do
-				if [[ "$BACKEND" == "GpuAcc" && "$RZG_LABEL" == "rzg2lc" ]]; then
-					echo "Using low memory model list..."
-					MODEL_LIST=test_model_list_delegate_low_mem.txt
-				else
-					MODEL_LIST=test_model_list_delegate.txt
-				fi
-
-				./run_Delegate_measurement.py -f $BENCHMARK_DIR/$MODEL_LIST \
+				./run_Delegate_measurement.py -f $BENCHMARK_DIR/test_model_list_delegate.txt \
 					-b /home/root/models/tensorflowlite/ -i $LOOP_INFERENCE -t "${CORES}" -d $DELEGATE \
 					-a warning -c $BACKEND $ENABLE_TURBO_MODE --benchmark
 
