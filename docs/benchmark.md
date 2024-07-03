@@ -92,6 +92,13 @@ cd /usr/bin/tfLiteDelegateBenchmark
 ./run_Delegate_measurement.py --models_file /usr/bin/tfLiteDelegateBenchmark/test_model_list_delegate.txt \
                                         --base_dir /home/root/models/tensorflowlite/ --iterations 30 \
                                         --threads 2 --delegate xnnpack
+
+
+# Run inference 30 times on each TfLite model using the ArmNN Delegate and the GPU Accelerator
+./run_Delegate_measurement.py -f /usr/bin/tfLiteDelegateBenchmark/test_model_list_delegate.txt \
+                                        --base_dir /home/root/models/tensorflowlite/ \
+                                        --iterations 30 --threads 2 --delegate armnn \
+                                        --armnn_log_level warning --compute GpuAcc
 ```
 
 ## ONNX Runtime
