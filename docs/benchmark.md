@@ -94,17 +94,6 @@ cd /usr/bin/tfLiteDelegateBenchmark
                                         --threads 2 --delegate xnnpack
 ```
 
-The RZ/G2LC has 1GB of memory, 384MB of which is allocated as CMA in the DTS. This can lead to memory issues
-for larger models when running with the GPU Accelerator backend for the ArmNN Delegate. A serperate model
-list is provided for this case which uses models suitable for the available resources.
-```bash
-# Run inference 30 times on each TfLite model using the ArmNN Delegate and the GPU Accelerator
-./run_Delegate_measurement.py -f /usr/bin/tfLiteDelegateBenchmark/test_model_list_delegate_low_mem.txt \
-                                        --base_dir /home/root/models/tensorflowlite/ \
-                                        --iterations 30 --threads 2 --delegate armnn \
-                                        --armnn_log_level warning --compute GpuAcc
-```
-
 ## ONNX Runtime
 ```bash
 cd /usr/bin/onnxruntime_benchmark

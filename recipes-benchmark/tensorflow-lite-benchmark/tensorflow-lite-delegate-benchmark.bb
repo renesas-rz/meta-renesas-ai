@@ -7,7 +7,6 @@ SRC_URI += " \
 	file://tfLiteDelegateBenchmark.cpp \
 	file://run_Delegate_measurement.py \
 	file://test_model_list_delegate.txt \
-	file://test_model_list_delegate_low_mem.txt \
 "
 
 DEPENDS = " \
@@ -90,15 +89,10 @@ do_install() {
 	install -m 0555 \
 		${WORKDIR}/test_model_list_delegate.txt \
 		${D}${bindir}/tfLiteDelegateBenchmark/
-
-	install -m 0555 \
-		${WORKDIR}/test_model_list_delegate_low_mem.txt \
-		${D}${bindir}/tfLiteDelegateBenchmark/
 }
 
 FILES_${PN} += " \
 	${bindir}/tfLiteDelegateBenchmark/tfLiteDelegateBenchmark \
 	${bindir}/tfLiteDelegateBenchmark/run_Delegate_measurement.py \
 	${bindir}/tfLiteDelegateBenchmark/test_model_list_delegate.txt \
-	${bindir}/tfLiteDelegateBenchmark/test_model_list_delegate_low_mem.txt \
 "
