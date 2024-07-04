@@ -6,7 +6,7 @@ platforms.
 This meta-layer should be used with the official Renesas RZ/G2 Yocto Poky BSP
 based on the CIP Kernel:\
 URI: **https://github.com/renesas-rz/meta-renesas.git** \
-tag: BSP-3.0.6 (0f2f02c4cff3bfc9fed5c0671f3e3165608122b0)
+tag: BSP-3.0.6-update2 (4ba2b531f4e9db85ffbd94e2df35bf6e1a6a1aad)
 
 ## Supported Frameworks/Versions ##
 
@@ -58,7 +58,7 @@ This meta-layer depends on the following:
   * URI: https://github.com/renesas-rz/meta-renesas
   * layers: meta-rz-common, meta-rzg2h, meta-rzg2l, meta-rzv2l
   * branch: dunfell/rz
-  * revision: 0f2f02c4cff3bfc9fed5c0671f3e3165608122b0
+  * revision: 4ba2b531f4e9db85ffbd94e2df35bf6e1a6a1aad
 
 ## Patches for other meta-layers ##
 In order to build meta-renesas-ai some external meta-layers need to be patched.
@@ -106,7 +106,7 @@ cd ..
 
 git clone https://github.com/renesas-rz/meta-renesas
 cd meta-renesas
-git checkout BSP-3.0.6
+git checkout BSP-3.0.6-update2
 cd ..
 ```
 
