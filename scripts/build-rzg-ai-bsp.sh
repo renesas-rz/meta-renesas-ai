@@ -17,7 +17,7 @@ set -e
 # Global parameters
 RZG_AI_BSP_URL="${CI_REPOSITORY_URL:-https://github.com/renesas-rz/meta-renesas-ai.git}"
 RZG_AI_BSP_VER="${CI_COMMIT_REF_NAME:-master}"
-RZG_BSP_VER="BSP-3.0.6-update2"
+RZG_BSP_VER="BSP-3.0.6-update3"
 WORK_DIR="${PWD}"
 COMMAND_NAME="$0"
 INSTALL_DEPENDENCIES=false
